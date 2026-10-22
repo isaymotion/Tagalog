@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Usap Tayo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Learn Tagalog (Filipino) for everyday life and psychiatric interviewing. App created by Isabella Navarro, MD.">
+<meta name="author" content="Isabella Navarro, MD">
+<meta name="theme-color" content="#1e3265">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Usap Tayo">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<script>
+  // Apply the saved theme before first paint to avoid a flash.
+  try { var t = JSON.parse(localStorage.getItem('usaptayo.v1') || '{}').settings; if (t && t.theme && t.theme !== 'system') document.documentElement.setAttribute('data-theme', t.theme); } catch (e) {}
+</script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#/" aria-label="Usap Tayo home"><img src="icons/logo-96.png" alt=""><span>Usap Tayo</span></a>
+  <div class="navbtns">
+    <button class="iconbtn" id="navBack" title="Back (Alt+←)" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button class="iconbtn" id="navFwd" title="Forward (Alt+→)" aria-label="Forward"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+  </div>
+  <div class="searchwrap">
+    <input id="gsearch" type="search" placeholder="Search words, phrases, lessons…" autocomplete="off" aria-label="Search everything" aria-controls="gsuggest">
+    <svg class="sicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <div class="suggest" id="gsuggest" role="listbox" hidden></div>
+  </div>
+  <button class="iconbtn" id="themeBtn" title="Switch light/dark mode" aria-label="Switch light/dark mode"></button>
+</header>
+
+<div class="shell">
+  <nav class="rail" id="rail" aria-label="Sections"></nav>
+  <main id="main" tabindex="-1"><div class="page" id="view"></div>
+    <footer class="attrib" id="attrib"></footer>
+  </main>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Main"></nav>
+
+<script src="js/data/dict-core.js"></script>
+<script src="js/data/dict-everyday.js"></script>
+<script src="js/data/dict-clinical.js"></script>
+<script src="js/data/dict-more.js"></script>
+<script src="js/data/verbs.js"></script>
+<script src="js/data/lessons.js"></script>
+<script src="js/data/reading.js"></script>
+<script src="js/data/dialogues.js"></script>
+<script src="js/data/psych-phrases.js"></script>
+<script src="js/data/psych-cases.js"></script>
+<script src="js/data/meta.js"></script>
+<script src="js/conjugate.js"></script>
+<script src="js/core.js"></script>
+<script src="js/views.js"></script>
+<script src="js/psych-views.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

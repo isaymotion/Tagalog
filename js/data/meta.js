@@ -1,0 +1,56 @@
+/* App metadata, attribution, What's New, and placement test. */
+window.APP_META = {
+  name: 'Usap Tayo',
+  tagline: 'Tagalog for clinicians',
+  version: '1.0.0',
+  updated: 'October 2026',
+  author: 'Isabella Navarro, MD',
+  email: 'isaymotion@gmail.com',
+  attribution: 'App created by Isabella Navarro, MD. Latest version October 2026. isaymotion@gmail.com'
+};
+
+/* Newest first. type: new | improved | fixed | content */
+window.WHATS_NEW = [
+  {
+    version: '1.0.0', date: 'October 2026', title: 'First release',
+    items: [
+      ['new', 'Psychiatry Tagalog track: 26 sections and 315 phrases from opening and consent to MSE, risk, management, children, and elderly patients. Every phrase comes in a respectful (po) form and an everyday form.'],
+      ['new', 'Hallucination and delusion screening phrases, including spirit and folk-belief questions ("Nakakakita ka ba ng mga anino o maligno?", "May bumubulong ba sa iyo?").'],
+      ['new', 'Five interactive case simulations: first-episode psychosis, depression with suicide risk, mania, delirium, and alcohol withdrawal.'],
+      ['new', 'Patient-response interpretation drill with clinical significance for each line.'],
+      ['new', 'English–Filipino and Filipino–English dictionary (about 1,650 entries) with root-word search (type "kinakain" to find "kain").'],
+      ['new', 'Universal search across the dictionary, lessons, reading, dialogues, and psychiatry phrases.'],
+      ['new', 'Spaced-repetition flashcards with decks by topic, a psychiatry deck, and an automatic mistakes deck.'],
+      ['new', 'Verb aspect and affix trainer covering -um-, mag-, ma-, -in, i-, and -an.'],
+      ['new', 'Grammar and culture lessons: markers, focus, aspect, particles, po/opo, numbers and time, Taglish, hiya, utang na loob, folk beliefs, and idioms of distress.'],
+      ['new', 'Graded reading passages with glossaries and comprehension questions.'],
+      ['new', 'Speaking drills with text-to-speech, speech recognition (where the browser supports it), and record-and-compare.'],
+      ['new', 'Placement test, levels, streaks, progress stats, and backup export/import.'],
+      ['new', 'Dark and light mode, back and forward buttons, offline support, and install-to-home-screen.']
+    ]
+  }
+];
+
+/* Placement test: [level, question, options, correctIndex] */
+window.PLACEMENT = [
+  ['A1', '"Salamat po" means:', ['Good morning', 'Thank you (polite)', 'Goodbye'], 1],
+  ['A1', '"Ilang taon ka na?" asks about your:', ['name', 'age', 'job'], 1],
+  ['A1', 'Which is "I"?', ['ako', 'ikaw', 'siya'], 0],
+  ['A1', '"Masakit ang ulo ko" means:', ['My head hurts', 'I\'m hungry', 'I\'m sleepy'], 0],
+  ['A1', 'Choose the marker: "Pumunta ako ___ ospital."', ['ang', 'ng', 'sa'], 2],
+  ['A2', '"Kumain ka na ba?" means:', ['Will you eat?', 'Have you eaten?', 'Are you eating?'], 1],
+  ['A2', 'Incompleted (ongoing) form of "inom" (-um-):', ['uminom', 'umiinom', 'iinom'], 1],
+  ['A2', '"We" including the listener:', ['kami', 'tayo', 'sila'], 1],
+  ['A2', '"Alas-tres" is:', ['3 o\'clock', '3 pesos', '3 days'], 0],
+  ['A2', '"Wala akong gana" means:', ['I have no appetite/drive', 'I have no money', 'I am not here'], 0],
+  ['B1', '"Hindi na siya umiinom ng gamot" means:', ['He hasn\'t taken it yet', 'He no longer takes his medicine', 'He will take it'], 1],
+  ['B1', '"Ano ang sinabi ng boses?" uses which focus?', ['actor', 'object', 'locative'], 1],
+  ['B1', '"May naririnig daw siyang boses" — "daw" tells you:', ['he denies it', 'it\'s reported by someone', 'it happened long ago'], 1],
+  ['B1', 'Correct particle order: "Have you eaten already?"', ['Kumain ka na ba?', 'Kumain na ka ba?', 'Kumain ba na ka?'], 0],
+  ['B1', '"Hiya" best translates as:', ['joy', 'shame/propriety', 'anger'], 1],
+  ['B2', '"Kapag may tiyaga, may nilaga" means:', ['Patience leads to reward', 'Eat stew when sad', 'Be quick'], 0],
+  ['B2', '"Sinasaniban siya" most likely means:', ['He is being possessed', 'He is being fed', 'He is sleeping'], 0],
+  ['B2', 'Contemplated, object focus of "kuha":', ['kinuha', 'kukunin', 'kumukuha'], 1],
+  ['B2', '"Pabigat lang ako sa pamilya ko" signals:', ['gratitude', 'perceived burdensomeness', 'boredom'], 1],
+  ['B2', '"Ipinagluto ko siya" means:', ['I cooked him', 'I cooked for him', 'He cooked for me'], 1]
+];
