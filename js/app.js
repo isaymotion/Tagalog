@@ -26,6 +26,8 @@
     [/^\/psych\/cases$/, V.psychCases, 'psych'],
     [/^\/psych\/case\/(?<id>[\w-]+)$/, V.psychCase, 'psych'],
     [/^\/psych\/interp$/, V.psychInterp, 'psych'],
+    [/^\/psych\/handout$/, V.handout, 'psych'],
+    [/^\/psych\/handout$/, V.handout, 'psych'],
     [/^\/placement$/, V.placement, 'placement'],
     [/^\/progress$/, V.progress, 'progress'],
     [/^\/settings$/, V.settings, 'settings'],

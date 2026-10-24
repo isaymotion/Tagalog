@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '1.0.0',
+  version: '1.1.0',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -11,6 +11,19 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '1.1.0', date: 'October 2026', title: 'Printable psychiatry handouts',
+    items: [
+      ['new', 'Handout generator (Psychiatry → Printable handout): download a PDF or print the psychiatric interview flow and the MSE.'],
+      ['new', 'English translation can be shown, hidden for practice, or moved to an answer key at the end.'],
+      ['new', 'Five starting points: Full interview + MSE, MSE only, Risk assessment, Pocket booklet (A5), and Complete reference.'],
+      ['new', 'Interview flow overview with numbered steps and "go to risk assessment now" branch points.'],
+      ['new', 'MSE table: what to assess, Tagalog prompts, and plain Tagalog descriptions families use; optional blank MSE write-up form.'],
+      ['new', 'Choose respectful, everyday, or both registers; A4, Letter, or A5; three text sizes; tips and likely patient answers on or off.'],
+      ['improved', 'Each psychiatry section has a "Handout of this section" button.'],
+      ['improved', 'PDFs work offline once the app has been opened online.']
+    ]
+  },
   {
     version: '1.0.0', date: 'October 2026', title: 'First release',
     items: [

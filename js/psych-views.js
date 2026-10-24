@@ -17,6 +17,7 @@
       '<div class="grid">' +
       '<a class="tile" href="#/psych/cases"><span class="eyebrow">Simulate</span><h3>Case simulations</h3><p>' + PSYCH_CASES.length + ' interactive interviews with feedback and an MSE summary.</p></a>' +
       '<a class="tile" href="#/psych/interp"><span class="eyebrow">Listen</span><h3>What is the patient saying?</h3><p>' + PSYCH_INTERP.length + ' patient and family lines to interpret, with clinical significance.</p></a>' +
+      '<a class="tile" href="#/psych/handout"><span class="eyebrow">Print</span><h3>Printable handout</h3><p>Interview flow and MSE as a PDF, with or without English.</p></a>' +
       '<a class="tile" href="#/flash/psych"><span class="eyebrow">Memorize</span><h3>Psychiatry flashcards</h3><p>All phrases with spaced repetition.</p></a>' +
       '<a class="tile" href="#/lessons/idioms-distress"><span class="eyebrow">Culture</span><h3>Idioms of distress</h3><p>Mabigat ang dibdib, nerbiyos, tulala, and more.</p></a></div>' +
       Object.entries(groups).map(([g, ss]) => '<h2 style="margin-top:20px">' + esc(g) + '</h2><div class="grid">' + ss.map((s) =>
@@ -65,7 +66,7 @@
     el.innerHTML = crumb([['Psychiatry', '#/psych'], [s.title]]) + '<span class="eyebrow">' + esc(s.group) + '</span><h1>' + esc(s.title) + '</h1><p class="muted">' + esc(s.intro) + '</p>' +
       '<div class="spread" style="margin-bottom:12px"><div class="seg" role="group" aria-label="Mode">' +
       [['study', 'Study'], ['recall', 'Recall'], ['quiz', 'Quiz EN→TL'], ['reverse', 'Quiz TL→EN']].map(([k, t]) => '<button data-m="' + k + '" class="' + (mode === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div>' +
-      '<button class="btn sm" id="addall">' + icons.plus + ' Add all to flashcards</button></div>' +
+      '<div class="row"><a class="btn sm" href="#/psych/handout?s=' + s.id + '">Handout of this section</a><button class="btn sm" id="addall">' + icons.plus + ' Add all to flashcards</button></div></div>' +
       '<p class="muted small" id="modehelp">Recall hides the Tagalog: say it aloud from the English, then tap to check.</p>' +
       '<div id="pbody"></div>' +
       '<div class="spread" style="margin-top:16px">' + (prev ? '<a class="btn" href="#/psych/s/' + prev.id + '">← ' + esc(prev.title) + '</a>' : '<span></span>') + (next ? '<a class="btn" href="#/psych/s/' + next.id + '">' + esc(next.title) + ' →</a>' : '') + '</div>';

@@ -12,6 +12,7 @@
 |---|---|
 | **Psychiatry Tagalog** | 26 sections (315 phrases) covering opening and consent, HPI, depression, mania, anxiety/OCD, trauma, hallucinations, delusions, suicide and violence risk, de-escalation, substances, history, collateral, MSE (cognition, abstraction, observations), explaining diagnosis, medication side effects, admission, children, elderly patients, and closing. Each phrase has a respectful (*po*) form and an everyday/Taglish form. |
 | **Case simulations** | 5 interactive interviews (first-episode psychosis, depression with suicide risk, mania, delirium, alcohol withdrawal) with feedback and an MSE summary. |
+| **Printable handout** | PDF or print of the interview flow and MSE. English can be shown, hidden, or moved to an answer key. Presets: Full interview + MSE, MSE only, Risk assessment, Pocket booklet (A5), Complete reference. Works offline. |
 | **Interpretation drill** | 28 patient and family statements with meaning and clinical significance. |
 | **Dictionary** | About 1,650 entries, English → Filipino and Filipino → English, with root-word search (`kinakain` finds `kain`, `binubulungan` finds `bulong`). |
 | **Universal search** | One search bar (press `/`) across words, phrases, lessons, readings, dialogues, cases, and verbs. |
@@ -45,6 +46,7 @@ All content lives in plain JavaScript files under `js/data/`. No build step.
 - **Dictionary words**: add a line to any `dict-*.js` file in the form `tagalog|english|pos|category|root|note`.
 - **Psychiatry phrases**: add `{ en, f, c, n }` objects to a section in `psych-phrases.js` (`f` = respectful form, `c` = everyday form, `n` = note).
 - **Cases and interpretation items**: `psych-cases.js`.
+- **Handout order and MSE table**: `psych-flow.js` (interview steps, key phrases for pocket cards, MSE domains).
 - **Lessons, readings, dialogues, verbs**: `lessons.js`, `reading.js`, `dialogues.js`, `verbs.js`.
 - **What's New**: add a new entry at the top of `WHATS_NEW` in `meta.js`, and update `version` and `updated` in `APP_META`.
 
@@ -68,6 +70,8 @@ js/core.js              Storage, dictionary index, root-word stemmer, search, sp
 js/conjugate.js         Verb conjugation engine
 js/views.js             Main pages
 js/psych-views.js       Psychiatry pages
+js/handout.js           Printable handout / PDF generator
+js/vendor/              pdfmake (PDF library, MIT license)
 js/app.js               Routing, navigation, theme, search bar
 js/data/                All content
 ```
