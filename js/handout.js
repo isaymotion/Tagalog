@@ -8,11 +8,11 @@
 
   const ALL_STEPS = () => PSYCH_FLOW.concat(PSYCH_FLOW_EXTRA);
   const PRESETS = {
-    full: { label: 'Full interview + MSE', desc: 'The whole interview in order, key phrases, MSE table, and idioms.', o: { steps: PSYCH_FLOW.map((s) => s.id), depth: 'key', overview: true, mse: true, idioms: true, form: false, paper: 'A4', size: 'normal' } },
-    mse: { label: 'MSE only', desc: 'All MSE prompts, observation vocabulary, and a blank write-up form.', o: { steps: ['mse'], depth: 'all', overview: false, mse: true, idioms: false, form: true, paper: 'A4', size: 'normal' } },
-    risk: { label: 'Risk assessment', desc: 'Suicide, violence, and de-escalation, every phrase.', o: { steps: ['suicide', 'violence', 'deesc'], depth: 'all', overview: false, mse: false, idioms: false, form: false, paper: 'A4', size: 'normal' } },
-    pocket: { label: 'Pocket booklet', desc: 'A5 pages, small type, key phrases only. Fold or staple for the white coat.', o: { steps: PSYCH_FLOW.map((s) => s.id), depth: 'key', overview: true, mse: true, idioms: false, form: false, paper: 'A5', size: 'small', notes: false } },
-    everything: { label: 'Complete reference', desc: 'Every section and every phrase, including special populations.', o: { steps: ALL_STEPS().map((s) => s.id), depth: 'all', overview: true, mse: true, idioms: true, form: true, paper: 'A4', size: 'normal' } }
+    full: { label: 'Full interview + MSE', desc: 'The whole interview in order, key phrases, MSE table, and idioms.', o: { steps: PSYCH_FLOW.map((s) => s.id), depth: 'key', overview: true, mse: true, idioms: true, form: false, deescList: false, paper: 'A4', size: 'normal' } },
+    mse: { label: 'MSE only', desc: 'All MSE prompts, observation vocabulary, and a blank write-up form.', o: { steps: ['mse'], depth: 'all', overview: false, mse: true, idioms: false, form: true, deescList: false, paper: 'A4', size: 'normal' } },
+    risk: { label: 'Risk assessment', desc: 'Suicide, violence, and de-escalation phrases, plus the de-escalation checklist.', o: { steps: ['suicide', 'violence', 'deesc'], depth: 'all', overview: false, mse: false, idioms: false, form: false, deescList: true, paper: 'A4', size: 'normal' } },
+    pocket: { label: 'Pocket booklet', desc: 'A5 pages, small type, key phrases only. Fold or staple for the white coat.', o: { steps: PSYCH_FLOW.map((s) => s.id), depth: 'key', overview: true, mse: true, idioms: false, form: false, deescList: false, paper: 'A5', size: 'small', notes: false } },
+    everything: { label: 'Complete reference', desc: 'Every section and every phrase, including special populations and the de-escalation checklist.', o: { steps: ALL_STEPS().map((s) => s.id), depth: 'all', overview: true, mse: true, idioms: true, form: true, deescList: true, paper: 'A4', size: 'normal' } }
   };
   const DEFAULTS = { preset: 'full', english: 'show', register: 'f', notes: true, answers: false, title: 'Psychiatric Interview in Tagalog', preparedFor: '' };
 
@@ -59,7 +59,10 @@
     return {
       title: o.title || DEFAULTS.title, preparedFor: o.preparedFor, date: new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' }),
       overview: o.overview ? (flowOrder.length ? flowOrder : steps).map((s) => ({ n: body.find((b) => b.id === s.id).n, title: s.title, goal: s.goal, branch: s.branch || '' })) : null,
-      body, mse, idioms: o.idioms ? idiomRows() : null, form: o.form, key: o.english === 'key' ? key : null, o
+      body, mse, idioms: o.idioms ? idiomRows() : null, form: o.form, deesc: o.deescList && window.PSYCH_DEESC ? {
+        behaviors: PSYCH_DEESC.behaviors, escalation: PSYCH_DEESC.escalation,
+        steps: PSYCH_DEESC.steps.map((st, i) => ({ n: i + 1, en: st.en, tip: o.notes ? st.tip : '', say: st.say.map(ref).filter(Boolean).map((p) => phraseModel(p, o)) }))
+      } : null, key: o.english === 'key' ? key : null, o
     };
   }
 
@@ -88,6 +91,15 @@
     if (m.idioms && m.idioms.length) {
       h += '<section class="ho-sec"><h2>Idioms of distress</h2><div class="ho-tw"><table><tr><th>Patient says</th>' + (showEn ? '<th>Literally</th>' : '') + '<th>May indicate</th></tr>' +
         m.idioms.map((r) => '<tr><td><b>' + esc(r[0]) + '</b></td>' + (showEn ? '<td>' + esc(r[1]) + '</td>' : '') + '<td>' + esc(r[2]) + '</td></tr>').join('') + '</table></div></section>';
+    }
+    if (m.deesc) {
+      const d = m.deesc;
+      h += '<section class="ho-sec"><h2>De-escalation checklist</h2><p class="ho-goal">Patient: ____________________ Age: _____ Sex: _____ Ward: ________</p>' +
+        '<p class="ho-goal"><b>Tick the behavior presented by the patient.</b></p><div class="ho-beh">' + d.behaviors.map((b) => '<div><span class="ho-box"></span><b>' + esc(b.en) + '</b>' + (showEn ? '' : '') + '<small>' + esc(b.tl) + '</small></div>').join('') + '</div>' +
+        '<div class="ho-steps">' + d.steps.map((st) => '<div class="ho-step"><span class="ho-box"></span><div><b>' + st.n + '. ' + esc(st.en) + '</b>' + (st.tip ? '<small>' + esc(st.tip) + '</small>' : '') +
+          st.say.map((p) => '<div class="ho-say"><b>' + esc(p.tl) + '</b>' + (p.alt ? ' <i>' + esc(p.alt) + '</i>' : '') + (showEn ? '<span> ' + esc(p.en) + '</span>' : '') + '</div>').join('') + '</div></div>').join('') + '</div>' +
+        '<p class="ho-branch">If de-escalation fails, NAOD refers to NOD for further intervention. Notify POD at all times. (' + d.escalation.map((e) => e[0] + ' = ' + e[1]).join('; ') + ')</p>' +
+        '<p class="ho-goal">Remarks: ☐ Successful ☐ Partly successful ☐ Not successful, escalated ________________________</p><p class="ho-goal">NAOD: ______________ NOD: ______________ POD notified: ☐ Date/shift/time: ______________</p></section>';
     }
     if (m.form) {
       h += '<section class="ho-sec"><h2>MSE write-up</h2><p class="ho-goal">Patient: ____________________ Date: __________ Language used: __________</p><div class="ho-tw"><table class="ho-form">' +
@@ -178,6 +190,26 @@
       const head = (showEn ? ['Patient says', 'Literally', 'May indicate'] : ['Patient says', 'May indicate']).map((t) => ({ text: t, bold: true, color: MUTED, fontSize: base - 1.5 }));
       content.push({ table: { headerRows: 1, dontBreakRows: true, widths: showEn ? ['32%', '28%', '*'] : ['40%', '*'], body: [head].concat(m.idioms.map((r) => cols.map((c, i) => ({ text: r[c], bold: i === 0 })))) }, layout, fontSize: base - 0.5 });
     }
+    if (m.deesc) {
+      const d = m.deesc;
+      const box = () => ({ width: 10, table: { widths: [6], heights: [6], body: [[{ text: '', fontSize: 1 }]] }, layout: { hLineWidth: () => 0.7, vLineWidth: () => 0.7, hLineColor: () => '#333a52', vLineColor: () => '#333a52', paddingTop: () => 0, paddingBottom: () => 0, paddingLeft: () => 0, paddingRight: () => 0 }, margin: [0, 2, 0, 0] });
+      const boxed = (stack) => ({ columns: [box(), { stack, width: '*' }], columnGap: 6, margin: [0, 0, 0, 4] });
+      const inline = (t) => ({ columns: [box(), { text: t, width: 'auto' }], columnGap: 4, width: 'auto' });
+      content.push(Object.assign(heading(null, 'De-escalation checklist'), { pageBreak: m.body.length || m.overview ? 'before' : undefined }));
+      content.push({ text: 'Patient: ______________________   Age: ______   Sex: ______   Ward: __________', margin: [0, 2, 0, 6] });
+      content.push({ text: 'Tick the behavior presented by the patient.', bold: true, margin: [0, 0, 0, 4] });
+      const per = Math.ceil(d.behaviors.length / 3);
+      content.push({ columns: [0, 1, 2].map((c) => ({ stack: d.behaviors.slice(c * per, (c + 1) * per).map((b) => boxed([{ text: b.en, bold: true, fontSize: base - 0.5 }, { text: b.tl, color: MUTED, fontSize: base - 1.5, italics: true }])) })), columnGap: 10, margin: [0, 0, 0, 6] });
+      d.steps.forEach((st) => {
+        const stack = [{ text: st.n + '. ' + st.en, bold: true }];
+        if (st.tip) stack.push({ text: st.tip, color: MUTED, fontSize: base - 1.5 });
+        st.say.forEach((p) => stack.push({ text: [{ text: '“' + p.tl + '”', color: NAVY }].concat(p.alt ? [{ text: '  ' + p.alt, italics: true, color: MUTED }] : []).concat(showEn ? [{ text: '  ' + p.en, color: MUTED, fontSize: base - 1.5 }] : []), margin: [8, 1, 0, 0] }));
+        content.push(Object.assign(boxed(stack), { unbreakable: true }));
+      });
+      content.push({ table: { widths: ['*'], body: [[{ text: [{ text: 'If de-escalation fails, NAOD refers to NOD for further intervention. Notify POD at all times.', bold: true }, { text: '\n' + d.escalation.map((e) => e[0] + ' = ' + e[1]).join(';   '), color: MUTED, fontSize: base - 1.5 }], fillColor: '#fdf1dc' }]] }, layout: { hLineWidth: () => 0, vLineWidth: () => 0, paddingTop: () => 5, paddingBottom: () => 5, paddingLeft: () => 8 }, margin: [0, 6, 0, 8] });
+      content.push({ columns: [{ text: 'Remarks:', bold: true, width: 'auto' }, inline('Successful'), inline('Partly successful'), inline('Not successful, escalated'), { text: '________________', width: '*' }], columnGap: 12, margin: [0, 0, 0, 14] });
+      content.push({ columns: [{ text: '______________________\nNursing Attendant on Duty', alignment: 'center', fontSize: base - 1 }, { text: '______________________\nNurse on Duty', alignment: 'center', fontSize: base - 1 }, { text: '______________________\nPOD notified (date/shift/time)', alignment: 'center', fontSize: base - 1 }], unbreakable: true });
+    }
     if (m.form) {
       content.push(Object.assign(heading(null, 'MSE write-up'), { pageBreak: 'before' }));
       content.push({ text: 'Patient: ______________________   Date: ____________   Language used: ____________', margin: [0, 2, 0, 6] });
@@ -205,6 +237,7 @@
   /* ---------- Page ---------- */
   V.handout = (el, p, q) => {
     let o = opts();
+    if (q.deesc) o = Object.assign({}, o, { preset: 'custom', steps: [], deescList: true, overview: false, mse: false, idioms: false, form: false, title: 'De-escalation Checklist' });
     if (q.s) { // came from a section page: start with just that section
       const st = ALL_STEPS().find((x) => x.sections.includes(q.s));
       if (st) o = Object.assign({}, o, { preset: 'custom', steps: [st.id], depth: 'all', overview: false, mse: q.s.startsWith('mse'), idioms: false, form: false });
@@ -223,7 +256,7 @@
         '<div><div class="eyebrow">Paper</div>' + seg('paper', [['A4', 'A4'], ['LETTER', 'Letter'], ['A5', 'A5 booklet']]) + '</div>' +
         '<div><div class="eyebrow">Text size</div>' + seg('size', [['small', 'Small'], ['normal', 'Normal'], ['large', 'Large']]) + '</div>' +
         '</div>' +
-        '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('overview', 'Interview flow overview') + chk('mse', 'MSE table') + chk('idioms', 'Idioms of distress') + chk('form', 'Blank MSE write-up form') + chk('notes', 'Clinician tips and notes') + chk('answers', 'Likely patient answers') + '</div></div>' +
+        '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('overview', 'Interview flow overview') + chk('mse', 'MSE table') + chk('idioms', 'Idioms of distress') + chk('form', 'Blank MSE write-up form') + chk('deescList', 'De-escalation checklist') + chk('notes', 'Clinician tips and notes') + chk('answers', 'Likely patient answers') + '</div></div>' +
         '<details' + (o.preset === 'custom' ? ' open' : '') + '><summary><b>Sections</b> <span class="muted small">(' + o.steps.length + ' selected)</span></summary><div class="ho-chks" style="margin-top:8px">' +
         '<div class="small muted" style="grid-column:1/-1">Interview flow, in order</div>' + PSYCH_FLOW.map((s, i) => '<label class="ho-chk"><input type="checkbox" data-step="' + s.id + '"' + (o.steps.includes(s.id) ? ' checked' : '') + '> <span>' + (i + 1) + '. ' + esc(s.title) + '</span></label>').join('') +
         '<div class="small muted" style="grid-column:1/-1;margin-top:6px">Add-ons</div>' + PSYCH_FLOW_EXTRA.map((s) => '<label class="ho-chk"><input type="checkbox" data-step="' + s.id + '"' + (o.steps.includes(s.id) ? ' checked' : '') + '> <span>' + esc(s.title) + '</span></label>').join('') +
@@ -236,12 +269,12 @@
     };
     const preview = () => {
       const paper = el.querySelector('#hoPaper');
-      if (!o.steps.length && !o.mse) { paper.innerHTML = '<p class="muted">Choose at least one section or the MSE table.</p>'; return; }
+      if (!o.steps.length && !o.mse && !o.deescList) { paper.innerHTML = '<p class="muted">Choose at least one section or the MSE table.</p>'; return; }
       paper.innerHTML = renderHTML(build(o));
     };
     const update = (patch, redraw) => { o = Object.assign({}, o, patch); saveOpts(o); if (redraw) draw(); else preview(); };
     const bind = () => {
-      el.querySelectorAll('[data-preset]').forEach((b) => (b.onclick = () => update(Object.assign({ notes: true }, PRESETS[b.dataset.preset].o, { preset: b.dataset.preset }), true)));
+      el.querySelectorAll('[data-preset]').forEach((b) => (b.onclick = () => update(Object.assign({ notes: true }, PRESETS[b.dataset.preset].o, { preset: b.dataset.preset }, o.title === 'De-escalation Checklist' ? { title: DEFAULTS.title } : {}), true)));
       el.querySelectorAll('[data-seg]').forEach((b) => (b.onclick = () => {
         el.querySelectorAll('[data-seg="' + b.dataset.seg + '"]').forEach((x) => x.classList.toggle('on', x === b));
         const patch = { [b.dataset.seg]: b.dataset.v };
@@ -261,7 +294,7 @@
       el.querySelector('#hoPrint').onclick = () => window.print();
       el.querySelector('#hoPdf').onclick = async () => {
         const stat = el.querySelector('#hoStat'), btn = el.querySelector('#hoPdf');
-        if (!o.steps.length && !o.mse) { App.toast('Choose at least one section first.'); return; }
+        if (!o.steps.length && !o.mse && !o.deescList) { App.toast('Choose at least one section first.'); return; }
         btn.disabled = true; stat.textContent = 'Making your PDF…';
         try {
           await loadPdfMake();

@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '1.1.0',
+  version: '1.2.0',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -11,6 +11,17 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '1.2.0', date: 'October 2026', title: 'De-escalation checklist',
+    items: [
+      ['new', 'De-escalation checklist (Psychiatry → De-escalation checklist): tick the behaviors observed, work through the 12 steps, and record the outcome.'],
+      ['new', 'Every step has Tagalog phrases to say aloud, in respectful and everyday forms, with tips such as keeping two arms\' length and an open exit.'],
+      ['new', 'Escalation path built in: if de-escalation fails, the NAOD refers to the NOD, and the POD is notified at all times.'],
+      ['new', 'Copyable chart note with time, behaviors, steps done, and remarks. Nothing is saved and no patient details are asked for.'],
+      ['new', 'Printable blank checklist with Tagalog phrases in the handout generator, also included in the Risk assessment and Complete reference presets.'],
+      ['content', '17 new de-escalation phrases, also added to flashcards and search.']
+    ]
+  },
   {
     version: '1.1.0', date: 'October 2026', title: 'Printable psychiatry handouts',
     items: [

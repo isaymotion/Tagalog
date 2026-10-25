@@ -184,7 +184,7 @@
   });
   (window.PSYCH_CASES || []).forEach((c) => push('Case', c.title, c.setting, '', '#/psych/case/' + c.id));
   (window.VERBS || []).forEach((v) => push('Verb', v.r, v.en, (v.ex || ''), '#/verbs/' + v.r));
-  [['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp']]
+  [['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp'], ['De-escalation checklist', '#/psych/deesc'], ['Printable handout', '#/psych/handout']]
     .forEach(([t, r]) => push('Page', t, '', '', r));
   App.searchAll = (q, limit) => {
     const nq = norm(q);

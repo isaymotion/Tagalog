@@ -367,3 +367,31 @@ details summary { cursor: pointer; }
   .ho-paper { border: 0; box-shadow: none; max-width: none; padding: 0; }
   .ho-paper h2, .ho-flow .ho-n, .ho-flow li { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+/* ---------- De-escalation checklist ---------- */
+.dz-beh { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); }
+.dz-chip { text-align: left; display: grid; gap: 2px; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; }
+.dz-chip span { color: var(--muted); font-size: .9rem; }
+.dz-chip.on { border-color: var(--bad); background: var(--bad-bg); }
+.dz-step { display: grid; gap: 10px; }
+.dz-step.done { border-color: var(--good); }
+.dz-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: start; }
+.dz-box { width: 30px; height: 30px; border-radius: 8px; border: 2px solid var(--line); background: var(--surface); color: var(--good); display: grid; place-items: center; cursor: pointer; padding: 0; }
+.dz-step.done .dz-box { border-color: var(--good); background: var(--good-bg); }
+.dz-box svg { width: 18px; height: 18px; }
+.dz-n { font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
+.dz-en { font-weight: 600; }
+.dz-say { display: grid; gap: 6px; padding-left: 42px; }
+.dz-line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: start; padding: 8px 10px; background: var(--surface-2); border-radius: 10px; }
+.dz-tl { font-size: 1.08rem; }
+.dz-esc { display: grid; gap: 4px; justify-items: start; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); }
+.dz-esc span { color: var(--warn); padding-left: 6px; }
+@media (max-width: 480px) { .dz-say { padding-left: 0; } }
+.ho-box { display: inline-block; width: .85em; height: .85em; border: 1px solid #333a52; margin-right: 6px; vertical-align: -1px; flex: none; }
+.ho-beh { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 12px; margin-bottom: 8px; }
+.ho-beh small { display: block; color: var(--p-muted); font-style: italic; margin-left: 1.2em; }
+.ho-step { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px; padding: 4px 0; border-top: 1px solid var(--p-line); break-inside: avoid; }
+.ho-step small { display: block; color: var(--p-muted); }
+.ho-say { margin-left: .6em; color: var(--p-navy); }
+.ho-say span { color: var(--p-muted); font-size: .9em; }
+@media (max-width: 520px) { .ho-beh { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
