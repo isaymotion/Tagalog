@@ -2,17 +2,28 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '1.4.0',
+  version: '1.5.0',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
   // Institution whose nursing de-escalation checklist the app's checklist follows.
-  institution: { name: 'Mariveles Mental Wellness and General Hospital', address: 'P. Monroe Street Poblacion, Mariveles, Bataan, Philippines 2105', short: 'MMWGH', deescForm: 'MMH-NUR-04-112-01' },
+  institution: { name: 'Mariveles Mental Wellness and General Hospital', address: 'P. Monroe Street Poblacion, Mariveles, Bataan, Philippines 2105', short: 'MMWGH', deescForm: 'MMH-NUR-04-112-01', dischargeForm: 'MMH-MED-04-04-02' },
   attribution: 'App created by Isabella Navarro, MD. Latest version October 2026. isaymotion@gmail.com'
 };
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '1.5.0', date: 'October 2026', title: 'Discharge assessment',
+    items: [
+      ['new', 'Discharge assessment (Psychiatry → Discharge assessment): go through each field of the hospital Discharge Summary form (MMH-MED-04-04-02) one at a time.'],
+      ['new', 'Each field shows what to assess, the Tagalog questions to ask (with audio), likely patient answers, and standard wording to tap into your documentation.'],
+      ['new', 'Summary in the form\'s layout, ready to copy, with safety flags for suicidal or homicidal ideas, persisting delusions, poor insight, and empty fields.'],
+      ['new', 'Insight graded on the 1–6 scale, the patient\'s own words for mood, and teach-back for discharge medications.'],
+      ['new', 'Printable discharge summary interview guide in the handout generator.'],
+      ['content', '53 new discharge questions, also in flashcards, search, and the audio pack.']
+    ]
+  },
   {
     version: '1.4.0', date: 'October 2026', title: 'Natural Filipino audio',
     items: [

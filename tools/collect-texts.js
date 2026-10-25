@@ -10,7 +10,7 @@ ctx.window = ctx;
 vm.createContext(ctx);
 const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
 ['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/verbs.js', 'js/data/lessons.js',
- 'js/data/reading.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js',
+ 'js/data/reading.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js',
  'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js'].forEach(load);
 
 const out = new Map();
