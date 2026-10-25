@@ -1,0 +1,89 @@
+{
+ "finished": "2026-10-25T06:57:26+00:00",
+ "attempted": 3054,
+ "have": 3020,
+ "wanted": 3054,
+ "seconds": 1739,
+ "sample_errors": [
+  {
+   "text": "tigil",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "niluto",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "alas-tres",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "naglayas",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "Maligayang Pasko",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "tinatanong",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "delikado",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "Puwede po bang isandaan na lang?",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "hindi po",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "pumasok",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "May ginawa ka bang delikado na hindi mo usually ginagawa?",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "mabigat ang loob",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "anak sa labas",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "adik",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "humihinga",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "pumupunta",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "Ano ang makakatulong sa susunod?",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "bangko",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "kapatid",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "Nakikiramay po ako. Kumusta po ang tulog at pagkain ninyo mula noon?",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  }
+ ]
+}
