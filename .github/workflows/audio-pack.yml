@@ -19,7 +19,7 @@ on:
         default: false
   push:
     branches: [main]
-    paths: ['js/data/**', 'js/conjugate.js', 'tools/**']
+    paths: ['js/data/**', 'js/conjugate.js', 'tools/**', '.github/workflows/audio-pack.yml']
 
 permissions:
   contents: write
@@ -33,10 +33,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with: { node-version: 20 }
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with: { python-version: '3.12' }
       - name: Install voice tool
         run: pip install edge-tts==7.0.2
@@ -45,8 +45,8 @@ jobs:
       - name: Record audio
         run: |
           python tools/make_audio_pack.py \
-            --voice "${{ inputs.voice || 'fil-PH-BlessicaNeural' }}" \
-            --rate "${{ inputs.rate || '-5%' }}" \
+            --voice="${{ inputs.voice || 'fil-PH-BlessicaNeural' }}" \
+            --rate="${{ inputs.rate || '-5%' }}" \
             ${{ inputs.rebuild && '--rebuild' || '' }}
       - name: Commit audio pack
         run: |
