@@ -300,7 +300,7 @@
   App.canSpeak = !!synth;
   App.pack = { keys: new Set(), info: null, ready: false };
   App.loadAudioPack = () => fetch('audio/manifest.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).then((m) => {
-    if (m && Array.isArray(m.keys)) { App.pack.keys = new Set(m.keys); App.pack.info = m; }
+    if (m && Array.isArray(m.keys) && m.keys.length) { App.pack.keys = new Set(m.keys); App.pack.info = m; }
   }).catch(() => {}).finally(() => { App.pack.ready = true; });
   App.hasClip = (text) => state.settings.voiceSource !== 'device' && App.pack.keys.has(AudioKey(text));
   let current = null; // { audio } or { utter }

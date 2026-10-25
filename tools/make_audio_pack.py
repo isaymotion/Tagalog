@@ -35,24 +35,36 @@ def speakable(text):
     t = t.replace('(', ', ').replace(')', ', ')
     return t
 
-async def gen_edge(items, voice, rate, workers):
+ERRORS = []
+
+async def gen_edge(items, voice, rate, workers, deadline):
     import edge_tts
     sem = asyncio.Semaphore(workers)
     done = 0
+    ok = 0
     async def one(key, text):
         nonlocal done
         out = os.path.join(AUDIO, key + '.mp3')
+        nonlocal ok
         async with sem:
-            for attempt in range(5):
+            if time.time() > deadline:
+                return
+            # Stop early if the voice service is clearly not working, instead of burning the whole job.
+            if done >= 40 and ok == 0:
+                return
+            for attempt in range(4):
                 try:
-                    await edge_tts.Communicate(speakable(text), voice, rate=rate).save(out + '.part')
+                    await asyncio.wait_for(edge_tts.Communicate(speakable(text), voice, rate=rate).save(out + '.part'), timeout=45)
                     if os.path.getsize(out + '.part') < 500:
                         raise RuntimeError('empty audio')
                     os.replace(out + '.part', out)
+                    ok += 1
                     break
                 except Exception as e:  # network hiccups: back off and retry
-                    if attempt == 4:
-                        print('FAILED', key, text, e, file=sys.stderr)
+                    if attempt == 3:
+                        print('FAILED', key, text, repr(e), file=sys.stderr, flush=True)
+                        if len(ERRORS) < 20:
+                            ERRORS.append({'text': text, 'error': repr(e)[:300]})
                     await asyncio.sleep(2 + attempt * 3)
             done += 1
             if done % 100 == 0:
@@ -83,6 +95,7 @@ def main():
     ap.add_argument('--workers', type=int, default=6)
     ap.add_argument('--rebuild', action='store_true', help='regenerate every clip (e.g. after changing voice)')
     ap.add_argument('--limit', type=int, default=0, help='only generate this many (testing)')
+    ap.add_argument('--max-minutes', type=float, default=50, help='stop recording after this long; run again to continue')
     a = ap.parse_args()
 
     texts = json.load(open(os.path.join(ROOT, 'tools', 'texts.json'), encoding='utf-8'))
@@ -100,7 +113,7 @@ def main():
     t0 = time.time()
     if todo:
         if a.engine == 'edge':
-            asyncio.run(gen_edge(todo, a.voice, a.rate, a.workers))
+            asyncio.run(gen_edge(todo, a.voice, a.rate, a.workers, t0 + a.max_minutes * 60))
         else:
             gen_mms(todo)
     removed = 0
@@ -113,6 +126,11 @@ def main():
         'engine': a.engine, 'voice': a.voice if a.engine == 'edge' else 'mms-tts-tgl',
         'generated': datetime.now(timezone.utc).strftime('%Y-%m-%d'), 'count': len(have), 'bytes': size, 'keys': have
     }, open(manifest_path, 'w'), separators=(',', ':'))
+    for f in os.listdir(AUDIO):
+        if f.endswith('.part'):
+            os.remove(os.path.join(AUDIO, f))
+    json.dump({'finished': datetime.now(timezone.utc).isoformat(timespec='seconds'), 'attempted': len(todo), 'have': len(have), 'wanted': len(wanted),
+               'seconds': round(time.time() - t0), 'sample_errors': ERRORS}, open(os.path.join(AUDIO, 'last-run.json'), 'w'), indent=1)
     print(f'Done in {time.time() - t0:.0f}s: {len(have)}/{len(wanted)} clips, {size / 1e6:.1f} MB, removed {removed} old clips')
     if len(have) < len(wanted):
         print('Some clips failed; run again to fill the gaps.', file=sys.stderr)
