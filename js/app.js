@@ -84,6 +84,7 @@
   }
   function render() {
     App.keyHandler = null;
+    if (App.onLeave) { try { App.onLeave(); } catch (e) {} App.onLeave = null; }
     if (window.speechSynthesis) speechSynthesis.cancel();
     const { path, q } = parse();
     let hit = null;

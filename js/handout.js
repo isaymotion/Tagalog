@@ -8,12 +8,15 @@
 
   const ALL_STEPS = () => PSYCH_FLOW.concat(PSYCH_FLOW_EXTRA);
   const PRESETS = {
-    full: { label: 'Full interview + MSE', desc: 'The whole interview in order, key phrases, MSE table, and idioms.', o: { steps: PSYCH_FLOW.map((s) => s.id), depth: 'key', overview: true, mse: true, idioms: true, form: false, deescList: false, paper: 'A4', size: 'normal' } },
-    mse: { label: 'MSE only', desc: 'All MSE prompts, observation vocabulary, and a blank write-up form.', o: { steps: ['mse'], depth: 'all', overview: false, mse: true, idioms: false, form: true, deescList: false, paper: 'A4', size: 'normal' } },
-    risk: { label: 'Risk assessment', desc: 'Suicide, violence, and de-escalation phrases, plus the de-escalation checklist.', o: { steps: ['suicide', 'violence', 'deesc'], depth: 'all', overview: false, mse: false, idioms: false, form: false, deescList: true, paper: 'A4', size: 'normal' } },
-    pocket: { label: 'Pocket booklet', desc: 'A5 pages, small type, key phrases only. Fold or staple for the white coat.', o: { steps: PSYCH_FLOW.map((s) => s.id), depth: 'key', overview: true, mse: true, idioms: false, form: false, deescList: false, paper: 'A5', size: 'small', notes: false } },
-    everything: { label: 'Complete reference', desc: 'Every section and every phrase, including special populations and the de-escalation checklist.', o: { steps: ALL_STEPS().map((s) => s.id), depth: 'all', overview: true, mse: true, idioms: true, form: true, deescList: true, paper: 'A4', size: 'normal' } }
+    full: { label: 'Full interview + MSE', desc: 'The whole interview in order, key phrases, MSE table, and idioms.', o: { steps: PSYCH_FLOW.map((s) => s.id), depth: 'key', overview: true, mse: true, idioms: true, form: false, deescList: false, deescCard: false, deescAfter: false, paper: 'A4', size: 'normal' } },
+    mse: { label: 'MSE only', desc: 'All MSE prompts, observation vocabulary, and a blank write-up form.', o: { steps: ['mse'], depth: 'all', overview: false, mse: true, idioms: false, form: true, deescList: false, deescCard: false, deescAfter: false, paper: 'A4', size: 'normal' } },
+    risk: { label: 'Risk assessment', desc: 'Suicide, violence, and de-escalation phrases, plus the de-escalation checklist.', o: { steps: ['suicide', 'violence', 'deesc'], depth: 'all', overview: false, mse: false, idioms: false, form: false, deescList: true, deescCard: false, deescAfter: true, paper: 'A4', size: 'normal' } },
+    pocket: { label: 'Pocket booklet', desc: 'A5 pages, small type, key phrases only. Fold or staple for the white coat.', o: { steps: PSYCH_FLOW.map((s) => s.id), depth: 'key', overview: true, mse: true, idioms: false, form: false, deescList: false, deescCard: false, deescAfter: false, paper: 'A5', size: 'small', notes: false } },
+    deesccard: { label: 'De-escalation pocket card', desc: 'Two A6 sides: the 12 steps with one Tagalog line each, plus what to do if it fails. Print double-sided and laminate.', o: { steps: [], depth: 'key', overview: false, mse: false, idioms: false, form: false, deescList: false, deescAfter: false, deescCard: true, paper: 'A6', size: 'small' } },
+    everything: { label: 'Complete reference', desc: 'Every section and every phrase, including special populations and the de-escalation checklist.', o: { steps: ALL_STEPS().map((s) => s.id), depth: 'all', overview: true, mse: true, idioms: true, form: true, deescList: true, deescCard: false, deescAfter: true, paper: 'A4', size: 'normal' } }
   };
+  const CARD_LABELS = ['Keep two arms\' length', 'Approach calmly', 'Introduce, orient, reassure', 'Short, simple words', 'Let them talk', 'Listen and reflect', 'Agree, or agree to disagree', 'Set clear limits', 'Reassure: we\'ll help you', 'Coach to stay in control', 'Offer choices', 'Offer medication'];
+  const INST = () => (window.APP_META && APP_META.institution) || {};
   const DEFAULTS = { preset: 'full', english: 'show', register: 'f', notes: true, answers: false, title: 'Psychiatric Interview in Tagalog', preparedFor: '' };
 
   function opts() {
@@ -62,7 +65,47 @@
       body, mse, idioms: o.idioms ? idiomRows() : null, form: o.form, deesc: o.deescList && window.PSYCH_DEESC ? {
         behaviors: PSYCH_DEESC.behaviors, escalation: PSYCH_DEESC.escalation,
         steps: PSYCH_DEESC.steps.map((st, i) => ({ n: i + 1, en: st.en, tip: o.notes ? st.tip : '', say: st.say.map(ref).filter(Boolean).map((p) => phraseModel(p, o)) }))
-      } : null, key: o.english === 'key' ? key : null, o
+      } : null,
+      deescAfter: o.deescAfter && window.PSYCH_DEESC ? PSYCH_DEESC.after.map((a) => ({ title: a.title, who: a.who, points: a.points, say: a.say.map(ref).filter(Boolean).map((p) => phraseModel(p, o)) })) : null,
+      card: o.deescCard && window.PSYCH_DEESC ? {
+        steps: PSYCH_DEESC.steps.map((st, i) => ({ n: i + 1, label: CARD_LABELS[i], say: phraseModel(ref(st.say[0]), o) })),
+        behaviors: PSYCH_DEESC.behaviors.map((b) => b.en.replace(/ \(specify\).*$/, '')), escalation: PSYCH_DEESC.escalation,
+        debrief: ['deescalation:36', 'deescalation:38'].map(ref).filter(Boolean).map((p) => phraseModel(p, o))
+      } : null,
+      key: o.english === 'key' ? key : null, o
+    };
+  }
+
+  /* ---------- Pocket card (A6, two sides) ---------- */
+  function cardHTML(m) {
+    const c = m.card, showEn = m.o.english === 'show';
+    const line = (st) => '<div class="hc-step"><span class="hc-n">' + st.n + '</span><div><b>' + esc(st.label) + '</b><div class="hc-tl">' + esc(st.say.tl) + '</div>' + (showEn ? '<div class="hc-en">' + esc(st.say.en) + '</div>' : '') + '</div></div>';
+    const top = '<div class="hc-top"><b>DE-ESCALATION</b><span>' + esc(INST().short || '') + (INST().deescForm ? ' · ' + esc(INST().deescForm) : '') + '</span></div>';
+    return '<div class="hc-wrap"><div class="hc-card">' + top + '<div class="hc-sub">Watch for: ' + esc(c.behaviors.join(', ')) + '</div>' + c.steps.slice(0, 6).map(line).join('') + '</div>' +
+      '<div class="hc-card">' + top + c.steps.slice(6).map(line).join('') + '<div class="hc-esc"><b>If it fails:</b> NAOD → NOD. <b>Notify POD at all times.</b></div>' +
+      '<div class="hc-sub"><b>Debrief later:</b> ' + c.debrief.map((p) => esc(p.tl) + (showEn ? ' (' + esc(p.en) + ')' : '')).join(' · ') + '</div><div class="hc-foot">NCMH Crisis Hotline 1553 · Usap Tayo</div></div></div>';
+  }
+  function cardDoc(m, logo) {
+    const c = m.card, showEn = m.o.english === 'show';
+    const fs = 9;
+    const top = { columns: [{ text: 'DE-ESCALATION', bold: true, color: '#ffffff', fontSize: 9 }, { text: (INST().short || '') + (INST().deescForm ? ' · ' + INST().deescForm : ''), color: '#ffffff', fontSize: 6, alignment: 'right', margin: [0, 2, 0, 0] }] };
+    const banner = { table: { widths: ['*'], body: [[Object.assign({ fillColor: NAVY }, { stack: [top] })]] }, layout: { hLineWidth: () => 0, vLineWidth: () => 0, paddingTop: () => 4, paddingBottom: () => 4, paddingLeft: () => 6, paddingRight: () => 6 }, margin: [0, 0, 0, 5] };
+    const step = (st) => ({ table: { widths: [12, '*'], body: [[{ text: String(st.n), bold: true, color: NAVY, fillColor: GOLD, alignment: 'center', fontSize: fs + 0.5 },
+      { stack: [{ text: st.label, bold: true, fontSize: fs }, { text: st.say.tl, color: NAVY, fontSize: fs + 0.6 }].concat(showEn ? [{ text: st.say.en, color: MUTED, fontSize: fs - 1.2 }] : []) }]] },
+      layout: { hLineWidth: () => 0, vLineWidth: () => 0, paddingTop: () => 2, paddingBottom: () => 2, paddingLeft: () => 4, paddingRight: () => 2 }, margin: [0, 0, 0, 3], unbreakable: true });
+    const content = [JSON.parse(JSON.stringify(banner)), { text: 'Watch for: ' + c.behaviors.join(', '), fontSize: fs - 1, color: MUTED, margin: [0, 0, 0, 5] }].concat(c.steps.slice(0, 6).map(step));
+    const b2 = JSON.parse(JSON.stringify(banner)); b2.pageBreak = 'before';
+    content.push(b2);
+    content.push.apply(content, c.steps.slice(6).map(step));
+    content.push({ table: { widths: ['*'], body: [[{ text: [{ text: 'If it fails: ', bold: true }, 'NAOD » NOD for further intervention. ', { text: 'Notify POD at all times.', bold: true }], fillColor: '#fdf1dc', fontSize: fs }]] }, layout: { hLineWidth: () => 0, vLineWidth: () => 0, paddingTop: () => 3, paddingBottom: () => 3, paddingLeft: () => 5 }, margin: [0, 2, 0, 4] });
+    content.push({ text: [{ text: 'Debrief later: ', bold: true }].concat(c.debrief.map((p, i) => ({ text: (i ? ' · ' : '') + p.tl + (showEn ? ' (' + p.en + ')' : '') }))), fontSize: fs - 0.6, color: '#333a52' });
+    [content[0], b2].forEach((b) => { b.layout = banner.layout; });
+    return {
+      pageSize: 'A6', pageMargins: [14, 14, 14, 18],
+      info: { title: m.title, author: APP_META.author, subject: 'De-escalation pocket card', creator: 'Usap Tayo ' + APP_META.version },
+      content: fixGlyphs(content),
+      footer: (cur, total) => ({ text: (cur === 1 ? 'Front' : 'Back') + ' · NCMH Crisis Hotline 1553 · ' + APP_META.attribution, fontSize: 4.6, color: MUTED, margin: [14, 4, 14, 0] }),
+      defaultStyle: { font: 'Roboto', fontSize: fs, lineHeight: 1.1 }
     };
   }
 
@@ -73,6 +116,7 @@
       '<div class="ho-tl"><b>' + esc(p.tl) + '</b>' + (p.alt ? '<i>' + esc(p.alt) + '</i>' : '') + (p.note ? '<small>' + esc(p.note) + '</small>' : '') +
       (p.answers.length ? '<small class="ho-ans">Patient may say: ' + p.answers.map((a) => esc(a[0]) + (showEn ? ' (' + esc(a[1]) + ')' : '')).join(' · ') + '</small>' : '') + '</div>' +
       (showEn ? '<div class="ho-en">' + esc(p.en) + '</div>' : '') + '</div>';
+    if (m.card) return cardHTML(m);
     let h = '<header class="ho-head"><img src="icons/logo-96.png" alt=""><div><h1>' + esc(m.title) + '</h1><p>' + (m.preparedFor ? 'Prepared for ' + esc(m.preparedFor) + ' · ' : '') + esc(m.date) +
       ' · Respectful form' + (o.register === 'c' ? ' replaced by everyday form' : o.register === 'both' ? ' with everyday form in italics' : '') + '</p></div></header>';
     if (m.overview) {
@@ -94,12 +138,16 @@
     }
     if (m.deesc) {
       const d = m.deesc;
-      h += '<section class="ho-sec"><h2>De-escalation checklist</h2><p class="ho-goal">Patient: ____________________ Age: _____ Sex: _____ Ward: ________</p>' +
+      h += '<section class="ho-sec">' + (INST().name ? '<div class="ho-inst"><b>' + esc(INST().name.toUpperCase()) + '</b><br>' + esc(INST().address) + '</div>' : '') + '<h2>De-escalation checklist</h2><p class="ho-goal">Patient: ____________________ Age: _____ Sex: _____ Ward: ________</p>' +
         '<p class="ho-goal"><b>Tick the behavior presented by the patient.</b></p><div class="ho-beh">' + d.behaviors.map((b) => '<div><span class="ho-box"></span><b>' + esc(b.en) + '</b>' + (showEn ? '' : '') + '<small>' + esc(b.tl) + '</small></div>').join('') + '</div>' +
         '<div class="ho-steps">' + d.steps.map((st) => '<div class="ho-step"><span class="ho-box"></span><div><b>' + st.n + '. ' + esc(st.en) + '</b>' + (st.tip ? '<small>' + esc(st.tip) + '</small>' : '') +
           st.say.map((p) => '<div class="ho-say"><b>' + esc(p.tl) + '</b>' + (p.alt ? ' <i>' + esc(p.alt) + '</i>' : '') + (showEn ? '<span> ' + esc(p.en) + '</span>' : '') + '</div>').join('') + '</div></div>').join('') + '</div>' +
         '<p class="ho-branch">If de-escalation fails, NAOD refers to NOD for further intervention. Notify POD at all times. (' + d.escalation.map((e) => e[0] + ' = ' + e[1]).join('; ') + ')</p>' +
-        '<p class="ho-goal">Remarks: ☐ Successful ☐ Partly successful ☐ Not successful, escalated ________________________</p><p class="ho-goal">NAOD: ______________ NOD: ______________ POD notified: ☐ Date/shift/time: ______________</p></section>';
+        '<p class="ho-goal">Remarks: ☐ Successful ☐ Partly successful ☐ Not successful, escalated ________________________</p><p class="ho-goal">NAOD: ______________ NOD: ______________ POD notified: ☐ Date/shift/time: ______________</p>' + (INST().deescForm ? '<p class="ho-form-no">' + esc(INST().deescForm) + '</p>' : '') + '</section>';
+    }
+    if (m.deescAfter) {
+      h += '<section class="ho-sec"><h2>If de-escalation fails</h2><p class="ho-goal">General guide. Hospital policy and physician orders decide what is done.</p>' + m.deescAfter.map((a, i) => '<div class="ho-step" style="grid-template-columns:minmax(0,1fr)"><div><b>' + (i + 1) + '. ' + esc(a.title) + '</b> <span class="ho-muted">(' + esc(a.who) + ')</span>' +
+        a.points.map((t) => '<small>• ' + esc(t) + '</small>').join('') + a.say.map((p) => '<div class="ho-say"><b>' + esc(p.tl) + '</b>' + (p.alt ? ' <i>' + esc(p.alt) + '</i>' : '') + (showEn ? '<span> ' + esc(p.en) + '</span>' : '') + '</div>').join('') + '</div></div>').join('') + '</section>';
     }
     if (m.form) {
       h += '<section class="ho-sec"><h2>MSE write-up</h2><p class="ho-goal">Patient: ____________________ Date: __________ Language used: __________</p><div class="ho-tw"><table class="ho-form">' +
@@ -138,6 +186,7 @@
   }
   const NAVY = '#1e3265', GOLD = '#e3b53f', MUTED = '#5b6480', LINE = '#d9deea', TINT = '#eef1f8';
   function docDef(m, logo) {
+    if (m.card) return cardDoc(m, logo);
     const o = m.o, showEn = o.english === 'show', numbered = o.english === 'key';
     const base = { small: 8.5, normal: 10, large: 12 }[o.size] || 10;
     const a5 = o.paper === 'A5';
@@ -195,7 +244,8 @@
       const box = () => ({ width: 10, table: { widths: [6], heights: [6], body: [[{ text: '', fontSize: 1 }]] }, layout: { hLineWidth: () => 0.7, vLineWidth: () => 0.7, hLineColor: () => '#333a52', vLineColor: () => '#333a52', paddingTop: () => 0, paddingBottom: () => 0, paddingLeft: () => 0, paddingRight: () => 0 }, margin: [0, 2, 0, 0] });
       const boxed = (stack) => ({ columns: [box(), { stack, width: '*' }], columnGap: 6, margin: [0, 0, 0, 4] });
       const inline = (t) => ({ columns: [box(), { text: t, width: 'auto' }], columnGap: 4, width: 'auto' });
-      content.push(Object.assign(heading(null, 'De-escalation checklist'), { pageBreak: m.body.length || m.overview ? 'before' : undefined }));
+      if (INST().name) content.push({ stack: [{ text: INST().name.toUpperCase(), bold: true, fontSize: base + 1 }, { text: INST().address, fontSize: base - 1, color: MUTED }], alignment: 'center', margin: [0, 0, 0, 2], pageBreak: m.body.length || m.overview ? 'before' : undefined });
+      content.push(Object.assign(heading(null, 'De-escalation checklist'), { pageBreak: !INST().name && (m.body.length || m.overview) ? 'before' : undefined }));
       content.push({ text: 'Patient: ______________________   Age: ______   Sex: ______   Ward: __________', margin: [0, 2, 0, 6] });
       content.push({ text: 'Tick the behavior presented by the patient.', bold: true, margin: [0, 0, 0, 4] });
       const per = Math.ceil(d.behaviors.length / 3);
@@ -209,6 +259,17 @@
       content.push({ table: { widths: ['*'], body: [[{ text: [{ text: 'If de-escalation fails, NAOD refers to NOD for further intervention. Notify POD at all times.', bold: true }, { text: '\n' + d.escalation.map((e) => e[0] + ' = ' + e[1]).join(';   '), color: MUTED, fontSize: base - 1.5 }], fillColor: '#fdf1dc' }]] }, layout: { hLineWidth: () => 0, vLineWidth: () => 0, paddingTop: () => 5, paddingBottom: () => 5, paddingLeft: () => 8 }, margin: [0, 6, 0, 8] });
       content.push({ columns: [{ text: 'Remarks:', bold: true, width: 'auto' }, inline('Successful'), inline('Partly successful'), inline('Not successful, escalated'), { text: '________________', width: '*' }], columnGap: 12, margin: [0, 0, 0, 14] });
       content.push({ columns: [{ text: '______________________\nNursing Attendant on Duty', alignment: 'center', fontSize: base - 1 }, { text: '______________________\nNurse on Duty', alignment: 'center', fontSize: base - 1 }, { text: '______________________\nPOD notified (date/shift/time)', alignment: 'center', fontSize: base - 1 }], unbreakable: true });
+      if (INST().deescForm) content.push({ text: INST().deescForm, alignment: 'right', fontSize: base - 1, margin: [0, 12, 0, 0] });
+    }
+    if (m.deescAfter) {
+      content.push(Object.assign(heading(null, 'If de-escalation fails'), { pageBreak: 'before' }));
+      content.push({ text: 'General guide. Hospital policy and physician orders decide what is done.', color: MUTED, margin: [0, 0, 0, 4] });
+      m.deescAfter.forEach((a, i) => {
+        const stack = [{ text: [{ text: (i + 1) + '. ' + a.title, bold: true }, { text: '  (' + a.who + ')', color: MUTED, fontSize: base - 1.5 }] }]
+          .concat(a.points.map((t) => ({ text: '• ' + t, fontSize: base - 1, margin: [6, 0, 0, 0] })))
+          .concat(a.say.map((p) => ({ text: [{ text: '“' + p.tl + '”', color: NAVY }].concat(p.alt ? [{ text: '  ' + p.alt, italics: true, color: MUTED }] : []).concat(showEn ? [{ text: '  ' + p.en, color: MUTED, fontSize: base - 1.5 }] : []), margin: [14, 1, 0, 0] })));
+        content.push({ stack, unbreakable: true, margin: [0, 0, 0, 6] });
+      });
     }
     if (m.form) {
       content.push(Object.assign(heading(null, 'MSE write-up'), { pageBreak: 'before' }));
@@ -232,12 +293,14 @@
       styles: { h1: { fontSize: a5 ? base + 5 : base + 8, bold: true, color: NAVY }, h2: { fontSize: base + 2, bold: true, color: NAVY, margin: [0, 4, 0, 4] }, meta: { color: MUTED, fontSize: base - 1 } }
     };
   }
-  App.handoutDoc = (o) => docDef(build(o)); // exposed for testing
+  App.handoutPresets = PRESETS;
+  App.handoutDoc = (o) => docDef(build(Object.assign({}, DEFAULTS, PRESETS.full.o, o))); // exposed for testing
 
   /* ---------- Page ---------- */
   V.handout = (el, p, q) => {
     let o = opts();
-    if (q.deesc) o = Object.assign({}, o, { preset: 'custom', steps: [], deescList: true, overview: false, mse: false, idioms: false, form: false, title: 'De-escalation Checklist' });
+    if (q.deesccard) o = Object.assign({}, o, PRESETS.deesccard.o, { preset: 'deesccard', title: 'De-escalation Pocket Card' });
+    if (q.deesc) o = Object.assign({}, o, { preset: 'custom', steps: [], deescList: true, deescAfter: true, deescCard: false, overview: false, mse: false, idioms: false, form: false, title: 'De-escalation Checklist' });
     if (q.s) { // came from a section page: start with just that section
       const st = ALL_STEPS().find((x) => x.sections.includes(q.s));
       if (st) o = Object.assign({}, o, { preset: 'custom', steps: [st.id], depth: 'all', overview: false, mse: q.s.startsWith('mse'), idioms: false, form: false });
@@ -256,29 +319,29 @@
         '<div><div class="eyebrow">Paper</div>' + seg('paper', [['A4', 'A4'], ['LETTER', 'Letter'], ['A5', 'A5 booklet']]) + '</div>' +
         '<div><div class="eyebrow">Text size</div>' + seg('size', [['small', 'Small'], ['normal', 'Normal'], ['large', 'Large']]) + '</div>' +
         '</div>' +
-        '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('overview', 'Interview flow overview') + chk('mse', 'MSE table') + chk('idioms', 'Idioms of distress') + chk('form', 'Blank MSE write-up form') + chk('deescList', 'De-escalation checklist') + chk('notes', 'Clinician tips and notes') + chk('answers', 'Likely patient answers') + '</div></div>' +
+        '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('overview', 'Interview flow overview') + chk('mse', 'MSE table') + chk('idioms', 'Idioms of distress') + chk('form', 'Blank MSE write-up form') + chk('deescList', 'De-escalation checklist') + chk('deescAfter', 'If it fails: restraint, monitoring, debrief') + chk('notes', 'Clinician tips and notes') + chk('answers', 'Likely patient answers') + '</div></div>' +
         '<details' + (o.preset === 'custom' ? ' open' : '') + '><summary><b>Sections</b> <span class="muted small">(' + o.steps.length + ' selected)</span></summary><div class="ho-chks" style="margin-top:8px">' +
         '<div class="small muted" style="grid-column:1/-1">Interview flow, in order</div>' + PSYCH_FLOW.map((s, i) => '<label class="ho-chk"><input type="checkbox" data-step="' + s.id + '"' + (o.steps.includes(s.id) ? ' checked' : '') + '> <span>' + (i + 1) + '. ' + esc(s.title) + '</span></label>').join('') +
         '<div class="small muted" style="grid-column:1/-1;margin-top:6px">Add-ons</div>' + PSYCH_FLOW_EXTRA.map((s) => '<label class="ho-chk"><input type="checkbox" data-step="' + s.id + '"' + (o.steps.includes(s.id) ? ' checked' : '') + '> <span>' + esc(s.title) + '</span></label>').join('') +
         '<div class="row" style="grid-column:1/-1"><button class="btn sm" data-all="1">Select all</button><button class="btn sm" data-all="0">Clear</button></div></div></details>' +
         '<div class="ho-grid"><label class="small">Title<input class="input" id="hoTitle" value="' + esc(o.title) + '"></label><label class="small">Prepared for (optional)<input class="input" id="hoFor" value="' + esc(o.preparedFor) + '" placeholder="e.g., PGY-1, Dept. of Psychiatry"></label></div>' +
         '<div class="row"><button class="btn primary" id="hoPdf">' + icons.book + ' Download PDF</button><button class="btn" id="hoPrint">Print</button><span class="muted small" id="hoStat"></span></div></div>' +
-        '<h2 style="margin-top:18px">Preview</h2><div class="ho-paper ho-' + o.paper + ' ho-size-' + o.size + '" id="hoPaper"></div>';
+        (o.deescCard ? '<p class="small muted" style="margin:4px 0 0">The pocket card always prints on A6 (105 × 148 mm), front and back. Print double-sided, trim, and laminate.</p>' : '') + '<h2 style="margin-top:18px">Preview</h2><div class="ho-paper ho-' + (o.deescCard ? 'A6' : o.paper) + ' ho-size-' + o.size + '" id="hoPaper"></div>';
       bind();
       preview();
     };
     const preview = () => {
       const paper = el.querySelector('#hoPaper');
-      if (!o.steps.length && !o.mse && !o.deescList) { paper.innerHTML = '<p class="muted">Choose at least one section or the MSE table.</p>'; return; }
+      if (!o.steps.length && !o.mse && !o.deescList && !o.deescAfter && !o.deescCard) { paper.innerHTML = '<p class="muted">Choose at least one section or the MSE table.</p>'; return; }
       paper.innerHTML = renderHTML(build(o));
     };
     const update = (patch, redraw) => { o = Object.assign({}, o, patch); saveOpts(o); if (redraw) draw(); else preview(); };
     const bind = () => {
-      el.querySelectorAll('[data-preset]').forEach((b) => (b.onclick = () => update(Object.assign({ notes: true }, PRESETS[b.dataset.preset].o, { preset: b.dataset.preset }, o.title === 'De-escalation Checklist' ? { title: DEFAULTS.title } : {}), true)));
+      el.querySelectorAll('[data-preset]').forEach((b) => (b.onclick = () => { const k = b.dataset.preset; const special = { deesccard: 'De-escalation Pocket Card' }; const auto = ['De-escalation Checklist', 'De-escalation Pocket Card', DEFAULTS.title].includes(o.title); update(Object.assign({ notes: true }, PRESETS[k].o, { preset: k }, auto ? { title: special[k] || DEFAULTS.title } : {}), true); }));
       el.querySelectorAll('[data-seg]').forEach((b) => (b.onclick = () => {
         el.querySelectorAll('[data-seg="' + b.dataset.seg + '"]').forEach((x) => x.classList.toggle('on', x === b));
         const patch = { [b.dataset.seg]: b.dataset.v };
-        if (b.dataset.seg === 'paper' || b.dataset.seg === 'size') { el.querySelector('#hoPaper').className = 'ho-paper ho-' + (patch.paper || o.paper) + ' ho-size-' + (patch.size || o.size); }
+        if (b.dataset.seg === 'paper' || b.dataset.seg === 'size') { el.querySelector('#hoPaper').className = 'ho-paper ho-' + (o.deescCard ? 'A6' : patch.paper || o.paper) + ' ho-size-' + (patch.size || o.size); }
         update(patch);
       }));
       el.querySelectorAll('[data-o]').forEach((c) => (c.onchange = () => update({ [c.dataset.o]: c.checked })));
@@ -294,7 +357,7 @@
       el.querySelector('#hoPrint').onclick = () => window.print();
       el.querySelector('#hoPdf').onclick = async () => {
         const stat = el.querySelector('#hoStat'), btn = el.querySelector('#hoPdf');
-        if (!o.steps.length && !o.mse && !o.deescList) { App.toast('Choose at least one section first.'); return; }
+        if (!o.steps.length && !o.mse && !o.deescList && !o.deescAfter && !o.deescCard) { App.toast('Choose at least one section first.'); return; }
         btn.disabled = true; stat.textContent = 'Making your PDF…';
         try {
           await loadPdfMake();

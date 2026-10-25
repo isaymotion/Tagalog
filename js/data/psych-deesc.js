@@ -59,6 +59,24 @@
         tip: 'Offer oral first; let the patient choose the route when possible.',
         say: [add({ en: 'There is medicine that can help you calm down and feel better.', f: 'May gamot po na makakatulong para kumalma at gumaan ang pakiramdam ninyo.', c: 'May gamot na makakatulong para kumalma ka at gumaan ang pakiramdam mo.' }), use('Would you prefer a tablet or an injection?')] }
     ],
+    // What happens when verbal de-escalation is not enough. Wording is general; follow your hospital's policy.
+    after: [
+      { title: 'Escalate', who: 'NOD and POD',
+        points: ['NAOD refers to the NOD for further intervention; the POD is notified and assesses the patient.', 'Keep using calm verbal de-escalation throughout.', 'Offer oral medication first; give the patient a choice of route where possible.'],
+        say: [use('We will give you medicine to help you calm down.'), use('Would you prefer a tablet or an injection?')] },
+      { title: 'Restraint or seclusion (last resort)', who: 'Physician order, trained team',
+        points: ['Only to prevent imminent harm to the patient or others, after less restrictive measures fail (RA 11036: least restrictive care).', 'Requires a physician\'s order per hospital policy; use the minimum force and time needed.', 'Explain what is happening and why, even if the patient seems not to listen.', 'Remove belts, sharp objects, and anything that can be used to harm.'],
+        say: [add({ en: 'This is only temporary, for your safety and others\'.', f: 'Pansamantala lang po ito, para sa kaligtasan ninyo at ng iba.', c: 'Pansamantala lang ito, para sa kaligtasan mo at ng iba.' }), add({ en: 'We are not punishing you.', f: 'Hindi po namin kayo pinaparusahan.', c: 'Hindi ka namin pinaparusahan.' }), add({ en: 'Once you are calm, we will remove it.', f: 'Kapag kalmado na po kayo, tatanggalin na namin ito.', c: 'Kapag kalmado ka na, tatanggalin na namin ito.' })] },
+      { title: 'Monitoring', who: 'NOD, at the interval set by policy',
+        points: ['Check breathing, circulation, skin, and vital signs at the interval your policy sets (often every 15 minutes).', 'Offer fluids, toileting, and position change; check for pain and tightness.', 'Reassess regularly whether restraint is still needed. Document each check.'],
+        say: [add({ en: 'Is it too tight? Does anything hurt?', f: 'Masyado po bang masikip? May masakit po ba?', c: 'Masyado bang masikip? May masakit ba?' }), add({ en: 'Do you want to drink or use the toilet?', f: 'Gusto po ba ninyong uminom o umihi?', c: 'Gusto mo bang uminom o umihi?' }), add({ en: 'Can you breathe well?', f: 'Nakakahinga po ba kayo nang maayos?', c: 'Nakakahinga ka ba nang maayos?' })] },
+      { title: 'Release', who: 'NOD with POD',
+        points: ['Release as soon as the patient is calm and safe, often in steps.', 'Tell the patient what you are doing before each step.'],
+        say: [add({ en: 'You are calmer now. We will remove it slowly.', f: 'Mas kalmado na po kayo. Dahan-dahan po naming tatanggalin ito.', c: 'Mas kalmado ka na. Dahan-dahan naming tatanggalin ito.' })] },
+      { title: 'Debrief', who: 'Patient, staff, and family',
+        points: ['Talk with the patient once calm: what happened, what helped, what to do next time.', 'Staff debrief: what worked, injuries, and lessons. Inform the family as appropriate.', 'Document the incident, interventions, times, and outcome.'],
+        say: [add({ en: 'From your point of view, what happened earlier?', f: 'Sa tingin po ninyo, ano po ang nangyari kanina?', c: 'Sa tingin mo, ano ang nangyari kanina?' }), add({ en: 'What makes you get angry or upset?', f: 'Ano po ang nagpapainit ng ulo ninyo?', c: 'Ano ang nagpapainit ng ulo mo?' }), add({ en: 'What would help next time?', f: 'Ano po ang makakatulong sa susunod?', c: 'Ano ang makakatulong sa susunod?' }), add({ en: 'Are you hurt anywhere?', f: 'May nasaktan po ba sa inyo?', c: 'May nasaktan ba sa iyo?' })] }
+    ],
     escalation: [
       ['NAOD', 'Nursing Attendant on Duty', 'Starts de-escalation. If it fails, refers to the NOD.'],
       ['NOD', 'Nurse on Duty', 'Takes over for further intervention.'],

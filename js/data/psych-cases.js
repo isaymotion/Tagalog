@@ -147,7 +147,53 @@ window.PSYCH_CASES = [
     findings: ['Daily heavy alcohol use (1–2 bottles gin)', 'Last drink ~48 h ago', 'Tremor, diaphoresis, insomnia, visual hallucinations (insects)', 'Alcohol withdrawal, at risk for delirium tremens. Assess orientation, vitals, seizure history; start withdrawal protocol and thiamine'],
     mse: '47M, diaphoretic, tremulous, anxious. Visual hallucinations (insects). Assess orientation and attention.'
   }
+},
+{
+  id: 'agitated', title: 'Agitated patient: de-escalation', level: 'B1',
+  setting: 'Acute ward, late morning. Mang Ernesto, 45, admitted three days ago, is holding up one end of his bed and shouting near the nurses\' station. You are the nurse on duty; another staff member stands nearby. Choose your words step by step, following the de-escalation checklist.',
+  steps: [
+    { who: 'Mang Ernesto', line: ['Huwag kayong lalapit! Ibabagsak ko \'tong kama!', 'Don\'t come near! I\'ll drop this bed!'],
+      choices: [
+        { tl: 'Dito lang po ako, Mang Ernesto. Hindi po ako lalapit. Ako po si Nurse Ana.', en: 'I\'ll stay right here, Mang Ernesto. I won\'t come closer. I\'m Nurse Ana.', score: 2, fb: 'Steps 1–3: you keep your distance, stay calm, and introduce yourself.' },
+        { tl: 'Ibaba mo \'yan! Ngayon na!', en: 'Put that down! Now!', score: 0, fb: 'Shouting an order while he is threatening escalates the situation (step 2: do not provoke).' },
+        { tl: 'Kumalma po kayo.', en: 'Please calm down.', score: 1, fb: 'Calm, but "calm down" alone rarely works. Introduce yourself and show you are keeping your distance first.' } ] },
+    { who: 'Mang Ernesto', line: ['Ikinulong n\'yo ako dito! Gusto ko nang umuwi!', 'You locked me up here! I want to go home!'],
+      choices: [
+        { tl: 'Galit po kayo kasi gusto na ninyong umuwi, tama po ba? Ikuwento po ninyo sa akin.', en: 'You\'re angry because you want to go home, is that right? Tell me about it.', score: 2, fb: 'Steps 5–6: you let him express himself and reflect the feeling back.' },
+        { tl: 'Hindi ka puwedeng umuwi, may sakit ka.', en: 'You can\'t go home, you\'re sick.', score: 0, fb: 'Arguing about the admission now adds fuel. Listen first.' },
+        { tl: 'Bakit po kayo galit?', en: 'Why are you angry?', score: 1, fb: '"Bakit" can sound like a challenge. Reflecting the feeling works better.' } ] },
+    { who: 'Mang Ernesto', line: ['Tatlong araw na ako dito, walang nagsasabi sa akin kung kailan ako lalabas!', 'I\'ve been here three days and nobody tells me when I\'m getting out!'],
+      choices: [
+        { tl: 'Tama po kayo, mahirap pong maghintay nang walang alam. Aalamin ko po iyan para sa inyo.', en: 'You\'re right, it\'s hard to wait without knowing. I\'ll find out for you.', score: 2, fb: 'Step 7: you agree with the part that is true and offer help.' },
+        { tl: 'Ganyan talaga dito.', en: 'That\'s just how it is here.', score: 0, fb: 'Dismissive.' },
+        { tl: 'Hindi ko po alam.', en: 'I don\'t know.', score: 1, fb: 'Honest, but offer to find out.' } ] },
+    { who: 'Mang Ernesto', line: ['(nakataas pa rin ang kama) ...Basta! Ayoko dito!', '(still holding the bed up) ...Whatever! I don\'t want to be here!'],
+      choices: [
+        { tl: 'Hindi po puwede ang manira ng gamit, baka may masaktan. Gusto ko po kayong tulungan na kumalma.', en: 'Breaking things isn\'t allowed; someone could get hurt. I want to help you calm down.', score: 2, fb: 'Steps 8–9: a clear limit with the reason, then reassurance that you want to help.' },
+        { tl: 'Kapag hindi mo ibinaba, itatali ka namin.', en: 'If you don\'t put it down, we\'ll tie you up.', score: 0, fb: 'A threat is not a limit. It usually escalates.' },
+        { tl: 'Sige po, bahala kayo.', en: 'Fine, up to you.', score: 0, fb: 'Leaving a dangerous behavior unaddressed is unsafe.' } ] },
+    { who: 'Mang Ernesto', line: ['(huminga nang malalim) ...Paano?', '(takes a deep breath) ...How?'],
+      choices: [
+        { tl: 'Ibaba po muna natin nang dahan-dahan ang kama. Kaya po ninyo iyan. Huminga po tayo: isa, dalawa, tatlo.', en: 'Let\'s put the bed down slowly. You can do it. Let\'s breathe: one, two, three.', score: 2, fb: 'Step 10: concrete coaching, one action at a time.' },
+        { tl: 'Basta ibaba po ninyo.', en: 'Just put it down.', score: 1, fb: 'Clear, but coach him through it.' },
+        { tl: 'Ewan ko po.', en: 'I don\'t know.', score: 0, fb: 'He asked for help. Give a specific next step.' } ] },
+    { who: 'Mang Ernesto', line: ['(ibinaba ang kama) O, ayan na.', '(puts the bed down) There. Done.'],
+      choices: [
+        { tl: 'Salamat po at ibinaba ninyo. Magaling po. Gusto po ba ninyong umupo dito, o maglakad muna kasama ko?', en: 'Thank you for putting it down. Well done. Would you like to sit here, or walk with me for a while?', score: 2, fb: 'Steps 10–11: praise, then two acceptable choices.' },
+        { tl: 'Okay.', en: 'Okay.', score: 1, fb: 'Missed the chance to reinforce the calm behavior.' },
+        { tl: 'Dapat kanina pa.', en: 'You should have done that earlier.', score: 0, fb: 'Shaming can restart the escalation.' } ] },
+    { who: 'Mang Ernesto', line: ['Hindi pa rin ako mapakali... ang init ng ulo ko.', 'I still can\'t settle... I\'m so irritable.'],
+      choices: [
+        { tl: 'May gamot po na makakatulong para kumalma kayo. Tableta po ba o iniksiyon ang gusto ninyo?', en: 'There\'s medicine that can help you calm down. Would you prefer a tablet or an injection?', score: 2, fb: 'Step 12: explain how medication helps and offer a choice. Then notify the POD.' },
+        { tl: 'Iiniksiyunan na lang po namin kayo.', en: 'We\'ll just give you an injection.', score: 0, fb: 'Offer oral medication and a choice first.' },
+        { tl: 'Matulog na lang po kayo.', en: 'Just go to sleep.', score: 1, fb: 'He is telling you he still feels unsettled. Offer help.' } ] }
+  ],
+  summary: {
+    findings: ['Agitation with threat to drop a bed, loud and irritable, three days after admission', 'Trigger: feels detained and uninformed about discharge', 'Responded to verbal de-escalation: distance, introduction, listening, agreeing, limits, coaching, choices', 'Accepted offer of medication', 'Remarks: successful. Notify the POD; follow up on his discharge question; debrief with him later ("Ano po ang makakatulong sa susunod?")'],
+    mse: '45M, initially agitated, standing, lifting bed, loud. Mood "galit"; affect irritable, later calmer. Goal-directed complaint about discharge. Accepted limits and medication.'
+  }
 }
+
 ];
 
 /* Interpretation drill: what is the patient (or family) saying? [tagalog, english, clinical significance] */

@@ -2,15 +2,28 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '1.2.0',
+  version: '1.3.0',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
+  // Institution whose nursing de-escalation checklist the app's checklist follows.
+  institution: { name: 'Mariveles Mental Wellness and General Hospital', address: 'P. Monroe Street Poblacion, Mariveles, Bataan, Philippines 2105', short: 'MMWGH', deescForm: 'MMH-NUR-04-112-01' },
   attribution: 'App created by Isabella Navarro, MD. Latest version October 2026. isaymotion@gmail.com'
 };
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '1.3.0', date: 'October 2026', title: 'De-escalation: drills, pocket card, and next steps',
+    items: [
+      ['new', 'Practice case "Agitated patient: de-escalation": choose your words step by step through the checklist, with feedback. Also available as a spoken role-play.'],
+      ['new', 'Rapid drill: listen-and-repeat loops and timed quick-response prompts so the first lines come out automatically.'],
+      ['new', '"If it fails" guide: escalation, restraint or seclusion as a last resort, monitoring, release, and debrief, with Tagalog phrases for each.'],
+      ['new', 'De-escalation pocket card: two A6 sides with the 12 steps and one Tagalog line each. Print double-sided and laminate.'],
+      ['improved', 'Checklist and printouts now show Mariveles Mental Wellness and General Hospital and form number MMH-NUR-04-112-01.'],
+      ['content', '11 new phrases for restraint, monitoring, release, and debriefing.']
+    ]
+  },
   {
     version: '1.2.0', date: 'October 2026', title: 'De-escalation checklist',
     items: [

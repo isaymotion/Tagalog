@@ -10,10 +10,10 @@
 
 | Section | What it does |
 |---|---|
-| **Psychiatry Tagalog** | 26 sections (332 phrases) covering opening and consent, HPI, depression, mania, anxiety/OCD, trauma, hallucinations, delusions, suicide and violence risk, de-escalation, substances, history, collateral, MSE (cognition, abstraction, observations), explaining diagnosis, medication side effects, admission, children, elderly patients, and closing. Each phrase has a respectful (*po*) form and an everyday/Taglish form. |
-| **Case simulations** | 5 interactive interviews (first-episode psychosis, depression with suicide risk, mania, delirium, alcohol withdrawal) with feedback and an MSE summary. |
+| **Psychiatry Tagalog** | 26 sections (343 phrases) covering opening and consent, HPI, depression, mania, anxiety/OCD, trauma, hallucinations, delusions, suicide and violence risk, de-escalation, substances, history, collateral, MSE (cognition, abstraction, observations), explaining diagnosis, medication side effects, admission, children, elderly patients, and closing. Each phrase has a respectful (*po*) form and an everyday/Taglish form. |
+| **Case simulations** | 6 interactive interviews (first-episode psychosis, depression with suicide risk, mania, delirium, alcohol withdrawal, agitated patient) with feedback and an MSE summary. |
 | **Printable handout** | PDF or print of the interview flow and MSE. English can be shown, hidden, or moved to an answer key. Presets: Full interview + MSE, MSE only, Risk assessment, Pocket booklet (A5), Complete reference. Works offline. |
-| **De-escalation checklist** | Interactive 12-step checklist with Tagalog phrases for each step, behaviors observed, outcome, escalation path (NAOD → NOD, notify POD), and a copyable chart note. Printable blank version in the handout generator. |
+| **De-escalation checklist** | Based on Mariveles Mental Wellness and General Hospital form MMH-NUR-04-112-01. Tabs for the bedside checklist, a rapid audio drill, an "if it fails" guide (restraint, monitoring, debrief), and a practice case. A6 pocket card in the handout generator. Interactive 12-step checklist with Tagalog phrases for each step, behaviors observed, outcome, escalation path (NAOD → NOD, notify POD), and a copyable chart note. Printable blank version in the handout generator. |
 | **Interpretation drill** | 28 patient and family statements with meaning and clinical significance. |
 | **Dictionary** | About 1,650 entries, English → Filipino and Filipino → English, with root-word search (`kinakain` finds `kain`, `binubulungan` finds `bulong`). |
 | **Universal search** | One search bar (press `/`) across words, phrases, lessons, readings, dialogues, cases, and verbs. |

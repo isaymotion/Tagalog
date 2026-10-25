@@ -395,3 +395,24 @@ details summary { cursor: pointer; }
 .ho-say { margin-left: .6em; color: var(--p-navy); }
 .ho-say span { color: var(--p-muted); font-size: .9em; }
 @media (max-width: 520px) { .ho-beh { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.dz-inst { margin: -2px 0 12px; line-height: 1.35; }
+.dz-tabs { display: flex; flex-wrap: wrap; }
+.dz-q { display: grid; gap: 10px; padding: 14px; border-radius: 12px; background: var(--surface-2); margin-top: 6px; }
+.dz-cue { font-size: 1.25rem; font-weight: 650; }
+.dz-timer { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.dz-timer i { display: block; height: 100%; width: 100%; background: var(--gold); transform-origin: left; animation: dzshrink linear forwards; }
+@keyframes dzshrink { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+.ho-inst { text-align: center; line-height: 1.3; margin-bottom: 6px; font-size: .92em; }
+.ho-form-no { text-align: right; color: var(--p-muted); font-size: .85em; margin: 10px 0 0; }
+.ho-paper.ho-A6 { max-width: none; padding: 14px; background: #e9ecf3; }
+.hc-wrap { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.hc-card { background: #fff; aspect-ratio: 105 / 148; padding: 12px; font-size: 10.5px; line-height: 1.25; box-shadow: 0 1px 4px rgba(0,0,0,.12); display: flex; flex-direction: column; gap: 4px; overflow: hidden; max-width: 100%; }
+.hc-top { display: flex; justify-content: space-between; align-items: baseline; background: var(--p-navy); color: #fff; padding: 4px 6px; font-size: 1.05em; }
+.hc-top span { font-size: .7em; }
+.hc-sub { color: var(--p-muted); font-size: .88em; }
+.hc-step { display: grid; grid-template-columns: 1.4em minmax(0, 1fr); gap: 5px; }
+.hc-n { background: var(--p-gold); color: var(--p-navy); font-weight: 700; text-align: center; }
+.hc-tl { color: var(--p-navy); }
+.hc-en { color: var(--p-muted); font-size: .85em; }
+.hc-esc { background: #fdf1dc; padding: 4px 6px; }
+.hc-foot { margin-top: auto; color: var(--p-muted); font-size: .8em; }
