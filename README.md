@@ -35,6 +35,22 @@ Also: dark/light mode, back/forward buttons, offline support, and install-to-hom
 
 To try it locally: run `python3 -m http.server` in this folder and open `http://localhost:8000`. (Opening `index.html` directly also works, but offline mode needs a web server.)
 
+## Audio pack (natural Filipino voice)
+
+Browsers on most phones have no Filipino voice, so Tagalog read by the device sounds wrong. The app therefore plays recorded clips from `audio/` whenever they exist.
+
+The clips are made by the GitHub Actions job **Build Tagalog audio pack** (`.github/workflows/audio-pack.yml`):
+
+1. On GitHub, open the **Actions** tab. If asked, click **I understand my workflows, go ahead and enable them**.
+2. Choose **Build Tagalog audio pack** → **Run workflow**. Pick the voice (Blessica, female; Angelo, male) and rate, then **Run workflow**.
+3. In about 10–20 minutes the job commits roughly 3,000 MP3 clips (about 40 MB) to `audio/`. The app uses them automatically.
+
+The job also runs by itself whenever files in `js/data/` change, so new phrases get audio. To change the voice for everything, run it with **Re-record every clip** ticked.
+
+How it works: `tools/collect-texts.js` lists every Tagalog string the app can speak; `tools/make_audio_pack.py` records each one (file name = hash of the text, see `js/audio-key.js`) and writes `audio/manifest.json`. The default engine is Microsoft's neural Filipino voices via the open-source `edge-tts` client, an unofficial client of Microsoft's free Read Aloud service, fine for a free educational app but not a paid API. The script also supports Meta's open MMS Tagalog model (`--engine mms`, CC BY-NC 4.0), which is lower quality but fully open.
+
+Without the pack, the app uses a Filipino device voice if one is installed (Android: Google Text-to-speech → Filipino; Microsoft Edge on a computer), otherwise the closest available voice (Indonesian, Malay, or Spanish), never English.
+
 ## Speech features
 
 - **Text-to-speech** uses the device's voices. Quality is best with a Filipino voice installed: on Android, Google Text-to-speech → install Filipino; Chrome on desktop often includes one. Choose the voice in **Settings → Voice**.

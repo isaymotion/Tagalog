@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '1.3.0',
+  version: '1.4.0',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,16 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '1.4.0', date: 'October 2026', title: 'Natural Filipino audio',
+    items: [
+      ['new', 'Tagalog audio pack: every word and phrase in the app (about 3,000) recorded with a natural Filipino neural voice, played instead of the device voice.'],
+      ['new', 'The pack is recorded by a GitHub job and updates itself when content changes. Choose a female or male voice and the speaking rate.'],
+      ['new', 'Settings → Voice: switch between the recorded voice and the device voice, see what is installed, and save all audio for offline use.'],
+      ['fixed', 'Without a recording or a Filipino device voice, the app now uses the closest voice (Indonesian, Malay, or Spanish) instead of an English one.'],
+      ['improved', 'Dialogues, readings, and the de-escalation drill play recorded clips in sequence.']
+    ]
+  },
   {
     version: '1.3.0', date: 'October 2026', title: 'De-escalation: drills, pocket card, and next steps',
     items: [

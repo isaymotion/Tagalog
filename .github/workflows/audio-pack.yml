@@ -1,0 +1,59 @@
+# Records the Tagalog audio pack with a natural Filipino voice and commits it to the repo.
+# Runs automatically when app content changes, or by hand: Actions tab → "Build Tagalog audio pack" → Run workflow.
+name: Build Tagalog audio pack
+
+on:
+  workflow_dispatch:
+    inputs:
+      voice:
+        description: 'Voice'
+        type: choice
+        default: fil-PH-BlessicaNeural
+        options: [fil-PH-BlessicaNeural, fil-PH-AngeloNeural]
+      rate:
+        description: 'Speaking rate (e.g. -5%, -15% for slower)'
+        default: '-5%'
+      rebuild:
+        description: 'Re-record every clip (use after changing voice or rate)'
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths: ['js/data/**', 'js/conjugate.js', 'tools/**']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: audio-pack
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Install voice tool
+        run: pip install edge-tts==7.0.2
+      - name: Collect phrases
+        run: node tools/collect-texts.js
+      - name: Record audio
+        run: |
+          python tools/make_audio_pack.py \
+            --voice "${{ inputs.voice || 'fil-PH-BlessicaNeural' }}" \
+            --rate "${{ inputs.rate || '-5%' }}" \
+            ${{ inputs.rebuild && '--rebuild' || '' }}
+      - name: Commit audio pack
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add audio tools/texts.json
+          if git diff --cached --quiet; then echo "No audio changes"; exit 0; fi
+          git commit -m "Update Tagalog audio pack"
+          git pull --rebase origin main
+          git push

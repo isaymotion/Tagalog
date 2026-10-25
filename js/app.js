@@ -85,7 +85,7 @@
   function render() {
     App.keyHandler = null;
     if (App.onLeave) { try { App.onLeave(); } catch (e) {} App.onLeave = null; }
-    if (window.speechSynthesis) speechSynthesis.cancel();
+    App.stopSpeech();
     const { path, q } = parse();
     let hit = null;
     for (const [re, fn, key] of routes) { const m = path.match(re); if (m) { hit = [fn, m.groups || {}, key]; break; } }
@@ -171,6 +171,7 @@
   }
 
   App.applyTheme();
+  App.loadAudioPack().then(() => { if (/^#\/(settings|speak)/.test(location.hash)) render(); });
   if (!location.hash) { try { history.replaceState({ idx: 0 }, '', '#/'); } catch (e) { location.hash = '#/'; } }
   render();
   // Voices load asynchronously in some browsers; refresh voice-dependent pages once.

@@ -10,19 +10,8 @@
   const sayLine = (p) => '<div class="dz-line"><div><div class="tl dz-tl">' + esc(main(p)) + '</div>' + (alt(p) && alt(p) !== main(p) ? '<div class="tl small muted">' + esc(alt(p)) + '</div>' : '') + '<div class="small muted">' + esc(p.en) + '</div></div>' + App.sayBtn(main(p)) + '</div>';
 
   // Speak a line and resolve when finished (or after a timeout if speech is unavailable).
-  function speakWait(text, lang) {
-    return new Promise((res) => {
-      if (!window.speechSynthesis) return setTimeout(res, 1500);
-      speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      if (lang === 'en') u.lang = 'en-US';
-      else { const v = App.voices().find((x) => x.name === S().settings.voice) || App.filipinoVoices()[0]; if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'fil-PH'; }
-      u.rate = S().settings.rate || 0.85;
-      let done = false; const fin = () => { if (!done) { done = true; res(); } };
-      u.onend = fin; u.onerror = fin; setTimeout(fin, 12000);
-      speechSynthesis.speak(u);
-    });
-  }
+  const speakWait = (text, lang) => App.speakAsync(text, { lang, quiet: true });
+
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
   V.deesc = (el, p, q) => {
@@ -90,7 +79,7 @@
 
     const draw = () => { stopAll(); el.innerHTML = head() + '<div id="dzBody" style="margin-top:14px">' + views[tab]() + '</div>'; bind(); };
     const keep = (fn) => { const y = window.scrollY; fn(); window.scrollTo(0, y); };
-    const stopAll = () => { if (drill) drill.stop = true; if (window.speechSynthesis) speechSynthesis.cancel(); };
+    const stopAll = () => { if (drill) drill.stop = true; App.stopSpeech(); };
     const drillLines = (set) => {
       if (set === 'after') return D.after.flatMap((a) => a.say);
       const steps = set === 'first4' ? D.steps.slice(0, 4) : D.steps;

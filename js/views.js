@@ -325,7 +325,7 @@
       '<h2 style="margin-top:16px">Glossary</h2><div class="gloss">' + r.gloss.map(([t, e]) => '<span><b>' + esc(t) + '</b> — ' + esc(e) + '</span>').join('') + '</div>' +
       '<h2 style="margin-top:16px">Questions</h2><div id="rq"></div>';
     el.querySelector('#trbtn').onclick = () => { showTr = !showTr; draw(); };
-    el.querySelector('#readall').onclick = () => App.speak(r.tl.join(' '));
+    el.querySelector('#readall').onclick = () => App.speakAll(r.tl, 350);
     draw();
     App.runQuiz(el.querySelector('#rq'), r.q.map(([q, opts, a, exp]) => ({ q, opts, a, exp, tlq: !/^(Which|What|Why|How|Clinically)\b|^"/.test(q) })), {
       onDone: (rt, n) => { S().done.reading[r.id] = Math.max(Math.round((100 * rt) / n), S().done.reading[r.id] || 0); App.activity(10); }
@@ -340,13 +340,16 @@
       '<h2 style="margin-top:18px">Clinical dialogues</h2><div class="grid">' + PSYCH_CASES.map((c) => '<a class="tile" href="#/speak/case-' + c.id + '"><div class="row">' + lvPill(c.level) + '<span class="pill warn">clinical</span></div><h3 style="margin-top:6px">' + esc(c.title) + '</h3><p>Role-play the best-practice interview lines.</p></a>').join('') + '</div>';
   };
   function speechSupportNote() {
-    const fil = App.filipinoVoices().length;
+    const st = App.audioStatus();
     const parts = [];
-    if (!App.canSpeak) parts.push('This browser has no text-to-speech.');
-    else if (!fil) parts.push('No Filipino voice was found on this device, so audio may use an English accent. On Android, install "Filipino" in Google Text-to-speech settings. Chrome on desktop often includes one.');
-    if (!App.canListen) parts.push('Speech recognition isn\'t available here (it works best in Chrome). You can still use <b>Record</b> to hear yourself and compare.');
+    if (st.pack) { /* recorded Filipino audio covers the app's phrases */ }
+    else if (st.voiceKind === 'filipino' || st.voiceKind === 'chosen') { /* device Filipino voice */ }
+    else if (st.voiceKind === 'near') parts.push('The Filipino audio pack is not installed yet, so audio uses the closest voice on this device (' + esc(st.voiceName) + '). It sounds closer to Tagalog than an English voice, but not native.');
+    else parts.push(App.canSpeak ? 'No Filipino voice is available yet. Install the audio pack (see Settings → Voice) for natural Filipino audio.' : 'This browser has no text-to-speech.');
+    if (!App.canListen) parts.push('Speech scoring isn\'t available in this browser (it works best in Chrome). You can still use <b>Record</b> to compare.');
     return parts.length ? '<div class="notice" style="margin-bottom:12px">' + parts.join(' ') + ' <a href="#/settings">Voice settings</a></div>' : '';
   }
+
   App.speechSupportNote = speechSupportNote;
   // Turn a case into a dialogue: patient line + best clinician response
   App.caseDialogue = (c) => {
@@ -389,7 +392,7 @@
     const advance = () => { step++; if (step >= d.lines.length) { const a = avg(); if (a) S().done.dialogues[d.id] = Math.max(a, S().done.dialogues[d.id] || 0); App.activity(10); } draw(); const c = d.lines[step]; if (c && mode === 'role' && c[0] !== d.you) setTimeout(() => App.speak(textOf(c)), 250); };
     const bind = () => {
       const q = (s) => el.querySelector(s);
-      if (q('#playall')) q('#playall').onclick = async () => { for (const l of d.lines) { await new Promise((res) => { if (!App.canSpeak) return res(); const u = new SpeechSynthesisUtterance(textOf(l)); const v = App.voices().find((x) => x.name === S().settings.voice) || App.filipinoVoices()[0]; if (v) u.voice = v; u.lang = v ? v.lang : 'fil-PH'; u.rate = S().settings.rate; u.onend = res; u.onerror = res; speechSynthesis.speak(u); }); } };
+      if (q('#playall')) q('#playall').onclick = () => App.speakAll(d.lines.map(textOf), 300);
       if (q('#hear')) q('#hear').onclick = () => App.speak(textOf(d.lines[step]));
       if (q('#nextline')) q('#nextline').onclick = () => { App.speak(textOf(d.lines[step])); advance(); };
       if (q('#reveal')) q('#reveal').onclick = advance;
@@ -480,10 +483,7 @@
       '<div class="card stack"><h2 style="margin:0">Appearance</h2><div class="seg" role="group" aria-label="Theme">' + [['system', 'System'], ['light', 'Light'], ['dark', 'Dark']].map(([k, t]) => '<button data-theme="' + k + '" class="' + (s.theme === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div></div>' +
       '<div class="card stack"><h2 style="margin:0">Register</h2><p class="muted" style="margin:0">Which version of each psychiatry phrase to show first. Respectful uses <i>po</i> and <i>kayo</i> (for elders, most adult patients, and family). Everyday uses <i>ka/mo</i> and some Taglish (for younger patients and peers).</p>' +
       '<div class="seg" role="group" aria-label="Register">' + [['f', 'Respectful (po)'], ['c', 'Everyday / Taglish']].map(([k, t]) => '<button data-reg="' + k + '" class="' + (s.register === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div></div>' +
-      '<div class="card stack"><h2 style="margin:0">Voice</h2>' + speechSupportNote() +
-      '<label>Voice <select class="input" id="voice"><option value="">Automatic (' + (fil[0] ? esc(fil[0].name) : 'no Filipino voice found') + ')</option>' + voices.map((v) => '<option value="' + esc(v.name) + '"' + (s.voice === v.name ? ' selected' : '') + '>' + esc(v.name + ' (' + v.lang + ')') + '</option>').join('') + '</select></label>' +
-      '<label>Speed <input type="range" id="rate" min="0.5" max="1.2" step="0.05" value="' + s.rate + '" style="width:100%"></label>' +
-      '<div class="row"><button class="btn" id="test">' + icons.sound + ' Test: "Magandang umaga po. Kumusta po kayo?"</button></div></div>' +
+      '<div class="card stack"><h2 style="margin:0">Voice</h2>' + voiceCard(s, voices) + '</div>' +
       '<div class="card stack"><h2 style="margin:0">Flashcards</h2><label>New cards per day <input class="input" type="number" id="npd" min="5" max="100" value="' + s.newPerDay + '" style="width:120px"></label></div>' +
       '<div class="card stack"><h2 style="margin:0">Install</h2><p style="margin:0">Add Usap Tayo to your home screen to use it like an app, even offline. iPhone: Safari → Share → <b>Add to Home Screen</b>. Android: Chrome menu → <b>Install app</b>.</p><div class="row"><button class="btn" id="install" hidden>Install now</button></div></div>' +
       '<div class="card stack"><h2 style="margin:0">Reset</h2><p class="muted" style="margin:0">Erase all progress on this device. Export a backup first if you want to keep it.</p><div class="row"><button class="btn" id="reset1">Erase progress…</button><span id="reset2" hidden><span class="small">Are you sure? </span><button class="btn sm" id="resetyes" style="color:var(--bad);border-color:var(--bad)">Yes, erase everything</button> <button class="btn sm" id="resetno">Cancel</button></span></div></div>' +
@@ -491,6 +491,22 @@
     el.querySelectorAll('[data-theme]').forEach((b) => (b.onclick = () => { s.theme = b.dataset.theme; App.save(); App.applyTheme(); V.settings(el); }));
     el.querySelectorAll('[data-reg]').forEach((b) => (b.onclick = () => { s.register = b.dataset.reg; App.save(); V.settings(el); }));
     el.querySelector('#voice').onchange = (e) => { s.voice = e.target.value; App.save(); };
+    el.querySelectorAll('[data-vsrc]').forEach((b) => (b.onclick = () => { s.voiceSource = b.dataset.vsrc; App.save(); V.settings(el); }));
+    const dl = el.querySelector('#dlAudio');
+    if (dl) dl.onclick = async () => {
+      const keys = [...App.pack.keys], stat = el.querySelector('#dlStat');
+      dl.disabled = true; let n = 0, fail = 0;
+      let cache = null; try { cache = await caches.open('usaptayo-audio'); } catch (e) {}
+      for (let i = 0; i < keys.length; i += 8) {
+        await Promise.all(keys.slice(i, i + 8).map(async (k) => {
+          const url = 'audio/' + k + '.mp3';
+          try { if (cache && (await cache.match(url))) { n++; return; } const r = await fetch(url); if (!r.ok) throw 0; if (cache) await cache.put(url, r); n++; } catch (e) { fail++; }
+        }));
+        stat.textContent = 'Saved ' + n + ' of ' + keys.length + (fail ? ' (' + fail + ' failed)' : '');
+      }
+      stat.textContent = fail ? 'Saved ' + n + ' of ' + keys.length + '. Some failed; tap again to retry.' : 'All ' + n + ' clips saved for offline use.';
+      dl.disabled = false;
+    };
     el.querySelector('#rate').oninput = (e) => { s.rate = +e.target.value; App.save(); };
     el.querySelector('#npd').onchange = (e) => { s.newPerDay = Math.max(5, Math.min(100, +e.target.value || 20)); App.save(); };
     el.querySelector('#test').onclick = () => App.speak('Magandang umaga po. Kumusta po kayo?');
@@ -500,6 +516,23 @@
     el.querySelector('#resetyes').onclick = () => { App.reset(); App.applyTheme(); App.toast('Progress erased.'); V.settings(el); };
     if (!voices.length && App.canSpeak) setTimeout(() => { if (App.voices().length && location.hash.startsWith('#/settings')) V.settings(el); }, 600);
   };
+
+  function voiceCard(s, voices) {
+    const st = App.audioStatus(), info = App.pack.info;
+    const packLine = info
+      ? '<span class="pill good">Installed</span> ' + info.count + ' recorded clips · ' + esc(info.voice) + ' · ' + esc(info.generated) + ' · ' + (info.bytes / 1e6).toFixed(0) + ' MB'
+      : (App.pack.ready ? '<span class="pill warn">Not installed yet</span> The recordings are made by a one-click job on GitHub. See "Audio pack" in the README.' : 'Checking…');
+    const dev = App.bestTagalogVoice();
+    const devLine = dev.kind === 'filipino' || dev.kind === 'chosen' ? 'Filipino voice: ' + esc(dev.voice.name) : dev.kind === 'near' ? 'No Filipino voice on this device. Closest match: ' + esc(dev.voice.name + ' (' + dev.voice.lang + ')') + '.' : 'No usable voice on this device.';
+    return '<div class="seg" role="group" aria-label="Voice source" style="display:flex;flex-wrap:wrap">' + [['pack', 'Recorded Filipino voice'], ['device', 'Device voice']].map(([k, t]) => '<button data-vsrc="' + k + '" class="' + (s.voiceSource === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div>' +
+      '<div class="small"><b>Audio pack:</b> ' + packLine + '</div>' +
+      (info ? '<div class="row"><button class="btn sm" id="dlAudio">Save all audio for offline use</button><span class="small muted" id="dlStat"></span></div>' : '') +
+      '<div class="small"><b>Device voice:</b> ' + devLine + ' Used for anything without a recording' + (s.voiceSource === 'device' ? ' and, with this setting, for everything' : '') + '. It never uses an English voice for Tagalog unless you pick one below.</div>' +
+      '<details><summary class="small">Choose a device voice</summary><label class="small" style="display:block;margin-top:6px">Voice <select class="input" id="voice"><option value="">Automatic</option>' + voices.map((v) => '<option value="' + esc(v.name) + '"' + (s.voice === v.name ? ' selected' : '') + '>' + esc(v.name + ' (' + v.lang + ')') + '</option>').join('') + '</select></label>' +
+      '<p class="small muted" style="margin:6px 0 0">Android: Settings → Google Text-to-speech → install Filipino. Microsoft Edge on a computer includes natural Filipino voices (Blessica, Angelo). iPhone has no Filipino voice, so use the recorded pack.</p></details>' +
+      '<label>Speed <input type="range" id="rate" min="0.5" max="1.2" step="0.05" value="' + s.rate + '" style="width:100%"></label>' +
+      '<div class="row"><button class="btn" id="test">' + icons.sound + ' Test: "Magandang umaga po. Kumusta po kayo?"</button></div>';
+  }
 
   /* ---------- What's New ---------- */
   V.whatsnew = (el) => {

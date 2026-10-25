@@ -15,7 +15,7 @@
   /* ---------- Storage ---------- */
   const KEY = 'usaptayo.v1';
   const defaults = () => ({
-    settings: { theme: 'system', register: 'f', voice: '', rate: 0.85, cardDir: 'tl-en', newPerDay: 20 },
+    settings: { theme: 'system', register: 'f', voice: '', voiceSource: 'pack', rate: 0.85, cardDir: 'tl-en', newPerDay: 20 },
     srs: {}, mistakes: [], newToday: { date: '', n: 0 },
     done: { lessons: {}, reading: {}, cases: {}, dialogues: {}, sections: {} },
     streak: { last: '', count: 0, best: 0, days: [] },
@@ -280,20 +280,70 @@
     return i < 30 ? i + 'd' : i < 365 ? Math.round(i / 30) + 'mo' : (i / 365).toFixed(1) + 'y';
   };
 
-  /* ---------- Speech ---------- */
+  /* ---------- Speech ----------
+     1. Recorded audio pack (audio/manifest.json + audio/<key>.mp3), natural Filipino voice.
+     2. Device Filipino voice, if installed.
+     3. A device voice whose language reads Tagalog spelling closely (Indonesian, Malay, Spanish), never English. */
   const synth = window.speechSynthesis;
   App.voices = () => (synth ? synth.getVoices() : []);
   App.filipinoVoices = () => App.voices().filter((v) => /^(fil|tl)([-_]|$)/i.test(v.lang) || /filipino|tagalog/i.test(v.name));
-  App.canSpeak = !!synth;
-  App.speak = (text, opts) => {
-    if (!synth) { App.toast('Text-to-speech is not available in this browser.'); return; }
-    synth.cancel();
-    const u = new SpeechSynthesisUtterance(text);
+  const NEAR = [/^id([-_]|$)/i, /^ms([-_]|$)/i, /^es([-_]|$)/i, /^it([-_]|$)/i];
+  App.bestTagalogVoice = () => {
     const all = App.voices();
-    let v = all.find((x) => x.name === state.settings.voice) || App.filipinoVoices()[0];
-    if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'fil-PH';
-    u.rate = (opts && opts.rate) || state.settings.rate || 0.85;
+    const chosen = all.find((x) => x.name === state.settings.voice);
+    if (chosen) return { voice: chosen, kind: 'chosen' };
+    const fil = App.filipinoVoices();
+    if (fil.length) return { voice: fil.find((v) => /natural|neural|online|google/i.test(v.name)) || fil[0], kind: 'filipino' };
+    for (const re of NEAR) { const v = all.filter((x) => re.test(x.lang)); if (v.length) return { voice: v.find((x) => x.localService) || v[0], kind: 'near' }; }
+    return { voice: null, kind: 'none' };
+  };
+  App.canSpeak = !!synth;
+  App.pack = { keys: new Set(), info: null, ready: false };
+  App.loadAudioPack = () => fetch('audio/manifest.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).then((m) => {
+    if (m && Array.isArray(m.keys)) { App.pack.keys = new Set(m.keys); App.pack.info = m; }
+  }).catch(() => {}).finally(() => { App.pack.ready = true; });
+  App.hasClip = (text) => state.settings.voiceSource !== 'device' && App.pack.keys.has(AudioKey(text));
+  let current = null; // { audio } or { utter }
+  const haltCurrent = () => {
+    if (current && current.audio) { try { current.audio.pause(); } catch (e) {} }
+    if (current && current.done) current.done();
+    current = null;
+    if (synth) synth.cancel();
+  };
+  App.stopSpeech = () => { App._seq = (App._seq || 0) + 1; haltCurrent(); };
+  // Speak Tagalog text; resolves when finished. opts.lang = 'en' speaks English with the device voice.
+  App.speakAsync = (text, opts) => new Promise((resolve) => {
+    opts = opts || {};
+    haltCurrent();
+    const rate = opts.rate || state.settings.rate || 0.85;
+    let finished = false;
+    const done = () => { if (!finished) { finished = true; resolve(); } };
+    if (opts.lang !== 'en' && App.hasClip(text)) {
+      const a = new Audio('audio/' + AudioKey(text) + '.mp3');
+      a.playbackRate = Math.min(1.4, Math.max(0.6, rate / 0.85));
+      a.preservesPitch = true;
+      current = { audio: a, done };
+      a.onended = done; a.onerror = () => { App.pack.keys.delete(AudioKey(text)); done(); };
+      a.play().catch(done);
+      return;
+    }
+    if (!synth) { if (!opts.quiet) App.toast('Audio is not available in this browser.'); return setTimeout(done, 800); }
+    const u = new SpeechSynthesisUtterance(text);
+    if (opts.lang === 'en') u.lang = 'en-US';
+    else { const b = App.bestTagalogVoice(); if (b.voice) { u.voice = b.voice; u.lang = b.voice.lang; } else u.lang = 'fil-PH'; }
+    u.rate = rate;
+    u.onend = done; u.onerror = done;
+    current = { utter: u, done };
+    setTimeout(done, 15000 + text.length * 120);
     synth.speak(u);
+  });
+  App.speak = (text, opts) => { App._seq = (App._seq || 0) + 1; App.speakAsync(text, opts); };
+  App.speakAll = async (texts, gapMs) => { const tok = (App._seq = (App._seq || 0) + 1); for (const t of texts) { if (App._seq !== tok) return; await App.speakAsync(t); if (gapMs) await new Promise((r) => setTimeout(r, gapMs)); } };
+  // Describes what the learner will hear, for notices and settings.
+  App.audioStatus = () => {
+    const pack = App.pack.info && state.settings.voiceSource !== 'device';
+    const b = App.bestTagalogVoice();
+    return { pack: !!pack, packCount: App.pack.keys.size, voiceKind: b.kind, voiceName: b.voice ? b.voice.name + ' (' + b.voice.lang + ')' : '' };
   };
   if (synth) synth.onvoiceschanged = () => { App.voicesReady = true; };
 
