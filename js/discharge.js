@@ -41,9 +41,11 @@
       if (has('suicide', /\bactive\b|reassess/i)) out.push(['bad', 'Active suicidal ideation documented. Reassess discharge readiness and safety planning before the patient leaves.']);
       else if (has('suicide', /passive/i)) out.push(['warn', 'Passive death wish documented. Make a safety plan with the patient and family, and limit access to means at home.']);
       if (has('homicide', /present|reassess/i)) out.push(['bad', 'Homicidal ideation documented. Reassess discharge readiness and consider duty to protect.']);
-      if (has('positive', /persist/i)) out.push(['warn', 'Delusions persist. Document the risk assessment and the family\'s plan for supervision.']);
+      if (has('positive', /command/i)) out.push(['bad', 'Command hallucinations persist. Reassess discharge readiness before the patient leaves.']);
+      else if (has('positive', /delusions persist/i)) out.push(['warn', 'Delusions persist. Document the risk assessment and the family\'s plan for supervision.']);
       if (has('insight', /poor|grade 1|grade 2/i)) out.push(['warn', 'Poor insight. Plan for supervised medication and consider a depot.']);
       if (has('medications', /teach-back/i) === false && rec.medications.picks.size + rec.medications.text.length > 0) out.push(['info', 'Teach-back not marked for medications.']);
+      if (has('aftercare', /deferred/i)) out.push(['info', 'Discharge deferred. Tell the family the reason in plain words and when you will reassess.']);
       const empty = F.filter((f) => f.kind !== 'sign' && !value(f)).map((f) => f.label);
       if (empty.length) out.push(['info', 'Not yet filled: ' + empty.join(', ') + '.']);
       return out;

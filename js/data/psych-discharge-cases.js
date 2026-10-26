@@ -10,10 +10,13 @@
      wrong { pick: why } targeted feedback for common wrong picks
      doc   model documentation line
      why   teaching point shown after checking
-     quote (mood only) model patient quote */
+     quote (mood only) model patient quote
+   ans entries may carry a third item, the speaker (e.g. 'Mother'); default is the patient.
+   decision { discharge: true|false, why }: the model call at the end (discharge today, or defer). */
 window.PSYCH_DISCHARGE_CASES = [
 {
-  id: 'ramon', title: 'Back on medicine, ready to go home', level: 'B1',
+  id: 'ramon', title: 'Back on medicine, ready to go home', level: 'B1', dx: 'Schizophrenia',
+  decision: { discharge: true, why: 'Discharge today. Psychosis has largely resolved, there is no suicidal or homicidal ideation, he sleeps well, and his wife will supervise the medicine. The teach-back error was fixed before he left.' },
   setting: 'Ward, morning of planned discharge. Mang Ramon, 42, tricycle driver, third admission. His wife is waiting at the nurses\' station.',
   chart: [
     'Admitted 3 weeks ago after stopping his medicine for 2 months: insomnia, hearing neighbors\' voices through the wall, believed a neighbor was poisoning the family\'s food, threw a chair at home.',
@@ -136,8 +139,8 @@ window.PSYCH_DISCHARGE_CASES = [
         3: ['Sa health center po, libre raw doon. Kung wala, bibili po ang asawa ko.', 'At the health center, it\'s free there. If not, my wife will buy it.'],
         4: ['Opo, hindi ko na po uulitin.', 'Yes, I won\'t do that again.'] },
       key: [2],
-      need: ['Olanzapine ___ mg tab, 1 tab at HS'], ok: ['Family supervises medication'],
-      wrong: { 'Teach-back done, correct': 'His teach-back was wrong: he plans to take it only when he can\'t sleep. Re-teach ("every night, even when you sleep well"), ask again, and mark it correct only when it is.', 'Fluphenazine decanoate ___ mg/ml, ___ ml deep IM every ___ weeks': 'He has no depot injection, as he said himself.' },
+      need: ['Olanzapine ___ mg tab, 1 tab at HS', 'Teach-back incorrect, re-taught'], ok: ['Family supervises medication'],
+      wrong: { 'Teach-back done, correct': 'His teach-back was wrong: he plans to take it only when he can\'t sleep. Re-teach ("every night, even when you sleep well"), ask again, and document "Teach-back incorrect, re-taught".', 'Fluphenazine decanoate ___ mg/ml, ___ ml deep IM every ___ weeks': 'He has no depot injection, as he said himself.' },
       doc: 'Olanzapine 10 mg tab, 1 tab at HS; teach-back initially incorrect ("only when I can\'t sleep"), re-taught; wife to supervise',
       why: 'Teach-back is the step that catches errors. Without it he would have gone home taking his antipsychotic only on bad nights, which is how he relapsed last time.' },
     aftercare: {
@@ -152,7 +155,8 @@ window.PSYCH_DISCHARGE_CASES = [
   }
 },
 {
-  id: 'liza', title: 'Better, but not fully safe', level: 'B1',
+  id: 'liza', title: 'Better, but not fully safe', level: 'B1', dx: 'Major depressive disorder',
+  decision: { discharge: true, why: 'Discharge today, with a safety plan. The death wish is passive, with no plan or intent; she has protective factors, her mother will keep the medicines, and she agreed to tell her mother if the thoughts return. Arrange early contact. Had she described intent or a plan, discharge would be deferred.' },
   setting: 'Ward, afternoon before planned discharge. Liza, 34, public school teacher, second depressive episode. Her mother is visiting; her husband works abroad.',
   chart: [
     'Admitted 2 weeks ago after telling her sister she wanted to die. Not eating or sleeping for a month, stopped going to work, felt she was a burden to her family.',
@@ -272,18 +276,393 @@ window.PSYCH_DISCHARGE_CASES = [
         2: ['Isang tableta po ng sertraline tuwing umaga pagkatapos mag-almusal, araw-araw, kahit maayos na ang pakiramdam ko.', 'One sertraline tablet every morning after breakfast, every day, even when I feel well.'],
         3: ['Sa health center po, o bibili si Nanay sa botika.', 'At the health center, or Mama will buy it at the pharmacy.'], 4: ['Opo, Dok. Hindi na po tulad ng dati.', 'Yes, Doc. Not like before.'] },
       key: [2],
-      need: ['Teach-back done, correct', 'Family supervises medication'],
-      wrong: { 'Olanzapine ___ mg tab, 1 tab at HS': 'She is on sertraline, which is not in the quick picks. Write it in the details.', 'Fluphenazine decanoate ___ mg/ml, ___ ml deep IM every ___ weeks': 'She has no injection.' },
+      need: ['Sertraline ___ mg tab, ___', 'Teach-back done, correct', 'Family supervises medication'],
+      wrong: { 'Olanzapine ___ mg tab, 1 tab at HS': 'She is on sertraline, not olanzapine.', 'Fluphenazine decanoate ___ mg/ml, ___ ml deep IM every ___ weeks': 'She has no injection.' },
       doc: 'Sertraline 100 mg tab, 1 tab after breakfast; teach-back correct; mother to keep the supply and give one dose a day',
-      why: 'With a passive death wish, the family keeps the supply and gives one dose at a time. Write sertraline in the details since it isn\'t a quick pick.' },
+      why: 'With a passive death wish, the family keeps the supply and gives one dose at a time.' },
     aftercare: {
       ans: { 0: ['Opo, Dok.', 'Yes, Doc.'], 1: ['Si Nanay po. Siya na rin po ang magtatago ng mga gamot ko.', 'Mama. She\'ll also keep my medicines.'],
         2: ['Opo. Sasabihin ko po kay Nanay kapag bumalik ang ganoong isipin.', 'Yes. I\'ll tell Mama if those thoughts come back.'],
         3: ['Salamat po. Isusulat ko po sa likod ng reseta.', 'Thank you. I\'ll write it on the back of the prescription.'] },
-      need: ['OPD follow-up in 2 weeks', 'Family oriented on warning signs', 'Referred to ___'],
+      need: ['OPD follow-up in 2 weeks', 'Family oriented on warning signs', 'Referred to ___', 'Safety plan made with patient and family'],
       wrong: { 'Depot injection schedule given': 'She is on oral medicine only.' },
       doc: 'OPD follow-up in 2 weeks; referred to psychology for psychotherapy; mother oriented on warning signs and safety plan; crisis hotline 1553 given',
       why: 'With a passive death wish, consider earlier contact (a phone check-in within the week) and make sure the mother knows the hotline too.' }
+  }
+},
+{
+  id: 'carlo', title: 'Mania settling, big plans', level: 'B1', dx: 'Bipolar I disorder',
+  setting: 'Ward, morning of planned discharge. Carlo, 28, call center agent, first manic episode needing admission. His partner, Jessa, is coming at noon.',
+  chart: [
+    'Admitted 18 days ago: slept 2 hours a night for a week, spent his savings on gadgets, talked nonstop, said he would become a millionaire through an online business, irritable when stopped. One depressive episode at 24, untreated.',
+    'Admission MSE: overfamiliar, restless, pressured speech, euphoric and labile, flight of ideas, grandiose delusions, insight grade 1.',
+    'Course: lithium carbonate started, level in range on day 14; quetiapine at night. Fine hand tremor since week 2. No restraint. Sleep chart 7 hours a night for a week.',
+    'Plan: lithium carbonate 450 mg tab, 1 tab twice a day; quetiapine 200 mg tab at bedtime. OPD in 2 weeks with lithium level and creatinine before the visit. Partner to supervise.'
+  ],
+  decision: { discharge: true, why: 'Discharge today. Mania is in partial remission: sleep is normal, speech is only mildly fast, and there is no risk to self or others. Residual grandiose plans and impaired social judgment call for a clear plan with his partner (no big financial decisions for now), not for a longer stay.' },
+  fields: {
+    behavior: {
+      obs: 'Neatly dressed, hair styled. Jokes with the nurse and calls her "ate ganda". Sits through the interview but shifts often. Stops joking when asked.',
+      ans: { 0: ['Ayos na ayos, Dok! Grabe, ang ganda ng araw ngayon, uuwi na ako!', 'Doing great, Doc! Wow, what a beautiful day, I\'m going home!'], 1: ['Oo naman, Dok, kahit isang oras pa!', 'Of course, Doc, even for an hour!'] },
+      need: ['Cooperative', 'Well groomed', 'Good eye contact', 'Overfamiliar'], ok: ['Calm', 'Restless'],
+      wrong: { Irritable: 'He was irritable on admission. Today he is cheerful and stops when redirected.', Guarded: 'He is open, even too open.' },
+      doc: 'Cooperative, well groomed, good eye contact, mildly overfamiliar but redirectable; shifts in his seat',
+      why: 'Mild overfamiliarity that stops when redirected is common as mania settles. Compare with admission: restless, intrusive, hard to redirect.' },
+    mood: {
+      obs: 'Smiles a lot and laughs easily, but the laughter fits what is said. No sudden swings during the interview.',
+      ans: { 0: ['Masaya po, Dok! Pero hindi na yung sobra-sobra noon. Mas kalmado na po ako.', 'Happy, Doc! But not the over-the-top kind like before. I\'m calmer now.'],
+        1: ['Masaya po. Medyo naiinip lang dito sa ward.', 'Happy. Just a bit bored here on the ward.'], 2: ['Siyam, Dok! Este... mga walo po siguro.', 'Nine, Doc! I mean... maybe about eight.'] },
+      quote: 'Masaya po, Dok! Pero hindi na yung sobra-sobra noon. (Happy, Doc! But not over the top like before.)',
+      need: ['Mildly elevated mood', 'Congruent affect', 'Full range affect'],
+      wrong: { 'Euphoric mood': 'Euphoric was his admission state. He now notices it himself and corrects his own rating.', 'Labile affect': 'No sudden swings today. Labile was the admission finding.', 'Euthymic mood': 'He is still more cheerful than usual and rates his mood 8 to 9. Mildly elevated is more accurate.' },
+      doc: '"Masaya po, Dok! Pero hindi na yung sobra-sobra noon." (Happy, Doc! But not over the top like before.) Mildly elevated mood, congruent, full range affect, no lability',
+      why: 'Mania rarely goes from euphoric to euthymic in two weeks. Documenting "mildly elevated" sets the baseline for the follow-up visit.' },
+    process: {
+      obs: 'Speech is a little fast but can be interrupted. The story drifts to his business plans and comes back when you redirect.',
+      ans: { 0: ['Hindi po ako natutulog noon, kasi ang dami kong ideya, yung online business ko, yung mga supplier, may kakilala ako sa Cebu na... ay, sorry po, Dok. Yun nga po, dinala ako ni Jessa kasi naubos ko ang ipon namin.', 'I wasn\'t sleeping then, because I had so many ideas, my online business, the suppliers, I know someone in Cebu who... oh, sorry, Doc. Anyway, Jessa brought me in because I used up our savings.'],
+        1: ['Magre-resign po ako sa call center para mag-full time sa negosyo. Mangungutang po ako sa lending para sa puhunan.', 'I\'ll resign from the call center to go full time on the business. I\'ll borrow from a lending company for capital.'] },
+      key: [0],
+      need: ['Some tangentiality'], ok: ['Goal-directed', 'Coherent and relevant'],
+      wrong: { 'Flight of ideas': 'Flight of ideas jumps rapidly between loosely linked ideas and can\'t be steered back. He drifts once and returns with "yun nga po" when he notices.', 'Loose associations': 'Each idea links to the next; he is not incoherent.' },
+      doc: 'Mild tangentiality, redirectable; speech slightly fast but interruptible',
+      why: 'Listen for the return: "ay, sorry po... yun nga po" means he steered himself back. That makes it mild tangentiality, not flight of ideas.' },
+    positive: {
+      obs: 'Not responding to internal stimuli.',
+      ans: { 0: ['Wala po, Dok. Wala naman akong narinig kahit noon.', 'No, Doc. I didn\'t hear anything even before.'], 1: ['Wala po.', 'No.'], 2: ['Wala po.', 'No.'], 3: ['Wala naman po.', 'Not really.'],
+        4: ['Sigurado pa rin po akong yayaman ako sa negosyo. Pero siguro po hindi kasing bilis ng akala ko. Baka mga isang taon.', 'I\'m still sure I\'ll get rich from the business. But maybe not as fast as I thought. Maybe in a year.'],
+        5: ['Wala po, Dok.', 'No, Doc.'] },
+      key: [4],
+      need: ['No hallucinations elicited', 'Not responding to internal stimuli', 'Grandiose ideas, less intense'],
+      wrong: { 'Delusions no longer held': 'He is still "sure" he will get rich, only slower. The idea is softened, not gone.', 'Delusions persist': 'He now admits it may not happen fast and is open to the timeline. Less intense fits better than persisting at full strength.' },
+      doc: 'No hallucinations; not responding to internal stimuli; residual grandiose ideas about business success, less intense and open to discussion',
+      why: 'Re-ask about the specific admission belief. Grandiosity that softens ("baka mga isang taon") is typical of partial remission.' },
+    negative: {
+      ans: { 0: ['Opo! Ako pa nga po ang nag-aaya sa iba.', 'Yes! I\'m the one inviting the others.'], 1: ['Opo, kilala ko na po lahat dito.', 'Yes, I know everyone here now.'], 2: ['Sobra po, Dok!', 'Very much, Doc!'], 3: ['Opo, araw-araw po.', 'Yes, every day.'] },
+      need: ['None noted'],
+      doc: 'None noted',
+      why: 'No negative symptoms. Watch instead for the opposite: too much energy and activity returning.' },
+    suicide: {
+      ans: { 0: ['Hindi po, Dok! Ang dami ko pang gagawin.', 'No, Doc! I still have so much to do.'], 1: ['Wala po.', 'None.'], 2: ['Sasabihin ko po kay Jessa.', 'I\'d tell Jessa.'] },
+      need: [['Denies suicidal ideation, plan, or intent', 'None']],
+      doc: 'Denies suicidal ideation, plan, or intent',
+      why: 'Denies now, but bipolar disorder carries a high suicide risk, especially when a depressive episode follows mania. Teach the warning signs of depression too.' },
+    homicide: {
+      ans: { 0: ['Wala po.', 'No.'], 1: ['Wala po. Si Jessa po, nagalit ako sa kanya noon kasi pinigilan niya ako. Pero naiintindihan ko na po.', 'No. Jessa, I was angry at her before because she stopped me. But I understand now.'] },
+      need: [['Denies homicidal ideation', 'None']],
+      doc: 'Denies homicidal ideation, including toward his partner',
+      why: 'Irritability on admission was aimed at his partner. Asking about her by name is part of the risk assessment.' },
+    orientation: {
+      ans: { 0: ['Lunes po, katapusan ng Oktubre.', 'Monday, end of October.'], 1: ['Sa ospital po sa Mariveles.', 'At the hospital in Mariveles.'], 2: ['Kayo po si Dok!', 'You\'re Doc!'] },
+      need: ['Oriented to time, place, and person (×3)'], doc: 'Oriented to time, place, and person (×3)', why: 'Fully oriented.' },
+    memory: {
+      ans: { 0: ['Bola, puno, susi!', 'Ball, tree, key!'], 1: ['Bola, puno, susi. Madali lang po iyan, Dok.', 'Ball, tree, key. That\'s easy, Doc.'], 2: ['Pandesal po at hotdog.', 'Pandesal and hotdog.'], 3: ['Mga dalawa\'t kalahating linggo na po.', 'About two and a half weeks ago.'], 4: ['Sa Dinalupihan po.', 'In Dinalupihan.'] },
+      need: ['Intact immediate, recent, and remote memory'], doc: 'Intact immediate, recent, and remote memory', why: 'Intact.' },
+    insight: {
+      ans: { 0: ['Napuyat lang po ako sa trabaho at na-stress. Kaya po siguro ako nagkaganoon.', 'I was just sleep-deprived from work and stressed. That\'s probably why I got like that.'],
+        1: ['Bipolar daw po. Pero sa tingin ko po, pagod lang talaga iyon.', 'They said bipolar. But I think it was really just exhaustion.'],
+        2: ['Opo, iinumin ko po, kasi sabi ninyo. Pero sana po saglit lang.', 'Yes, I\'ll take it, because you said so. But hopefully only for a short while.'],
+        3: ['Baka po hindi ako makatulog ulit?', 'Maybe I won\'t be able to sleep again?'] },
+      key: [0, 1],
+      need: ['Poor', 'Grade 3: blames others/external factors'], ok: ['Fair', 'Grade 2: slight awareness'],
+      wrong: { Good: 'He attributes the episode to work stress and exhaustion and hopes the medicine is short term.', 'Grade 5: intellectual insight': 'He does not yet accept bipolar disorder as an illness in himself.' },
+      doc: 'Poor (grade 3): attributes the episode to work stress and lack of sleep; accepts medicine because advised, hopes it is short term',
+      why: 'Blaming stress or lack of sleep is grade 3. Lithium adherence depends on insight, so involve his partner and repeat psychoeducation at every visit.' },
+    judgment: {
+      ans: { 0: ['Bibili po agad ako, Dok. May pera pa naman po ako... ay, wala na nga pala.', 'I\'ll buy some right away, Doc. I still have money... oh, actually I don\'t anymore.'],
+        1: ['Wala naman po akong naririnig na boses, Dok.', 'I don\'t hear any voices, Doc.'], 2: ['Sisigaw po ako ng "sunog!" para lumabas lahat.', 'I\'d shout "fire!" so everyone gets out.'],
+        3: ['Hindi naman po ako umiinom, Dok. Paminsan-minsan lang po.', 'I don\'t really drink, Doc. Just once in a while.'] },
+      key: [],
+      need: ['Intact test judgment', 'Impaired social judgment'], ok: ['Fair', 'Poor'],
+      wrong: { 'Intact social judgment': 'His plan is to resign and borrow money for the business right after an episode that used up the family\'s savings. That is impaired social judgment.', Good: 'Test judgment is fine, but his real-life plans are not.' },
+      doc: 'Intact test judgment; impaired social judgment (plans to resign and take a loan for a business right after discharge)',
+      why: 'Social judgment is about his actual plans, which came up in the thought process field. Advise him and his partner to put off big decisions (resigning, loans) until the mood is stable.' },
+    sleep: {
+      obs: 'Ward sleep chart: 7 hours a night for the past week. On admission: 2 hours.',
+      ans: { 0: ['Mga pito po, Dok. Ang sarap na po ng tulog ko.', 'About seven, Doc. I sleep really well now.'], 1: ['Hindi na po.', 'Not anymore.'], 2: ['Hindi po.', 'No.'],
+        3: ['Medyo malakas pa rin po ako, pero natutulog na po ako. Hindi na tulad noon na dalawang oras lang.', 'I still have a lot of energy, but I sleep now. Not like before, just two hours.'] },
+      key: [3],
+      need: ['Good', '7–8 hours, uninterrupted'],
+      wrong: { 'Reduced need for sleep': 'That was the admission finding. He now sleeps 7 hours and feels rested.', 'Daytime sedation': 'He denies daytime sleepiness despite quetiapine at night.' },
+      doc: 'Good, 7 hours, uninterrupted (sleep chart); no reduced need for sleep',
+      why: 'Sleep is the best early marker in bipolar disorder. Teach him and his partner: two or more short nights without feeling tired means call or come back.' },
+    adverse: {
+      obs: 'Fine tremor of both hands on outstretched arms. Lithium level in range on day 14. No vomiting, diarrhea, or unsteady gait. No falls or restraint.',
+      ans: { 0: ['Nanginginig po nang kaunti ang kamay ko kapag nagta-type sa cellphone. Pero kaya naman po.', 'My hands shake a little when I type on my phone. But it\'s manageable.'], 1: ['Wala po.', 'No.'] },
+      key: [0],
+      need: ['Tremor'],
+      wrong: { None: 'He has a fine hand tremor, visible on exam. Document it: a coarse tremor later could mean toxicity.', 'Extrapyramidal symptoms': 'A fine postural tremor on lithium is a lithium effect, not EPS. Check for rigidity before calling it EPS.' },
+      doc: 'Fine bilateral hand tremor on lithium (level in range); no signs of toxicity',
+      why: 'A fine tremor is common on lithium. Write it down so a change to a coarse tremor, with vomiting, diarrhea, or unsteadiness, is recognized as possible toxicity.' },
+    diagnosis: {
+      ans: { 0: ['Opo, bipolar daw po.', 'Yes, they said bipolar.'], 1: ['Pero wala naman po akong naririnig, Dok. Yung negosyo lang po ang naisip ko.', 'But I don\'t hear anything, Doc. I was just thinking about the business.'], 2: ['Salamat po. Akala ng tatay ko, nadala lang ako ng barkada.', 'Thank you. My father thought my friends just led me astray.'] },
+      need: ['Bipolar I disorder, current or most recent episode manic, in partial remission'],
+      wrong: { 'Bipolar I disorder, current episode manic': 'On admission he was in a manic episode. At discharge, with symptoms much reduced, use the partial remission specifier.', 'Major depressive disorder, recurrent': 'One manic episode makes it bipolar I, whatever the past depressions.' },
+      doc: 'Bipolar I disorder, current or most recent episode manic, in partial remission',
+      why: 'The earlier depression and this mania together are bipolar I. When explaining, say the illness has highs and lows, since the second line of the script (hearing things) does not fit him.' },
+    medications: {
+      ans: { 0: ['Opo.', 'Yes.'], 1: ['Wala po akong iniksiyon, di ba?', 'I don\'t have an injection, right?'],
+        2: ['Lithium po, isang tableta sa umaga at isa sa gabi, pagkatapos kumain. Tapos yung quetiapine, isa bago matulog.', 'Lithium, one tablet in the morning and one at night, after meals. Then the quetiapine, one before bed.'],
+        3: ['Bibili po si Jessa. Mahal po ba iyon, Dok?', 'Jessa will buy it. Is it expensive, Doc?'], 4: ['Opo, Dok.', 'Yes, Doc.'],
+        5: ['Ah, kaya pala po ako kinukunan ng dugo. Okay po, iinom ako ng maraming tubig.', 'Ah, so that\'s why they take my blood. Okay, I\'ll drink plenty of water.'] },
+      key: [2, 5],
+      need: ['Lithium carbonate ___ mg tab, ___', 'Quetiapine ___ mg tab, ___', 'Teach-back done, correct'], ok: ['Family supervises medication'],
+      wrong: { 'Divalproex sodium ___ mg tab, ___': 'He is on lithium, not valproate.', 'Teach-back incorrect, re-taught': 'His teach-back was correct: lithium twice a day after meals, quetiapine at bedtime.' },
+      doc: 'Lithium carbonate 450 mg tab, 1 tab twice a day after meals; quetiapine 200 mg tab, 1 tab at HS; teach-back correct; toxicity signs and fluids explained',
+      why: 'For lithium, the teach-back should include the warning signs of toxicity, not only the schedule. Cost matters too: ask the family about it before discharge.' },
+    aftercare: {
+      ans: { 0: ['Opo, Dok.', 'Yes, Doc.'], 1: ['Si Jessa po. Siya rin po ang hahawak ng pera namin muna.', 'Jessa. She\'ll also handle our money for now.'],
+        2: ['Opo. Kapag hindi na po ako inaantok sa gabi, sasabihin ko agad.', 'Yes. If I stop feeling sleepy at night, I\'ll say so right away.'], 3: ['Salamat po.', 'Thank you.'] },
+      need: ['OPD follow-up in 2 weeks', 'Laboratory tests before follow-up: ___', 'Family oriented on warning signs'],
+      wrong: { 'Discharge deferred: ___': 'He has no risk to self or others and sleeps normally. Residual grandiosity can be managed as an outpatient.' },
+      doc: 'OPD follow-up in 2 weeks; lithium level and creatinine before the visit; partner oriented on warning signs (short sleep, overspending); partner to manage finances for now',
+      why: 'Order the lithium level before the visit, timed 12 hours after the last dose, so the result is ready when he is seen. His partner managing the money was his own idea: put it in the plan.' }
+  }
+},
+{
+  id: 'arnel', title: 'Psychosis cleared, cravings ahead', level: 'B1', dx: 'Substance-induced psychosis',
+  setting: 'Ward, afternoon before planned discharge. Arnel, 31, construction worker. His older brother, Kuya Boyet, will take him home.',
+  chart: [
+    'Admitted 3 weeks ago, brought by his brother and barangay officials: for a week he believed men were following him to kill him, saw shadows on the roof, and threatened a neighbor with a bolo. Using shabu daily for 6 months, often to stay awake on night shifts. Occasional alcohol.',
+    'Admission MSE: hypervigilant, restless, persecutory delusions, visual hallucinations, insight grade 1. Urine drug screen positive for methamphetamine.',
+    'Course: psychotic symptoms cleared by day 8. Days 2 to 7: slept up to 14 hours, ate a lot, low mood (withdrawal). No restraint. Sleep chart 8 hours a night for 10 days.',
+    'No psychosis before he started using. Plan: risperidone 2 mg tab at bedtime for now; OPD in 2 weeks; refer to a community-based drug rehabilitation program; brother to supervise.'
+  ],
+  decision: { discharge: true, why: 'Discharge today. Psychosis cleared within days of stopping the drug, and there is no risk to self or others. His plan to use "a little" for night shifts is a relapse risk, not a reason to keep him: it is what the rehabilitation referral and family plan are for.' },
+  fields: {
+    behavior: {
+      obs: 'Thin, fairly groomed, in a borrowed shirt. Fair eye contact, looks away when drugs come up. Sits still and answers politely.',
+      ans: { 0: ['Okay na po, Dok.', 'Okay now, Doc.'], 1: ['Sige po.', 'All right.'] },
+      need: ['Calm', 'Cooperative', 'Fairly groomed'], ok: ['Good eye contact'],
+      wrong: { Restless: 'He was restless and hypervigilant on admission. He sits still today.', Guarded: 'He looks away from shame when drugs come up, but he answers. That is not guardedness.' },
+      doc: 'Calm, cooperative, fairly groomed, fair eye contact; looks away when substance use is discussed',
+      why: 'Looking away when drugs come up is usually hiya, not guardedness. Keep a neutral, non-judging tone so he keeps talking.' },
+    mood: {
+      obs: 'Speaks in a low voice about the incident, brightens when talking about his daughter.',
+      ans: { 0: ['Okay na po. Pero nahihiya po ako sa nangyari, lalo na sa kapitbahay namin.', 'Okay now. But I\'m ashamed of what happened, especially with our neighbor.'], 1: ['Medyo malungkot po. Nahihiya.', 'A bit sad. Ashamed.'], 2: ['Mga anim po.', 'About six.'] },
+      quote: 'Okay na po. Pero nahihiya po ako sa nangyari. (Okay now. But I\'m ashamed of what happened.)',
+      need: [['Dysphoric mood', 'Euthymic mood'], 'Congruent affect', 'Full range affect'],
+      wrong: { 'Flat affect': 'He brightens when he talks about his daughter.', 'Anxious mood': 'Shame and sadness are what he describes, not worry.' },
+      doc: '"Okay na po. Pero nahihiya po ako sa nangyari." (Okay now. But I\'m ashamed of what happened.) Mildly dysphoric mood related to shame; congruent, full range affect',
+      why: 'Shame after a psychotic episode is common and can push people back to using. Name it and normalize it.' },
+    process: {
+      ans: { 0: ['Gumagamit po ako ng shabu para kayanin ang night shift. Tapos po, parang may sumusunod sa akin para patayin ako. Tinakot ko po ang kapitbahay namin, kaya dinala ako ni Kuya dito.', 'I was using shabu to get through night shifts. Then it felt like someone was following me to kill me. I threatened our neighbor, so my brother brought me here.'],
+        1: ['Babalik po ako sa construction. Kailangan ko pong magpadala sa anak ko.', 'I\'ll go back to construction. I need to send money to my daughter.'] },
+      need: ['Goal-directed', 'Coherent and relevant'], doc: 'Goal-directed, coherent and relevant', why: 'Clear and organized.' },
+    positive: {
+      obs: 'Not responding to internal stimuli. Nurses\' notes: no hallucinations reported since day 8.',
+      ans: { 0: ['Wala po.', 'No.'], 1: ['Wala na po.', 'Not anymore.'], 2: ['Noon po, maraming anino sa bubong. Ngayon po, wala na.', 'Before, there were many shadows on the roof. Now, none.'],
+        3: ['Wala na po. Alam ko na po na dahil sa shabu iyon.', 'Not anymore. I know now it was because of the shabu.'],
+        4: ['Akala ko po talaga may papatay sa akin. Ngayon po, alam kong hindi totoo iyon. Epekto lang po ng droga.', 'I really thought someone would kill me. Now I know that wasn\'t true. Just the drug\'s effect.'], 5: ['Wala po.', 'No.'] },
+      key: [2, 4],
+      need: ['No hallucinations elicited', 'Not responding to internal stimuli', 'Delusions no longer held'],
+      wrong: { 'Residual auditory hallucinations, less frequent': 'He denies any voices, and nurses agree.', 'Residual persecutory ideas, less intense': 'He calls the belief untrue and links it to the drug.' },
+      doc: 'No hallucinations (visual hallucinations on admission resolved by day 8); not responding to internal stimuli; persecutory delusion no longer held',
+      why: 'Fast resolution after stopping the drug supports a substance-induced psychosis. If symptoms had lasted well beyond a month of abstinence, think again about a primary psychotic disorder.' },
+    negative: {
+      ans: { 0: ['Opo, sumasali po ako sa basketball.', 'Yes, I join basketball.'], 1: ['Opo.', 'Yes.'], 2: ['Opo, gusto ko na pong magtrabaho.', 'Yes, I want to work now.'], 3: ['Opo.', 'Yes.'] },
+      need: ['None noted'],
+      wrong: { Avolition: 'The low energy was in the first week of withdrawal. He now plays basketball and wants to work.', Anhedonia: 'Interest has returned since withdrawal ended.' },
+      doc: 'None noted (low energy during the first week, related to withdrawal, resolved)',
+      why: 'Withdrawal can look like negative symptoms or depression in the first days. Reassess after it passes, as here.' },
+    suicide: {
+      ans: { 0: ['Noong unang linggo po, sobrang lungkot ko at gusto ko lang matulog nang matulog. Pero hindi ko po naisip na magpakamatay. Ngayon po, wala.', 'In the first week I was so sad and just wanted to sleep and sleep. But I never thought of killing myself. Now, nothing.'],
+        1: ['Wala po.', 'None.'], 2: ['Sasabihin ko po kay Kuya.', 'I\'d tell my brother.'] },
+      need: [['Denies suicidal ideation, plan, or intent', 'None']],
+      doc: 'Denies suicidal ideation, plan, or intent (low mood during early withdrawal, resolved)',
+      why: 'The crash after stopping methamphetamine brings low mood. Ask about it, and warn him it can return if he uses and stops again.' },
+    homicide: {
+      ans: { 0: ['Wala po.', 'No.'], 1: ['Wala po. Hihingi po ako ng tawad sa kapitbahay namin. Hindi ko po talaga gustong saktan siya.', 'No. I\'ll ask our neighbor for forgiveness. I never really wanted to hurt him.'] },
+      key: [1],
+      need: [['Denies homicidal ideation', 'None']],
+      doc: 'Denies homicidal ideation, including toward the neighbor he threatened',
+      why: 'He threatened a specific person with a weapon. Ask about that neighbor directly, and check that the family has removed the bolo or other weapons at home.' },
+    orientation: {
+      ans: { 0: ['Lunes po. Katapusan na po ng Oktubre.', 'Monday. End of October.'], 1: ['Sa ospital po sa Mariveles.', 'At the hospital in Mariveles.'], 2: ['Kayo po si Dok.', 'You\'re Doc.'] },
+      need: ['Oriented to time, place, and person (×3)'], doc: 'Oriented to time, place, and person (×3)', why: 'Fully oriented.' },
+    memory: {
+      ans: { 0: ['Bola, puno, susi.', 'Ball, tree, key.'], 1: ['Bola, puno, susi.', 'Ball, tree, key.'], 2: ['Lugaw po.', 'Rice porridge.'], 3: ['Tatlong linggo na po.', 'Three weeks ago.'], 4: ['Sa Limay po.', 'In Limay.'] },
+      need: ['Intact immediate, recent, and remote memory'], doc: 'Intact immediate, recent, and remote memory', why: 'Intact.' },
+    insight: {
+      ans: { 0: ['Dahil po sa shabu. Hindi ko po alam na ganoon pala ang epekto.', 'Because of the shabu. I didn\'t know it had that effect.'],
+        1: ['Hindi naman po sakit, Dok. Bisyo lang po. Kaya ko pong itigil.', 'It\'s not an illness, Doc. Just a vice. I can stop it.'],
+        2: ['Opo, kung sasabihin ninyo.', 'Yes, if you say so.'], 3: ['Baka po bumalik yung mga anino?', 'Maybe the shadows will come back?'] },
+      key: [1],
+      need: ['Fair', 'Grade 3: blames others/external factors'], ok: ['Grade 4: aware, cause unknown in self'],
+      wrong: { Good: 'He sees the drug as the cause but calls his use "just a vice" he can stop on his own. He does not yet see the use disorder as a problem needing treatment.', 'Grade 5: intellectual insight': 'Grade 5 would mean recognizing the use disorder in himself.' },
+      doc: 'Fair (grade 3): attributes the psychosis to shabu; sees his use as "bisyo lang" that he can stop alone; does not yet accept a use disorder',
+      why: 'Insight into the psychosis is good; insight into the addiction is poor. Document both, since the second predicts relapse.' },
+    judgment: {
+      ans: { 0: ['Pupunta po ako sa health center.', 'I\'ll go to the health center.'], 1: ['Babalik po ako dito.', 'I\'ll come back here.'], 2: ['Lalabas po ako at sasabihan ang guwardiya.', 'I\'d go out and tell the guard.'],
+        3: ['Hindi na po. Siguro po konti na lang, pang-puyat lang kapag night shift. Hindi na po tulad ng dati.', 'Not anymore. Maybe just a little, to stay awake on night shift. Not like before.'] },
+      key: [3],
+      need: ['Intact test judgment', 'Impaired social judgment'], ok: ['Fair', 'Poor'],
+      wrong: { 'Intact social judgment': 'He plans to keep using "a little" to stay awake on night shifts, the same pattern that led to the psychosis.', Good: 'Test judgment is fine, but his plan for real life is not.' },
+      doc: 'Intact test judgment; impaired social judgment (plans to use shabu "konti lang, pang-puyat" on night shifts)',
+      why: 'The substance question is the key one in this case. "Konti lang" is a common answer: explore it, link it to the psychosis, and talk with him and his brother about shift work options.' },
+    sleep: {
+      obs: 'Ward sleep chart: slept up to 14 hours a day in week 1; 8 hours a night for the past 10 days.',
+      ans: { 0: ['Maayos na po, mga walong oras.', 'Fine now, about eight hours.'], 1: ['Hindi na po.', 'Not anymore.'], 2: ['Hindi na po. Noong unang linggo lang po, tulog ako nang tulog.', 'Not anymore. Only in the first week, I slept and slept.'], 3: ['Hindi po.', 'No.'] },
+      need: ['Good', '7–8 hours, uninterrupted'], ok: [],
+      wrong: { 'Daytime sedation': 'The long sleep was in week 1, during withdrawal. He is not sleepy now.' },
+      doc: 'Good, 8 hours, uninterrupted (hypersomnia during week 1 withdrawal, resolved)',
+      why: 'Document the withdrawal pattern so it is not mistaken for medicine sedation.' },
+    adverse: {
+      obs: 'Chart: hypersomnia, increased appetite, and low mood on days 2 to 7. No restraint, no falls, no EPS on risperidone.',
+      ans: { 0: ['Wala naman po. Noong umpisa lang, antok na antok ako at gutom palagi.', 'Nothing. Only at the start, I was very sleepy and always hungry.'], 1: ['Wala po.', 'No.'] },
+      need: ['Withdrawal symptoms'],
+      wrong: { None: 'The chart shows methamphetamine withdrawal in week 1. It belongs here as an event during the stay.', Sedation: 'The sleepiness was withdrawal, not the medicine, and it has resolved.' },
+      doc: 'Methamphetamine withdrawal on days 2 to 7 (hypersomnia, increased appetite, low mood), resolved; no medication side effects',
+      why: 'Withdrawal is an event during the admission. It also tells you what he will face if he uses again and stops.' },
+    diagnosis: {
+      ans: { 0: ['Opo, Dok.', 'Yes, Doc.'], 1: ['Opo, ganoon nga po ang nangyari.', 'Yes, that\'s what happened.'], 2: ['Pero bisyo po ito, Dok, hindi sakit, di ba?', 'But this is a vice, Doc, not an illness, right?'] },
+      key: [2],
+      need: ['Methamphetamine-induced psychotic disorder, with ___ use disorder'],
+      wrong: { 'Schizophrenia, first episode, currently in acute episode': 'The psychosis started during heavy use and cleared within days of stopping, with no earlier psychosis. That points to a substance-induced disorder.', 'Schizophrenia, first episode, currently in partial remission': 'The psychosis started during heavy use and cleared within days of stopping, with no earlier psychosis. That points to a substance-induced disorder.' },
+      doc: 'Methamphetamine-induced psychotic disorder, with severe use disorder',
+      why: 'Fill the blank with the use disorder\'s severity (daily use, use despite harm, failed control: severe). When he says "bisyo, hindi sakit", explain that addiction is a treatable condition, not a weakness.' },
+    medications: {
+      ans: { 0: ['Opo.', 'Yes.'], 1: ['Wala po akong iniksiyon.', 'I don\'t have an injection.'], 2: ['Isang tableta po ng risperidone bago matulog, gabi-gabi.', 'One risperidone tablet before bed, every night.'], 3: ['Sa health center po.', 'At the health center.'], 4: ['Opo.', 'Yes.'], 5: ['Hindi naman po ako naka-lithium, di ba, Dok?', 'I\'m not on lithium, right, Doc?'] },
+      need: ['Risperidone ___ mg tab, ___', 'Teach-back done, correct'], ok: ['Family supervises medication'],
+      wrong: { 'Haloperidol ___ mg tab, ___': 'He is on risperidone.', 'Lithium carbonate ___ mg tab, ___': 'He is not on lithium, as he said.' },
+      doc: 'Risperidone 2 mg tab, 1 tab at HS; teach-back correct; brother to supervise',
+      why: 'Tell him how long the antipsychotic is planned for, and that it does not protect against psychosis if he uses again.' },
+    aftercare: {
+      ans: { 0: ['Opo.', 'Yes.'], 1: ['Si Kuya Boyet po.', 'Kuya Boyet.'], 2: ['Opo. Pati po kapag gusto ko ulit gumamit, sasabihin ko kay Kuya.', 'Yes. And if I want to use again, I\'ll tell my brother.'], 3: ['Salamat po.', 'Thank you.'] },
+      need: ['OPD follow-up in 2 weeks', 'Referred to ___', 'Family oriented on warning signs'],
+      wrong: { 'Discharge deferred: ___': 'The psychosis has cleared and there is no risk to self or others. Relapse prevention is outpatient work.' },
+      doc: 'OPD follow-up in 2 weeks; referred to a community-based drug rehabilitation program; brother oriented on warning signs (not sleeping, suspiciousness, cravings); weapons removed from the home',
+      why: 'He may worry about legal trouble for disclosing drug use. Explain what stays confidential and what doesn\'t before the referral, so he engages instead of hiding his use.' }
+  }
+},
+{
+  id: 'mika', title: 'The family wants her home', level: 'B2', dx: 'Schizophrenia (first episode)',
+  setting: 'Ward, Saturday morning. Mika, 23, college student, admitted 12 days ago. Her mother, Aling Tess, asks for discharge today: the bills are piling up and the neighbors are talking.',
+  chart: [
+    'Symptoms for 8 months: withdrew from friends, stopped attending class, then began hearing voices of classmates insulting her and believing her phone was being used to watch her. Admitted after she was found on the school building\'s rooftop ledge.',
+    'Admission MSE: guarded, withdrawn, blunted affect, thought blocking, persecutory delusions, command auditory hallucinations, insight grade 1.',
+    'Course: haloperidol and biperiden. Nurses\' notes from last night: seen whispering to the window, "tumahimik kayo". Paces the hallway. Sleep chart 4 to 5 hours.',
+    'Mother has also asked about taking her to a faith healer after discharge.'
+  ],
+  decision: { discharge: false, why: 'Defer discharge. She still has command hallucinations telling her to jump, is considering obeying them, sleeps poorly, and was admitted after being found on a ledge. Explain the reason to her mother in plain words, involve social service about the bills, and set a date to reassess.' },
+  fields: {
+    behavior: {
+      obs: 'Sits at the edge of the chair, hair uncombed but clean. Short answers. Glances at the ceiling several times. Legs moving constantly.',
+      ans: { 0: ['Okay lang po.', 'Just okay.'], 1: ['...Sige po.', '...All right.'] },
+      need: ['Guarded', 'Fairly groomed', 'Restless'], ok: ['Withdrawn', 'Cooperative'],
+      wrong: { Calm: 'She sits on the edge of the chair with legs constantly moving, glancing at the ceiling.', 'Well groomed': 'Clean but uncombed: fairly groomed at most.' },
+      doc: 'Guarded, restless (constant leg movement), fairly groomed, poor eye contact, glances at the ceiling during the interview',
+      why: 'The glances at the ceiling matter for the next fields. Restlessness here may also be akathisia: check the adverse event field.' },
+    mood: {
+      obs: 'Little facial expression. Looks frightened once, when a door bangs.',
+      ans: { 0: ['Okay lang po. Gusto ko na pong umuwi.', 'Just okay. I want to go home now.'], 1: ['...Takot po. Minsan.', '...Scared. Sometimes.'], 2: ['Hindi ko po alam. Lima?', 'I don\'t know. Five?'] },
+      key: [1],
+      quote: 'Okay lang po. Gusto ko na pong umuwi. (Just okay. I want to go home now.)',
+      need: ['Anxious mood', ['Blunted affect', 'Restricted affect']], ok: ['Congruent affect'],
+      wrong: { 'Euthymic mood': '"Okay lang po" is a common deflection. When asked to choose, she said she is scared.', 'Full range affect': 'Very little expression except fear.' },
+      doc: '"Okay lang po. Gusto ko na pong umuwi." (Just okay. I want to go home.) Anxious mood ("takot po"); blunted affect',
+      why: '"Okay lang po" plus "gusto ko nang umuwi" is the answer of someone who wants to leave. The second question, with choices, got the real mood.' },
+    process: {
+      obs: 'Stops mid-sentence once and looks at the ceiling, then cannot remember the question.',
+      ans: { 0: ['Dinala po ako ni Mama kasi... (tumigil, tumingin sa kisame) ...ano nga po ulit ang tanong?', 'Mama brought me because... (stops, looks at the ceiling) ...what was the question again?'],
+        1: ['Babalik po ako sa school. Siguro po.', 'I\'ll go back to school. Maybe.'] },
+      key: [0],
+      need: ['Thought blocking'], ok: ['Coherent and relevant'],
+      wrong: { 'Goal-directed': 'She lost the thread mid-sentence and could not return to it.', 'Loose associations': 'Her ideas connect when she speaks. The problem is a sudden stop, not jumps between unrelated ideas.' },
+      doc: 'Thought blocking (stops mid-sentence, looks at the ceiling, loses the question); otherwise relevant',
+      why: 'A sudden stop with a glance away, then "ano nga po ulit ang tanong?", is blocking, and may mean voices interrupting. It leads straight to the next field.' },
+    positive: {
+      obs: 'Glances at the ceiling during pauses. Nurses\' notes: whispering "tumahimik kayo" to the window last night.',
+      ans: { 0: ['Wala na po.', 'Not anymore.'], 1: ['...Minsan po.', '...Sometimes.'], 2: ['Wala po.', 'No.'],
+        3: ['Hindi ko po alam. Minsan po iniisip ko pa rin na may nakatingin sa cellphone ko.', 'I don\'t know. Sometimes I still think someone is watching through my phone.'],
+        4: ['Medyo totoo pa rin po siguro. Pero hindi na kasing lala.', 'Maybe it\'s still a bit true. But not as bad.'],
+        5: ['(tahimik) ...Sabi po nila, mas mabuti raw kung tumalon na lang ako. Pero hindi ko naman po sinusunod.', '(quiet) ...They say it would be better if I just jumped. But I don\'t obey them.'] },
+      key: [1, 5],
+      need: ['Command auditory hallucinations, persist (reassess discharge)', 'Responding to internal stimuli', 'Residual persecutory ideas, less intense'],
+      wrong: { 'No hallucinations elicited': 'She said "wala na po" first, then "minsan po" to the whispering question, and described voices telling her to jump. The nurses saw her answering them.', 'Not responding to internal stimuli': 'She glances at the ceiling during pauses, and nurses saw her whispering to the window.', 'Delusions no longer held': 'She still thinks her phone may be watched.' },
+      doc: 'Command auditory hallucinations persist (voices telling her to jump; she says she does not obey); responding to internal stimuli (glances at ceiling, nurses observed whispering); residual persecutory ideas about her phone, less intense',
+      why: 'Her first answer was "wala na po". The voices only came out with the whispering question and the command question. Always ask about commands when voices were present on admission.' },
+    negative: {
+      obs: 'Ward notes: stays in bed most of the day, does not join OT, needs prompting to bathe.',
+      ans: { 0: ['Hindi po. Wala po akong gana.', 'No. I don\'t feel like it.'], 1: ['Hindi po.', 'No.'], 2: ['Wala po.', 'No.'], 3: ['Kapag sinabihan lang po ni Nurse.', 'Only when the nurse tells me.'] },
+      need: ['Avolition', 'Asociality'], ok: ['Alogia (poverty of speech)', 'Mild blunting', 'Poor self-care', 'Anhedonia'],
+      wrong: { 'None noted': 'She stays in bed, avoids others, and bathes only when prompted.' },
+      doc: 'Avolition, asociality, needs prompting for self-care',
+      why: 'Negative symptoms began in the 8-month prodrome and often improve more slowly than voices. They affect what she can manage at home.' },
+    suicide: {
+      ans: { 0: ['Wala po.', 'No.'], 1: ['Wala po.', 'None.'],
+        2: ['Hindi ko po alam... Baka sundin ko na lang po sila, para tumahimik na sila.', 'I don\'t know... Maybe I\'ll just obey them, so they\'ll be quiet.'] },
+      key: [2],
+      need: ['Active suicidal ideation (reassess discharge)'],
+      wrong: { 'Denies suicidal ideation, plan, or intent': 'She denied twice, but the third question brought out that she might obey voices telling her to jump. With the rooftop history, that is active ideation.',
+        None: 'She denied twice, but the third question brought out that she might obey voices telling her to jump.',
+        'Passive death wish, no plan or intent': 'Considering obeying a command to jump, after being found on a ledge, is more than a wish to not wake up. It has a method and a reason to act.' },
+      doc: 'Active suicidal ideation: may obey command hallucinations to jump "para tumahimik na sila"; admitted after being found on a rooftop ledge. Reassess discharge',
+      why: 'Command hallucinations plus "baka sundin ko na lang" plus a recent near-attempt is high risk. This finding alone means discharge should be deferred.' },
+    homicide: {
+      ans: { 0: ['Wala po.', 'No.'], 1: ['Wala po.', 'No.'] },
+      need: [['Denies homicidal ideation', 'None']], doc: 'Denies homicidal ideation', why: 'The voices in her case are directed at herself.' },
+    orientation: {
+      ans: { 0: ['Sabado po. Hindi ko po alam ang petsa.', 'Saturday. I don\'t know the date.'], 1: ['Ospital po.', 'Hospital.'], 2: ['Doktor po.', 'Doctor.'] },
+      need: ['Oriented to time, place, and person (×3)'],
+      wrong: { 'Disoriented to time': 'She knows the day. Not knowing the exact date after 12 days on a ward is common and is not disorientation.' },
+      doc: 'Oriented to time, place, and person (×3); unsure of the exact date',
+      why: 'Knowing the day of the week is enough for time orientation on a ward. Note the uncertainty about the date without calling it disorientation.' },
+    memory: {
+      ans: { 0: ['Bola, puno, susi.', 'Ball, tree, key.'], 1: ['Bola... susi... (tumingin sa kisame) ...puno po.', 'Ball... key... (looks at the ceiling) ...tree.'], 2: ['Tinapay po.', 'Bread.'], 3: ['Mga isang linggo po? Dalawa?', 'About a week? Two?'], 4: ['Sa Mariveles po.', 'In Mariveles.'] },
+      need: ['Intact immediate, recent, and remote memory'], ok: ['Impaired recent memory'],
+      doc: 'Immediate and remote memory intact; recent memory grossly intact (3/3, distracted; unsure of the admission date)',
+      why: 'She recalled all three despite distraction. Poor attention from voices can look like memory loss: note it without overcalling it.' },
+    insight: {
+      ans: { 0: ['Kasi po pagod ako sa school. Si Mama lang po ang nag-aalala.', 'Because I was tired from school. Only Mama is worried.'], 1: ['Siguro po... medyo. Pero hindi naman po malala.', 'Maybe... a little. But it\'s not serious.'], 2: ['Kung kailangan po. Para makauwi.', 'If I need to. So I can go home.'], 3: ['Hindi ko po alam.', 'I don\'t know.'] },
+      key: [1],
+      need: ['Poor', ['Grade 2: slight awareness', 'Grade 3: blames others/external factors']],
+      wrong: { Fair: 'She minimizes ("hindi naman malala") and takes medicine only "para makauwi".', 'Grade 4: aware, cause unknown in self': 'She does not accept that she is ill in a way that needs treatment.' },
+      doc: 'Poor (grade 2–3): slight awareness, attributes symptoms to school fatigue, takes medicine "para makauwi"',
+      why: 'Taking medicine "so I can go home" is a warning sign of stopping it once home.' },
+    judgment: {
+      ans: { 0: ['Hindi ko po alam.', 'I don\'t know.'], 1: ['Hindi ko na lang po sasabihin kay Mama, para hindi na ako ibalik dito.', 'I just won\'t tell Mama, so I won\'t be brought back here.'], 2: ['Lalabas po ako.', 'I\'d go out.'], 3: ['Hindi po ako umiinom.', 'I don\'t drink.'] },
+      key: [1],
+      need: ['Impaired social judgment'], ok: ['Poor', 'Intact test judgment'],
+      wrong: { 'Intact social judgment': 'She plans to hide returning voices from her mother so she is not readmitted.', Good: 'Her plan is to hide symptoms. That is poor judgment.' },
+      doc: 'Impaired social judgment (would hide returning voices from her mother to avoid readmission); test judgment intact',
+      why: 'Planning to hide symptoms is one of the most important answers in the interview. With the command hallucinations, it means home is not yet safe.' },
+    sleep: {
+      obs: 'Ward sleep chart: 4 to 5 hours a night, awake at 2 to 3 a.m. most nights.',
+      ans: { 0: ['Mga apat na oras po.', 'About four hours.'], 1: ['Opo. Maingay po kasi sila.', 'Yes. Because they\'re noisy.'], 2: ['Medyo po.', 'A bit.'], 3: ['Hindi po. Pagod nga po ako palagi.', 'No. I\'m actually always tired.'] },
+      key: [1],
+      need: ['Poor', 'Frequent awakenings'], ok: ['Difficulty initiating sleep', 'Daytime sedation'],
+      wrong: { Good: 'Four to five hours with waking at night is poor sleep.', 'Reduced need for sleep': 'She is tired, not energized. That is insomnia, not a reduced need for sleep.' },
+      doc: 'Poor, 4–5 hours with frequent awakenings (sleep chart); woken by the voices',
+      why: '"Maingay po kasi sila" (they\'re noisy) means the voices wake her. Poor sleep is another reason she is not ready.' },
+    adverse: {
+      obs: 'Paces the hallway, says her legs feel restless. No rigidity or tremor on exam. No restraint, no falls.',
+      ans: { 0: ['Hindi po mapakali ang mga binti ko. Gusto ko pong maglakad nang maglakad.', 'My legs can\'t keep still. I want to keep walking and walking.'], 1: ['Wala po.', 'No.'] },
+      key: [0],
+      need: ['Akathisia'], ok: ['Extrapyramidal symptoms'],
+      wrong: { None: 'She describes an inner urge to keep moving, and paces. That is akathisia.', Tremor: 'No tremor on exam.' },
+      doc: 'Akathisia on haloperidol (inner restlessness, pacing); no rigidity or tremor',
+      why: 'Akathisia is distressing and is linked to suicidal behavior. Treat it (dose review, propranolol, or a different antipsychotic) as part of keeping her safe.' },
+    diagnosis: {
+      ans: { 0: ['...Opo.', '...Yes.'], 1: ['Hindi po ako baliw.', 'I\'m not crazy.'], 2: ['Sabi po ni Mama, baka may kumuha raw sa akin na engkanto.', 'Mama says maybe an engkanto took me.'] },
+      need: ['Schizophrenia, first episode, currently in acute episode'],
+      wrong: { 'Schizophrenia, first episode, currently in partial remission': 'Command hallucinations, blocking, and residual delusions are still active.', 'Schizophrenia, multiple episodes, currently in acute episode': 'This is her first episode.' },
+      doc: 'Schizophrenia, first episode, currently in acute episode',
+      why: 'Eight months of symptoms, including the prodrome, meets the duration for schizophrenia. "Hindi po ako baliw" is stigma talking: respond that it is an illness that affects thinking and can be treated, not a judgment of her.' },
+    medications: {
+      ans: { 0: ['Opo.', 'Yes.'], 1: ['Wala po.', 'No.'], 2: ['Yung puting tableta po... dalawang beses? Hindi ko po alam.', 'The white tablet... twice? I don\'t know.'], 3: ['Si Mama po. Pero mahal daw po.', 'Mama. But she says it\'s expensive.'], 4: ['Opo.', 'Yes.'], 5: ['Wala po akong ganyan.', 'I don\'t have that.'] },
+      key: [2, 3],
+      need: ['Haloperidol ___ mg tab, ___', 'Biperiden 2 mg tab, ___'], ok: ['Teach-back incorrect, re-taught', 'Family supervises medication'],
+      wrong: { 'Teach-back done, correct': 'She does not know her medicines yet.', 'Risperidone ___ mg tab, ___': 'She is on haloperidol.' },
+      doc: 'Haloperidol ___ mg tab and biperiden 2 mg tab (continue while admitted; review for akathisia); teach-back incorrect, to repeat before discharge; cost concern raised by mother',
+      why: 'Unclear teach-back and a cost worry are two more things to fix before she goes home. Social service can help with the cost.' },
+    aftercare: {
+      ans: { 0: ['Uuwi na po ba ako?', 'Am I going home?'], 1: ['Si Mama po.', 'Mama.'], 2: ['...Opo.', '...Yes.'], 3: ['Opo.', 'Yes.'],
+        4: ['Pero Dok, wala na po kaming pambayad. At nakakahiya na po sa mga kapitbahay. Puwede po bang dalhin na lang namin siya sa manggagamot?', 'But Doc, we have no more money to pay. And it\'s embarrassing with the neighbors. Can we just take her to the healer instead?', 'Aling Tess (mother)'] },
+      key: [4],
+      need: ['Discharge deferred: ___'], ok: ['Safety plan made with patient and family'],
+      wrong: { 'OPD follow-up in 2 weeks': 'She has command hallucinations to jump that she may obey, after a near-attempt. Discharge should be deferred, so there is no follow-up date yet.', 'Family oriented on warning signs': 'Do this before discharge, but the plan now is deferral.' },
+      doc: 'Discharge deferred: persisting command hallucinations with active suicidal ideation, poor sleep, akathisia. Mother informed of the reason; social service referral for the bills; reassess on Monday',
+      why: 'Respect the mother\'s worries: cost, hiya, and her own explanation of the illness. Say prayer or a healer can go together with treatment, but now is not safe. Give a specific reassessment day so "deferred" doesn\'t sound like "indefinitely".' }
   }
 }
 ];

@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '1.6.0',
+  version: '1.7.0',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,16 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '1.7.0', date: 'October 2026', title: 'More discharge cases',
+    items: [
+      ['content', 'Three new discharge practice cases: bipolar I disorder with mania settling (on lithium), methamphetamine-induced psychosis, and first-episode schizophrenia where the family wants discharge but the patient is not ready.'],
+      ['new', 'Each case now ends with your decision: discharge today or defer. It is compared with the model and counts toward the score.'],
+      ['new', 'Some answers now come from a family member, labeled with who is speaking.'],
+      ['improved', 'Discharge assessment: new documentation picks for lithium, divalproex, haloperidol, quetiapine, sertraline, bipolar I in partial remission, methamphetamine-induced psychotic disorder, command hallucinations, tremor, withdrawal, safety plan, laboratory tests, and deferred discharge.'],
+      ['improved', 'Discharge assessment: five new questions (command hallucinations, reduced need for sleep, offers of shabu or alcohol, lithium safety, explaining a deferred discharge to the family), and a safety flag when command hallucinations persist.']
+    ]
+  },
   {
     version: '1.6.0', date: 'October 2026', title: 'Discharge practice cases',
     items: [

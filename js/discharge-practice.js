@@ -33,7 +33,7 @@
     const done = store();
     el.innerHTML = '<div class="breadcrumb"><a href="#/psych">Psychiatry</a> / <a href="#/psych/discharge">Discharge assessment</a> / Practice cases</div>' +
       '<h1>Discharge practice</h1><p class="muted">Interview a simulated patient on the day of discharge. Ask the questions in Tagalog, document each field with the form\'s wording, then compare your discharge MSE with a model answer.</p>' +
-      '<div class="grid">' + PSYCH_DISCHARGE_CASES.map((c) => '<a class="tile" href="#/psych/dcase/' + c.id + '"><span class="eyebrow">' + esc(c.level) + '</span><h3>' + esc(c.title) + '</h3><p>' + esc(c.setting) + '</p>' +
+      '<div class="grid">' + PSYCH_DISCHARGE_CASES.map((c) => '<a class="tile" href="#/psych/dcase/' + c.id + '"><span class="eyebrow">' + esc(c.dx || '') + ' · ' + esc(c.level) + '</span><h3>' + esc(c.title) + '</h3><p>' + esc(c.setting) + '</p>' +
         (done[c.id] != null ? '<div class="meta"><span class="pill ' + (done[c.id] >= 80 ? 'good' : done[c.id] >= 50 ? 'warn' : 'bad') + '">Best ' + done[c.id] + '%</span></div>' : '') + '</a>').join('') + '</div>' +
       '<p class="small muted" style="margin-top:14px">Patients are fictional. Doses are teaching examples, not prescribing advice.</p>';
   };
@@ -43,8 +43,8 @@
     if (!C) { el.innerHTML = '<p>Case not found.</p>'; return; }
     const D = PSYCH_DISCHARGE;
     const F = D.fields.filter((f) => f.kind !== 'sign' && C.fields[f.id]);
-    let rec, cur;
-    const reset = () => { rec = {}; F.forEach((f) => (rec[f.id] = { asked: new Set(), picks: new Set(), text: '', quote: '', res: null })); cur = 0; };
+    let rec, cur, decision;
+    const reset = () => { rec = {}; F.forEach((f) => (rec[f.id] = { asked: new Set(), picks: new Set(), text: '', quote: '', res: null })); cur = 0; decision = null; };
     reset();
 
     const yourValue = (f) => {
@@ -54,7 +54,8 @@
       if (r.text.trim()) v += (v ? '; ' : '') + r.text.trim();
       return v;
     };
-    const total = () => { const n = F.filter((f) => rec[f.id].res).length; const pts = F.reduce((a, f) => a + (rec[f.id].res ? rec[f.id].res.score : 0), 0); return { n, pts, pct: Math.round((100 * pts) / (2 * F.length)) }; };
+    const decided = () => decision !== null && C.decision;
+    const total = () => { const n = F.filter((f) => rec[f.id].res).length; const pts = F.reduce((a, f) => a + (rec[f.id].res ? rec[f.id].res.score : 0), 0) + (decided() && decision === C.decision.discharge ? 2 : 0); return { n, pts, pct: Math.round((100 * pts) / (2 * F.length + (C.decision ? 2 : 0))) }; };
 
     const nav = () => {
       const groups = [];
@@ -73,7 +74,7 @@
         const p = ref(rf); if (!p) return '';
         const a = (cf.ans && cf.ans[qi]) || DEFAULT_ANS, asked = r.asked.has(qi);
         return '<div class="dz-line dc-q' + (asked ? ' asked' : '') + '"><div><div class="tl dz-tl">' + esc(main(p)) + '</div>' + (alt(p) && alt(p) !== main(p) ? '<div class="tl small muted">' + esc(alt(p)) + '</div>' : '') + '<div class="small muted">' + esc(p.en) + '</div>' +
-          (asked ? '<div class="dc-ans"><span class="eyebrow">Patient</span><div class="tl">' + esc(a[0]) + '</div><div class="small muted dc-en"' + (r.showEn ? '' : ' hidden') + '>' + esc(a[1]) + '</div></div>' : '') +
+          (asked ? '<div class="dc-ans"><span class="eyebrow">' + esc(a[2] || 'Patient') + '</span><div class="tl">' + esc(a[0]) + '</div><div class="small muted dc-en"' + (r.showEn ? '' : ' hidden') + '>' + esc(a[1]) + '</div></div>' : '') +
           '</div><div class="dc-acts">' + App.sayBtn(main(p)) + (asked ? App.sayBtn(a[0]) : '<button class="btn sm" data-ask="' + qi + '">Ask</button>') + '</div></div>';
       }).join('') + '</div>' +
       (r.asked.size ? '<button class="btn sm ghost" id="dcEn" style="margin-top:6px">' + (r.showEn ? 'Hide' : 'Show') + ' English for answers</button>' : '') + '</div>';
@@ -114,12 +115,15 @@
 
     const compareView = () => {
       const t = total();
-      if (t.n === F.length) { const best = store(); best[C.id] = Math.max(t.pct, best[C.id] || 0); App.save(); }
+      if (t.n === F.length && (!C.decision || decided())) { const best = store(); best[C.id] = Math.max(t.pct, best[C.id] || 0); App.save(); }
       const risky = F.filter((f) => f.risk && (!rec[f.id].res || rec[f.id].res.score < 2));
       const pending = F.filter((f) => !rec[f.id].res);
       return '<div class="card stack"><div class="spread"><h2 style="margin:0">Your discharge vs the model</h2>' + (t.n ? '<span class="pill ' + (t.pct >= 80 ? 'good' : t.pct >= 50 ? 'warn' : 'bad') + '">' + t.pct + '%</span>' : '') + '</div>' +
         (pending.length ? '<div class="feedback" style="background:var(--surface-2)">Not yet checked: ' + pending.map((f) => esc(f.label)).join(', ') + '. Unchecked fields score 0.</div>' : '') +
         risky.map((f) => '<div class="feedback no"><b>Safety: ' + esc(f.label) + '.</b> The model documents: ' + esc(C.fields[f.id].doc) + '</div>').join('') +
+        (C.decision ? '<div class="card stack dc-decide" style="gap:8px"><h3 style="margin:0">Your decision</h3>' +
+          (decision === null ? '<p class="small muted" style="margin:0">From what you found, should the patient go home today?</p><div class="row"><button class="btn" data-dec="1">Discharge today</button><button class="btn" data-dec="0">Defer discharge</button></div>'
+            : '<div class="feedback ' + (decision === C.decision.discharge ? 'ok' : 'no') + '"><b>' + (decision === C.decision.discharge ? 'Same call as the model.' : 'The model makes the other call.') + '</b> You chose: ' + (decision ? 'discharge today' : 'defer discharge') + '. ' + esc(C.decision.why) + '</div>') + '</div>' : '') +
         '<div class="stack dc-cmp" style="gap:8px">' + F.map((f) => {
           const r = rec[f.id], s = r.res ? r.res.score : -1;
           return '<div class="dc-row ' + (s === 2 ? 'ok' : s === 1 ? 'mid' : s === 0 ? 'no' : '') + '"><div class="spread"><b>' + esc(f.label) + '</b><span class="pill ' + (s === 2 ? 'good' : s === 1 ? 'warn' : s === 0 ? 'bad' : '') + '">' + (s === 2 ? 'Match' : s === 1 ? 'Partial' : s === 0 ? 'Missed' : 'Not checked') + '</span></div>' +
@@ -137,7 +141,7 @@
     const scrollField = () => { const t = el.querySelector('.ds-field, .dc-cmp'); if (!t) return; const top = t.getBoundingClientRect().top + window.scrollY - 80; if (window.scrollY > top) window.scrollTo(0, top); };
     const bind = () => {
       el.querySelectorAll('[data-go]').forEach((b) => (b.onclick = () => { const n = +b.dataset.go; if (n < 0 || n > F.length) return; cur = n; App.stopSpeech(); draw(); scrollField(); }));
-      if (cur === F.length) { el.querySelector('#dcAgain').onclick = () => { reset(); draw(); window.scrollTo(0, 0); }; return; }
+      if (cur === F.length) { el.querySelector('#dcAgain').onclick = () => { reset(); draw(); window.scrollTo(0, 0); }; el.querySelectorAll('[data-dec]').forEach((b) => (b.onclick = () => { decision = b.dataset.dec === '1'; App.recordAnswer(decision === C.decision.discharge); const y = window.scrollY; draw(); window.scrollTo(0, y); })); return; }
       const f = F[cur], r = rec[f.id];
       el.querySelectorAll('[data-ask]').forEach((b) => (b.onclick = () => {
         const qi = +b.dataset.ask; r.asked.add(qi); const y = window.scrollY; draw(); window.scrollTo(0, y);
