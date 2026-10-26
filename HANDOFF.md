@@ -5,13 +5,13 @@
 - **Owner:** Ma. Isabella P. Navarro, MD, incoming PGY-1 psychiatry resident at MMWGH. Nurses there also request features.
 - **Repo:** github.com/isaymotion/Tagalog (git remote also works as `isaymotion/tagalog`). Branches: `main` = the app (served by GitHub Pages); `dev-tools` = tests + this doc (not published).
 - **Live:** https://isaymotion.github.io/tagalog/ (Pages deploys `main` root automatically).
-- **Current version:** 1.6.0 (Oct 2026). Service worker cache `usaptayo-1.6.0`.
+- **Current version:** 1.8.0 (Oct 2026). Service worker cache `usaptayo-1.8.0`.
 
 ## 2. Fixed rules
 - Attribution string (footer, About, PDFs), exact: `App created by Isabella Navarro, MD. Latest version October 2026. isaymotion@gmail.com` (in `js/data/meta.js` → `APP_META.attribution`). Update the month/year in it only when the release month changes.
 - Every release: add an entry at the TOP of `WHATS_NEW` in `meta.js`, bump `APP_META.version`, bump `VERSION` in `sw.js` (`usaptayo-X.Y.Z`), add any new JS files to the `FILES` list in `sw.js`.
 - **Never** put patient names, ages, record numbers, staff names, signatures, or license numbers into the app or repo. Users send photos of real hospital forms: use only the form's structure (field names, order, form number).
-- Hospital forms already used: de-escalation checklist `MMH-NUR-04-112-01`; discharge summary `MMH-MED-04-04-02` (stored in `APP_META.institution`). User approved showing hospital name/address and form numbers; government seals are not reproduced.
+- Hospital forms already used: de-escalation checklist `MMH-NUR-04-112-01`; discharge summary `MMH-MED-04-04-02` (stored in `APP_META.institution`); Readmission Form `MMH-MED-04-26-02` (page 1: identifiers, chief complaints in Tagalog quotes, HPI, past psychiatric history, medical history, substance use) and `MMH-MED-04-26-01` (page 2: MSE, PE, vital signs, diagnosis, plan, admitting physician); only its MSE order is used, in `psych-admit-mse.js`. The **initial admission form** is still to come from her (Liza's MSE case waits for it). User approved showing hospital name/address and form numbers; government seals are not reproduced.
 - Psychiatry phrases are practice phrasings, not validated instrument translations; keep that disclaimer (About, handouts). Don't reproduce copyrighted tests (MMSE text, C-SSRS).
 - Every psychiatry phrase has `f` (respectful, po/kayo) and `c` (everyday/Taglish) forms. Avoid stigmatizing terms (baliw, adik) except in the "stigma" dictionary category.
 - Crisis line shown: NCMH Crisis Hotline 1553 (24/7), plus 0919-057-1553, 0917-899-8727 (per Jan 2026 report).
@@ -19,7 +19,7 @@
 - Writing style in UI copy: plain, active, no em-dash asides.
 
 ## 3. Architecture and data formats
-Static site, vanilla JS, no build step. `index.html` loads scripts in order: data files → `conjugate.js` → `audio-key.js` → `core.js` → `views.js` → `psych-views.js` → `handout.js` → `deesc.js` → `discharge.js` → `discharge-practice.js` → `app.js`. Hash routing (`#/path?query`) in `app.js` `routes`.
+Static site, vanilla JS, no build step. `index.html` loads scripts in order: data files → `conjugate.js` → `audio-key.js` → `core.js` → `views.js` → `psych-views.js` → `handout.js` → `deesc.js` → `discharge.js` → `discharge-practice.js` → `mse-practice.js` → `app.js`. Hash routing (`#/path?query`) in `app.js` `routes`.
 
 | File | Contents |
 |---|---|
@@ -33,7 +33,9 @@ Static site, vanilla JS, no build step. `index.html` loads scripts in order: dat
 | `js/data/psych-flow.js` | `PSYCH_FLOW` (19 interview steps), `PSYCH_FLOW_EXTRA`, `PSYCH_MSE`; phrases referenced as `"sectionId:index"` |
 | `js/data/psych-deesc.js` | `PSYCH_DEESC { behaviors, steps(12), after(5 phases), escalation, outcomes }`; appends phrases to section `deescalation` |
 | `js/data/psych-discharge.js` | `PSYCH_DISCHARGE { form, fields:[{ id, group, label, kind, assess, ask, picks, risk? }] }`; creates section `discharge` and a `PSYCH_FLOW_EXTRA` entry |
-| `js/data/psych-discharge-cases.js` | `PSYCH_DISCHARGE_CASES: [{ id, title, level, setting, chart:[lines], fields:{ <dischargeFieldId>: { obs?, ans:{qIdx:[tl,en]}, key?:[qIdx], need:[pick or [any-of]], ok?, wrong?:{pick:why}, doc, why, quote? } } }]`. `qIdx` indexes the field's `ask` in `psych-discharge.js`; every pick must be a string from that field's `picks` (data_check enforces this, and that the model grades as a full match). Grader: `App.dischargeGrade(caseField, Set)` in `js/discharge-practice.js` |
+| `js/data/psych-discharge-cases.js` | `PSYCH_DISCHARGE_CASES: [{ id, title, level, setting, chart:[lines], fields:{ <dischargeFieldId>: { obs?, ans:{qIdx:[tl,en]}, key?:[qIdx], need:[pick or [any-of]], ok?, wrong?:{pick:why}, doc, why, quote? } } }]`. `qIdx` indexes the field's `ask` in `psych-discharge.js`; every pick must be a string from that field's `picks` (data_check enforces this, and that the model grades as a full match). Grader: `App.dischargeGrade(caseField, Set)` in `js/discharge-practice.js`. Also per case: `dx` (tile label), `decision:{discharge:bool, why}` (graded end decision); an `ans` entry may have a 3rd item = speaker (e.g. 'Aling Tess (mother)') |
+| `js/data/psych-admit-mse.js` | `PSYCH_ADMIT_MSE { form, domains:[{ id, group, label, kind, assess, ask:[phrase refs], picks, risk? }] }`: 13 domains in Readmission Form order (appearance, psychomotor, attitude, mood, speech, process, perception, content, safety, orientation, insight, impulse, judgment). Uses existing phrases only; append to `ask`, never insert |
+| `js/data/psych-mse-cases.js` | `PSYCH_MSE_CASES: [{ id (same as its discharge case), title, level, dx, form, setting, chart, cc:{ ask, ans:[tl,en,who], opts:[[text,correct,why]] }, domains:{ <id>: { obs?, ans, key?, need, ok?, wrong?, doc, why, quote?, ev?:{ find, opts:[[text,correct]], why } } } }]`. View: `js/mse-practice.js` (`#/psych/mcases`, `#/psych/mcase/<id>`), scores in `state.done.mcases`; compare screen shows admission vs discharge rows when a discharge case has the same id |
 | `js/data/meta.js` | `APP_META`, `WHATS_NEW`, `PLACEMENT` |
 | `js/core.js` | storage (`localStorage` key `usaptayo.v1`), dictionary index, root-word stemmer `App.findRoots`, search, SRS, speech (`App.speakAsync`, audio pack first, then Filipino device voice, then id/ms/es voice, never English) |
 | `js/handout.js` | handout/PDF generator (pdfmake in `js/vendor/`, lazy-loaded); presets `full, mse, risk, pocket, discharge, deesccard, everything` |
@@ -63,8 +65,8 @@ python3 /home/claude/devtools/tests/smoke.py --base http://localhost:8765/index.
 gh run list -R isaymotion/tagalog -w "Build Tagalog audio pack" -L 3             # audio job status
 gh api -X POST repos/isaymotion/tagalog/actions/workflows/audio-pack.yml/dispatches -f ref=main   # rerun audio job
 ```
-Baseline (v1.6.0): data_check prints `{"version":"1.6.0","dict":1658,"sections":27,"phrases":396,"cases":6,"lessons":22,"reading":12,"dialogues":8,"verbs":78,"dcases":2}` and `DATA OK`; smoke prints PDF page counts (full 12, mse 6, risk 6, pocket 15, discharge 3, deesccard 2, everything 29) and `SMOKE OK · 44 routes × 2 viewports` (smoke also runs a discharge practice flow on both cases). Audio: 3252/3252 clips.
-Last verified clean: 2026-10-26 after the 1.6.0 release (both tests pass).
+Baseline (v1.8.0): data_check prints `{"version":"1.8.0","dict":1658,"sections":27,"phrases":401,"cases":6,"lessons":22,"reading":12,"dialogues":8,"verbs":78,"dcases":5,"mcases":1}` and `DATA OK`; smoke prints PDF page counts (full 12, mse 6, risk 6, pocket 15, discharge 4, deesccard 2, everything 30) and `SMOKE OK · 49 routes × 2 viewports` (smoke also runs discharge practice flows on Ramon, Liza and Mika, the command-hallucination flag, and the admission MSE flow on Ramon). Audio: 3421/3421 clips.
+Last verified clean: 2026-10-26 after the 1.8.0 release (both tests pass).
 
 ## 6. Status
 | Area | Done |
@@ -73,12 +75,16 @@ Last verified clean: 2026-10-26 after the 1.6.0 release (both tests pass).
 | Psychiatry | 27 sections / 396 phrases, 6 case sims, 28 interpretation items, interview flow + MSE structure |
 | Handouts | PDF/print generator, 7 presets, English show/hide/answer key, A4/Letter/A5/A6 |
 | De-escalation | Checklist (MMH-NUR-04-112-01), rapid drill, "if it fails" guide, practice case, A6 pocket card |
-| Discharge | Guided field-by-field assessment (MMH-MED-04-04-02), summary with safety flags, printable guide; practice cases (`#/psych/dcases`, `#/psych/dcase/<id>`): Ramon (schizophrenia, teach-back error, restraint only in chart) and Liza (recurrent MDD, passive death wish found only by the 3rd suicide question). Best scores in `state.done.dcases` |
-| Audio | 3,252 clips, Filipino neural voice, auto-updating GitHub job |
+| Discharge | Guided field-by-field assessment (MMH-MED-04-04-02), summary with safety flags, printable guide; practice cases (`#/psych/dcases`, `#/psych/dcase/<id>`): Ramon (schizophrenia, teach-back error, restraint only in chart), Liza (recurrent MDD, passive death wish found only by the 3rd suicide question), Carlo (bipolar I, mania settling, lithium, impaired social judgment), Arnel (methamphetamine-induced psychosis, "konti lang, pang-puyat" relapse plan), Mika (first-episode schizophrenia, command hallucinations, model decision = defer). Discharge-or-defer decision at the end. 1.7.0 also appended picks (new drugs/diagnoses, command hallucinations, deferred discharge) and 5 questions to the real assessment, plus a command-hallucination flag. Best scores in `state.done.dcases` |
+| Admission MSE | `#/psych/mcases`: Readmission Form MSE order, chief complaint MCQ, 13 domains, evidence questions, form-style self-check, admission vs discharge comparison. Case: Ramon. Liza waits for the initial admission form |
+| Audio | 3,421 clips, Filipino neural voice, auto-updating GitHub job |
 
 ## 7. Next steps (offered to the user, not yet chosen)
-Discharge practice cases shipped in 1.6.0 (2026-10-26). Ask her which is next; next release = **1.7.0**, cache `usaptayo-1.7.0`. - More discharge practice cases (e.g., bipolar mania resolving, a case where discharge should be deferred). Not in handouts yet: a printable case sheet is possible.
-- Admission vs discharge MSE comparison.
+Shipped 2026-10-26: 1.6.0 discharge practice, 1.7.0 three more discharge cases, 1.8.0 admission MSE practice (with admission vs discharge comparison). Next release = **1.9.0**, cache `usaptayo-1.9.0`.
+- **Waiting on her:** initial admission form photo → Liza's admission MSE case (same pattern as Ramon; she is a first admission at MMWGH). Check whether the initial form's MSE section matches the readmission order; if not, add a second domain list keyed by `form` on the case.
+- Admission MSE cases for Carlo (flight of ideas, pressured speech, clanging in Tagalog), Arnel, and Mika (thought blocking): offered, good for formal thought disorder practice.
+- Nurse version: she will get the nurses' forms first.
+- Printable case sheet for discharge/MSE cases (not in handouts yet).
 - Filipino take-home sheet for patient/family (meds schedule, follow-up, warning signs, hotline) from discharge fields.
 - More hospital forms in the same pattern (admission/intake, progress notes): she would send photos.
 - Match department-standard documentation wording.
@@ -95,10 +101,14 @@ Discharge practice cases shipped in 1.6.0 (2026-10-26). Ask her which is next; n
 - Starting a server with `&` then `pkill` makes the Bash call exit 144; use `run_in_background`.
 - Background watchers die at their time limit; poll `gh run view <id> --json status,conclusion`.
 - A phrase section's indexes are IDs; append only.
+- New discharge questions go in the `MORE` list at the end of `psych-discharge.js` (appended to the section and to the end of the field's `ask`), never into `FIELDS[].ask`.
+- New picks are plain strings, so appending them is safe; smoke tests click picks by index, so append rather than insert.
+- `version: 'X'` appears in both `APP_META` and `WHATS_NEW`; match `  version: 'X',\n  updated` when bumping.
 - Discharge practice answers are keyed by question index within a discharge field's `ask`. Changing `psych-discharge.js` asks would both break phrase IDs and misalign case answers: append only.
 - `.eyebrow` is uppercased by CSS, so Playwright `inner_text` returns capitals; compare lowercased.
-- `js/views.js` creates `App.views`; later view files must not reassign it (`discharge-practice.js` uses `App.views || {}` so data_check can load it in Node).
+- `js/views.js` creates `App.views`; later view files must not reassign it (`discharge-practice.js` and `mse-practice.js` use `App.views || {}` so data_check can load them in Node for the grader).
+- Element screenshots on phone show the sticky header over the card; that's an artifact, not a layout bug.
 - Medication/diagnosis "picks" in discharge mirror the form's examples (olanzapine, fluphenazine decanoate); keep them generic with blanks.
 
 ## 9. Files to re-attach
-None required. The user's photos of hospital forms contained patient data and were deliberately not saved; ask her for a fresh photo only if a new form is being added. The app icon is already in `icons/`.
+None required. The user's photos of hospital forms (including the readmission form, 2026-10-26) contained patient data and were deliberately not saved; ask her for a fresh photo only if a new form is being added. The app icon is already in `icons/`.
