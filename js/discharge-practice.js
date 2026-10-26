@@ -129,7 +129,7 @@
           return '<div class="dc-row ' + (s === 2 ? 'ok' : s === 1 ? 'mid' : s === 0 ? 'no' : '') + '"><div class="spread"><b>' + esc(f.label) + '</b><span class="pill ' + (s === 2 ? 'good' : s === 1 ? 'warn' : s === 0 ? 'bad' : '') + '">' + (s === 2 ? 'Match' : s === 1 ? 'Partial' : s === 0 ? 'Missed' : 'Not checked') + '</span></div>' +
             '<div class="small"><span class="eyebrow">You</span> ' + esc(yourValue(f) || '—') + '</div><div class="small"><span class="eyebrow">Model</span> ' + esc(C.fields[f.id].doc) + '</div></div>';
         }).join('') + '</div>' +
-        '<div class="row"><button class="btn primary" id="dcAgain">Run the case again</button><a class="btn" href="#/psych/dcases">Other cases</a><a class="btn" href="#/psych/discharge">Real discharge assessment</a></div></div>';
+        '<div class="row"><button class="btn primary" id="dcAgain">Run the case again</button><a class="btn" href="#/psych/dcases">Other cases</a>' + ((window.PSYCH_MSE_CASES || []).some((m) => m.id === C.id) ? '<a class="btn" href="#/psych/mcase/' + C.id + '">Admission MSE of this patient</a>' : '') + '<a class="btn" href="#/psych/discharge">Real discharge assessment</a></div></div>';
     };
 
     const draw = () => {

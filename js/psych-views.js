@@ -19,6 +19,7 @@
       '<a class="tile" href="#/psych/interp"><span class="eyebrow">Listen</span><h3>What is the patient saying?</h3><p>' + PSYCH_INTERP.length + ' patient and family lines to interpret, with clinical significance.</p></a>' +
       '<a class="tile" href="#/psych/discharge"><span class="eyebrow">Ward</span><h3>Discharge assessment</h3><p>Each discharge summary field: what to ask in Tagalog and how to document it.</p></a>' +
       '<a class="tile" href="#/psych/dcases"><span class="eyebrow">Ward</span><h3>Discharge practice</h3><p>Interview a simulated patient, document the discharge MSE, and compare it with a model answer.</p></a>' +
+      '<a class="tile" href="#/psych/mcases"><span class="eyebrow">Admission</span><h3>Admission MSE practice</h3><p>Interview a patient on admission, document each MSE domain, and name the evidence for key findings.</p></a>' +
       '<a class="tile" href="#/psych/deesc"><span class="eyebrow">Bedside</span><h3>De-escalation checklist</h3><p>12 steps with Tagalog phrases, outcome, and a copyable note.</p></a>' +
       '<a class="tile" href="#/psych/handout"><span class="eyebrow">Print</span><h3>Printable handout</h3><p>Interview flow and MSE as a PDF, with or without English.</p></a>' +
       '<a class="tile" href="#/flash/psych"><span class="eyebrow">Memorize</span><h3>Psychiatry flashcards</h3><p>All phrases with spaced repetition.</p></a>' +

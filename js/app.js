@@ -30,6 +30,8 @@
     [/^\/psych\/deesc$/, V.deesc, 'psych'],
     [/^\/psych\/discharge$/, V.discharge, 'psych'],
     [/^\/psych\/dcases$/, V.dischargeCases, 'psych'],
+    [/^\/psych\/mcases$/, V.mseCases, 'psych'],
+    [/^\/psych\/mcase\/(?<id>[\w-]+)$/, V.mseCase, 'psych'],
     [/^\/psych\/dcase\/(?<id>[\w-]+)$/, V.dischargeCase, 'psych'],
     [/^\/psych\/handout$/, V.handout, 'psych'],
     [/^\/placement$/, V.placement, 'placement'],

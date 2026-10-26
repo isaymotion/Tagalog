@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '1.7.0',
+  version: '1.8.0',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,16 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '1.8.0', date: 'October 2026', title: 'Admission MSE practice',
+    items: [
+      ['new', 'Admission MSE practice (Psychiatry → Admission MSE practice): interview a simulated patient on admission, in the order of the MSE section of the hospital\'s Readmission Form (MMH-MED-04-26-01/02).'],
+      ['new', 'Start with the chief complaint in the informant\'s own words, then document each domain: appearance, psychomotor activity, attitude, mood and affect, speech, thought process, perception, thought content, suicidal and homicidal ideation, orientation, insight, impulse control, and judgment.'],
+      ['new', 'Evidence questions: after checking a domain, choose the patient line that supports the key finding.'],
+      ['new', 'Compare your MSE with the model, write it as you would on the form for self-check, and see the same patient\'s admission and discharge MSE side by side.'],
+      ['content', 'First case: Mang Ramon on readmission (schizophrenia). Traps include dropping "po" as a sign of irritability, delusional content with a linear thought process, and a family\'s engkanto explanation that is not the patient\'s delusion.']
+    ]
+  },
   {
     version: '1.7.0', date: 'October 2026', title: 'More discharge cases',
     items: [
