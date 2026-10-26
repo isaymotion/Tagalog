@@ -1,8 +1,13 @@
 {
- "finished": "2026-10-26T04:50:29+00:00",
- "attempted": 36,
- "have": 3421,
- "wanted": 3421,
- "seconds": 31,
- "sample_errors": []
+ "finished": "2026-10-26T06:40:02+00:00",
+ "attempted": 94,
+ "have": 3514,
+ "wanted": 3515,
+ "seconds": 106,
+ "sample_errors": [
+  {
+   "text": "Naiintindihan po ba ninyo ang sakit ninyo?",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  }
+ ]
 }
