@@ -21,7 +21,7 @@
       '<h1>Admission MSE practice</h1><p class="muted">Interview a simulated patient on admission, in the order of the MSE section of the hospital\'s Readmission Form (' + esc(PSYCH_ADMIT_MSE.form) + '). Ask in Tagalog, document each domain, name the line that supports a key finding, then compare your MSE with a model. Each patient also has a discharge case, so you can see what changed.</p>' +
       '<div class="grid">' + PSYCH_MSE_CASES.map((c) => '<a class="tile" href="#/psych/mcase/' + c.id + '"><span class="eyebrow">' + esc(c.dx || '') + ' · ' + esc(c.level) + '</span><h3>' + esc(c.title) + '</h3><p>' + esc(c.setting) + '</p>' +
         (done[c.id] != null ? '<div class="meta"><span class="pill ' + pillCls(done[c.id]) + '">Best ' + done[c.id] + '%</span></div>' : '') + '</a>').join('') + '</div>' +
-      '<p class="small muted" style="margin-top:14px">Patients are fictional. More admission cases will follow the hospital\'s initial admission form.</p>';
+      '<p class="small muted" style="margin-top:14px">Patients are fictional. More admission cases will follow the hospital\'s initial admission form. For quick drills on single findings, including Filipino culture-or-pathology look-alikes, use the <a href="https://isaymotion.github.io/MSEtrainer/#/practice?lang=tl" target="_blank" rel="noopener">MSE Trainer</a>.</p>';
   };
 
   V.mseCase = (el, params) => {
@@ -135,7 +135,7 @@
         '<details class="card"><summary><b>Write it as on the form</b> <span class="muted small">optional, for self-check</span></summary><div class="stack" style="gap:8px;margin-top:8px">' +
           '<label class="small" for="mseWritten">Your MSE, one line per domain, as you would write it on the Readmission Form</label><textarea class="input" id="mseWritten" rows="10">' + esc(written) + '</textarea>' +
           '<label class="small" for="mseModel">Model MSE</label><textarea class="input" id="mseModel" rows="10" readonly style="font-family:ui-monospace,Menlo,monospace;font-size:.82rem">' + esc(modelMSE()) + '</textarea></div></details>' +
-        '<div class="row"><button class="btn primary" id="dcAgain">Run the case again</button><a class="btn" href="#/psych/mcases">Other cases</a></div></div>' + disRows();
+        '<div class="row"><button class="btn primary" id="dcAgain">Run the case again</button><a class="btn" href="#/psych/mcases">Other cases</a><a class="btn" href="https://isaymotion.github.io/MSEtrainer/#/practice?lang=tl" target="_blank" rel="noopener">Drill findings in MSE Trainer</a></div></div>' + disRows();
     };
 
     const draw = () => {

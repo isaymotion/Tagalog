@@ -41,6 +41,9 @@ add('Opo, Dok.'); // default discharge practice answer
   add(v.r);
 });
 add('Magandang umaga po. Kumusta po kayo?'); // settings voice test
+// Lines other apps play from this audio pack (one per line, # for comments). See tools/import-msetrainer.js.
+const extra = path.join(__dirname, 'extra-texts');
+if (fs.existsSync(extra)) fs.readdirSync(extra).filter((f) => f.endsWith('.txt')).forEach((f) => fs.readFileSync(path.join(extra, f), 'utf8').split('\n').forEach((l) => { if (!l.startsWith('#')) add(l); }));
 
 const list = [...out.entries()].map(([key, text]) => ({ key, text })).sort((a, b) => a.key.localeCompare(b.key));
 fs.writeFileSync(path.join(__dirname, 'texts.json'), JSON.stringify(list, null, 0));

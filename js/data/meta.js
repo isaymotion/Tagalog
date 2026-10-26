@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '1.8.0',
+  version: '1.8.1',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,13 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '1.8.1', date: 'October 2026', title: 'MSE Trainer link',
+    items: [
+      ['new', 'Links to the MSE Trainer\'s new Tagalog cases from the Psychiatry page and the admission MSE practice: quick drills on naming a single finding, including Filipino culture-or-pathology look-alikes.'],
+      ['content', 'The audio pack now also records the MSE Trainer\'s Tagalog lines, so both apps use the same Filipino voice.']
+    ]
+  },
   {
     version: '1.8.0', date: 'October 2026', title: 'Admission MSE practice',
     items: [
