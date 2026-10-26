@@ -63,6 +63,7 @@ gh run list -R isaymotion/tagalog -w "Build Tagalog audio pack" -L 3            
 gh api -X POST repos/isaymotion/tagalog/actions/workflows/audio-pack.yml/dispatches -f ref=main   # rerun audio job
 ```
 Baseline (v1.5.0): data_check prints `{"version":"1.5.0","dict":1658,"sections":27,"phrases":396,"cases":6,"lessons":22,"reading":12,"dialogues":8,"verbs":78}` and `DATA OK`; smoke prints PDF page counts (full 12, mse 6, risk 6, pocket 15, discharge 3, deesccard 2, everything 29) and `SMOKE OK · 41 routes × 2 viewports`. Audio: 3157/3157 clips.
+Last verified clean: 2026-10-26 (fresh clone, `main` at `0216522`, both tests pass, `audio/last-run.json` 3157/3157, no errors).
 
 ## 6. Status
 | Area | Done |
@@ -75,7 +76,7 @@ Baseline (v1.5.0): data_check prints `{"version":"1.5.0","dict":1658,"sections":
 | Audio | 3,157 clips, Filipino neural voice, auto-updating GitHub job |
 
 ## 7. Next steps (offered to the user, not yet chosen)
-Ask which she wants; none is started. Next release = **1.6.0**, cache `usaptayo-1.6.0`.
+Ask which she wants; none is started (asked again 2026-10-26 after baseline check; awaiting her choice). Next release = **1.6.0**, cache `usaptayo-1.6.0`.
 - Discharge practice case (simulated patient; compare her MSE to a model answer).
 - Admission vs discharge MSE comparison.
 - Filipino take-home sheet for patient/family (meds schedule, follow-up, warning signs, hotline) from discharge fields.
