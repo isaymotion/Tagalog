@@ -76,7 +76,7 @@ Last verified clean: 2026-10-26 (fresh clone, `main` at `0216522`, both tests pa
 | Audio | 3,157 clips, Filipino neural voice, auto-updating GitHub job |
 
 ## 7. Next steps (offered to the user, not yet chosen)
-Ask which she wants; none is started (asked again 2026-10-26 after baseline check; awaiting her choice). Next release = **1.6.0**, cache `usaptayo-1.6.0`.
+**Chosen 2026-10-26: Discharge practice case** is the first build for 1.6.0 (not started yet). The rest stay offered. Next release = **1.6.0**, cache `usaptayo-1.6.0`.
 - Discharge practice case (simulated patient; compare her MSE to a model answer).
 - Admission vs discharge MSE comparison.
 - Filipino take-home sheet for patient/family (meds schedule, follow-up, warning signs, hotline) from discharge fields.
