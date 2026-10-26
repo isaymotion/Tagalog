@@ -6,7 +6,7 @@
 
 Checks every route on desktop and phone (no JS errors, no horizontal overflow), exercises
 case simulation, flashcards, back/forward, search, theme toggle, de-escalation checklist,
-discharge assessment, and builds a PDF for every handout preset. Prints PASS/FAIL.
+discharge assessment, discharge practice cases, and builds a PDF for every handout preset. Prints PASS/FAIL.
 Google Fonts load errors are expected in sandboxes without internet and are ignored.
 """
 import argparse, asyncio, base64, os, shutil, subprocess
@@ -17,7 +17,7 @@ ROUTES = ['#/', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/
   '#/psych/s/hallucinations', '#/psych/cases', '#/psych/case/jomar', '#/psych/interp', '#/placement', '#/progress', '#/settings', '#/new',
   '#/about', '#/more', '#/psych/handout', '#/psych/handout?s=suicide', '#/psych/deesc', '#/psych/handout?deesc=1', '#/psych/s/deescalation',
   '#/psych/deesc?tab=drill', '#/psych/deesc?tab=after', '#/psych/deesc?tab=practice', '#/psych/case/agitated', '#/speak/case-agitated',
-  '#/psych/handout?deesccard=1', '#/psych/discharge', '#/psych/handout?discharge=1', '#/psych/s/discharge']
+  '#/psych/handout?deesccard=1', '#/psych/discharge', '#/psych/handout?discharge=1', '#/psych/s/discharge', '#/psych/dcases', '#/psych/dcase/ramon', '#/psych/dcase/liza']
 
 LOAD_PDFMAKE = """async () => { if (!window.pdfMake) await new Promise((r) => { const s = document.createElement('script'); s.src = 'js/vendor/pdfmake.min.js';
   s.onload = () => { const t = document.createElement('script'); t.src = 'js/vendor/vfs_fonts.js'; t.onload = r; document.head.appendChild(t); }; document.head.appendChild(s); }); }"""
@@ -65,6 +65,20 @@ async def main(base, out):
             await pg.click('[data-go="5"].ds-chip'); await pg.click('[data-pick="2"]'); await pg.click('.ds-chip.sum'); await pg.wait_for_timeout(100)
             summ = await pg.inner_text('#view')
             if 'Passive death wish documented' not in summ or 'Active suicidal' in summ: fails.append(f'{name}: discharge flags')
+            # discharge practice: model picks match; a missed passive death wish is caught
+            await pg.evaluate("location.hash='#/psych/dcase/ramon'"); await pg.wait_for_timeout(200)
+            await pg.click('[data-ask="0"]')
+            for k in [0, 1, 2, 4]: await pg.click(f'[data-pick="{k}"]')
+            await pg.click('#dcCheck'); await pg.wait_for_timeout(100)
+            if 'Matches the model' not in await pg.inner_text('#view'): fails.append(f'{name}: dcase model match')
+            await pg.evaluate("location.hash='#/psych/dcase/liza'"); await pg.wait_for_timeout(200)
+            await pg.click('[data-go="5"].ds-chip'); await pg.click('[data-ask="0"]'); await pg.click('[data-pick="1"]'); await pg.click('#dcCheck'); await pg.wait_for_timeout(100)
+            t = (await pg.inner_text('#view')).lower()
+            if 'passive death wish' not in t or "you didn't ask" not in t: fails.append(f'{name}: dcase suicide feedback')
+            await pg.click('.ds-chip.sum'); await pg.wait_for_timeout(100)
+            if 'Safety: Suicidal ideas' not in await pg.inner_text('#view'): fails.append(f'{name}: dcase safety flag')
+            if await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name}: dcase compare overflow')
+            await pg.screenshot(path=f'{out}/{name}_dcase_compare.png', full_page=True)
             if name == 'desk':
                 await pg.evaluate("location.hash='#/psych/handout'"); await pg.wait_for_timeout(200)
                 await pg.evaluate(LOAD_PDFMAKE)
