@@ -82,6 +82,7 @@
       el.innerHTML = '<div class="breadcrumb"><a href="#/psych">Psychiatry</a> / Discharge assessment</div><h1>Discharge assessment</h1>' +
         (inst.name ? '<p class="dz-inst"><b>' + esc(inst.name) + '</b><br><span class="muted small">Discharge Summary · Form ' + esc(D.form) + '</span></p>' : '') +
         '<p class="muted">Go through the discharge summary one field at a time: what to assess, what to ask in Tagalog, and how to document it. Nothing here is saved, and no patient details are needed.</p>' +
+        '<p><a class="btn sm" href="#/psych/dcases">Practice first with a simulated patient →</a></p>' +
         nav() + '<div style="margin-top:12px">' + (cur < F.length ? fieldView(F[cur], cur) : summaryView()) + '</div>';
       bind();
     };

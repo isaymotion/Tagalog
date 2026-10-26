@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '1.5.0',
+  version: '1.6.0',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,16 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '1.6.0', date: 'October 2026', title: 'Discharge practice cases',
+    items: [
+      ['new', 'Discharge practice (Psychiatry → Discharge practice): interview a simulated patient on the day of discharge, using the same fields and questions as the Discharge Summary form (MMH-MED-04-04-02).'],
+      ['new', 'Tap Ask to hear the patient answer in Tagalog. Read the chart and ward notes, then document each field with the form\'s wording.'],
+      ['new', 'Check each field against a model answer: what you missed, what the findings don\'t support and why, and any key question you didn\'t ask.'],
+      ['new', 'At the end, compare your discharge MSE with the model field by field, with a score and safety flags for missed suicide or homicide findings.'],
+      ['content', 'Two cases: schizophrenia back on medicine (a teach-back error and a restraint only in the chart), and recurrent depression with a passive death wish that comes out only on the third question.']
+    ]
+  },
   {
     version: '1.5.0', date: 'October 2026', title: 'Discharge assessment',
     items: [
