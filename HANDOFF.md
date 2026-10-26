@@ -5,7 +5,8 @@
 - **Owner:** Ma. Isabella P. Navarro, MD, incoming PGY-1 psychiatry resident at MMWGH. Nurses there also request features.
 - **Repo:** github.com/isaymotion/Tagalog (git remote also works as `isaymotion/tagalog`). Branches: `main` = the app (served by GitHub Pages); `dev-tools` = tests + this doc (not published).
 - **Live:** https://isaymotion.github.io/tagalog/ (Pages deploys `main` root automatically).
-- **Current version:** 1.8.0 (Oct 2026). Service worker cache `usaptayo-1.8.0`.
+- **Current version:** 1.8.1 (Oct 2026). Service worker cache `usaptayo-1.8.1`.
+- **Linked app:** MSE Trainer, repo `isaymotion/MSEtrainer`, live https://isaymotion.github.io/MSEtrainer/ (see section 10).
 
 ## 2. Fixed rules
 - Attribution string (footer, About, PDFs), exact: `App created by Isabella Navarro, MD. Latest version October 2026. isaymotion@gmail.com` (in `js/data/meta.js` → `APP_META.attribution`). Update the month/year in it only when the release month changes.
@@ -65,7 +66,7 @@ python3 /home/claude/devtools/tests/smoke.py --base http://localhost:8765/index.
 gh run list -R isaymotion/tagalog -w "Build Tagalog audio pack" -L 3             # audio job status
 gh api -X POST repos/isaymotion/tagalog/actions/workflows/audio-pack.yml/dispatches -f ref=main   # rerun audio job
 ```
-Baseline (v1.8.0): data_check prints `{"version":"1.8.0","dict":1658,"sections":27,"phrases":401,"cases":6,"lessons":22,"reading":12,"dialogues":8,"verbs":78,"dcases":5,"mcases":1}` and `DATA OK`; smoke prints PDF page counts (full 12, mse 6, risk 6, pocket 15, discharge 4, deesccard 2, everything 30) and `SMOKE OK · 49 routes × 2 viewports` (smoke also runs discharge practice flows on Ramon, Liza and Mika, the command-hallucination flag, and the admission MSE flow on Ramon). Audio: 3421/3421 clips.
+Baseline (v1.8.0): data_check prints `{"version":"1.8.0","dict":1658,"sections":27,"phrases":401,"cases":6,"lessons":22,"reading":12,"dialogues":8,"verbs":78,"dcases":5,"mcases":1}` and `DATA OK`; smoke prints PDF page counts (full 12, mse 6, risk 6, pocket 15, discharge 4, deesccard 2, everything 30) and `SMOKE OK · 49 routes × 2 viewports` (smoke also runs discharge practice flows on Ramon, Liza and Mika, the command-hallucination flag, and the admission MSE flow on Ramon). Audio: 3515/3515 clips (includes 119 MSE Trainer lines).
 Last verified clean: 2026-10-26 after the 1.8.0 release (both tests pass).
 
 ## 6. Status
@@ -77,10 +78,11 @@ Last verified clean: 2026-10-26 after the 1.8.0 release (both tests pass).
 | De-escalation | Checklist (MMH-NUR-04-112-01), rapid drill, "if it fails" guide, practice case, A6 pocket card |
 | Discharge | Guided field-by-field assessment (MMH-MED-04-04-02), summary with safety flags, printable guide; practice cases (`#/psych/dcases`, `#/psych/dcase/<id>`): Ramon (schizophrenia, teach-back error, restraint only in chart), Liza (recurrent MDD, passive death wish found only by the 3rd suicide question), Carlo (bipolar I, mania settling, lithium, impaired social judgment), Arnel (methamphetamine-induced psychosis, "konti lang, pang-puyat" relapse plan), Mika (first-episode schizophrenia, command hallucinations, model decision = defer). Discharge-or-defer decision at the end. 1.7.0 also appended picks (new drugs/diagnoses, command hallucinations, deferred discharge) and 5 questions to the real assessment, plus a command-hallucination flag. Best scores in `state.done.dcases` |
 | Admission MSE | `#/psych/mcases`: Readmission Form MSE order, chief complaint MCQ, 13 domains, evidence questions, form-style self-check, admission vs discharge comparison. Case: Ramon. Liza waits for the initial admission form |
-| Audio | 3,421 clips, Filipino neural voice, auto-updating GitHub job |
+| Audio | 3,515 clips (incl. MSE Trainer lines), Filipino neural voice, auto-updating GitHub job |
 
 ## 7. Next steps (offered to the user, not yet chosen)
-Shipped 2026-10-26: 1.6.0 discharge practice, 1.7.0 three more discharge cases, 1.8.0 admission MSE practice (with admission vs discharge comparison). Next release = **1.9.0**, cache `usaptayo-1.9.0`.
+Shipped 2026-10-26: 1.6.0 discharge practice, 1.7.0 three more discharge cases, 1.8.0 admission MSE practice (with admission vs discharge comparison). 1.8.1 added links to the MSE Trainer and records its Tagalog lines. Next release = **1.9.0**, cache `usaptayo-1.9.0`.
+- **Waiting on her:** the Tagalog review workbook `tagalog-review-2026-10.xlsx` (413 draft lines: 119 MSE Trainer, 294 Usap Tayo from 1.6–1.8). When she sends it back, apply each "Fix" row (column A says where: MSE Trainer case id, `discharge:<n>`, `dcase <id>`, `mcase <id>`), rerun `tools/import-msetrainer.js` if MSE Trainer lines changed, and push both. Rebuild the workbook with `tests/msetrainer/review_collect.js` + `review_build.py`.
 - **Waiting on her:** initial admission form photo → Liza's admission MSE case (same pattern as Ramon; she is a first admission at MMWGH). Check whether the initial form's MSE section matches the readmission order; if not, add a second domain list keyed by `form` on the case.
 - Admission MSE cases for Carlo (flight of ideas, pressured speech, clanging in Tagalog), Arnel, and Mika (thought blocking): offered, good for formal thought disorder practice.
 - Nurse version: she will get the nurses' forms first.
@@ -112,3 +114,12 @@ Shipped 2026-10-26: 1.6.0 discharge practice, 1.7.0 three more discharge cases, 
 
 ## 9. Files to re-attach
 None required. The user's photos of hospital forms (including the readmission form, 2026-10-26) contained patient data and were deliberately not saved; ask her for a fresh photo only if a new form is being added. The app icon is already in `icons/`.
+
+## 10. MSE Trainer (isaymotion/MSEtrainer)
+- Separate study app (Shea-based, 462 cases). No build step: `index.html`, `css/style.css`, `js/data.js` (English cases, terms, `T()`), `js/data-tl.js` (Tagalog cases + "Culture or pathology?" domain `fc`, 10 terms), `js/news.js` (What's New), `js/audio-key.js` (copy of ours), `js/app.js`. Attribution line in its footer and README: `Made by Isabella Navarro, MD. Latest version October 2026. isaymotion@gmail.com` (keep exact; update month only). She chose: push directly to its `main` (2026-10-26).
+- Tagalog case format: `lang:'tl'`, C:/P: lines `Tagalog || English` (English hidden until answered), `ask:'tl || en'`, optional `dom:'fc'` to file a standard-term case under Culture or pathology?. Tagalog cases are original (not Shea) and say so; terms still cite Shea chapters.
+- Audio: it plays our clips from `https://isaymotion.github.io/tagalog/audio/<AudioKey>.mp3` (manifest fetched cross-origin). After changing its Tagalog lines: `node tools/import-msetrainer.js /home/claude/msetrainer` here (writes `tools/extra-texts/msetrainer.txt`; `collect-texts.js` reads every `tools/extra-texts/*.txt`), commit, push; the audio job records them. Text in parentheses (stage directions) is skipped by both sides (`speakable()`).
+- "Sa Tagalog" card on every MSE/culture case links into our stable routes `#/psych/s/<section>` and `#/lessons/<id>` (maps `UT_DOM`/`UT_TERM` in its app.js). Never rename those section or lesson ids.
+- Its deep links: `#/practice?lang=tl&dom=fc`, `#/practice?drill=<term>`; views `#/practice|glossary|progress|new|about`. Prefs `dv:5` (a saved dv:4 list of 26 domains counts as "all").
+- Tests (kept here, not in its repo): `node tests/msetrainer/data_check.js /home/claude/msetrainer` → `{"cases":462,"terms":419,"domains":27,"tagalog":42,"culture":15}` `DATA OK`; serve it on 8766 and `python3 tests/msetrainer/smoke.py http://localhost:8766/index.html <scratchpad>/mse` → `SMOKE OK` (phone dark + desktop light, deep link, hidden English, Ask it in Tagalog, Sa Tagalog, views, back/forward, theme cycle, menu, backup export/import round trip).
+- Clone: `git clone https://github.com/isaymotion/msetrainer /home/claude/msetrainer` (add the repo to the session first; the remote prints a "moved to MSEtrainer" notice, harmless).
