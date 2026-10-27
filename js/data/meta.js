@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '1.10.0',
+  version: '2.0.0',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -14,6 +14,19 @@ window.APP_META = {
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
   {
+    version: '2.0.0', date: 'October 2026', title: 'Substance use screening and brief intervention',
+    items: [
+      ['new', 'Substance use (Psychiatry → Substance use): screen betel nut (nganga, bunga, mama, buyo, hitso), tobacco, alcohol, shabu, cannabis, other substances and gambling (sabong, e-sabong, online) on the DSM-5-TR criteria in Tagalog. Tap Oo or Hindi; the app rates mild, moderate or severe, applies remission and other specifiers, and gives the ICD-10-CM code and a copyable chart line. Nothing about the patient is saved.'],
+      ['new', 'Add-on screens scored on the same page: AUDIT-C for alcohol and the Fagerström test for nicotine dependence, in Tagalog with answer choices.'],
+      ['new', 'Brief intervention: a six-step motivational interview in Tagalog (permission and open questions, reflections and affirmations, importance and confidence rulers, elicit–provide–elicit with substance-specific psychoeducation, change plan, and what to say when the patient is not ready), ending in a summary that uses the patient\'s own reasons.'],
+      ['new', 'Nurse view (Resident / Nurse switch on the page): a short screening and brief-advice script with withdrawal watch items and when to escalate. Pending Nursing Service review.'],
+      ['new', 'Betel nut specifics: what is in the quid (tobacco changes the diagnosis and the risk), quids per day, swallowing the juice, a mouth check for white or red patches and trismus, and harm-reduction steps for patients not ready to quit. Alcohol counts in bote, lapad, bilog and tagay; cigarettes in sticks and kaha.'],
+      ['new', 'Case simulation: Mang Tonyo, a fisherman referred for a white patch in the cheek, from first question to a change plan.'],
+      ['new', 'MSE interviewer sheet, pages 3 and 4: the substance screen, the 11 criteria, betel nut, AUDIT-C, Fagerström, the gambling criteria, then the motivational interview, psychoeducation per substance and the nurse script, printable with the rest of the sheet.'],
+      ['content', 'Five new phrase sections under Substance use (the 11 criteria, betel nut, tobacco/alcohol/shabu, gambling, AUDIT-C and Fagerström) and one under Motivational interviewing, all with flashcards, search and audio. Criteria are paraphrased from the DSM-5-TR; the Tagalog is for training, not a validated translation.']
+    ]
+  },
+  {
     version: '1.10.0', date: 'October 2026', title: 'Shea\'s techniques in Tagalog, linked to the trainer',
     items: [
       ['new', 'New phrase section (Psychiatry → Asking so the truth can come out): 24 Tagalog phrasings of Shea\'s validity techniques (gentle assumption, symptom amplification, denial of the specific, behavioral incidents, shame attenuation, normalization, anchor questions) and the mood questions that most interviews miss (the mania screen, the two hypomania screens, early morning awakening, libido, persistence, family suicide). Respectful and everyday forms, with a note naming the technique.'],
@@ -22,7 +35,7 @@ window.WHATS_NEW = [
     ]
   },
   {
-    version: '1.10.0', date: 'October 2026', title: 'MSE interviewer sheet',
+    version: '1.9.0', date: 'October 2026', title: 'MSE interviewer sheet',
     items: [
       ['new', 'MSE interviewer sheet (Psychiatry → MSE interviewer sheet): a two-page Tagalog question sheet for the OPD and wards. Mood, depression (D-I-S-A-E-C-G-P + hopelessness), suicide (screen, explore, protective factors), mania (D-S-A-F-P-I-G-R), hallucinations, delusions by type with conviction and action, anger and impulse control, violence, substances, anxiety, cognition, insight and judgment, closing, and the observed parts of the MSE.'],
       ['new', 'Print it from the app (A4, three columns, two pages) or download the ready-made PDF; works offline. Show or hide English, and tap any line to hear it.'],

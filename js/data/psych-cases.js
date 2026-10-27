@@ -192,8 +192,52 @@ window.PSYCH_CASES = [
     findings: ['Agitation with threat to drop a bed, loud and irritable, three days after admission', 'Trigger: feels detained and uninformed about discharge', 'Responded to verbal de-escalation: distance, introduction, listening, agreeing, limits, coaching, choices', 'Accepted offer of medication', 'Remarks: successful. Notify the POD; follow up on his discharge question; debrief with him later ("Ano po ang makakatulong sa susunod?")'],
     mse: '45M, initially agitated, standing, lifting bed, loud. Mood "galit"; affect irritable, later calmer. Goal-directed complaint about discharge. Accepted limits and medication.'
   }
+},
+{
+  id: 'tonyo-nganga', title: 'Betel nut use disorder and brief intervention', level: 'B1',
+  setting: 'Outpatient clinic. Mang Tonyo, 48, a fisherman, was referred by the dental clinic for a white patch inside his cheek. His wife, Aling Nena, sits beside him. His teeth are stained red; he keeps a small pouch in his hand.',
+  steps: [
+    { who: 'Aling Nena', line: ['Dok, simula bata pa po siya ngumunguya ng nganga. Ayaw pong tumigil kahit may sugat na sa bibig.', 'Doc, he has been chewing betel nut since he was young. He won\'t stop even with a sore in his mouth.'],
+      choices: [
+        { tl: 'Salamat po. Mang Tonyo, puwede po ba nating pag-usapan ang nganga? Hindi po ako manghuhusga; gusto ko lang pong maintindihan.', en: 'Thank you. Mang Tonyo, may we talk about the betel nut? I\'m not here to judge; I just want to understand.', score: 2, fb: 'Good: you turn to the patient, ask permission, and remove the judgment before asking anything.' },
+        { tl: 'Mang Tonyo, kailangan na po ninyong itigil iyan. Kanser po iyan.', en: 'Mang Tonyo, you have to stop that. That is cancer.', score: 0, fb: 'Unasked advice and a frightening label before rapport. He will agree to end the conversation and change nothing.' },
+        { tl: 'Ilang nganga po sa isang araw?', en: 'How many quids a day?', score: 1, fb: 'Useful, but it answers the wife, not the patient, and skips permission.' } ] },
+    { who: 'Mang Tonyo', line: ['Dok, nakakatanggal po ng antok sa dagat. Pampagising at pampainit. Dalawampu siguro sa isang araw, may tabako.', 'Doc, it keeps me awake at sea. It wakes me up and warms me. Maybe twenty a day, with tobacco.'],
+      choices: [
+        { tl: 'Kaya po pala mahalaga ito sa trabaho ninyo. Ano naman po ang hindi ninyo gusto sa nganga?', en: 'So that\'s why it matters for your work. And what don\'t you like about the betel nut?', score: 2, fb: 'Good: you reflect the benefit he named, then ask for the other side. This is the decisional balance, and he will give you the reasons for change himself.' },
+        { tl: 'Dalawampu? Sobra po iyan.', en: 'Twenty? That\'s too much.', score: 0, fb: 'Judging the number makes him defend it.' },
+        { tl: 'May tabako po pala. Mas delikado po iyon.', en: 'With tobacco. That\'s more dangerous.', score: 1, fb: 'True and worth saying later, with permission. Right now it stops his story.' } ] },
+    { who: 'Mang Tonyo', line: ['Yung sugat sa bibig, Dok. At laging nagagalit si Nena. Sinubukan ko nang tumigil noong isang taon, dalawang linggo lang.', 'The sore in my mouth, Doc. And Nena is always angry. I tried to stop last year, only two weeks.'],
+      choices: [
+        { tl: 'Dalawang linggo po, hindi iyon maliit. Ano po ang nakatulong noon, at ano po ang naging mahirap?', en: 'Two weeks, that is not small. What helped then, and what made it hard?', score: 2, fb: 'Good: you affirm the attempt and mine it for what worked and what the triggers were. Criterion 2 (failed efforts) is also now documented.' },
+        { tl: 'Bakit po kayo bumalik?', en: 'Why did you go back?', score: 1, fb: 'The question is fair, but "bakit" invites excuses; asking what was hard gets the same information with less shame.' },
+        { tl: 'Kung sinubukan ninyo noon, kaya ninyo ulit. Tigil na po.', en: 'If you tried before, you can do it again. Stop now.', score: 0, fb: 'Cheerleading plus an order. He has not yet decided anything.' } ] },
+    { who: 'Mang Tonyo', line: ['Noong tumigil ako, iritable ako, hindi makatulog, at lagi kong hinahanap. Sa bangka, lahat ngumunguya.', 'When I stopped I was irritable, couldn\'t sleep, and kept looking for it. On the boat, everyone chews.'],
+      choices: [
+        { tl: 'Kapag tumitigil po kayo, nararamdaman ninyo ang pagkairita at hirap matulog; iyon po ang withdrawal. At kailangan po ninyo ng mas marami ngayon kaysa dati para sa parehong epekto?', en: 'When you stop you feel irritable and can\'t sleep; that is withdrawal. And do you need more now than before for the same effect?', score: 2, fb: 'Good: you name withdrawal without alarm (criterion 11) and move to tolerance (criterion 10). Keep counting; you are building the severity rating.' },
+        { tl: 'Iyon po ang adiksyon.', en: 'That is addiction.', score: 0, fb: 'The label adds nothing and "adik" carries heavy stigma in Tagalog. Describe, don\'t label.' },
+        { tl: 'Mahirap nga po kapag lahat ngumunguya.', en: 'It is hard when everyone chews.', score: 1, fb: 'A fair reflection of the social trigger, but you missed the withdrawal he just described.' } ] },
+    { who: 'Mang Tonyo', line: ['Oo, Dok. Dati lima lang. Ngayon dalawampu. Pero alam ko naman na masama sa bibig; nagpapatuloy pa rin ako.', 'Yes, Doc. Before it was only five. Now twenty. But I know it\'s bad for my mouth; I keep going anyway.'],
+      choices: [
+        { tl: 'Mula zero hanggang sampu, gaano po kahalaga sa inyo na bawasan o itigil ang nganga?', en: 'From zero to ten, how important is it to you to cut down or stop the betel nut?', score: 2, fb: 'Good: with the criteria gathered (tolerance, withdrawal, failed efforts, craving, use despite harm, social problems: at least six, so severe), you move to the importance ruler.' },
+        { tl: 'Kung alam po ninyong masama, bakit po hindi kayo tumigil?', en: 'If you know it\'s bad, why don\'t you stop?', score: 0, fb: 'This is the question every smoker and chewer has heard a hundred times. It produces shame, not change.' },
+        { tl: 'Puwede ko po bang ibahagi ang alam namin tungkol sa nganga at sa sugat sa bibig?', en: 'May I share what we know about betel nut and the sore in the mouth?', score: 1, fb: 'Asking permission before information is right; the ruler first would have told you how much he already wants to change.' } ] },
+    { who: 'Mang Tonyo', line: ['Siguro pito, Dok. Dahil sa mga anak ko.', 'Maybe seven, Doc. Because of my children.'],
+      choices: [
+        { tl: 'Pito po, at dahil sa mga anak ninyo. Bakit po pito at hindi tatlo?', en: 'Seven, and because of your children. Why seven and not three?', score: 2, fb: 'Good: you repeat his reason and ask why not lower. He now argues for change in his own words.' },
+        { tl: 'Bakit po hindi sampu?', en: 'Why not ten?', score: 0, fb: 'Asking why not higher makes him list the reasons against change.' },
+        { tl: 'Mabuti po. Puwede ko po bang ibahagi ang alam namin tungkol sa sugat sa bibig ninyo?', en: 'Good. May I share what we know about the sore in your mouth?', score: 1, fb: 'Permission-based feedback is fine, but one more question on the ruler would have strengthened his own motivation first.' } ] },
+    { who: 'Mang Tonyo', line: ['Kasi gusto kong makita silang makatapos. At ayokong magka-kanser. Pero paano sa bangka?', 'Because I want to see them finish school. And I don\'t want to get cancer. But what about on the boat?'],
+      choices: [
+        { tl: 'Ano po ang gusto ninyong unang hakbang: alisin muna ang tabako sa nganga at bawasan sa lima kada araw, o tuluyang itigil? Sino po ang makakatulong sa bangka?', en: 'What first step do you want: take the tobacco out of the quid and cut to five a day, or stop completely? Who could help you on the boat?', score: 2, fb: 'Good: he chooses the goal, you offer a harm-reduction step for the tobacco, and you plan around his trigger. Set a date, name a substitute, and book a follow-up with a mouth examination.' },
+        { tl: 'Dapat po tuluyang itigil, walang bawas-bawas.', en: 'You should stop completely, no cutting down.', score: 0, fb: 'Taking the choice away from him lowers the chance he does anything at all.' },
+        { tl: 'Sige po, bumalik na lang po kayo sa isang buwan.', en: 'Okay, just come back in a month.', score: 1, fb: 'Follow-up matters, but leave with a concrete plan and a date, not only an appointment.' } ] }
+  ],
+  summary: {
+    findings: ['Daily betel nut chewing with tobacco for over 30 years; about 20 quids a day, up from 5 (tolerance)', 'Withdrawal on stopping: irritability, insomnia, craving', 'Persistent desire and a failed attempt to stop (2 weeks last year)', 'Use despite a known oral lesion; marital conflict over use', 'At least 6 criteria in 12 months: other (betel nut) use disorder, severe, F19.20; tobacco in the quid also meets tobacco use disorder criteria', 'Importance 7/10 (children, cancer fear); trigger: the boat crew; patient chose to remove tobacco and cut to 5 a day as a first step', 'White patch in the buccal mucosa needs examination and referral'],
+    mse: '48M fisherman, teeth stained red, cooperative. Speech normal. Mood "okay naman"; affect appropriate, briefly embarrassed. Thought process linear; content: ambivalence about chewing, no delusions. Perception intact. Cognition grossly intact. Insight fair (knows the harm, sees the link to the lesion); judgment fair, improving with the plan.'
+  }
 }
-
 ];
 
 /* Interpretation drill: what is the patient (or family) saying? [tagalog, english, clinical significance] */

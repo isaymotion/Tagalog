@@ -481,6 +481,7 @@ details summary { cursor: pointer; }
 .ms-arrow { color: #c0392b; font-weight: 700; font-size: .85em; }
 .ms-ut { display: inline-block; font-size: .6rem; font-weight: 700; letter-spacing: .05em; color: var(--p-navy, var(--navy)); background: color-mix(in srgb, var(--p-navy, var(--navy)) 14%, var(--surface)); border-radius: 4px; padding: 0 4px; vertical-align: 2px; }
 .ms-gloss { font-size: .82rem; color: var(--muted); margin-top: 1px; }
+.ms-sub-opts { font-size: .78rem; color: var(--muted); margin-top: 1px; }
 .ms-note { font-size: .8rem; font-style: italic; color: var(--muted); margin-top: 6px; }
 .ms-obs span { display: block; font-size: .86rem; padding: 3px 0; border-top: 1px solid var(--line); }
 .ms-obs span:first-child { border-top: 0; }
@@ -518,6 +519,7 @@ details summary { cursor: pointer; }
   .ms-sec.risk .ms-b { background: #b23a3a; }
   .ms-ut { font-size: 5.6pt; color: #1f3a5f; background: #dbe6f5; padding: 0 2.5pt; vertical-align: 1pt; }
   .ms-gloss { font-size: 6.6pt; color: #6b7280; }
+  .ms-sub-opts { font-size: 6.4pt; color: #5b6472; }
   .ms-note { font-size: 7pt; color: #5b6472; margin-top: 1.5pt; }
   .ms-obs span { font-size: 7.3pt; padding: 0; border: 0; margin-bottom: 1.2pt; padding-left: 6pt; text-indent: -6pt; }
   .ms-obs b { color: #1f3a5f; }
@@ -526,3 +528,39 @@ details summary { cursor: pointer; }
   #view > .eyebrow { display: none !important; }
   .ms-en-on .ms-page { height: auto; overflow: visible; }
 }
+
+/* ---------- Substance use screening and brief intervention ---------- */
+.sd-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+.sd-chips .pill, .sd-steps .pill, .sd-opts .pill { cursor: pointer; border: 1px solid var(--line); white-space: normal; text-align: left; }
+.sd-steps { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+.sd-line { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: start; padding: 7px 0; border-top: 1px solid var(--line); }
+.sd-line:first-of-type { border-top: 0; }
+.sd-tl { font-size: 1rem; line-height: 1.45; }
+.sd-en { font-size: .86rem; color: var(--muted); margin-top: 2px; }
+.sd-n { font-size: .8rem; color: var(--muted); font-style: italic; margin-top: 2px; }
+.sd-step h3, .card .sd-step h3 { margin-top: 0; }
+.sd-group { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 12px 0 2px; }
+.sd-crit { display: grid; grid-template-columns: 28px 1fr; gap: 8px; align-items: start; padding: 8px 0; border-top: 1px solid var(--line); }
+.sd-crit .sd-line { border-top: 0; padding-top: 0; }
+.sd-crit.yes { background: color-mix(in srgb, var(--warn-bg) 60%, transparent); margin: 0 -8px; padding-left: 8px; padding-right: 8px; border-radius: 8px; }
+.sd-crit.no { opacity: .8; }
+.sd-num { width: 26px; height: 26px; border-radius: 50%; background: var(--chip); display: grid; place-items: center; font-weight: 700; font-size: .8rem; margin-top: 4px; }
+.sd-crit.yes .sd-num { background: var(--warn); color: #fff; }
+.sd-body { min-width: 0; }
+.sd-ans { margin-top: 6px; }
+.sd-ans button.on { background: var(--navy); color: #fff; }
+.sd-crit.no .sd-ans button.on { background: var(--muted); }
+.sd-opts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.sd-result { border-width: 2px; }
+.sd-result.mild { border-color: var(--good); }
+.sd-result.moderate { border-color: var(--warn); }
+.sd-result.severe { border-color: var(--bad); }
+.sd-rulers { display: grid; gap: 10px; margin-top: 10px; }
+.sd-rulers label { display: grid; gap: 4px; font-size: .9rem; }
+.card .ho-chk select.input { max-width: 100%; }
+.sd-spec { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.sd-spec .ho-chk { max-width: 100%; }
+.sd-rulers input[type=range] { width: 100%; accent-color: var(--navy); }
+.sd-det { margin-top: 10px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+.sd-det summary { cursor: pointer; font-weight: 600; }
+@media print { .sd-chips, .sd-ans, .sd-opts, .sd-line .say { display: none !important; } }

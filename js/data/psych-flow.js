@@ -51,6 +51,8 @@ window.PSYCH_FLOW = [
 
 /* Optional add-on sections (not part of the standard flow order). */
 window.PSYCH_FLOW_EXTRA = [
+  { id: 'sud', title: 'Substance use screening and brief intervention', goal: 'Betel nut, tobacco, alcohol, shabu, gambling: the DSM-5-TR criteria, severity, and a motivational interview.', sections: ['sud-screen', 'sud-betel', 'sud-other', 'sud-gambling', 'sud-screens', 'mi'], key: ['sud-screen:0', 'sud-screen:1', 'sud-screen:4', 'sud-screen:5', 'sud-screen:7', 'sud-screen:12', 'sud-screen:13', 'sud-betel:0', 'sud-betel:1', 'sud-betel:5', 'mi:0', 'mi:1', 'mi:9', 'mi:12', 'mi:19', 'mi:25'],
+    tip: 'Normalize first ("tinatanong namin ito sa lahat"), see the patient alone, and never say "adik".' },
   { id: 'deesc', title: 'De-escalation', goal: 'Calm voice, simple words, offer choices.', sections: ['deescalation'], key: ['deescalation:0', 'deescalation:1', 'deescalation:2', 'deescalation:3', 'deescalation:5', 'deescalation:8', 'deescalation:10'] },
   { id: 'meds', title: 'Medication side effects and adherence', goal: 'Ask specifically; cost is a common barrier.', sections: ['meds'], key: ['meds:0', 'meds:2', 'meds:3', 'meds:4', 'meds:5', 'meds:6', 'meds:7', 'meds:12'] },
   { id: 'admit', title: 'Admission and discharge', goal: 'Why, how long, what to expect.', sections: ['admission'], key: ['admission:0', 'admission:1', 'admission:2', 'admission:6', 'admission:7'] },
