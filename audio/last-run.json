@@ -1,13 +1,8 @@
 {
- "finished": "2026-10-27T01:17:06+00:00",
- "attempted": 5,
- "have": 3571,
+ "finished": "2026-10-27T01:17:54+00:00",
+ "attempted": 1,
+ "have": 3572,
  "wanted": 3572,
- "seconds": 73,
- "sample_errors": [
-  {
-   "text": "Nalulungkot po ba kayo nitong mga nakaraang araw? Madalas po ba kayong umiiyak?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  }
- ]
+ "seconds": 11,
+ "sample_errors": []
 }
