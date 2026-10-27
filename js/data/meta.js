@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.0.0',
+  version: '2.0.1',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -14,7 +14,7 @@ window.APP_META = {
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
   {
-    version: '2.0.0', date: 'October 2026', title: 'Substance use screening and brief intervention',
+    version: '2.0.1', date: 'October 2026', title: 'Substance use screening and brief intervention',
     items: [
       ['new', 'Substance use (Psychiatry → Substance use): screen betel nut (nganga, bunga, mama, buyo, hitso), tobacco, alcohol, shabu, cannabis, other substances and gambling (sabong, e-sabong, online) on the DSM-5-TR criteria in Tagalog. Tap Oo or Hindi; the app rates mild, moderate or severe, applies remission and other specifiers, and gives the ICD-10-CM code and a copyable chart line. Nothing about the patient is saved.'],
       ['new', 'Add-on screens scored on the same page: AUDIT-C for alcohol and the Fagerström test for nicotine dependence, in Tagalog with answer choices.'],

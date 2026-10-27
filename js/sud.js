@@ -14,7 +14,7 @@
 
   const line = (p, sub, showEn) => {
     const tl = D().fill(p.tl, sub);
-    return '<div class="sd-line"><div class="sd-tl">' + esc(tl) + (p.n ? '<div class="sd-n">' + esc(p.n) + '</div>' : '') + (showEn ? '<div class="sd-en">' + esc(D().fill(p.en, sub).replace(/\{w\}/g, sub.wen)) + '</div>' : '') + '</div>' + (p.tl.startsWith('(') ? '' : App.sayBtn(tl)) + '</div>';
+    return '<div class="sd-line"><div class="sd-tl">' + esc(tl) + (typeof p.n === 'string' && p.n ? '<div class="sd-n">' + esc(p.n) + '</div>' : '') + (showEn ? '<div class="sd-en">' + esc(D().fill(p.en, sub).replace(/\{w\}/g, sub.wen)) + '</div>' : '') + '</div>' + (p.tl.startsWith('(') ? '' : App.sayBtn(tl)) + '</div>';
   };
 
   function result() {
@@ -74,8 +74,8 @@
         '<div class="card"><h3>The ' + r.max + ' criteria, past 12 months</h3><p class="small muted">Tap Oo or Hindi after each answer. ' + (sub.gamble ? 'Not better explained by a manic episode.' : 'Tolerance and withdrawal do not count for medicines taken as prescribed.') + '</p>' +
         Object.keys(d.groups).filter((g) => r.crit.some((c) => c.group === g)).map((g) => '<div class="sd-group">' + esc(d.groups[g]) + '</div>' + r.crit.filter((c) => c.group === g).map((c) => {
           const a = st.ans[c.n];
-          return '<div class="sd-crit' + (a === true ? ' yes' : a === false ? ' no' : '') + '"><div class="sd-num">' + c.n + '</div><div class="sd-body">' + line(c, sub, showEn) + '</div>' +
-            '<div class="seg sd-ans" role="group" aria-label="Criterion ' + c.n + '"><button class="' + (a === true ? 'on' : '') + '" data-crit="' + c.n + '" data-v="1">Oo</button><button class="' + (a === false ? 'on' : '') + '" data-crit="' + c.n + '" data-v="0">Hindi</button></div></div>';
+          return '<div class="sd-crit' + (a === true ? ' yes' : a === false ? ' no' : '') + '"><div class="sd-num">' + c.n + '</div><div class="sd-body">' + line(c, sub, showEn) +
+            '<div class="seg sd-ans" role="group" aria-label="Criterion ' + c.n + '"><button class="' + (a === true ? 'on' : '') + '" data-crit="' + c.n + '" data-v="1" aria-pressed="' + (a === true) + '">Oo</button><button class="' + (a === false ? 'on' : '') + '" data-crit="' + c.n + '" data-v="0" aria-pressed="' + (a === false) + '">Hindi</button></div></div></div>';
         }).join('')).join('') + '</div>' +
         '<div class="card"><h3>Course and specifiers</h3>' + d.remission.map((p) => line(p, sub, showEn)).join('') +
         '<div class="sd-spec"><label class="ho-chk" style="flex-wrap:wrap"><span>Remission</span> <select class="input" id="sdRem" style="width:auto;max-width:100%;min-height:36px"><option value="none"' + (st.rem === 'none' ? ' selected' : '') + '>Current (criteria in the past 12 months)</option><option value="early"' + (st.rem === 'early' ? ' selected' : '') + '>Early remission (≥3 and <12 months)</option><option value="sustained"' + (st.rem === 'sustained' ? ' selected' : '') + '>Sustained remission (≥12 months)</option></select></label>' +
@@ -120,8 +120,8 @@
     el.querySelectorAll('[data-tab]').forEach((b) => (b.onclick = () => { st.tab = b.dataset.tab; render(el); }));
     el.querySelectorAll('[data-role]').forEach((b) => (b.onclick = () => { S().settings.role = b.dataset.role; App.save(); render(el); }));
     el.querySelectorAll('[data-mi]').forEach((b) => (b.onclick = () => { st.mi = +b.dataset.mi; render(el); }));
-    el.querySelectorAll('[data-crit]').forEach((b) => (b.onclick = () => { st.ans[+b.dataset.crit] = b.dataset.v === '1'; render(el); const t = el.querySelector('.sd-result'); if (Object.keys(st.ans).length === d.criteriaFor(sub).length && t) t.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }));
-    el.querySelectorAll('[data-scr]').forEach((b) => (b.onclick = () => { st.scr[+b.dataset.scr] = +b.dataset.pts; st['scrPick' + b.dataset.scr] = b.dataset.lab; render(el); }));
+    el.querySelectorAll('[data-crit]').forEach((b) => (b.onclick = () => { const n = +b.dataset.crit, v = b.dataset.v === '1'; if (st.ans[n] === v) delete st.ans[n]; else st.ans[n] = v; render(el); const t = el.querySelector('.sd-result'); if (Object.keys(st.ans).length === d.criteriaFor(sub).length && t) t.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }));
+    el.querySelectorAll('[data-scr]').forEach((b) => (b.onclick = () => { const i = +b.dataset.scr; if (st['scrPick' + i] === b.dataset.lab) { delete st.scr[i]; delete st['scrPick' + i]; } else { st.scr[i] = +b.dataset.pts; st['scrPick' + i] = b.dataset.lab; } render(el); }));
     el.querySelectorAll('[data-sex]').forEach((b) => (b.onclick = () => { st.female = b.dataset.sex === 'f'; render(el); }));
     const on = (id, ev, fn) => { const x = el.querySelector(id); if (x) x[ev] = fn; };
     on('#sdEn', 'onchange', (e) => { S().settings.sudEn = e.target.checked; App.save(); render(el); });

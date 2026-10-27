@@ -547,7 +547,8 @@ details summary { cursor: pointer; }
 .sd-num { width: 26px; height: 26px; border-radius: 50%; background: var(--chip); display: grid; place-items: center; font-weight: 700; font-size: .8rem; margin-top: 4px; }
 .sd-crit.yes .sd-num { background: var(--warn); color: #fff; }
 .sd-body { min-width: 0; }
-.sd-ans { margin-top: 6px; }
+.sd-ans { margin-top: 8px; display: inline-flex; }
+.sd-ans button { min-width: 64px; padding: 8px 16px; }
 .sd-ans button.on { background: var(--navy); color: #fff; }
 .sd-crit.no .sd-ans button.on { background: var(--muted); }
 .sd-opts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
