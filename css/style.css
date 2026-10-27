@@ -452,3 +452,77 @@ details summary { cursor: pointer; }
 .dc-row.mid { border-left-color: var(--warn); }
 .dc-row.no { border-left-color: var(--bad); }
 .dc-row .eyebrow { margin-right: 4px; }
+
+/* ---------- MSE interviewer sheet ---------- */
+.ms-page { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 18px; }
+.ms-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-end; border-bottom: 2px solid var(--p-navy, var(--navy)); padding-bottom: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.ms-title { font-weight: 700; font-size: 1.1rem; color: var(--p-navy, var(--navy)); }
+.ms-sub { font-size: .8rem; color: var(--muted); }
+.ms-right { font-size: .74rem; color: var(--muted); text-align: right; }
+.ms-right b { color: var(--p-navy, var(--navy)); }
+.ms-cols { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); align-items: start; }
+.ms-col { display: grid; gap: 12px; }
+.ms-sec { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--bg); }
+.ms-sec.risk { border-color: #c0392b; background: color-mix(in srgb, #c0392b 7%, var(--bg)); }
+.ms-sec.ut { background: color-mix(in srgb, var(--p-navy, var(--navy)) 6%, var(--bg)); }
+.ms-sec h2 { font-size: .95rem; margin: 0 0 6px; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; color: var(--p-navy, var(--navy)); }
+.ms-sec.risk h2 { color: #c0392b; }
+.ms-sec h2 .ms-en { font-size: .72rem; font-weight: 500; color: var(--muted); text-align: right; }
+.ms-sec h3 { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 8px 0 3px; }
+.ms-sec ul { list-style: none; margin: 0; padding: 0; }
+.ms-sec li { position: relative; padding: 4px 36px 4px 12px; border-top: 1px solid var(--line); font-size: .93rem; line-height: 1.4; }
+.ms-sec li::before { content: "–"; position: absolute; left: 0; color: var(--muted); }
+.ms-sec li.k { padding-left: 34px; }
+.ms-sec li.k::before { content: ""; }
+.ms-sec li:first-child { border-top: 0; }
+.ms-sec li .say { position: absolute; right: 0; top: 3px; width: 28px; height: 28px; }
+.ms-b { position: absolute; left: 0; top: 6px; min-width: 24px; padding: 0 3px; text-align: center; font-size: .66rem; font-weight: 700; color: var(--accent-fg); background: var(--p-navy, var(--navy)); border-radius: 4px; line-height: 16px; }
+.ms-sec.risk .ms-b { background: #c0392b; color: #fff; }
+.ms-arrow { color: #c0392b; font-weight: 700; font-size: .85em; }
+.ms-ut { display: inline-block; font-size: .6rem; font-weight: 700; letter-spacing: .05em; color: var(--p-navy, var(--navy)); background: color-mix(in srgb, var(--p-navy, var(--navy)) 14%, var(--surface)); border-radius: 4px; padding: 0 4px; vertical-align: 2px; }
+.ms-gloss { font-size: .82rem; color: var(--muted); margin-top: 1px; }
+.ms-note { font-size: .8rem; font-style: italic; color: var(--muted); margin-top: 6px; }
+.ms-obs span { display: block; font-size: .86rem; padding: 3px 0; border-top: 1px solid var(--line); }
+.ms-obs span:first-child { border-top: 0; }
+.ms-obs b { color: var(--p-navy, var(--navy)); }
+.ms-foot { display: flex; justify-content: space-between; gap: 12px; font-size: .72rem; color: var(--muted); border-top: 1px solid var(--line); margin-top: 12px; padding-top: 6px; }
+:root:not([data-theme="light"]) .ms-b, :root[data-theme="dark"] .ms-b { color: #fff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ms-ink: #9cc0ff; } }
+:root[data-theme="dark"] { --ms-ink: #9cc0ff; }
+.ms-title, .ms-right b, .ms-sec h2, .ms-obs b, .ms-ut { color: var(--ms-ink, var(--p-navy, var(--navy))); }
+.ms-ut { background: color-mix(in srgb, var(--ms-ink, var(--p-navy, var(--navy))) 16%, var(--surface)); }
+.ms-head { border-bottom-color: var(--ms-ink, var(--p-navy, var(--navy))); }
+
+@media print {
+  .ms-sheet, .ms-sheet * { color: #1b1b1f; }
+  .ms-page { width: auto; height: 278mm; overflow: hidden; page-break-after: always; break-after: page; display: flex; flex-direction: column; border: 0; border-radius: 0; padding: 0; margin: 0; background: #fff; font-family: "Figtree", Inter, "DejaVu Sans", Arial, sans-serif; }
+  .ms-page:last-child { page-break-after: auto; break-after: auto; }
+  .ms-head { border-bottom: 1.6pt solid #1f3a5f; padding-bottom: 3pt; margin-bottom: 5pt; flex-wrap: nowrap; }
+  .ms-title { font-size: 13pt; color: #1f3a5f; }
+  .ms-sub { font-size: 7pt; color: #4a5160; }
+  .ms-right { font-size: 6.6pt; color: #4a5160; } .ms-right b { color: #1f3a5f; }
+  .ms-cols { display: flex; gap: 5mm; flex: 1; min-height: 0; }
+  .ms-col { flex: 1 1 0; min-width: 0; display: block; }
+  .ms-sec { border: .6pt solid #cfd5df; border-radius: 3pt; padding: 3pt 4pt 3.5pt; margin-bottom: 4pt; background: #fff; font-size: 7.5pt; line-height: 1.22; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .ms-sec.risk { border-color: #b23a3a; background: #fff6f6; }
+  .ms-sec.ut { background: #f4f8fc; }
+  .ms-sec h2 { font-size: 9pt; margin: 0 0 2pt; color: #1f3a5f; text-transform: uppercase; letter-spacing: .3pt; }
+  .ms-sec.risk h2 { color: #b23a3a; }
+  .ms-sec h2 { display: block; }
+  .ms-sec h2 .ms-en { display: inline; margin-left: 4pt; font-size: 6.8pt; color: #6b7280; text-transform: none; letter-spacing: 0; }
+  .ms-sec h3 { font-size: 7.2pt; margin: 3pt 0 1pt; color: #4a5160; }
+  .ms-sec li { padding: 0 0 0 7pt; margin: 0 0 1.2pt; border: 0; font-size: 7.5pt; line-height: 1.22; }
+  .ms-sec li.k { padding-left: 15pt; }
+  .ms-sec li .say { display: none; }
+  .ms-b { top: 1pt; min-width: 11pt; padding: 0 1pt; font-size: 6.2pt; line-height: 8.5pt; border-radius: 2pt; background: #1f3a5f; color: #fff; }
+  .ms-sec.risk .ms-b { background: #b23a3a; }
+  .ms-ut { font-size: 5.6pt; color: #1f3a5f; background: #dbe6f5; padding: 0 2.5pt; vertical-align: 1pt; }
+  .ms-gloss { font-size: 6.6pt; color: #6b7280; }
+  .ms-note { font-size: 7pt; color: #5b6472; margin-top: 1.5pt; }
+  .ms-obs span { font-size: 7.3pt; padding: 0; border: 0; margin-bottom: 1.2pt; padding-left: 6pt; text-indent: -6pt; }
+  .ms-obs b { color: #1f3a5f; }
+  .ms-foot { font-size: 5.9pt; color: #6b7280; border-top: .6pt solid #cfd5df; margin-top: 3pt; padding-top: 2.5pt; }
+  .ms-arrow { color: #b23a3a; }
+  #view > .eyebrow { display: none !important; }
+  .ms-en-on .ms-page { height: auto; overflow: visible; }
+}

@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '1.8.1',
+  version: '1.9.0',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,14 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '1.9.0', date: 'October 2026', title: 'MSE interviewer sheet',
+    items: [
+      ['new', 'MSE interviewer sheet (Psychiatry → MSE interviewer sheet): a two-page Tagalog question sheet for the OPD and wards. Mood, depression (D-I-S-A-E-C-G-P + hopelessness), suicide (screen, explore, protective factors), mania (D-S-A-F-P-I-G-R), hallucinations, delusions by type with conviction and action, anger and impulse control, violence, substances, anxiety, cognition, insight and judgment, closing, and the observed parts of the MSE.'],
+      ['new', 'Print it from the app (A4, three columns, two pages) or download the ready-made PDF; works offline. Show or hide English, and tap any line to hear it.'],
+      ['content', 'Phrases marked UT are the same ones used in the rest of the app; the other ward questions were written for this sheet and are practice phrasings, not validated translations.']
+    ]
+  },
   {
     version: '1.8.1', date: 'October 2026', title: 'MSE Trainer link',
     items: [

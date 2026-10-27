@@ -27,6 +27,7 @@
     [/^\/psych\/case\/(?<id>[\w-]+)$/, V.psychCase, 'psych'],
     [/^\/psych\/interp$/, V.psychInterp, 'psych'],
     [/^\/psych\/handout$/, V.handout, 'psych'],
+    [/^\/psych\/mse-sheet$/, V.mseSheet, 'psych'],
     [/^\/psych\/deesc$/, V.deesc, 'psych'],
     [/^\/psych\/discharge$/, V.discharge, 'psych'],
     [/^\/psych\/dcases$/, V.dischargeCases, 'psych'],

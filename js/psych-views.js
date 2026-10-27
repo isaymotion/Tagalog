@@ -22,6 +22,7 @@
       '<a class="tile" href="#/psych/mcases"><span class="eyebrow">Admission</span><h3>Admission MSE practice</h3><p>Interview a patient on admission, document each MSE domain, and name the evidence for key findings.</p></a>' +
       '<a class="tile" href="https://isaymotion.github.io/MSEtrainer/#/practice?lang=tl" target="_blank" rel="noopener"><span class="eyebrow">MSE Trainer</span><h3>Name the finding in Tagalog</h3><p>Quick cases in your MSE Trainer app: Tagalog patient lines and Filipino culture-or-pathology look-alikes.</p></a>' +
       '<a class="tile" href="#/psych/deesc"><span class="eyebrow">Bedside</span><h3>De-escalation checklist</h3><p>12 steps with Tagalog phrases, outcome, and a copyable note.</p></a>' +
+      '<a class="tile" href="#/psych/mse-sheet"><span class="eyebrow">Print</span><h3>MSE interviewer sheet</h3><p>Two pages for the OPD and wards: every Tagalog screening question for the MSE, with the DISAECGP and mania mnemonics, suicide and violence risk, cognition, insight and judgment.</p></a>' +
       '<a class="tile" href="#/psych/handout"><span class="eyebrow">Print</span><h3>Printable handout</h3><p>Interview flow and MSE as a PDF, with or without English.</p></a>' +
       '<a class="tile" href="#/flash/psych"><span class="eyebrow">Memorize</span><h3>Psychiatry flashcards</h3><p>All phrases with spaced repetition.</p></a>' +
       '<a class="tile" href="#/lessons/idioms-distress"><span class="eyebrow">Culture</span><h3>Idioms of distress</h3><p>Mabigat ang dibdib, nerbiyos, tulala, and more.</p></a></div>' +
