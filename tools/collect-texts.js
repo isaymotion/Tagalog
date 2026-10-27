@@ -10,7 +10,7 @@ ctx.window = ctx;
 vm.createContext(ctx);
 const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
 ['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/verbs.js', 'js/data/lessons.js',
- 'js/data/reading.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js',
+ 'js/data/reading.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js',
  'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js'].forEach(load);
 
 const out = new Map();
@@ -30,6 +30,7 @@ const add = (t) => {
 (ctx.PSYCH_INTERP || []).forEach((x) => add(x[0]));
 (ctx.PSYCH_DISCHARGE_CASES || []).forEach((c) => Object.values(c.fields).forEach((f) => Object.values(f.ans || {}).forEach((a) => add(a[0]))));
 add('Opo, Dok.'); // default discharge practice answer
+(ctx.PSYCH_MSE_SHEET ? ctx.PSYCH_MSE_SHEET.sections : []).forEach((s) => (s.blocks || []).forEach((b) => b.items.forEach((it) => add(it.tl)))); // MSE interviewer sheet lines not already in PSYCH_SECTIONS
 (ctx.PSYCH_MSE_CASES || []).forEach((c) => { if (c.cc) add(c.cc.ans[0]); Object.values(c.domains).forEach((d) => Object.values(d.ans || {}).forEach((a) => add(a[0]))); });
 (ctx.LESSONS || []).forEach((l) => { const re = /<div class="ex"><b>([^<]+)<\/b>/g; let m; while ((m = re.exec(l.body))) add(m[1].replace(/&#39;/g, "'").replace(/&amp;/g, '&')); });
 (ctx.VERBS || []).forEach((v) => {
