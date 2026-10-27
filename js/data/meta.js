@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '1.9.0',
+  version: '1.10.0',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -14,7 +14,15 @@ window.APP_META = {
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
   {
-    version: '1.9.0', date: 'October 2026', title: 'MSE interviewer sheet',
+    version: '1.10.0', date: 'October 2026', title: 'Shea\'s techniques in Tagalog, linked to the trainer',
+    items: [
+      ['new', 'New phrase section (Psychiatry → Asking so the truth can come out): 24 Tagalog phrasings of Shea\'s validity techniques (gentle assumption, symptom amplification, denial of the specific, behavioral incidents, shame attenuation, normalization, anchor questions) and the mood questions that most interviews miss (the mania screen, the two hypomania screens, early morning awakening, libido, persistence, family suicide). Respectful and everyday forms, with a note naming the technique.'],
+      ['new', 'Technique notes: every psychiatry section now links to the chapter and section of the Psychiatric Interviewing Trainer (isaymotion.github.io/sheatrainer) that teaches the technique behind its phrases. The trainer links back here from its study guides.'],
+      ['content', 'The new section is marked draft for review until a native-speaking clinician has checked the wording; new phrases play with the device voice until the recorded audio pack is regenerated.']
+    ]
+  },
+  {
+    version: '1.10.0', date: 'October 2026', title: 'MSE interviewer sheet',
     items: [
       ['new', 'MSE interviewer sheet (Psychiatry → MSE interviewer sheet): a two-page Tagalog question sheet for the OPD and wards. Mood, depression (D-I-S-A-E-C-G-P + hopelessness), suicide (screen, explore, protective factors), mania (D-S-A-F-P-I-G-R), hallucinations, delusions by type with conviction and action, anger and impulse control, violence, substances, anxiety, cognition, insight and judgment, closing, and the observed parts of the MSE.'],
       ['new', 'Print it from the app (A4, three columns, two pages) or download the ready-made PDF; works offline. Show or hide English, and tap any line to hear it.'],

@@ -1,10 +1,10 @@
 /* Offline support. Bump VERSION whenever any file changes so phones pick up the update. */
-const VERSION = 'usaptayo-1.9.0';
+const VERSION = 'usaptayo-1.10.0';
 const FILES = [
   './', 'index.html', 'manifest.webmanifest', 'css/style.css',
   'js/core.js', 'js/views.js', 'js/psych-views.js', 'js/app.js', 'js/conjugate.js',
   'js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/verbs.js',
-  'js/data/lessons.js', 'js/data/reading.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js',
+  'js/data/lessons.js', 'js/data/reading.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-shea.js',
   'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/discharge.js', 'js/discharge-practice.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/mse-practice.js', 'js/data/psych-mse-sheet.js', 'js/mse-sheet.js', 'handouts/Tagalog_MSE_Interviewer_Guide.pdf', 'js/data/meta.js', 'js/handout.js', 'js/audio-key.js',
   'js/vendor/pdfmake.min.js', 'js/vendor/vfs_fonts.js',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/logo-96.png', 'icons/favicon-32.png', 'icons/favicon-64.png', 'icons/apple-touch-icon.png'

@@ -27,7 +27,7 @@
       '<a class="tile" href="#/flash/psych"><span class="eyebrow">Memorize</span><h3>Psychiatry flashcards</h3><p>All phrases with spaced repetition.</p></a>' +
       '<a class="tile" href="#/lessons/idioms-distress"><span class="eyebrow">Culture</span><h3>Idioms of distress</h3><p>Mabigat ang dibdib, nerbiyos, tulala, and more.</p></a></div>' +
       Object.entries(groups).map(([g, ss]) => '<h2 style="margin-top:20px">' + esc(g) + '</h2><div class="grid">' + ss.map((s) =>
-        '<a class="tile" href="#/psych/s/' + s.id + '"><h3>' + esc(s.title) + '</h3><p>' + s.phrases.length + ' phrases</p>' + (done.sections[s.id] ? '<div class="meta"><span class="pill good">' + (done.sections[s.id] === true ? 'Opened' : done.sections[s.id] + '% quiz') + '</span></div>' : '') + '</a>').join('') + '</div>').join('') +
+        '<a class="tile" href="#/psych/s/' + s.id + '"><h3>' + esc(s.title) + '</h3><p>' + s.phrases.length + ' phrases' + (s.draft ? ' · draft for review' : '') + '</p>' + (done.sections[s.id] ? '<div class="meta"><span class="pill good">' + (done.sections[s.id] === true ? 'Opened' : done.sections[s.id] + '% quiz') + '</span></div>' : '') + '</a>').join('') + '</div>').join('') +
       '<h2 style="margin-top:20px">Related lessons</h2><div class="grid">' + ['politeness', 'values', 'folk', 'idioms-distress', 'kinship', 'storytelling'].map((id) => { const l = LESSONS.find((x) => x.id === id); return l ? '<a class="tile" href="#/lessons/' + l.id + '"><h3>' + esc(l.title) + '</h3><p>' + esc(l.summary) + '</p></a>' : ''; }).join('') + '</div>';
   };
 
@@ -69,7 +69,10 @@
       if (recall) body.querySelectorAll('[data-reveal]').forEach((r) => (r.onclick = () => r.closest('.phrase').classList.remove('hide-tl')));
       if (q.p != null) { const t = body.querySelector('#ph' + q.p); if (t) { t.scrollIntoView({ block: 'center' }); t.style.background = 'var(--surface-2)'; } }
     };
-    el.innerHTML = crumb([['Psychiatry', '#/psych'], [s.title]]) + '<span class="eyebrow">' + esc(s.group) + '</span><h1>' + esc(s.title) + '</h1><p class="muted">' + esc(s.intro) + '</p>' +
+    const shea = (window.SHEA_LINKS || {})[s.id], ST = window.SHEA_TRAINER;
+    const sheaLink = shea && ST ? '<p class="small"><b>Technique notes:</b> <a href="' + ST.base + shea.ch + '/' + shea.sec + '" target="_blank" rel="noopener">' + esc(shea.label) + '</a> in the ' + esc(ST.name) + ' explains why these questions are worded this way.</p>' : '';
+    const draftNote = s.draft && ST ? '<div class="notice warn" style="margin-bottom:12px">' + esc(ST.draftNotice) + '</div>' : '';
+    el.innerHTML = crumb([['Psychiatry', '#/psych'], [s.title]]) + '<span class="eyebrow">' + esc(s.group) + '</span><h1>' + esc(s.title) + '</h1><p class="muted">' + esc(s.intro) + '</p>' + draftNote + sheaLink +
       '<div class="spread" style="margin-bottom:12px"><div class="seg" role="group" aria-label="Mode">' +
       [['study', 'Study'], ['recall', 'Recall'], ['quiz', 'Quiz EN→TL'], ['reverse', 'Quiz TL→EN']].map(([k, t]) => '<button data-m="' + k + '" class="' + (mode === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div>' +
       '<div class="row">' + (s.id === 'deescalation' ? '<a class="btn sm primary" href="#/psych/deesc">Open the checklist</a>' : '') + '<a class="btn sm" href="#/psych/handout?s=' + s.id + '">Handout of this section</a><button class="btn sm" id="addall">' + icons.plus + ' Add all to flashcards</button></div></div>' +

@@ -10,7 +10,7 @@
 
 | Section | What it does |
 |---|---|
-| **Psychiatry Tagalog** | 26 sections (343 phrases) covering opening and consent, HPI, depression, mania, anxiety/OCD, trauma, hallucinations, delusions, suicide and violence risk, de-escalation, substances, history, collateral, MSE (cognition, abstraction, observations), explaining diagnosis, medication side effects, admission, children, elderly patients, and closing. Each phrase has a respectful (*po*) form and an everyday/Taglish form. |
+| **Psychiatry Tagalog** | 27 sections (367 phrases) covering opening and consent, HPI, depression, mania, anxiety/OCD, trauma, hallucinations, delusions, suicide and violence risk, de-escalation, substances, history, collateral, MSE (cognition, abstraction, observations), explaining diagnosis, medication side effects, admission, children, elderly patients, closing, and Shea's validity techniques (gentle assumption, symptom amplification, denial of the specific, behavioral incidents, shame attenuation, normalization, anchor questions; draft for review). Each phrase has a respectful (*po*) form and an everyday/Taglish form. Every section links to the chapter of the [Psychiatric Interviewing Trainer](https://isaymotion.github.io/sheatrainer/) that teaches the technique behind it, and the trainer's study guides link back. |
 | **Case simulations** | 6 interactive interviews (first-episode psychosis, depression with suicide risk, mania, delirium, alcohol withdrawal, agitated patient) with feedback and an MSE summary. |
 | **MSE interviewer sheet** | Two A4 pages of Tagalog screening questions for the OPD and wards: opening, mood, depression (D-I-S-A-E-C-G-P), suicide (screen → explore → protective factors), mania (D-S-A-F-P-I-G-R), hallucinations, delusions by type, anger and impulse control, violence, substances, anxiety, cognition, insight and judgment, closing, and the observed MSE. Print from the app, download the ready-made PDF (`handouts/`), show or hide English, tap to listen. Phrases marked UT are shared with the rest of the app. |
 | **Printable handout** | PDF or print of the interview flow and MSE. English can be shown, hidden, or moved to an answer key. Presets: Full interview + MSE, MSE only, Risk assessment, Pocket booklet (A5), Complete reference. Works offline. |
@@ -66,6 +66,7 @@ All content lives in plain JavaScript files under `js/data/`. No build step.
 
 - **Dictionary words**: add a line to any `dict-*.js` file in the form `tagalog|english|pos|category|root|note`.
 - **Psychiatry phrases**: add `{ en, f, c, n }` objects to a section in `psych-phrases.js` (`f` = respectful form, `c` = everyday form, `n` = note).
+- **Shea technique phrases and trainer links**: `psych-shea.js` holds the "Asking so the truth can come out" section (appended to `PSYCH_SECTIONS`, so other indexes stay stable) and `SHEA_LINKS`, the map from each psychiatry section to a chapter and section of the Psychiatric Interviewing Trainer. Set `REVIEWED = true` there once the wording has been checked, to remove the draft notice.
 - **Cases and interpretation items**: `psych-cases.js`.
 - **Handout order and MSE table**: `psych-flow.js` (interview steps, key phrases for pocket cards, MSE domains).
 - **Lessons, readings, dialogues, verbs**: `lessons.js`, `reading.js`, `dialogues.js`, `verbs.js`.
