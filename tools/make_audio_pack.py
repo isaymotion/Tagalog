@@ -52,16 +52,20 @@ async def gen_edge(items, voice, rate, workers, deadline):
             # Stop early if the voice service is clearly not working, instead of burning the whole job.
             if done >= 40 and ok == 0:
                 return
-            for attempt in range(4):
+            # A few sentences come back empty from the service every time; the same sentence with the
+            # question marks softened to periods, or with a trailing pause, usually goes through.
+            base = speakable(text)
+            variants = [base, base, base.replace('?', '.'), base.replace('?', '.').rstrip('.') + '. ', base.rstrip('?.!') + ' .', base.replace(',', '').replace('?', '.')]
+            for attempt, spoken in enumerate(variants):
                 try:
-                    await asyncio.wait_for(edge_tts.Communicate(speakable(text), voice, rate=rate).save(out + '.part'), timeout=45)
+                    await asyncio.wait_for(edge_tts.Communicate(spoken, voice, rate=rate).save(out + '.part'), timeout=45)
                     if os.path.getsize(out + '.part') < 500:
                         raise RuntimeError('empty audio')
                     os.replace(out + '.part', out)
                     ok += 1
                     break
                 except Exception as e:  # network hiccups: back off and retry
-                    if attempt == 3:
+                    if attempt == len(variants) - 1:
                         print('FAILED', key, text, repr(e), file=sys.stderr, flush=True)
                         if len(ERRORS) < 20:
                             ERRORS.append({'text': text, 'error': repr(e)[:300]})
