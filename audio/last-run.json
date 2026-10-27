@@ -1,28 +1,12 @@
 {
- "finished": "2026-10-27T01:14:59+00:00",
- "attempted": 9,
- "have": 3567,
+ "finished": "2026-10-27T01:17:06+00:00",
+ "attempted": 5,
+ "have": 3571,
  "wanted": 3572,
- "seconds": 53,
+ "seconds": 73,
  "sample_errors": [
   {
-   "text": "May kumokontrol po ba sa kilos o katawan ninyo mula sa labas?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "Binigyan po ba kayo ng Diyos, o ng isang espiritu, ng espesyal na misyon?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "May pagkakataon po ba na may nasaktan kayong ibang tao, o may nasira kayong gamit dahil sa galit?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
    "text": "Nalulungkot po ba kayo nitong mga nakaraang araw? Madalas po ba kayong umiiyak?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "Mula isa hanggang sampu, gaano po kaganda ang pakiramdam ninyo ngayon?",
    "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
   }
  ]
