@@ -1,20 +1,20 @@
 {
- "finished": "2026-10-27T01:10:58+00:00",
- "attempted": 57,
- "have": 3549,
+ "finished": "2026-10-27T01:13:25+00:00",
+ "attempted": 23,
+ "have": 3563,
  "wanted": 3572,
- "seconds": 233,
+ "seconds": 99,
  "sample_errors": [
   {
-   "text": "Nasaan po tayo ngayon? Anong lugar / anong ospital po ito?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "May pagkakataon po ba na may nasaktan kayong ibang tao, o may nasira kayong gamit dahil sa galit?",
+   "text": "Magbilang po kayo pababa mula isandaan, bawasan ng pito tuwing bilang. (100, 93, 86, 79, 72)",
    "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
   },
   {
    "text": "Naisip na po ba ninyong wakasan ang inyong buhay? / Naisip na po ba ninyong magpakamatay?",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "May pagkakataon po ba na may nasaktan kayong ibang tao, o may nasira kayong gamit dahil sa galit?",
    "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
   },
   {
@@ -26,55 +26,7 @@
    "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
   },
   {
-   "text": "Magbilang po kayo pababa mula isandaan, bawasan ng pito tuwing bilang. (100, 93, 86, 79, 72)",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "Inuutusan po ba kayo ng boses na gumawa ng mga bagay? Sinusunod po ba ninyo?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "Nakagamit na po ba kayo ng droga tulad ng shabu, marijuana, o rugby? Gaano po kadalas, at kailan ang huling gamit?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "Ano po ang pumipigil sa inyo na gawin ito? Ano po ang nagbibigay sa inyo ng dahilan para magpatuloy?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "Ano po ang buong pangalan ninyo? Ilang taon na po kayo? Sino po ako? Ano po ang trabaho ko dito?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "Ano po ang ginawa ninyo dahil dito? Ano po ang balak ninyong gawin?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "Umiinom po ba kayo ng alak? Ano po \u2014 beer, gin, tuba, lambanog? Ilang bote po sa isang inuman? Ilang araw sa isang linggo?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "May sakit po ba kayo sa katawan na hindi makita ng mga doktor?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "Saan po galing ang boses \u2014 sa loob ng ulo o sa labas, parang totoong tao?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "Ikuwento po ninyo sa akin ang nangyari. Kailan po ito nagsimula \u2014 bigla o unti-unti?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "Anong petsa po ngayon? Anong araw? Anong buwan at taon? Umaga, hapon, o gabi na po ba?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
    "text": "Nalulungkot po ba kayo nitong mga nakaraang araw? Madalas po ba kayong umiiyak?",
-   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
-  },
-  {
-   "text": "Sinubukan na po ba ninyong wakasan ang buhay ninyo dati? Ano po ang ginawa ninyo? Ano po ang nangyari pagkatapos?",
    "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
   },
   {
@@ -83,6 +35,10 @@
   },
   {
    "text": "Puwede po ba ninyong ipaliwanag pa iyan? Ano po ang ibig ninyong sabihin doon?",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "Sabihin po ninyo ang mga araw ng linggo nang pabaligtad, simula sa Linggo. / Ulitin po: tatlo, walo, dalawa, lima.",
    "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
   }
  ]
