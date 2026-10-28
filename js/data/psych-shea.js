@@ -141,7 +141,7 @@
     substance: [{ ch: 'ch5', sec: 'finishing-lists', label: 'Chapter 5: Gentle assumption and symptom amplification' }, { ch: 'ch11', sec: 'visual-withdrawal', label: 'Chapter 11: Asking about withdrawal' }],
     history: { ch: 'ch9', sec: 'melancholia-anxiety', label: 'Chapter 9: The past psychiatric history' },
     'family-hx': { ch: 'ch9', sec: 'family-history', label: 'Chapter 9: The family history' },
-    social: [{ ch: 'ch6', sec: 'wellness', label: 'Chapter 6: The wellness triad' }, { ch: 'ch13', sec: 'social-history', label: 'Chapter 13: Reading the social history for personality patterns' }],
+    social: [{ ch: 'ch6', sec: 'wellness', label: 'Chapter 6: The wellness triad' }, { ch: 'ch13', sec: 'social-history', label: 'Chapter 13: Reading the social history for personality patterns' }, { ch: 'ch14', sec: 'probes', label: 'Chapter 14: Probe questions for personality disorders' }],
     collateral: [{ ch: 'ch18', sec: 'corroboration', label: 'Chapter 18: Corroboration' }, { ch: 'ch12', sec: 'families', label: 'Chapter 12: Families of patients with psychosis' }, { ch: 'ch10', sec: 'family', label: 'Chapter 10: The whole family has the depression' }],
     'mse-cog': [{ ch: 'ch16', sec: 'cognition', label: 'Chapter 16: Sensorium, cognition, and insight' }, { ch: 'ch11', sec: 'delirium', label: 'Chapter 11: Delirium and the bedside attention tests' }],
     'mse-abstract': { ch: 'ch16', sec: 'cognition', label: 'Chapter 16: Sensorium, cognition, and insight' },
@@ -151,7 +151,7 @@
     closing: { ch: 'ch3', sec: 'closing', label: 'Chapter 3: The closing' },
     meds: { ch: 'ch12', sec: 'akathisia-catatonia', label: 'Chapter 12: Akathisia and catatonia' },
     elderly: { ch: 'ch11', sec: 'delirium', label: 'Chapter 11: Delirium and the bedside attention tests' },
-    'shea-techniques': { ch: 'ch5', sec: 'challenge', label: 'Chapter 5: Validity techniques' },
+    'shea-techniques': [{ ch: 'ch5', sec: 'challenge', label: 'Chapter 5: Validity techniques' }, { ch: 'ch14', sec: 'expand', label: 'Chapter 14: Anchoring traits to adolescence and ruling out state dependency' }],
     'wd-alcohol': { ch: 'ch11', sec: 'visual-withdrawal', label: 'Chapter 11: Visual hallucinations and the withdrawal that kills' },
     'wd-agitation': { ch: 'ch12', sec: 'thought-and-gates', label: 'Chapter 12: The agitated psychotic patient' }
   };

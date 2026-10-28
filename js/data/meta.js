@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.2.2',
+  version: '2.2.3',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,12 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.2.3', date: 'October 2026', title: 'Links to the trainer\'s Chapter 14 (personality differential)',
+    items: [
+      ['improved', 'Personal and social history, and Shea\'s techniques, now also link to the Psychiatric Interviewing Trainer\'s Chapter 14 study guide: probe questions for personality disorders, and anchoring traits to adolescence while ruling out a current episode.']
+    ]
+  },
   {
     version: '2.2.2', date: 'October 2026', title: 'Links to the trainer\'s Chapter 13 (personality disorders)',
     items: [
