@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.2.1',
+  version: '2.2.2',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,12 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.2.2', date: 'October 2026', title: 'Links to the trainer\'s Chapter 13 (personality disorders)',
+    items: [
+      ['improved', 'Personal and social history, and Explaining diagnosis and treatment, now also link to the Psychiatric Interviewing Trainer\'s Chapter 13 study guide: reading the social history for personality patterns, and fitting the treatment discussion to the patient\'s personality.']
+    ]
+  },
   {
     version: '2.2.1', date: 'October 2026', title: 'More links to the Psychiatric Interviewing Trainer',
     items: [
