@@ -29,6 +29,7 @@
     [/^\/psych\/handout$/, V.handout, 'psych'],
     [/^\/psych\/mse-sheet$/, V.mseSheet, 'psych'],
     [/^\/psych\/sud$/, V.sud, 'psych'],
+    [/^\/psych\/mood$/, V.moodEpisode, 'psych'],
     [/^\/psych\/withdrawal$/, V.withdrawal, 'psych'],
     [/^\/psych\/deesc$/, V.deesc, 'psych'],
     [/^\/psych\/discharge$/, V.discharge, 'psych'],

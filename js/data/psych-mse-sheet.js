@@ -9,8 +9,8 @@ window.PSYCH_MSE_SHEET = {
   reminder: 'Huwag kalimutan: Orientation (oras, lugar, tao) · Insight · Judgment. Obserbahan: appearance, psychomotor, attitude, speech, affect, thought process.',
   disclaimer: 'Mga practice phrasing para sa training, hindi validated translation — i-adjust sa pasyente. UT = phrase na nasa Usap Tayo.',
   pages: [
-    [['opening', 'mood', 'depression'], ['suicide', 'mania'], ['hallucinations', 'behaviour']],
-    [['delusions', 'violence', 'clarify'], ['substance', 'anxiety', 'closing', 'observe'], ['cognition', 'insight']]
+    [['opening', 'mania'], ['depression'], ['suicide', 'hallucinations']],
+    [['delusions', 'violence', 'behaviour'], ['clarify', 'substance', 'anxiety', 'closing', 'observe'], ['cognition', 'insight']]
   ],
   sections: [
     { id: 'opening', title: 'Pagbubukas at rapport', en: 'Opening', ut: true, blocks: [
@@ -25,28 +25,11 @@ window.PSYCH_MSE_SHEET = {
       ] } ],
       note: 'Bago ang mga sintomas: Kasama po ba kayo ng iba nang nangyari ito, o nag-iisa? Tulog, gana sa pagkain, gamot (iniinom pa ba? kailan tumigil?).' },
 
-    { id: 'mood', title: 'Mood', en: 'Mood screen', blocks: [
-      { items: [
-        { r: 'opening:9' },
-        { tl: 'Kumusta po ang inyong mood o pakiramdam nitong nakaraang dalawang linggo?', en: 'How has your mood been these past two weeks?' },
-        { tl: 'Mula isa hanggang sampu, gaano po kaganda ang pakiramdam ninyo ngayon?', en: 'From one to ten, how good do you feel right now?' }
-      ] } ],
-      note: 'Isulat ang mood sa sariling salita ng pasyente (quote sa Tagalog + translation). Affect = ang naoobserbahan mo.' },
-
-    { id: 'depression', title: 'Depresyon', en: 'Depression · D I S A E C G P + hopeless', blocks: [
-      { items: [
-        { b: 'D', tl: 'Nalulungkot po ba kayo nitong mga nakaraang araw? Madalas po ba kayong umiiyak?', en: 'Have you been sad these past days? Do you cry often?' },
-        { b: 'I', tl: 'Nawalan po ba kayo ng gana o interes sa mga bagay-bagay?', en: 'Have you lost interest or pleasure in things?' },
-        { b: 'S', tl: 'Kumusta po ang tulog ninyo? Ilang oras po? Mahirap po bang makatulog, o nagigising nang maaga?', en: 'How is your sleep? How many hours? Trouble falling asleep, or waking early?' },
-        { b: 'A', tl: 'Kumusta po ang gana ninyo sa pagkain? Pumayat o tumaba po ba kayo?', en: 'How is your appetite? Have you lost or gained weight?' },
-        { b: 'E', tl: 'Lagi po ba kayong pagod o walang lakas?', en: 'Are you always tired or without energy?' },
-        { b: 'C', tl: 'Nakakapag-concentrate po ba kayo, halimbawa sa panonood ng TV o pagbabasa?', en: 'Can you concentrate, for example on watching TV or reading?' },
-        { b: 'G', tl: 'Nakakaramdam po ba kayo ng pagkakonsensiya, o na wala kayong halaga? Sinisisi po ba ninyo ang sarili ninyo?', en: 'Do you feel guilty, or worthless? Do you blame yourself?' },
-        { b: 'P', tl: 'May nakapansin po ba na bumagal kayo kumilos o magsalita, o hindi kayo makapirmi?', en: 'Has anyone noticed you moving or speaking more slowly, or being unable to sit still?' },
-        { b: 'H', tl: 'Nawawalan na po ba kayo ng pag-asa sa hinaharap?', en: 'Are you losing hope for the future?' },
-        { tl: 'Mas mabigat po ba ang pakiramdam sa umaga o sa gabi?', en: 'Do you feel worse in the morning or at night?' },
-        { b: 'S', tl: 'Sa mga panahong mabigat ang inyong pakiramdam, naiisip po ba ninyo na ayaw na ninyong mabuhay, o saktan ang inyong sarili?', en: 'When you feel this heavy, do you think you don\'t want to live anymore, or of hurting yourself?', arrow: '→ Suicide' }
-      ] } ] },
+    { id: 'depression', title: 'Depressed mood + SIGECAPS', en: 'Major depressive episode: gate + 5 of 9, 2 linggo', ut: true, blocks: [
+      { h: 'Gate', items: [ { r: 'depression:1' }, { r: 'depression:2' }, { r: 'depression:3' }, { r: 'depression:4' } ] },
+      { h: 'SIGECAPS', items: [ { r: 'depression:5', b: 'S' }, { r: 'depression:7', b: 'I' }, { r: 'depression:8', b: 'G' }, { r: 'depression:9', b: 'E' }, { r: 'depression:10', b: 'C' }, { r: 'depression:11', b: 'A' }, { r: 'depression:12', b: 'P' }, { r: 'depression:13', b: 'S', arrow: '→ Suicide' } ] },
+      { h: 'Duration · impairment · features', items: [ { r: 'depression:16' }, { r: 'depression:17' }, { r: 'depression:14' }, { r: 'depression:15' }, { r: 'depression:18', arrow: '→ DIGFAST' }, { r: 'depression:19' }, { r: 'depression:20' }, { r: 'depression:21' } ] } ],
+      note: 'Isulat ang mood sa sariling salita ng pasyente. Itanong sa lahat ng depressed ang nakaraang elevated mood bago magreseta ng antidepressant. Ang checker (Psychiatry → Mood episode) ang nagbibilang; PHQ-9 doon.' },
 
     { id: 'suicide', title: 'Suicide', en: 'Screen → explore. Itanong nang direkta.', risk: true, blocks: [
       { h: '1 · Screen', items: [ { r: 'suicide:0' }, { r: 'suicide:1' },
@@ -64,18 +47,11 @@ window.PSYCH_MSE_SHEET = {
         { r: 'suicide:18' } ] } ],
       note: 'Idokumento: death wish → ideation → plan → intent → means → past attempts → protective factors. NCMH crisis hotline 1553.' },
 
-    { id: 'mania', title: 'Mania / Hypomania', en: 'D S A F P I G R', blocks: [
-      { items: [
-        { b: 'D', tl: 'Nagkaroon na po ba kayo ng panahon na sobrang saya o sobrang sigla ninyo, higit sa karaniwan?', en: 'Have you had a period of feeling unusually happy or full of energy, more than usual?' },
-        { b: 'S', tl: 'Kaunti lang po ba ang tulog ninyo pero hindi kayo napapagod?', en: 'Do you sleep very little but not feel tired?' },
-        { b: 'A', tl: 'Mas mainit po ba ang ulo ninyo, o mas madaling magalit?', en: 'Are you more hot-headed, or more easily angered?' },
-        { b: 'F', tl: 'Parang nag-uunahan po ba ang mga iniisip ninyo?', en: 'Do your thoughts seem to race?' },
-        { b: 'P', tl: 'Sinabihan po ba kayo na masyado kayong mabilis o madaldal magsalita?', en: 'Have people told you that you talk too fast or too much?' },
-        { b: 'I', tl: 'Marami po ba kayong sinimulang proyekto? Malaki po ba ang nagastos ninyo?', en: 'Have you started many projects? Spent a lot of money?' },
-        { b: 'G', tl: 'Pakiramdam po ba ninyo ay may espesyal kayong kapangyarihan o misyon?', en: 'Do you feel you have special powers or a mission?' },
-        { b: 'R', tl: 'May ginawa po ba kayong mapanganib na hindi ninyo karaniwang ginagawa?', en: 'Have you done anything risky that you don\'t usually do?' }
-      ] } ],
-      note: 'Gaano po katagal ito tumagal? (≥ 4 araw hypomania; ≥ 1 linggo o na-admit = mania)' },
+    { id: 'mania', title: 'Elevated / expansive o irritable mood + DIGFAST', en: 'Mania: gate + 3 of 7 (4 kung irritable lang), 1 linggo · hypomania 4 araw', ut: true, blocks: [
+      { h: 'Gate', items: [ { r: 'mania:0' }, { r: 'mania:1' }, { r: 'mania:2' } ] },
+      { h: 'DIGFAST', items: [ { r: 'mania:3', b: 'D' }, { r: 'mania:4', b: 'I' }, { r: 'mania:5', b: 'G' }, { r: 'mania:6', b: 'F' }, { r: 'mania:7', b: 'A' }, { r: 'mania:8', b: 'S' }, { r: 'mania:9', b: 'T' } ] },
+      { h: 'Duration · severity · exclusions', items: [ { r: 'mania:10' }, { r: 'mania:11' }, { r: 'mania:12' }, { r: 'mania:13' }, { r: 'mania:14' } ] } ],
+      note: 'Na-admit o may psychosis = mania kahit anong tagal. Hypomania: 4+ araw, walang admission, walang psychosis, napansin ng iba. MDQ sa checker.' },
 
     { id: 'hallucinations', title: 'Hallucinations', en: 'Perception', blocks: [
       { h: 'Screen', items: [

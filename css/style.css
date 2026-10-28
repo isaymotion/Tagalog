@@ -553,6 +553,8 @@ details summary { cursor: pointer; }
 .sd-crit.no .sd-ans button.on { background: var(--muted); }
 .sd-opts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 .sd-result { border-width: 2px; }
+.sd-crit.sd-risk.yes { background: color-mix(in srgb, var(--bad-bg) 70%, transparent); }
+.sd-crit.sd-risk.yes .sd-num { background: var(--bad); }
 .sd-result.mild { border-color: var(--good); }
 .sd-result.moderate { border-color: var(--warn); }
 .sd-result.severe { border-color: var(--bad); }

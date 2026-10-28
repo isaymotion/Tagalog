@@ -12,7 +12,7 @@
     return s && s.phrases[+i];
   }
   function item(it) {
-    if (it.r) { const p = ref(it.r); return p ? { tl: p.f, en: p.en, ut: true, b: it.b, arrow: it.arrow } : null; }
+    if (it.r) { const p = ref(it.r); return p ? { tl: p.f, en: p.en.replace(/^[A-Z] · /, ''), ut: true, b: it.b, arrow: it.arrow } : null; }
     return it;
   }
   const UT = '<span class="ms-ut" title="Phrase from Usap Tayo">UT</span>';

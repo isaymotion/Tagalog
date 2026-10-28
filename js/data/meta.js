@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.1.0',
+  version: '2.2.0',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,16 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.2.0', date: 'October 2026', title: 'Mood reorganized: SIGECAPS and DIGFAST, with a mood episode checker',
+    items: [
+      ['improved', 'The Depression section is now "Depressed mood and SIGECAPS": the two gate symptoms first (depressed mood, loss of interest, two weeks), then Sleep, Interest, Guilt, Energy, Concentration, Appetite, Psychomotor, Suicide, each lettered. New lines: duration, impairment, the bipolar screen question to ask every depressed patient, psychotic features, mixed features, peripartum onset, and grief versus depression with a cultural note.'],
+      ['improved', 'The Mania section is now "Elevated, expansive or irritable mood and DIGFAST": the gate (elevated/expansive, or irritable only, with increased energy; noticed by others), then Distractibility, Indiscretion, Grandiosity, Flight of ideas, Activity, Sleep, Talkativeness, then duration, hospitalization, psychosis, substances, and mixed features.'],
+      ['new', 'Mood episode checker (Psychiatry → Mood episode): tap Oo or Hindi through the criteria; the app applies the DSM-5-TR rules (one gate symptom plus five of nine for two weeks; three of seven, or four if only irritable, for one week or any length if hospitalized; four days for hypomania), flags item 9 for suicide risk, and writes a copyable chart line with features. Nothing about the patient is saved.'],
+      ['new', 'PHQ-9 and MDQ in Tagalog, scored on the same page: PHQ-9 severity bands and the MDQ positive-screen rule before starting an antidepressant. Paraphrased for training, not validated translations.'],
+      ['improved', 'MSE interviewer sheet pages 1–2 and the PDF, the handout flow, and the admission MSE use the new order. Flashcard progress for the reordered phrases was moved automatically.']
+    ]
+  },
   {
     version: '2.1.0', date: 'October 2026', title: 'Withdrawal and agitation: alcohol, cannabis, the agitated patient',
     items: [

@@ -25,6 +25,18 @@
   try { state = Object.assign(defaults(), JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { state = defaults(); }
   state.settings = Object.assign(defaults().settings, state.settings || {});
   state.done = Object.assign(defaults().done, state.done || {});
+  // v2.2.0: the Depression and Mania phrase sections were reordered around SIGECAPS and DIGFAST.
+  // Move saved flashcard progress and mistakes to the new indexes once.
+  (function () {
+    if (state.migratedMoodV2) return;
+    const map = { depression: { 3: 7, 4: 5, 5: 5, 6: 6, 7: 11, 8: 9, 9: 10, 10: 8, 11: 8, 12: 12, 13: 14, 14: 3, 15: 15, 16: 4 }, mania: { 1: 8, 2: 1, 3: 6, 4: 9, 5: 7, 6: 5, 7: 4, 8: 10 } };
+    const move = (id) => { const m = /^p:(depression|mania):(\d+)$/.exec(id); if (!m) return id; const to = map[m[1]][+m[2]]; return to == null ? id : 'p:' + m[1] + ':' + to; };
+    const srs = {}; Object.keys(state.srs || {}).forEach((k) => { const nk = move(k); if (!srs[nk] || (state.srs[k].due || 0) < (srs[nk].due || 0)) srs[nk] = state.srs[k]; });
+    state.srs = srs;
+    state.mistakes = [...new Set((state.mistakes || []).map(move))];
+    state.migratedMoodV2 = true;
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable */ }
+  })();
   App.state = state;
   App.save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* storage unavailable */ } };
   App.reset = () => { state = App.state = defaults(); App.save(); };
