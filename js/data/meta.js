@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.0.1',
+  version: '2.1.0',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,18 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.1.0', date: 'October 2026', title: 'Withdrawal and agitation: alcohol, cannabis, the agitated patient',
+    items: [
+      ['new', 'Withdrawal and agitation (Psychiatry → Withdrawal and agitation): a bedside teaching reference condensed from the OpenEvidence Alcohol and Cannabis Withdrawal Guide, with the patient-facing parts in Tagalog with audio. Tabs for Alcohol, Cannabis, Agitation, Special populations, Cases and a Quick card.'],
+      ['new', 'Alcohol: ask the risk history in Tagalog, score the PAWSS (≥4 = high risk) and the CIWA-Ar (0–67, each item with its anchors) on the page, then copy a chart line with a plan matched to the band. Treatment reference: time course, differential, level of care, thiamine and electrolytes, symptom-triggered vs fixed vs front-loaded benzodiazepines, phenobarbital, benzodiazepine-resistant withdrawal, adjuncts that do and do not work, and AUD medication to start before discharge. Nothing about the patient is saved.'],
+      ['new', 'Cannabis: the seven DSM-5-TR withdrawal symptoms in Tagalog with an Oo/Hindi counter (3 or more in a week), the cannabinoid hyperemesis questions, a CHS vs withdrawal table, symptom-targeted management, the investigational medication table and the time course explained to the patient.'],
+      ['new', 'Agitation: safety and medical screen, environment, Project BETA\'s 10 domains with a Tagalog line for each, medication matched to the cause, the adult medication reference and trials, safety issues (olanzapine + benzodiazepine, QTc, akathisia, respiratory depression) and restraint as a last resort, linked to the hospital de-escalation checklist.'],
+      ['new', 'Special populations: cirrhosis (withdrawal vs hepatic encephalopathy), older adults, pregnancy and adolescents, with the screening questions in Tagalog. Four practice cases with answers and a Tagalog line to say.'],
+      ['new', 'Nurse view: a monitoring script in Tagalog (what to tell the patient, the CIWA-Ar round, cannabis days 3–5, after sedation), the CIWA-Ar scorer, and when to escalate. Pending Nursing Service review.'],
+      ['content', 'Three new phrase sections under Substance use (alcohol withdrawal and CIWA-Ar, cannabis withdrawal and CHS, agitation and the withdrawal watch), with flashcards, search and audio. Marked draft for review until the wording has been checked by a native-speaking clinician.']
+    ]
+  },
   {
     version: '2.0.1', date: 'October 2026', title: 'Substance use screening and brief intervention',
     items: [
