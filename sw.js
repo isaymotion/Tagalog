@@ -1,5 +1,5 @@
 /* Offline support. Bump VERSION whenever any file changes so phones pick up the update. */
-const VERSION = 'usaptayo-2.2.0';
+const VERSION = 'usaptayo-2.2.1';
 const FILES = [
   './', 'index.html', 'manifest.webmanifest', 'css/style.css',
   'js/core.js', 'js/views.js', 'js/psych-views.js', 'js/app.js', 'js/conjugate.js',

@@ -72,8 +72,12 @@
       if (recall) body.querySelectorAll('[data-reveal]').forEach((r) => (r.onclick = () => r.closest('.phrase').classList.remove('hide-tl')));
       if (q.p != null) { const t = body.querySelector('#ph' + q.p); if (t) { t.scrollIntoView({ block: 'center' }); t.style.background = 'var(--surface-2)'; } }
     };
-    const shea = (window.SHEA_LINKS || {})[s.id], ST = window.SHEA_TRAINER;
-    const sheaLink = shea && ST ? '<p class="small"><b>Technique notes:</b> <a href="' + ST.base + shea.ch + '/' + shea.sec + '" target="_blank" rel="noopener">' + esc(shea.label) + '</a> in the ' + esc(ST.name) + ' explains why these questions are worded this way.</p>' : '';
+    const sheaRaw = (window.SHEA_LINKS || {})[s.id], ST = window.SHEA_TRAINER;
+    const shea = sheaRaw ? [].concat(sheaRaw) : [];
+    const sheaA = (l) => '<a href="' + ST.base + l.ch + '/' + l.sec + '" target="_blank" rel="noopener">' + esc(l.label) + '</a>';
+    const sheaLink = shea.length && ST ? (shea.length === 1
+      ? '<p class="small"><b>Technique notes:</b> ' + sheaA(shea[0]) + ' in the ' + esc(ST.name) + ' explains why these questions are worded this way.</p>'
+      : '<div class="small"><b>Technique notes</b> in the ' + esc(ST.name) + ', on why these questions are worded this way:<ul style="margin:4px 0 12px;padding-left:20px">' + shea.map((l) => '<li>' + sheaA(l) + '</li>').join('') + '</ul></div>') : '';
     const draftNote = s.draft && ST ? '<div class="notice warn" style="margin-bottom:12px">' + esc(ST.draftNotice) + '</div>' : '';
     el.innerHTML = crumb([['Psychiatry', '#/psych'], [s.title]]) + '<span class="eyebrow">' + esc(s.group) + '</span><h1>' + esc(s.title) + '</h1><p class="muted">' + esc(s.intro) + '</p>' + draftNote + sheaLink +
       '<div class="spread" style="margin-bottom:12px"><div class="seg" role="group" aria-label="Mode">' +

@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.2.0',
+  version: '2.2.1',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,12 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.2.1', date: 'October 2026', title: 'More links to the Psychiatric Interviewing Trainer',
+    items: [
+      ['improved', 'A phrase section can now link to several trainer chapters under "Technique notes". Thirteen sections gained links to the new Chapter 10 (depression), 11 (psychosis differential) and 12 (the person beneath the psychosis) study guides: opening, depression, hallucinations, delusions, suicide, substances, collateral history, MSE cognition, medication side effects, elderly patients, alcohol withdrawal and agitation.']
+    ]
+  },
   {
     version: '2.2.0', date: 'October 2026', title: 'Mood reorganized: SIGECAPS and DIGFAST, with a mood episode checker',
     items: [
