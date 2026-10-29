@@ -195,7 +195,7 @@
     s.phrases.forEach((p, i) => push('Phrase', p.f, p.en, (p.c || '') + ' ' + (p.n || ''), '#/psych/s/' + s.id + '?p=' + i));
   });
   (window.PSYCH_CASES || []).forEach((c) => push('Case', c.title, c.setting, '', '#/psych/case/' + c.id));
-  (window.VERBS || []).forEach((v) => push('Verb', v.r, v.en, (v.ex || ''), '#/verbs/' + v.r));
+  (window.VERBS || []).forEach((v) => push('Verb', v.r, v.en, (v.ex || '') + ' ' + ((window.VERB_SENTENCES || {})[v.r] || []).map((s) => s[0] + ' ' + s[1]).join(' '), '#/verbs/' + v.r));
   [['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp'], ['De-escalation checklist', '#/psych/deesc'], ['Discharge assessment', '#/psych/discharge'], ['Discharge practice cases', '#/psych/dcases'], ['Admission MSE practice', '#/psych/mcases'], ['Printable handout', '#/psych/handout']]
     .forEach(([t, r]) => push('Page', t, '', '', r));
   App.searchAll = (q, limit) => {
@@ -231,6 +231,12 @@
       if (!f) return null;
       return { id, tl: f[asp], en: v.en + ' — ' + Conj.ASPECTS[asp].toLowerCase(), sub: Conj.FOCUS[af] || '' };
     }
+    if (id.startsWith('vs:')) {
+      const [, r, i] = id.split(':');
+      const s = ((window.VERB_SENTENCES || {})[r] || [])[+i];
+      if (!s) return null;
+      return { id, tl: s[0], en: s[1], note: s[5] || '', sub: r + ' · ' + (Conj.ASPECTS[s[3]] || 'bare root').toLowerCase() };
+    }
     return null;
   };
   App.verbForms = (v) => {
@@ -255,6 +261,10 @@
     const vids = [];
     (window.VERBS || []).forEach((v) => { const f = App.verbForms(v); Object.keys(f).forEach((af) => ['com', 'inc', 'con'].forEach((asp) => vids.push('v:' + v.r + ':' + af + ':' + asp))); });
     decks.push({ id: 'verbs', name: 'Verb forms', group: 'Vocabulary', ids: vids });
+    const sAll = [], sClin = [];
+    (window.VERBS || []).forEach((v) => (((window.VERB_SENTENCES || {})[v.r]) || []).forEach((s, i) => { const id = 'vs:' + v.r + ':' + i; sAll.push(id); if (/c/.test(s[4] || '')) sClin.push(id); }));
+    if (sAll.length) decks.push({ id: 'verb-sent', name: 'Verb sentences (all)', group: 'Vocabulary', ids: sAll });
+    if (sClin.length) decks.push({ id: 'verb-sent-clin', name: 'Verb sentences: clinical', group: 'Clinical vocabulary', ids: sClin });
     return decks;
   };
 

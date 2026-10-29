@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.2.4',
+  version: '2.3.0',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -14,7 +14,18 @@ window.APP_META = {
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
   {
-    version: '2.2.4', date: 'October 2026', title: 'Links to the trainer\'s Chapter 15 (the psychodynamic lens)',
+    version: '2.3.0', date: 'October 2026', title: 'Verb trainer: sentences for every aspect',
+    items: [
+      ['new', 'Every verb now comes with natural sample sentences for each aspect (infinitive/command, completed, ongoing, future) plus bare-root uses like "Tara, kain tayo!" — 628 sentences across the 78 verbs, with the verb form highlighted and audio for each.'],
+      ['new', 'Most sentences are bedside lines: "Ininom na po ba ninyo yung gamot?", "Inumin po dapat ninyo itong gamot", "May naririnig ka bang boses?", "Kailan ka tumigil sa gamot?" Clinical sentences are tagged, and "Play clinical only" reads just those.'],
+      ['new', 'Two sentence drills in the verb trainer: Fill the blank in a sentence (choose the right form) and Translate the sentence. Both work with the Clinical verbs filter.'],
+      ['new', 'Flashcard decks "Verb sentences (all)" and "Verb sentences: clinical", and an "Add sentences to flashcards" button on each verb page.'],
+      ['improved', 'Universal search now finds verb sentences, so typing "gamot" or "boses" lists the verb pages that use them.'],
+      ['content', 'The new sentences are a first draft pending native-speaker review; please report any that sound unnatural.']
+    ]
+  },
+  {
+    version: '2.3.0', date: 'October 2026', title: 'Links to the trainer\'s Chapter 15 (the psychodynamic lens)',
     items: [
       ['improved', 'De-escalation, Explaining diagnosis and treatment, and Closing the interview now also link to the Psychiatric Interviewing Trainer\'s Chapter 15 study guide: complementary shifts with an angry patient, collaborative planning when a patient splits, and setting boundaries with a patient who fears abandonment.']
     ]

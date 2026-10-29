@@ -9,7 +9,7 @@ const ctx = { window: {}, console, TextEncoder, Buffer };
 ctx.window = ctx;
 vm.createContext(ctx);
 const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
-['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/verbs.js', 'js/data/lessons.js',
+['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js',
  'js/data/reading.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js', 'js/data/psych-sud.js', 'js/data/psych-mood.js', 'js/data/psych-shea.js',
  'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js'].forEach(load);
 
@@ -40,6 +40,7 @@ add('Opo, Dok.'); // default discharge practice answer
   Object.values(forms).forEach((f) => ['inf', 'com', 'inc', 'con'].forEach((k) => add(f[k])));
   if (v.ex) add(v.ex.split('|')[0]);
   add(v.r);
+  ((ctx.VERB_SENTENCES || {})[v.r] || []).forEach((s) => add(s[0]));
 });
 add('Magandang umaga po. Kumusta po kayo?'); // settings voice test
 // Lines other apps play from this audio pack (one per line, # for comments). See tools/import-msetrainer.js.

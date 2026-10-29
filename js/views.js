@@ -24,7 +24,7 @@
       const q = qs[i];
       const order = shuffle(q.opts.map((o, k) => k));
       el.innerHTML = '<div class="card stack"><div class="spread"><span class="eyebrow">Question ' + (i + 1) + ' of ' + qs.length + '</span>' + (q.say ? App.sayBtn(q.say) : '') + '</div>' +
-        '<div class="' + (q.tlq ? 'tl' : '') + '" style="font-size:1.12rem;font-weight:600">' + esc(q.q) + '</div>' +
+        '<div class="' + (q.tlq ? 'tl' : '') + '" style="font-size:1.12rem;font-weight:600">' + esc(q.q) + '</div>' + (q.sub ? '<div class="muted">' + esc(q.sub) + '</div>' : '') +
         '<div class="opts">' + order.map((k) => '<button class="opt' + (q.tlo ? ' tl' : '') + '" data-k="' + k + '">' + esc(q.opts[k]) + '</button>').join('') + '</div><div data-fb></div></div>';
       el.querySelectorAll('.opt').forEach((b) => (b.onclick = () => {
         const k = +b.dataset.k, ok = k === q.a;
@@ -208,14 +208,49 @@
       Object.entries(f).map(([af, x]) => '<tr><td>' + esc(Conj.FOCUS[af] || af) + '</td>' + ['inf', 'com', 'inc', 'con'].map((k) => '<td><b>' + esc(x[k]) + '</b> ' + App.sayBtn(x[k]) + '</td>').join('') + '</tr>').join('') + '</table></div>';
   }
   App.verbTable = verbTable;
+
+  /* Sample sentences per verb (js/data/verb-sentences.js): [tl, en, form, aspect, flags, note] */
+  const SENT_ASPECTS = [['inf', 'Infinitive / command'], ['com', 'Completed (past)'], ['inc', 'Incompleted (ongoing / habitual)'], ['con', 'Contemplated (future)'], ['root', 'Bare root (casual invitation, command, or adjective-like)']];
+  const sentencesFor = (v) => ((window.VERB_SENTENCES || {})[v.r] || []).map((s, i) => ({ v, i, tl: s[0], en: s[1], form: s[2], asp: s[3], clinical: /c/.test(s[4] || ''), note: s[5] || '', polite: /\b(po|opo|ninyo|kayo|inyo)\b/i.test(s[0]) }));
+  App.sentencesFor = sentencesFor;
+  const sentCount = () => Object.values(window.VERB_SENTENCES || {}).reduce((n, a) => n + a.length, 0);
+  // Which affix class a form belongs to (for the "focus" pill); '' when it is an extra form outside the table.
+  const affixOf = (v, form) => { const f = App.verbForms(v); for (const af of Object.keys(f)) for (const k of ['inf', 'com', 'inc', 'con']) if (f[af][k] === form) return af; return ''; };
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\-]/g, '\\$&');
+  // Highlight the verb form inside the (escaped) sentence.
+  const hl = (tl, form) => esc(tl).replace(new RegExp('(' + escRe(esc(form)) + ')', 'i'), '<mark class="vf">$1</mark>');
+  const blank = (tl, form) => tl.replace(new RegExp(escRe(form), 'i'), '______');
+  function sentenceRow(s) {
+    const af = affixOf(s.v, s.form);
+    return '<div class="sent"><div class="spread"><div style="min-width:0"><div class="tl" style="font-size:1.08rem">' + hl(s.tl, s.form) + '</div><div class="muted">' + esc(s.en) + '</div>' +
+      '<div class="meta row" style="margin-top:4px">' + (af ? '<span class="pill">' + esc(Conj.FOCUS[af] || af) + '</span>' : '') + (s.polite ? '<span class="pill">po</span>' : '') + (s.clinical ? '<span class="pill warn">clinical</span>' : '') + (s.note ? '<span class="small muted">' + esc(s.note) + '</span>' : '') + '</div></div>' + App.sayBtn(s.tl) + '</div></div>';
+  }
+  function sentenceSection(v) {
+    const ss = sentencesFor(v);
+    if (!ss.length) return '';
+    return '<h2 style="margin-top:18px">In sentences</h2><p class="muted small">Natural sentences for each aspect; the verb form is highlighted. Tap 🔊 to hear one, or read the whole set with <b>Play all</b>.</p>' +
+      '<div class="row" style="margin-bottom:8px"><button class="btn sm" id="sayall">' + icons.sound + ' Play all</button><button class="btn sm" id="sayclin">' + icons.sound + ' Play clinical only</button><button class="btn sm" id="addsent">' + icons.plus + ' Add sentences to flashcards</button></div>' +
+      SENT_ASPECTS.map(([asp, label]) => { const rows = ss.filter((s) => s.asp === asp); return rows.length ? '<div class="card stack" style="margin-bottom:10px"><div class="eyebrow">' + esc(label) + '</div>' + rows.map(sentenceRow).join('') + '</div>' : ''; }).join('');
+  }
+  function bindSentenceSection(el, v) {
+    const ss = sentencesFor(v);
+    const all = el.querySelector('#sayall'); if (all) all.onclick = () => App.speakAll(ss.map((s) => s.tl), 500);
+    const cl = el.querySelector('#sayclin'); if (cl) cl.onclick = () => App.speakAll(ss.filter((s) => s.clinical).map((s) => s.tl), 500);
+    const add = el.querySelector('#addsent'); if (add) add.onclick = () => {
+      let n = 0;
+      ss.forEach((s) => { const id = 'vs:' + v.r + ':' + s.i; if (!S().srs[id]) { S().srs[id] = { e: 2.5, i: 0, r: 0, due: Date.now() }; n++; } });
+      App.save(); App.toast(n + ' sentence cards added. Find them under All due reviews.');
+    };
+  }
+
   V.verbs = (el) => {
-    el.innerHTML = '<h1>Verb trainer</h1><p class="muted">Tagalog verbs change by <b>focus</b> (affix) and <b>aspect</b> (completed, ongoing, future). Drill the forms until they are automatic. Verbs marked <span class="pill">clinical</span> come up constantly in interviews.</p>' +
+    el.innerHTML = '<h1>Verb trainer</h1><p class="muted">Tagalog verbs change by <b>focus</b> (affix) and <b>aspect</b> (completed, ongoing, future). Drill the forms until they are automatic, then meet each form in real sentences: every verb has natural examples for each aspect, ' + sentCount() + ' sentences in all, most of them bedside lines like <span class="tl">Ininom na po ba ninyo yung gamot?</span> Verbs marked <span class="pill">clinical</span> come up constantly in interviews.</p>' +
       '<div class="card stack"><h2 style="margin:0">Drill</h2><div class="row">' +
       '<label class="small">Verbs <select class="input" id="vset" style="width:auto"><option value="all">All verbs</option><option value="clinical">Clinical verbs</option></select></label>' +
-      '<label class="small">Mode <select class="input" id="vmode" style="width:auto"><option value="type">Type the form</option><option value="mc">Multiple choice</option><option value="id">Identify the aspect</option></select></label>' +
+      '<label class="small">Mode <select class="input" id="vmode" style="width:auto"><optgroup label="Forms"><option value="type">Type the form</option><option value="mc">Multiple choice</option><option value="id">Identify the aspect</option></optgroup><optgroup label="Sentences"><option value="fill">Fill the blank in a sentence</option><option value="tr">Translate the sentence</option></optgroup></select></label>' +
       '<button class="btn primary" id="vgo">Start 10 questions</button></div><div id="vdrill"></div></div>' +
-      '<div class="notice info" style="margin-top:12px"><b>Quick rules.</b> Ongoing and future reduplicate the first syllable: <span class="tl">kain → <b>ka</b>kain</span>. Completed and ongoing show the "started" marker: <span class="tl">-um-, nag-, -in-</span>. Read the <a href="#/lessons/aspect">aspect lesson</a> and <a href="#/lessons/focus">focus lesson</a>.</div>' +
-      '<h2 style="margin-top:18px">All verbs</h2><div class="grid">' + VERBS.map((v) => '<a class="tile" href="#/verbs/' + v.r + '"><h3 class="tl">' + esc(v.r) + '</h3><p>' + esc(v.en) + '</p><div class="meta row">' + v.a.concat(Object.keys(v.o || {}).filter((k) => !v.a.includes(k))).map((a) => '<span class="pill">' + esc(a === 'custom' ? 'special' : a) + '</span>').join('') + (v.clinical ? '<span class="pill warn">clinical</span>' : '') + '</div></a>').join('') + '</div>';
+      '<div class="notice info" style="margin-top:12px"><b>Quick rules.</b> Ongoing and future reduplicate the first syllable: <span class="tl">kain → <b>ka</b>kain</span>. Completed and ongoing show the "started" marker: <span class="tl">-um-, nag-, -in-</span>. The bare root also appears on its own in casual speech: <span class="tl">Tara, kain tayo!</span> Read the <a href="#/lessons/aspect">aspect lesson</a> and <a href="#/lessons/focus">focus lesson</a>.</div>' +
+      '<h2 style="margin-top:18px">All verbs</h2><div class="grid">' + VERBS.map((v) => '<a class="tile" href="#/verbs/' + v.r + '"><h3 class="tl">' + esc(v.r) + '</h3><p>' + esc(v.en) + '</p><div class="meta row">' + v.a.concat(Object.keys(v.o || {}).filter((k) => !v.a.includes(k))).map((a) => '<span class="pill">' + esc(a === 'custom' ? 'special' : a) + '</span>').join('') + (v.clinical ? '<span class="pill warn">clinical</span>' : '') + (sentencesFor(v).length ? '<span class="pill" style="font-weight:500">' + sentencesFor(v).length + ' sentences</span>' : '') + '</div></a>').join('') + '</div>';
     el.querySelector('#vgo').onclick = () => verbDrill(el.querySelector('#vdrill'), el.querySelector('#vset').value, el.querySelector('#vmode').value);
   };
   function verbItems(set) {
@@ -226,7 +261,43 @@
     });
     return items;
   }
+  function sentenceItems(set) {
+    const out = [];
+    VERBS.forEach((v) => sentencesFor(v).forEach((s) => { if (set !== 'clinical' || s.clinical) out.push(s); }));
+    return out;
+  }
+  const aspName = (asp) => (Conj.ASPECTS[asp] || 'Bare root');
+  function sentenceDrill(box, set, mode) {
+    const pool = sentenceItems(set);
+    const items = pick(pool, 10);
+    let qs;
+    if (mode === 'fill') {
+      qs = items.map((s) => {
+        // Distractors: other forms of the same verb (same affix class first), never a form that also fits the blank.
+        const f = App.verbForms(s.v);
+        const af = affixOf(s.v, s.form);
+        const same = af ? ['inf', 'com', 'inc', 'con'].map((k) => f[af][k]) : [];
+        const others = [].concat(...Object.values(f).map((x) => ['inf', 'com', 'inc', 'con'].map((k) => x[k])));
+        const used = new Set([s.form.toLowerCase()]);
+        const wrong = [];
+        shuffle(same).concat(shuffle(others), [s.v.r]).forEach((w) => { if (wrong.length < 3 && w && !used.has(w.toLowerCase())) { used.add(w.toLowerCase()); wrong.push(w); } });
+        return { q: blank(s.tl, s.form), sub: s.en, say: s.tl, tlq: true, opts: [s.form].concat(wrong), a: 0, tlo: true, cardId: 'vs:' + s.v.r + ':' + s.i,
+          exp: s.tl + ' — ' + aspName(s.asp) + (af ? ', ' + (Conj.FOCUS[af] || af) : '') + ' of ' + s.v.r + '.' + (s.note ? ' ' + s.note : '') };
+      });
+    } else {
+      qs = items.map((s) => {
+        const sameVerb = shuffle(sentencesFor(s.v).filter((x) => x.i !== s.i && x.en !== s.en)).map((x) => x.en);
+        const otherVerbs = shuffle(pool.filter((x) => x.v !== s.v)).map((x) => x.en);
+        const wrong = [...new Set(sameVerb.slice(0, 2).concat(otherVerbs))].filter((e) => e !== s.en).slice(0, 3);
+        return { q: s.tl, say: s.tl, tlq: true, opts: [s.en].concat(wrong), a: 0, cardId: 'vs:' + s.v.r + ':' + s.i,
+          exp: s.form + ' = ' + aspName(s.asp).toLowerCase() + ' of ' + s.v.r + ' (' + s.v.en + ').' + (s.note ? ' ' + s.note : '') };
+      });
+    }
+    const d = document.createElement('div'); d.style.marginTop = '12px'; box.innerHTML = ''; box.appendChild(d);
+    App.runQuiz(d, qs, { onDone: () => App.activity(10) });
+  }
   function verbDrill(box, set, mode) {
+    if (mode === 'fill' || mode === 'tr') return sentenceDrill(box, set, mode);
     const items = pick(verbItems(set), 10);
     if (mode === 'type') {
       let i = 0, right = 0;
@@ -272,13 +343,15 @@
     if (!v) { el.innerHTML = '<p>Verb not found. <a href="#/verbs">All verbs</a></p>'; return; }
     const [exT, exE] = (v.ex || '|').split('|');
     el.innerHTML = crumb([['Verb trainer', '#/verbs'], [v.r]]) + '<h1><span class="tl">' + esc(v.r) + '</span> · ' + esc(v.en) + '</h1>' +
-      verbTable(v) + (exT ? '<div class="card" style="margin-top:12px"><div class="spread"><div><div class="tl" style="font-size:1.12rem">' + esc(exT) + '</div><div class="muted">' + esc(exE) + '</div></div>' + App.sayBtn(exT) + '</div></div>' : '') +
-      '<div class="row" style="margin-top:12px"><button class="btn" id="addv">' + icons.plus + ' Add forms to flashcards</button><a class="btn" href="#/dict?q=' + encodeURIComponent(v.r) + '">Words with this root</a></div>';
+      verbTable(v) + (exT && !sentencesFor(v).length ? '<div class="card" style="margin-top:12px"><div class="spread"><div><div class="tl" style="font-size:1.12rem">' + esc(exT) + '</div><div class="muted">' + esc(exE) + '</div></div>' + App.sayBtn(exT) + '</div></div>' : '') +
+      '<div class="row" style="margin-top:12px"><button class="btn" id="addv">' + icons.plus + ' Add forms to flashcards</button><a class="btn" href="#/dict?q=' + encodeURIComponent(v.r) + '">Words with this root</a></div>' +
+      sentenceSection(v);
     el.querySelector('#addv').onclick = () => {
       const f = App.verbForms(v); let n = 0;
       Object.keys(f).forEach((af) => ['com', 'inc', 'con'].forEach((asp) => { const id = 'v:' + v.r + ':' + af + ':' + asp; if (!S().srs[id]) { S().srs[id] = { e: 2.5, i: 0, r: 0, due: Date.now() }; n++; } }));
       App.save(); App.toast(n + ' cards added. Find them under All due reviews.');
     };
+    bindSentenceSection(el, v);
   };
 
   /* ---------- Lessons ---------- */

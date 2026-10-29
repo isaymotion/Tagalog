@@ -577,3 +577,9 @@ details summary { cursor: pointer; }
 .wd-tbl table { min-width: 480px; }
 .wd-pearl { margin-top: 10px; }
 .sd-opts .pill[data-ck] { min-width: 34px; justify-content: center; }
+
+/* Verb trainer: sample sentences */
+.sent { padding: 10px 0; border-top: 1px solid var(--line); }
+.sent:first-of-type { border-top: 0; padding-top: 4px; }
+.sent .meta { flex-wrap: wrap; gap: 6px; }
+mark.vf { background: var(--warn-bg); color: var(--gold-ink); font-weight: 700; border-radius: 4px; padding: 0 3px; }

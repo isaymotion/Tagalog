@@ -25,7 +25,7 @@
 | **Dictionary** | About 1,650 entries, English → Filipino and Filipino → English, with root-word search (`kinakain` finds `kain`, `binubulungan` finds `bulong`). |
 | **Universal search** | One search bar (press `/`) across words, phrases, lessons, readings, dialogues, cases, and verbs. |
 | **Flashcards** | Spaced repetition with topic decks, psychiatry decks, verb-form decks, and an automatic "My mistakes" deck. |
-| **Verb trainer** | 78 verbs across -um-, mag-, ma-, -in, i-, -an with type-the-form, multiple-choice, and identify-the-aspect drills. |
+| **Verb trainer** | 78 verbs across -um-, mag-, ma-, -in, i-, -an with type-the-form, multiple-choice, and identify-the-aspect drills, plus 628 natural sample sentences (one set per aspect, most of them bedside lines) with fill-the-blank and translate-the-sentence drills. |
 | **Lessons** | 22 grammar and culture lessons with quizzes: markers, focus, aspect, particles, po/opo, numbers/time/money, Taglish, hiya, utang na loob, folk beliefs, idioms of distress. |
 | **Reading** | 12 graded passages (A1–B2) with glossaries and comprehension questions. |
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. |
@@ -73,7 +73,7 @@ All content lives in plain JavaScript files under `js/data/`. No build step.
 - **Withdrawal and agitation**: `psych-withdrawal.js` holds the Tagalog lines (`ALC_ASK`, `PAWSS`, `CIWA`, `CAN_CRIT`, `AGIT_LINES`, `NURSE`, …) and the English reference cards (`ALC_REF`, `CAN_REF`, `AGIT_REF`, `SPECIAL`, `CASES`). Set `REVIEWED = true` once the Tagalog has been checked, to remove the draft notice. Doses come from the teaching guide; edit them there if the hospital protocol differs.
 - **Cases and interpretation items**: `psych-cases.js`.
 - **Handout order and MSE table**: `psych-flow.js` (interview steps, key phrases for pocket cards, MSE domains).
-- **Lessons, readings, dialogues, verbs**: `lessons.js`, `reading.js`, `dialogues.js`, `verbs.js`.
+- **Lessons, readings, dialogues, verbs**: `lessons.js`, `reading.js`, `dialogues.js`, `verbs.js`, `verb-sentences.js` (sample sentences per verb and aspect).
 - **What's New**: add a new entry at the top of `WHATS_NEW` in `meta.js`, and update `version` and `updated` in `APP_META`.
 
 After changing files, bump `VERSION` in `sw.js` so installed copies pick up the update.
