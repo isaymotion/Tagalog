@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.2.3',
+  version: '2.2.4',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,12 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.2.4', date: 'October 2026', title: 'Links to the trainer\'s Chapter 15 (the psychodynamic lens)',
+    items: [
+      ['improved', 'De-escalation, Explaining diagnosis and treatment, and Closing the interview now also link to the Psychiatric Interviewing Trainer\'s Chapter 15 study guide: complementary shifts with an angry patient, collaborative planning when a patient splits, and setting boundaries with a patient who fears abandonment.']
+    ]
+  },
   {
     version: '2.2.3', date: 'October 2026', title: 'Links to the trainer\'s Chapter 14 (personality differential)',
     items: [
