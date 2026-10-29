@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.3.2',
+  version: '2.3.3',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,12 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.3.3', date: 'October 2026', title: 'Links to the trainer\'s interviews that can be played in Tagalog',
+    items: [
+      ['new', 'The de-escalation, suicide risk and delusions sections now link to simulated interviews in the Psychiatric Interviewing Trainer that have a Sa Tagalog switch: the patient\'s lines and your choices in Filipino, with the English underneath.']
+    ]
+  },
   {
     version: '2.3.2', date: 'October 2026', title: 'Links to the new Tagalog drills in the Psychiatric Interviewing Trainer',
     items: [

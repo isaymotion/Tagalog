@@ -8,7 +8,7 @@
       Set REVIEWED to true once approved to hide the notice.
    2. SHEA_LINKS: for each psych section, the trainer chapter and section that teach the technique behind the phrases.
       A value may be one link or an array of links (most relevant first). Rendered as "Technique notes" at the top of the section.
-      A link is { ch, sec, label } for a study-guide section, or { href: '#/drills/<id>', label } for any other trainer route. */
+      A link is { ch, sec, label } for a study-guide section, or { href: '#/drills/<id>' | '#/simulate/<id>', label } for any other trainer route. */
 (function () {
   const REVIEWED = false;
   window.SHEA_TRAINER = {
@@ -135,10 +135,10 @@
     anxiety: { ch: 'ch2', sec: 'ocd', label: 'Chapter 2: The normalizing OCD screen' },
     trauma: { ch: 'ch5', sec: 'raising', label: 'Chapter 5: Raising a sensitive topic' },
     hallucinations: [{ ch: 'ch12', sec: 'raising-voices', label: 'Chapter 12: Raising voices and exploring them' }, { ch: 'ch12', sec: 'commands', label: 'Chapter 12: Command hallucinations' }, { ch: 'ch16', sec: 'perception', label: 'Chapter 16: Perception' }],
-    delusions: [{ ch: 'ch11', sec: 'life-cycle', label: 'Chapter 11: Soft signs and exploring a delusion' }, { ch: 'ch11', sec: 'delusional-disorders', label: 'Chapter 11: Delusional disorders and dangerousness' }, { ch: 'ch12', sec: 'porous-ego', label: 'Chapter 12: First-rank symptoms' }, { ch: 'ch16', sec: 'content', label: 'Chapter 16: Thought content' }],
-    suicide: [{ ch: 'ch17', sec: 'case-approach', label: 'Chapter 17: The CASE Approach' }, { ch: 'ch10', sec: 'themes', label: 'Chapter 10: Burdensomeness and hopelessness' }, { ch: 'ch12', sec: 'commands', label: 'Chapter 12: Command hallucinations' }],
+    delusions: [{ ch: 'ch11', sec: 'life-cycle', label: 'Chapter 11: Soft signs and exploring a delusion' }, { ch: 'ch11', sec: 'delusional-disorders', label: 'Chapter 11: Delusional disorders and dangerousness' }, { ch: 'ch12', sec: 'porous-ego', label: 'Chapter 12: First-rank symptoms' }, { ch: 'ch16', sec: 'content', label: 'Chapter 16: Thought content' }, { href: '#/simulate/sim-watching', label: 'Interview in Tagalog: Watching (engaging a paranoid patient, turn on Sa Tagalog)' }],
+    suicide: [{ ch: 'ch17', sec: 'case-approach', label: 'Chapter 17: The CASE Approach' }, { ch: 'ch10', sec: 'themes', label: 'Chapter 10: Burdensomeness and hopelessness' }, { ch: 'ch12', sec: 'commands', label: 'Chapter 12: Command hallucinations' }, { href: '#/simulate/sim-pills', label: 'Interview in Tagalog: Just a few pills (the verbal video of an overdose, turn on Sa Tagalog)' }],
     violence: { ch: 'ch18', sec: 'presenting-recent', label: 'Chapter 18: Presenting and recent violent events' },
-    deescalation: [{ ch: 'ch8', sec: 'violence', label: 'Chapter 8: Calming a potentially violent patient' }, { ch: 'ch15', sec: 'complementary', label: 'Chapter 15: Complementary shifts with an angry patient' }],
+    deescalation: [{ ch: 'ch8', sec: 'violence', label: 'Chapter 8: Calming a potentially violent patient' }, { ch: 'ch15', sec: 'complementary', label: 'Chapter 15: Complementary shifts with an angry patient' }, { href: '#/simulate/sim-pacing', label: 'Interview in Tagalog: The man who won\'t sit (de-escalation, turn on Sa Tagalog)' }],
     substance: [{ ch: 'ch5', sec: 'finishing-lists', label: 'Chapter 5: Gentle assumption and symptom amplification' }, { ch: 'ch11', sec: 'visual-withdrawal', label: 'Chapter 11: Asking about withdrawal' }],
     history: { ch: 'ch9', sec: 'melancholia-anxiety', label: 'Chapter 9: The past psychiatric history' },
     'family-hx': { ch: 'ch9', sec: 'family-history', label: 'Chapter 9: The family history' },
