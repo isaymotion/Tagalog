@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.3.4',
+  version: '2.3.5',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,12 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.3.5', date: 'October 2026', title: 'Link to response practice in Tagalog',
+    items: [
+      ['new', 'The Shea\'s techniques section now links to the trainer\'s Chapter 5 response practice, which can be played in Filipino with its Sagot sa Tagalog switch.']
+    ]
+  },
   {
     version: '2.3.4', date: 'October 2026', title: 'Links to three interviews written in Tagalog, set in Mariveles',
     items: [

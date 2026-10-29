@@ -8,7 +8,7 @@
       Set REVIEWED to true once approved to hide the notice.
    2. SHEA_LINKS: for each psych section, the trainer chapter and section that teach the technique behind the phrases.
       A value may be one link or an array of links (most relevant first). Rendered as "Technique notes" at the top of the section.
-      A link is { ch, sec, label } for a study-guide section, or { href: '#/drills/<id>' | '#/simulate/<id>', label } for any other trainer route. */
+      A link is { ch, sec, label } for a study-guide section, or { href: '#/drills/<id>' | '#/simulate/<id>' | '#/practice/<chN>', label } for any other trainer route. */
 (function () {
   const REVIEWED = false;
   window.SHEA_TRAINER = {
@@ -152,7 +152,7 @@
     closing: [{ ch: 'ch3', sec: 'closing', label: 'Chapter 3: The closing' }, { ch: 'ch15', sec: 'merger', label: 'Chapter 15: Setting boundaries with a patient who fears abandonment' }],
     meds: { ch: 'ch12', sec: 'akathisia-catatonia', label: 'Chapter 12: Akathisia and catatonia' },
     elderly: { ch: 'ch11', sec: 'delirium', label: 'Chapter 11: Delirium and the bedside attention tests' },
-    'shea-techniques': [{ ch: 'ch5', sec: 'challenge', label: 'Chapter 5: Validity techniques' }, { ch: 'ch14', sec: 'expand', label: 'Chapter 14: Anchoring traits to adolescence and ruling out state dependency' }, { href: '#/drills/pakinggan', label: 'Drill: Pakinggan (hearing the move in a Tagalog line and answering it)' }, { href: '#/drills/sabihin-tagalog', label: 'Drill: Sabihin sa Tagalog (keeping the technique in Filipino)' }],
+    'shea-techniques': [{ ch: 'ch5', sec: 'challenge', label: 'Chapter 5: Validity techniques' }, { ch: 'ch14', sec: 'expand', label: 'Chapter 14: Anchoring traits to adolescence and ruling out state dependency' }, { href: '#/drills/pakinggan', label: 'Drill: Pakinggan (hearing the move in a Tagalog line and answering it)' }, { href: '#/drills/sabihin-tagalog', label: 'Drill: Sabihin sa Tagalog (keeping the technique in Filipino)' }, { href: '#/practice/ch5', label: 'Response practice in Tagalog: Chapter 5 validity techniques (turn on Sagot sa Tagalog)' }],
     'wd-alcohol': [{ ch: 'ch11', sec: 'visual-withdrawal', label: 'Chapter 11: Visual hallucinations and the withdrawal that kills' }, { href: '#/simulate/sim-kasama', label: 'Interview in Tagalog: Ang kasama (hearing withdrawal in a relative\'s account)' }],
     'wd-agitation': { ch: 'ch12', sec: 'thought-and-gates', label: 'Chapter 12: The agitated psychotic patient' }
   };
