@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.3.1',
+  version: '2.3.2',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,12 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.3.2', date: 'October 2026', title: 'Links to the new Tagalog drills in the Psychiatric Interviewing Trainer',
+    items: [
+      ['new', 'The Opening, History of present illness and Shea\'s techniques sections now link to the trainer\'s Tagalog drills: idioms of distress (nerbiyos, sumpong, kulam, lutang), choosing the right register (po, kayo, ikaw), and Pakinggan, hearing the move in a Tagalog line.']
+    ]
+  },
   {
     version: '2.3.1', date: 'October 2026', title: 'Natural Filipino voice for the substance use and withdrawal screens',
     items: [

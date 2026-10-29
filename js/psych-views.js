@@ -74,7 +74,7 @@
     };
     const sheaRaw = (window.SHEA_LINKS || {})[s.id], ST = window.SHEA_TRAINER;
     const shea = sheaRaw ? [].concat(sheaRaw) : [];
-    const sheaA = (l) => '<a href="' + ST.base + l.ch + '/' + l.sec + '" target="_blank" rel="noopener">' + esc(l.label) + '</a>';
+    const sheaA = (l) => '<a href="' + (l.href ? ST.root + l.href : ST.base + l.ch + '/' + l.sec) + '" target="_blank" rel="noopener">' + esc(l.label) + '</a>';
     const sheaLink = shea.length && ST ? (shea.length === 1
       ? '<p class="small"><b>Technique notes:</b> ' + sheaA(shea[0]) + ' in the ' + esc(ST.name) + ' explains why these questions are worded this way.</p>'
       : '<div class="small"><b>Technique notes</b> in the ' + esc(ST.name) + ', on why these questions are worded this way:<ul style="margin:4px 0 12px;padding-left:20px">' + shea.map((l) => '<li>' + sheaA(l) + '</li>').join('') + '</ul></div>') : '';

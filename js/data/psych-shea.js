@@ -7,11 +7,12 @@
       STATUS: DRAFT FOR REVIEW by Dr. Navarro or a native-speaking clinician before the draft notice is removed.
       Set REVIEWED to true once approved to hide the notice.
    2. SHEA_LINKS: for each psych section, the trainer chapter and section that teach the technique behind the phrases.
-      A value may be one link or an array of links (most relevant first). Rendered as "Technique notes" at the top of the section. */
+      A value may be one link or an array of links (most relevant first). Rendered as "Technique notes" at the top of the section.
+      A link is { ch, sec, label } for a study-guide section, or { href: '#/drills/<id>', label } for any other trainer route. */
 (function () {
   const REVIEWED = false;
   window.SHEA_TRAINER = {
-    name: 'Psychiatric Interviewing Trainer', base: 'https://isaymotion.github.io/sheatrainer/#/learn/', reviewed: REVIEWED,
+    name: 'Psychiatric Interviewing Trainer', base: 'https://isaymotion.github.io/sheatrainer/#/learn/', root: 'https://isaymotion.github.io/sheatrainer/', reviewed: REVIEWED,
     draftNotice: 'Draft wording. These Tagalog phrasings are new and have not yet been reviewed by a native-speaking clinician. Check them with your seniors before using them with patients.'
   };
 
@@ -126,9 +127,9 @@
 
   /* Usap Tayo section -> trainer chapter/section that teaches the technique behind it. */
   window.SHEA_LINKS = {
-    opening: [{ ch: 'ch3', sec: 'introduction', label: 'Chapter 3: The introduction' }, { ch: 'ch12', sec: 'culture-language', label: 'Chapter 12: Culture and language (ask which language the patient thinks in)' }],
+    opening: [{ ch: 'ch3', sec: 'introduction', label: 'Chapter 3: The introduction' }, { ch: 'ch12', sec: 'culture-language', label: 'Chapter 12: Culture and language (ask which language the patient thinks in)' }, { href: '#/drills/tagalog-register', label: 'Drill: Po, Kayo, Ikaw (choosing the register for the person in front of you)' }],
     consent: { ch: 'ch3', sec: 'confidentiality', label: 'Chapter 3: Addressing confidentiality' },
-    'cc-hpi': { ch: 'ch9', sec: 'persistence', label: 'Chapter 9: The history of the present illness' },
+    'cc-hpi': [{ ch: 'ch9', sec: 'persistence', label: 'Chapter 9: The history of the present illness' }, { href: '#/drills/tagalog-idioms', label: 'Drill: Mga Salitang Pahiwatig (what nerbiyos, sumpong, kulam and lutang are telling you)' }],
     depression: [{ ch: 'ch9', sec: 'exploring', label: 'Chapter 9: Exploring anhedonia and the neurovegetative symptoms' }, { ch: 'ch10', sec: 'biological', label: 'Chapter 10: The body as first messenger' }, { ch: 'ch10', sec: 'window-shade', label: 'Chapter 10: The window shade response' }],
     mania: { ch: 'ch9', sec: 'bipolar-trap', label: 'Chapter 9: The bipolar trap' },
     anxiety: { ch: 'ch2', sec: 'ocd', label: 'Chapter 2: The normalizing OCD screen' },
@@ -151,7 +152,7 @@
     closing: [{ ch: 'ch3', sec: 'closing', label: 'Chapter 3: The closing' }, { ch: 'ch15', sec: 'merger', label: 'Chapter 15: Setting boundaries with a patient who fears abandonment' }],
     meds: { ch: 'ch12', sec: 'akathisia-catatonia', label: 'Chapter 12: Akathisia and catatonia' },
     elderly: { ch: 'ch11', sec: 'delirium', label: 'Chapter 11: Delirium and the bedside attention tests' },
-    'shea-techniques': [{ ch: 'ch5', sec: 'challenge', label: 'Chapter 5: Validity techniques' }, { ch: 'ch14', sec: 'expand', label: 'Chapter 14: Anchoring traits to adolescence and ruling out state dependency' }],
+    'shea-techniques': [{ ch: 'ch5', sec: 'challenge', label: 'Chapter 5: Validity techniques' }, { ch: 'ch14', sec: 'expand', label: 'Chapter 14: Anchoring traits to adolescence and ruling out state dependency' }, { href: '#/drills/pakinggan', label: 'Drill: Pakinggan (hearing the move in a Tagalog line and answering it)' }, { href: '#/drills/sabihin-tagalog', label: 'Drill: Sabihin sa Tagalog (keeping the technique in Filipino)' }],
     'wd-alcohol': { ch: 'ch11', sec: 'visual-withdrawal', label: 'Chapter 11: Visual hallucinations and the withdrawal that kills' },
     'wd-agitation': { ch: 'ch12', sec: 'thought-and-gates', label: 'Chapter 12: The agitated psychotic patient' }
   };
