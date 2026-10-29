@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.3.3',
+  version: '2.3.4',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,12 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.3.4', date: 'October 2026', title: 'Links to three interviews written in Tagalog, set in Mariveles',
+    items: [
+      ['new', 'The anxiety, depression, collateral and alcohol withdrawal sections now link to simulated interviews in the Psychiatric Interviewing Trainer that are composed in Filipino first: Nasa kuwarto si Nanay, Nerbiyos daw and Ang kasama.']
+    ]
+  },
   {
     version: '2.3.3', date: 'October 2026', title: 'Links to the trainer\'s interviews that can be played in Tagalog',
     items: [

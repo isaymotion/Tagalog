@@ -130,9 +130,9 @@
     opening: [{ ch: 'ch3', sec: 'introduction', label: 'Chapter 3: The introduction' }, { ch: 'ch12', sec: 'culture-language', label: 'Chapter 12: Culture and language (ask which language the patient thinks in)' }, { href: '#/drills/tagalog-register', label: 'Drill: Po, Kayo, Ikaw (choosing the register for the person in front of you)' }],
     consent: { ch: 'ch3', sec: 'confidentiality', label: 'Chapter 3: Addressing confidentiality' },
     'cc-hpi': [{ ch: 'ch9', sec: 'persistence', label: 'Chapter 9: The history of the present illness' }, { href: '#/drills/tagalog-idioms', label: 'Drill: Mga Salitang Pahiwatig (what nerbiyos, sumpong, kulam and lutang are telling you)' }],
-    depression: [{ ch: 'ch9', sec: 'exploring', label: 'Chapter 9: Exploring anhedonia and the neurovegetative symptoms' }, { ch: 'ch10', sec: 'biological', label: 'Chapter 10: The body as first messenger' }, { ch: 'ch10', sec: 'window-shade', label: 'Chapter 10: The window shade response' }],
+    depression: [{ ch: 'ch9', sec: 'exploring', label: 'Chapter 9: Exploring anhedonia and the neurovegetative symptoms' }, { ch: 'ch10', sec: 'biological', label: 'Chapter 10: The body as first messenger' }, { ch: 'ch10', sec: 'window-shade', label: 'Chapter 10: The window shade response' }, { href: '#/simulate/sim-nanay', label: 'Interview in Tagalog: Nasa kuwarto si Nanay (depression and burdensomeness with the mother in the room)' }],
     mania: { ch: 'ch9', sec: 'bipolar-trap', label: 'Chapter 9: The bipolar trap' },
-    anxiety: { ch: 'ch2', sec: 'ocd', label: 'Chapter 2: The normalizing OCD screen' },
+    anxiety: [{ ch: 'ch2', sec: 'ocd', label: 'Chapter 2: The normalizing OCD screen' }, { href: '#/simulate/sim-nerbiyos', label: 'Interview in Tagalog: Nerbiyos daw (a panic attack and depression behind nerbiyos, with a kulam explanation)' }],
     trauma: { ch: 'ch5', sec: 'raising', label: 'Chapter 5: Raising a sensitive topic' },
     hallucinations: [{ ch: 'ch12', sec: 'raising-voices', label: 'Chapter 12: Raising voices and exploring them' }, { ch: 'ch12', sec: 'commands', label: 'Chapter 12: Command hallucinations' }, { ch: 'ch16', sec: 'perception', label: 'Chapter 16: Perception' }],
     delusions: [{ ch: 'ch11', sec: 'life-cycle', label: 'Chapter 11: Soft signs and exploring a delusion' }, { ch: 'ch11', sec: 'delusional-disorders', label: 'Chapter 11: Delusional disorders and dangerousness' }, { ch: 'ch12', sec: 'porous-ego', label: 'Chapter 12: First-rank symptoms' }, { ch: 'ch16', sec: 'content', label: 'Chapter 16: Thought content' }, { href: '#/simulate/sim-watching', label: 'Interview in Tagalog: Watching (engaging a paranoid patient, turn on Sa Tagalog)' }],
@@ -143,7 +143,7 @@
     history: { ch: 'ch9', sec: 'melancholia-anxiety', label: 'Chapter 9: The past psychiatric history' },
     'family-hx': { ch: 'ch9', sec: 'family-history', label: 'Chapter 9: The family history' },
     social: [{ ch: 'ch6', sec: 'wellness', label: 'Chapter 6: The wellness triad' }, { ch: 'ch13', sec: 'social-history', label: 'Chapter 13: Reading the social history for personality patterns' }, { ch: 'ch14', sec: 'probes', label: 'Chapter 14: Probe questions for personality disorders' }],
-    collateral: [{ ch: 'ch18', sec: 'corroboration', label: 'Chapter 18: Corroboration' }, { ch: 'ch12', sec: 'families', label: 'Chapter 12: Families of patients with psychosis' }, { ch: 'ch10', sec: 'family', label: 'Chapter 10: The whole family has the depression' }],
+    collateral: [{ ch: 'ch18', sec: 'corroboration', label: 'Chapter 18: Corroboration' }, { ch: 'ch12', sec: 'families', label: 'Chapter 12: Families of patients with psychosis' }, { ch: 'ch10', sec: 'family', label: 'Chapter 10: The whole family has the depression' }, { href: '#/simulate/sim-kasama', label: 'Interview in Tagalog: Ang kasama (a nephew\'s reluctant collateral about drinking)' }, { href: '#/simulate/sim-nanay', label: 'Interview in Tagalog: Nasa kuwarto si Nanay (the mother answers for the patient)' }],
     'mse-cog': [{ ch: 'ch16', sec: 'cognition', label: 'Chapter 16: Sensorium, cognition, and insight' }, { ch: 'ch11', sec: 'delirium', label: 'Chapter 11: Delirium and the bedside attention tests' }],
     'mse-abstract': { ch: 'ch16', sec: 'cognition', label: 'Chapter 16: Sensorium, cognition, and insight' },
     'mse-describe': { ch: 'ch16', sec: 'documenting', label: 'Chapter 16: Documenting the mental status' },
@@ -153,7 +153,7 @@
     meds: { ch: 'ch12', sec: 'akathisia-catatonia', label: 'Chapter 12: Akathisia and catatonia' },
     elderly: { ch: 'ch11', sec: 'delirium', label: 'Chapter 11: Delirium and the bedside attention tests' },
     'shea-techniques': [{ ch: 'ch5', sec: 'challenge', label: 'Chapter 5: Validity techniques' }, { ch: 'ch14', sec: 'expand', label: 'Chapter 14: Anchoring traits to adolescence and ruling out state dependency' }, { href: '#/drills/pakinggan', label: 'Drill: Pakinggan (hearing the move in a Tagalog line and answering it)' }, { href: '#/drills/sabihin-tagalog', label: 'Drill: Sabihin sa Tagalog (keeping the technique in Filipino)' }],
-    'wd-alcohol': { ch: 'ch11', sec: 'visual-withdrawal', label: 'Chapter 11: Visual hallucinations and the withdrawal that kills' },
+    'wd-alcohol': [{ ch: 'ch11', sec: 'visual-withdrawal', label: 'Chapter 11: Visual hallucinations and the withdrawal that kills' }, { href: '#/simulate/sim-kasama', label: 'Interview in Tagalog: Ang kasama (hearing withdrawal in a relative\'s account)' }],
     'wd-agitation': { ch: 'ch12', sec: 'thought-and-gates', label: 'Chapter 12: The agitated psychotic patient' }
   };
 })();
