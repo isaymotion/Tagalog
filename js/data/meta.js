@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.3.0',
+  version: '2.3.1',
   updated: 'October 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,14 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.3.1', date: 'October 2026', title: 'Natural Filipino voice for the substance use and withdrawal screens',
+    items: [
+      ['fixed', 'The 11 criteria, remission questions, motivational-interviewing lines and nurse script now play in the recorded Filipino voice for every substance (sigarilyo, alak, shabu, marijuana, other drugs, sugal), not only for nganga.'],
+      ['fixed', 'Alcohol withdrawal, cannabis withdrawal and agitation lines now play in the recorded voice too.'],
+      ['improved', 'The audio pack now picks up new psychiatry screens automatically, so future modules get the natural voice without extra steps.']
+    ]
+  },
   {
     version: '2.3.0', date: 'October 2026', title: 'Verb trainer: sentences for every aspect',
     items: [
