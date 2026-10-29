@@ -1,8 +1,21 @@
 {
- "finished": "2026-10-29T05:50:38+00:00",
- "attempted": 0,
- "have": 3803,
- "wanted": 3803,
- "seconds": 0,
- "sample_errors": []
+ "finished": "2026-10-29T21:17:45+00:00",
+ "attempted": 551,
+ "have": 4351,
+ "wanted": 4354,
+ "seconds": 508,
+ "sample_errors": [
+  {
+   "text": "Ano ang ginawa mo kahapon buong araw?",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "Kailan po ako uuwi?",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  },
+  {
+   "text": "Tatawa ka rin ulit balang araw.",
+   "error": "NoAudioReceived('No audio was received. Please verify that your parameters are correct.')"
+  }
+ ]
 }
