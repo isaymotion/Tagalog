@@ -17,7 +17,7 @@ ROUTES = ['#/', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/
   '#/psych/s/hallucinations', '#/psych/cases', '#/psych/case/jomar', '#/psych/interp', '#/placement', '#/progress', '#/settings', '#/new',
   '#/about', '#/more', '#/psych/handout', '#/psych/handout?s=suicide', '#/psych/deesc', '#/psych/handout?deesc=1', '#/psych/s/deescalation',
   '#/psych/deesc?tab=drill', '#/psych/deesc?tab=after', '#/psych/deesc?tab=practice', '#/psych/case/agitated', '#/speak/case-agitated',
-  '#/psych/handout?deesccard=1', '#/psych/discharge', '#/psych/handout?discharge=1', '#/psych/s/discharge', '#/psych/dcases', '#/psych/dcase/ramon', '#/psych/dcase/liza', '#/psych/dcase/carlo', '#/psych/dcase/arnel', '#/psych/dcase/mika', '#/psych/mcases', '#/psych/mcase/ramon']
+  '#/psych/handout?deesccard=1', '#/psych/discharge', '#/psych/handout?discharge=1', '#/psych/s/discharge', '#/psych/dcases', '#/psych/dcase/ramon', '#/psych/dcase/liza', '#/psych/dcase/carlo', '#/psych/dcase/arnel', '#/psych/dcase/mika', '#/psych/mcases', '#/psych/mcase/ramon', '#/affixes', '#/affixes?t=gitlapi', '#/lessons/panlapi']
 
 LOAD_PDFMAKE = """async () => { if (!window.pdfMake) await new Promise((r) => { const s = document.createElement('script'); s.src = 'js/vendor/pdfmake.min.js';
   s.onload = () => { const t = document.createElement('script'); t.src = 'js/vendor/vfs_fonts.js'; t.onload = r; document.head.appendChild(t); }; document.head.appendChild(s); }); }"""
@@ -43,6 +43,13 @@ async def main(base, out):
             await pg.evaluate("location.hash='#/psych/case/jomar'"); await pg.wait_for_timeout(150)
             for _ in range(6): await pg.click('.opt >> nth=0'); await pg.wait_for_timeout(60)
             if 'Case complete' not in await pg.inner_text('#view'): fails.append(f'{name}: case did not complete')
+            # panlapi drills: each mode runs 10 questions to the score screen
+            for mode in ['type', 'root', 'build', 'focus']:
+                await pg.evaluate("location.hash='#/affixes'"); await pg.wait_for_timeout(150)
+                await pg.select_option('#amode', mode); await pg.click('#ago'); await pg.wait_for_timeout(100)
+                for _ in range(10):
+                    await pg.click('#adrill .opt >> nth=0'); await pg.wait_for_timeout(40); await pg.click('#adrill [data-act=next]'); await pg.wait_for_timeout(40)
+                if '/ 10' not in await pg.inner_text('#adrill'): fails.append(f'{name}: affix drill {mode} did not finish')
             # flashcard grade
             await pg.evaluate("location.hash='#/flash/psych'"); await pg.wait_for_timeout(150)
             await pg.click('#fc'); await pg.wait_for_timeout(80); await pg.click('[data-g="2"]')

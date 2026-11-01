@@ -72,7 +72,21 @@ if (fs.existsSync(texts) && fs.existsSync(man)) {
   const missing = want.filter((t) => !have.has(t.key));
   if (missing.length) console.log('WARN', missing.length, 'texts without audio yet (push to main and let the audio job run):', missing.slice(0, 5).map((t) => t.text).join(' | '));
 }
-const counts = { version: C.APP_META.version, dict: C.App.DICT.length, sections: C.PSYCH_SECTIONS.length, phrases: C.PSYCH_SECTIONS.reduce((a, s) => a + s.phrases.length, 0), cases: C.PSYCH_CASES.length, lessons: C.LESSONS.length, reading: C.READING.length, dialogues: C.DIALOGUES.length, verbs: C.VERBS.length, dcases: (C.PSYCH_DISCHARGE_CASES || []).length, mcases: (C.PSYCH_MSE_CASES || []).length };
+// Panlapi trainer: every seg reassembles into its word, types exist, kabilaan has a sub, focus pairs differ.
+if (C.AFFIX_ITEMS) {
+  const types = new Set(C.AFFIX_TYPES.map((t) => t.id)), seen = new Set();
+  C.AFFIX_ITEMS.forEach((it) => {
+    if (!types.has(it.t)) bad('affix type ' + it.w);
+    if (it.seg.replace(/[[\]{}<>]/g, '') !== it.w) bad('affix seg ' + it.w);
+    if (it.t === 'kabilaan' && !/^(uh|gh|ug)$/.test(it.sub || '')) bad('affix sub ' + it.w);
+    if (!/\[/.test(it.seg)) bad('affix seg has no affix ' + it.w);
+    if (seen.has(it.w)) bad('affix dup ' + it.w); seen.add(it.w);
+    if (!it.en || !it.r) bad('affix fields ' + it.w);
+  });
+  C.AFFIX_FOCUS_DRILL.forEach((f) => { if (!f.q.includes('____') || f.ok === f.no || !f.why) bad('affix focus ' + f.q); });
+  C.AFFIX_LIST.forEach((a) => { if (!types.has(a.t)) bad('affix list type ' + a.a); });
+}
+const counts = { version: C.APP_META.version, dict: C.App.DICT.length, sections: C.PSYCH_SECTIONS.length, phrases: C.PSYCH_SECTIONS.reduce((a, s) => a + s.phrases.length, 0), cases: C.PSYCH_CASES.length, lessons: C.LESSONS.length, reading: C.READING.length, dialogues: C.DIALOGUES.length, verbs: C.VERBS.length, dcases: (C.PSYCH_DISCHARGE_CASES || []).length, mcases: (C.PSYCH_MSE_CASES || []).length, affixes: (C.AFFIX_ITEMS || []).length };
 console.log(JSON.stringify(counts));
 console.log(fails ? fails + ' FAILURES' : 'DATA OK');
 process.exit(fails ? 1 : 0);
