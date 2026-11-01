@@ -164,6 +164,14 @@ footer.attrib a { color: var(--muted); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pill.lv { background: var(--gold); color: #14182a; } }
 .pill.good { background: var(--good-bg); color: var(--good); }
 .pill.warn { background: var(--warn-bg); color: var(--warn); }
+.tile.on { border-color: var(--gold); }
+.segw .seg-a { color: var(--gold-ink); font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.segw .seg-r { font-weight: 500; }
+.segw .seg-d { color: var(--muted); font-style: italic; }
+.afl { padding: 0 16px; }
+.afe { padding: 10px 0; border-bottom: 1px solid var(--line); display: grid; gap: 4px; font-size: .95rem; }
+.afe:last-child { border-bottom: 0; }
+.afe .say { width: 28px; height: 28px; }
 .pill.bad { background: var(--bad-bg); color: var(--bad); }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; padding: 8px 16px;

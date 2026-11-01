@@ -4,7 +4,7 @@
 
 *Usap tayo* means "let's talk." This web app teaches English speakers to become fluent in conversational Tagalog (Filipino), with a training track for psychiatric interviews with Filipino-speaking patients.
 
-**App created by Isabella Navarro, MD. Latest version October 2026. isaymotion@gmail.com**
+**App created by Isabella Navarro, MD. Latest version November 2026. isaymotion@gmail.com**
 
 ## What's inside
 
@@ -26,6 +26,7 @@
 | **Universal search** | One search bar (press `/`) across words, phrases, lessons, readings, dialogues, cases, and verbs. |
 | **Flashcards** | Spaced repetition with topic decks, psychiatry decks, verb-form decks, and an automatic "My mistakes" deck. |
 | **Verb trainer** | 78 verbs across -um-, mag-, ma-, -in, i-, -an with type-the-form, multiple-choice, and identify-the-aspect drills, plus 628 natural sample sentences (one set per aspect, most of them bedside lines) with fill-the-blank and translate-the-sentence drills. |
+| **Panlapi (affix trainer)** | Take words apart into root and affix: unlapi, gitlapi, hulapi, kabilaan, laguhan. 216 words (120 clinical), 9 sound-change and placement rules, 26 affix meanings, and four drills (name the type, find the root, build the word, choose the affix the sentence forces). `js/data/affixes.js`, `js/affixes.js`, route `#/affixes`. |
 | **Lessons** | 22 grammar and culture lessons with quizzes: markers, focus, aspect, particles, po/opo, numbers/time/money, Taglish, hiya, utang na loob, folk beliefs, idioms of distress. |
 | **Reading** | 12 graded passages (A1–B2) with glossaries and comprehension questions. |
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. |
@@ -101,6 +102,7 @@ js/mse-sheet.js         MSE interviewer sheet (four-page print view)
 js/sud.js               Substance use screening, brief intervention, nurse script
 js/mood.js              Mood episode checker (SIGECAPS, DIGFAST, PHQ-9, MDQ)
 js/withdrawal.js        Withdrawal and agitation: PAWSS, CIWA-Ar, cannabis withdrawal counter, teaching reference, nurse script
+js/affixes.js           Panlapi affix trainer: type, root, build and focus drills over js/data/affixes.js
 handouts/               Ready-made PDFs (Tagalog MSE Interviewer Guide)
 js/vendor/              pdfmake (PDF library, MIT license)
 js/app.js               Routing, navigation, theme, search bar

@@ -10,7 +10,7 @@ ctx.window = ctx;
 vm.createContext(ctx);
 const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
 ['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js',
- 'js/data/reading.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js', 'js/data/psych-sud.js', 'js/data/psych-withdrawal.js', 'js/data/psych-mood.js', 'js/data/psych-shea.js',
+ 'js/data/reading.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js', 'js/data/psych-sud.js', 'js/data/psych-withdrawal.js', 'js/data/psych-mood.js', 'js/data/psych-shea.js', 'js/data/affixes.js',
  'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js'].forEach(load);
 
 const out = new Map();
@@ -43,6 +43,9 @@ add('Opo, Dok.'); // default discharge practice answer
   ((ctx.VERB_SENTENCES || {})[v.r] || []).forEach((s) => add(s[0]));
 });
 add('Magandang umaga po. Kumusta po kayo?'); // settings voice test
+(ctx.AFFIX_ITEMS || []).forEach((it) => add(it.w)); // panlapi trainer words
+(ctx.AFFIX_RULES || []).forEach((r) => r.ex.forEach((x) => add(x[0])));
+(ctx.AFFIX_FOCUS_DRILL || []).forEach((f) => add(f.q.replace('____', f.ok)));
 
 // Substance use screener: lines are templates ({s} substance, {w} withdrawal symptoms, {u} unit) filled at run time
 // for the chosen substance, so record every line as it is spoken for every substance, not only the nganga example.

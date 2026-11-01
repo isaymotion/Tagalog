@@ -2,17 +2,26 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.3.5',
-  updated: 'October 2026',
+  version: '2.4.0',
+  updated: 'November 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
   // Institution whose nursing de-escalation checklist the app's checklist follows.
   institution: { name: 'Mariveles Mental Wellness and General Hospital', address: 'P. Monroe Street Poblacion, Mariveles, Bataan, Philippines 2105', short: 'MMWGH', deescForm: 'MMH-NUR-04-112-01', dischargeForm: 'MMH-MED-04-04-02' },
-  attribution: 'App created by Isabella Navarro, MD. Latest version October 2026. isaymotion@gmail.com'
+  attribution: 'App created by Isabella Navarro, MD. Latest version November 2026. isaymotion@gmail.com'
 };
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.4.0', date: 'November 2026', title: 'Panlapi: the affix trainer',
+    items: [
+      ['new', 'New page under Verbs: Panlapi. Take any word apart into its root and affix, and learn the five positions: unlapi, gitlapi, hulapi, kabilaan, laguhan. 216 words, 120 of them from the ward (kalungkutan, nakakatakot, pampatulog, painumin, pinag-usapan).'],
+      ['new', 'Four drills: name the affix type, find the root, build the word from root + affix, and choose the affix a sentence forces (Uminom ka ng gamot / Inumin mo ang gamot). Wrong builds show which sound change or placement rule was missed.'],
+      ['new', 'Nine rules with examples: infix placement, ni-, -hin/-han, final o to u, d to r, dropped vowels (tingnan, buksan, kunin), pam-/pan-/mam- assimilation, reduplication as aspect, and the hyphen before vowel roots.'],
+      ['new', 'New lesson "Panlapi: the five positions" in the Verbs unit. Affix words you get wrong join the Mistakes deck.']
+    ]
+  },
   {
     version: '2.3.5', date: 'October 2026', title: 'Link to response practice in Tagalog',
     items: [

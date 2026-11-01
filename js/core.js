@@ -196,7 +196,7 @@
   });
   (window.PSYCH_CASES || []).forEach((c) => push('Case', c.title, c.setting, '', '#/psych/case/' + c.id));
   (window.VERBS || []).forEach((v) => push('Verb', v.r, v.en, (v.ex || '') + ' ' + ((window.VERB_SENTENCES || {})[v.r] || []).map((s) => s[0] + ' ' + s[1]).join(' '), '#/verbs/' + v.r));
-  [['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp'], ['De-escalation checklist', '#/psych/deesc'], ['Discharge assessment', '#/psych/discharge'], ['Discharge practice cases', '#/psych/dcases'], ['Admission MSE practice', '#/psych/mcases'], ['Printable handout', '#/psych/handout']]
+  [['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Panlapi affix trainer', '#/affixes'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp'], ['De-escalation checklist', '#/psych/deesc'], ['Discharge assessment', '#/psych/discharge'], ['Discharge practice cases', '#/psych/dcases'], ['Admission MSE practice', '#/psych/mcases'], ['Printable handout', '#/psych/handout']]
     .forEach(([t, r]) => push('Page', t, '', '', r));
   App.searchAll = (q, limit) => {
     const nq = norm(q);
@@ -230,6 +230,13 @@
       const f = v && App.verbForms(v)[af];
       if (!f) return null;
       return { id, tl: f[asp], en: v.en + ' — ' + Conj.ASPECTS[asp].toLowerCase(), sub: Conj.FOCUS[af] || '' };
+    }
+    if (id.startsWith('af:')) {
+      const w = id.slice(3);
+      const it = (window.AFFIX_ITEMS || []).find((x) => x.w.toLowerCase() === w.toLowerCase());
+      if (!it) return null;
+      const t = (window.AFFIX_TYPES || []).find((x) => x.id === it.t);
+      return { id, tl: it.w, en: it.en, note: 'root ' + it.r + (it.note ? '. ' + it.note : ''), sub: (t ? t.tl : it.t) + ' · panlapi' };
     }
     if (id.startsWith('vs:')) {
       const [, r, i] = id.split(':');

@@ -232,6 +232,41 @@ window.LESSONS = [
   ]
 },
 {
+  id: 'panlapi', level: 'A2', unit: 'Verbs', title: 'Panlapi: the five positions',
+  summary: 'Unlapi, gitlapi, hulapi, kabilaan, laguhan: how to take any Tagalog word apart.',
+  body: `
+<p>Almost every long Tagalog word is a short root (<b>salitang-ugat</b>) wearing one or more affixes (<b>panlapi</b>). Filipino grammar names an affix by where it sits.</p>
+<table><tr><th>Name</th><th>Where</th><th>Example</th><th>Root</th></tr>
+<tr><td><b>Unlapi</b> (prefix)</td><td>before the root</td><td><b>mag</b>-aral, <b>ma</b>tulog, <b>nakaka</b>takot</td><td>aral, tulog, takot</td></tr>
+<tr><td><b>Gitlapi</b> (infix)</td><td>inside the root, after its first consonant</td><td>k<b>um</b>ain, s<b>in</b>abi</td><td>kain, sabi</td></tr>
+<tr><td><b>Hulapi</b> (suffix)</td><td>after the root</td><td>inum<b>in</b>, tulung<b>an</b></td><td>inom, tulong</td></tr>
+<tr><td><b>Kabilaan</b></td><td>two affixes at once</td><td><b>ka</b>lungkut<b>an</b>, t<b>in</b>ulung<b>an</b></td><td>lungkot, tulong</td></tr>
+<tr><td><b>Laguhan</b></td><td>prefix + infix + suffix</td><td><b>p<u>in</u>ag</b>-usap<b>an</b></td><td>usap</td></tr></table>
+<p>Only two infixes exist (<b>-um-</b>, <b>-in-</b>) and only two suffixes (<b>-in</b>, <b>-an</b>). Everything else is a prefix, so most of the learning is on the prefixes and on the sound changes.</p>
+<h3>Why it matters at the bedside</h3>
+<p>The affix tells you who the sentence is about. <i>Uminom ka ng gamot</i> puts the patient in focus; <i>Inumin mo ang gamot</i> puts the medicine in focus. The same root also gives you nouns you will chart and hear every day:</p>
+<div class="ex"><b>Malungkot siya at puno ng kalungkutan ang kuwento niya.</b><span>He is sad and his story is full of sadness. (ma- adjective, ka- -an abstract noun)</span></div>
+<div class="ex"><b>Nakakatakot daw ang boses, kaya natatakot siyang matulog.</b><span>The voice is frightening, he says, so he is afraid to sleep. (nakaka- causes the feeling, na- feels it)</span></div>
+<div class="ex"><b>Binigyan siya ng pampatulog para makatulog.</b><span>He was given a sleeping pill so he could fall asleep. (-in- -an, pang- pa-, maka-)</span></div>
+<h3>Five sound changes to expect</h3>
+<ol><li>A vowel-initial root takes the infix in front: <b>um</b>alis, <b>in</b>inom.</li>
+<li>Roots in l, y, w take <b>ni-</b> instead of -in-: <b>ni</b>luto, <b>ni</b>yakap.</li>
+<li>A final <b>o</b> becomes <b>u</b> before a suffix: inom → inum<b>in</b>; lungkot → kalungkut<b>an</b>.</li>
+<li>After a vowel the suffix is <b>-hin</b> / <b>-han</b>: basa<b>hin</b>, sama<b>han</b>.</li>
+<li><b>d</b> between vowels becomes <b>r</b>: ma + dami → ma<b>r</b>ami; pa + tawad + in → patawa<b>r</b>in.</li></ol>
+<p>Some roots drop a vowel or change shape and have to be learned one by one: tingin → <b>tingnan</b>, bukas → <b>buksan</b>, bigay → <b>bigyan</b>, kuha → <b>kunin</b>, dala → <b>dalhin</b>.</p>
+<h3>Not an affix: the repeated syllable</h3>
+<p>Ka<b>ka</b>in, k<b>um</b>a<b>ka</b>in, nag<b>ba</b>basa: the repeated first syllable marks aspect (ongoing or future), not a new affix. Strip it off before you look for the root.</p>
+<div class="note">Drill all five positions in the <a href="#/affixes">Panlapi trainer</a>: name the type, find the root, build the word, and pick the affix a sentence forces.</div>`,
+  quiz: [
+    ['What kind of affix is in "kumain"?', ['unlapi', 'gitlapi', 'hulapi'], 1, '-um- sits inside the root after the first consonant: k-um-ain.'],
+    ['The root of "kalungkutan" is:', ['lungkot', 'lungkut', 'kalungkot'], 0, 'ka- -an around lungkot; the o became u before the suffix.'],
+    ['"Tinulungan" is:', ['hulapi only', 'gitlapi only', 'kabilaan (infix + suffix)'], 2, 't-in-ulung-an: -in- inside, -an after.'],
+    ['Build: inom + -in', ['inomin', 'inumin', 'inomhin'], 1, 'Final o becomes u; the root ends in a consonant, so no h.'],
+    ['In "nagbabasa", the "ba" that repeats is:', ['an unlapi', 'a gitlapi', 'aspect marking, not an affix'], 2, 'Reduplication shows ongoing aspect; the affix is nag-.']
+  ]
+},
+{
   id: 'particles', level: 'A2', unit: 'Natural speech', title: 'Particles: na, pa, ba, naman, kasi, nga, lang',
   summary: 'The small words that make you sound fluent.',
   body: `

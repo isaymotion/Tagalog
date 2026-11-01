@@ -15,6 +15,7 @@
     [/^\/flash\/(?<deck>[\w-]+)$/, V.review, 'flash'],
     [/^\/verbs$/, V.verbs, 'verbs'],
     [/^\/verbs\/(?<root>[\w-]+)$/, V.verb, 'verbs'],
+    [/^\/affixes$/, V.affixes, 'verbs'],
     [/^\/lessons$/, V.lessons, 'lessons'],
     [/^\/lessons\/(?<id>[\w-]+)$/, V.lesson, 'lessons'],
     [/^\/reading$/, V.reading, 'reading'],
