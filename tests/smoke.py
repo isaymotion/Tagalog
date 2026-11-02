@@ -50,6 +50,16 @@ async def main(base, out):
                 for _ in range(10):
                     await pg.click('#adrill .opt >> nth=0'); await pg.wait_for_timeout(40); await pg.click('#adrill [data-act=next]'); await pg.wait_for_timeout(40)
                 if '/ 10' not in await pg.inner_text('#adrill'): fails.append(f'{name}: affix drill {mode} did not finish')
+            # pin a page, see it on Home and More, unpin
+            await pg.evaluate("location.hash='#/psych/dcase/ramon'"); await pg.wait_for_timeout(200)
+            if 'Discharge practice' not in await pg.inner_text('.breadcrumb'): fails.append(f'{name}: central breadcrumb')
+            await pg.click('h1 .pin'); await pg.wait_for_timeout(100)
+            await pg.evaluate("location.hash='#/'"); await pg.wait_for_timeout(200)
+            if 'Pinned' not in await pg.inner_text('#view'): fails.append(f'{name}: pinned on home')
+            await pg.evaluate("location.hash='#/more'"); await pg.wait_for_timeout(200)
+            if 'ready to go home' not in await pg.inner_text('#view'): fails.append(f'{name}: pinned on more')
+            await pg.evaluate("location.hash='#/psych/dcase/ramon'"); await pg.wait_for_timeout(200); await pg.click('h1 .pin'); await pg.wait_for_timeout(100)
+            if await pg.evaluate("(App.state.pins||[]).length"): fails.append(f'{name}: unpin')
             # flashcard grade
             await pg.evaluate("location.hash='#/flash/psych'"); await pg.wait_for_timeout(150)
             await pg.click('#fc'); await pg.wait_for_timeout(80); await pg.click('[data-g="2"]')
