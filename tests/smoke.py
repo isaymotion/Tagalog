@@ -17,7 +17,7 @@ ROUTES = ['#/', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/
   '#/psych/s/hallucinations', '#/psych/cases', '#/psych/case/jomar', '#/psych/interp', '#/placement', '#/progress', '#/settings', '#/new',
   '#/about', '#/more', '#/psych/handout', '#/psych/handout?s=suicide', '#/psych/deesc', '#/psych/handout?deesc=1', '#/psych/s/deescalation',
   '#/psych/deesc?tab=drill', '#/psych/deesc?tab=after', '#/psych/deesc?tab=practice', '#/psych/case/agitated', '#/speak/case-agitated',
-  '#/psych/handout?deesccard=1', '#/psych/discharge', '#/psych/handout?discharge=1', '#/psych/s/discharge', '#/psych/dcases', '#/psych/dcase/ramon', '#/psych/dcase/liza', '#/psych/dcase/carlo', '#/psych/dcase/arnel', '#/psych/dcase/mika', '#/psych/mcases', '#/psych/mcase/ramon', '#/affixes', '#/affixes?t=gitlapi', '#/lessons/panlapi']
+  '#/psych/handout?deesccard=1', '#/psych/discharge', '#/psych/handout?discharge=1', '#/psych/s/discharge', '#/psych/dcases', '#/psych/dcase/ramon', '#/psych/dcase/liza', '#/psych/dcase/carlo', '#/psych/dcase/arnel', '#/psych/dcase/mika', '#/psych/mcases', '#/psych/mcase/ramon', '#/affixes', '#/affixes?t=gitlapi', '#/lessons/panlapi', '#/practice', '#/psych?tab=cases', '#/psych?tab=tools', '#/psych?tab=print']
 
 LOAD_PDFMAKE = """async () => { if (!window.pdfMake) await new Promise((r) => { const s = document.createElement('script'); s.src = 'js/vendor/pdfmake.min.js';
   s.onload = () => { const t = document.createElement('script'); t.src = 'js/vendor/vfs_fonts.js'; t.onload = r; document.head.appendChild(t); }; document.head.appendChild(s); }); }"""
@@ -50,6 +50,11 @@ async def main(base, out):
                 for _ in range(10):
                     await pg.click('#adrill .opt >> nth=0'); await pg.wait_for_timeout(40); await pg.click('#adrill [data-act=next]'); await pg.wait_for_timeout(40)
                 if '/ 10' not in await pg.inner_text('#adrill'): fails.append(f'{name}: affix drill {mode} did not finish')
+            # psychiatry hub tabs and the Practice tab
+            await pg.evaluate("location.hash='#/psych?tab=tools'"); await pg.wait_for_timeout(200)
+            if 'Withdrawal and agitation' not in await pg.inner_text('#view') or 'Opening and rapport' in await pg.inner_text('#view'): fails.append(f'{name}: hub tabs')
+            await pg.evaluate("location.hash='#/more'"); await pg.wait_for_timeout(200)
+            if 'Dictionary' not in await pg.inner_text('#view'): fails.append(f'{name}: dictionary under More')
             # pin a page, see it on Home and More, unpin
             await pg.evaluate("location.hash='#/psych/dcase/ramon'"); await pg.wait_for_timeout(200)
             if 'Discharge practice' not in await pg.inner_text('.breadcrumb'): fails.append(f'{name}: central breadcrumb')
