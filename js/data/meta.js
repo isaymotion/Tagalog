@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.9.0',
+  version: '2.9.1',
   updated: 'November 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,12 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.9.1', date: 'November 2026', title: 'Cleaner verb tables',
+    items: [
+      ['fixed', 'In the verb handout, the affix is marked by how the form is built, not by matching letters, and the repeated aspect syllable is shown in italics. Irregular forms such as bilhin are left unmarked instead of marked wrongly.']
+    ]
+  },
   {
     version: '2.9.0', date: 'November 2026', title: 'Verb and lesson handouts',
     items: [

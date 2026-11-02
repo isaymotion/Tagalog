@@ -241,17 +241,51 @@
     return [tl.slice(0, a), tl.slice(a, a + form.length), tl.slice(a + form.length)];
   }
   // Pieces of a verb form that are not the root, found by matching the root from the right: kumakain → [kuma][kain].
-  function affixSplit(form, root) {
-    const f = form.toLowerCase(), r = root.toLowerCase(), mark = f.split('').map(() => true);
-    let j = r.length - 1;
-    for (let i = f.length - 1; i >= 0 && j >= 0; i--) if (f[i] === r[j]) { mark[i] = false; j--; }
-    if (j >= 0) return [{ s: form, a: false }];
-    const out = [];
-    for (let i = 0; i < form.length; i++) { const last = out[out.length - 1]; if (last && last.a === mark[i]) last.s += form[i]; else out.push({ s: form[i], a: mark[i] }); }
-    return out;
+  /* Split a conjugated form into pieces { s, k } with k = 'a' affix, 'd' repeated aspect syllable, 'r' root,
+     by rebuilding it the way conjugate.js does. A form that conjugate.js does not produce (an override such as
+     bilhin or kausapin) is returned unmarked rather than guessed at. */
+  function affixSplit(form, root, af, asp) {
+    const plain = [{ s: form, k: 'r' }];
+    if (!window.Conj || !af || !asp) return plain;
+    const made = Conj.conjugate(root, af);
+    if (!made || !made[asp] || made[asp].toLowerCase() !== form.toLowerCase()) return plain;
+    const r = root.toLowerCase(), rd = Conj.redupSyl(r), isV = (c) => /[aeiou]/.test(c);
+    const dup = asp === 'inc' || asp === 'con';
+    // The word the affix attaches to: root, or repeated syllable + root; its letters are 'd' then 'r'.
+    const body = (withDup) => (withDup ? [{ s: rd, k: 'd' }, { s: r, k: 'r' }] : [{ s: r, k: 'r' }]);
+    // Infix after the first consonant (or in front of a vowel; ni- before l/y for -in-).
+    const infixed = (inf, withDup) => {
+      const w = (withDup ? rd : '') + r;
+      if (isV(w[0]) || (inf === 'in' && (w[0] === 'l' || w[0] === 'y'))) return [{ s: isV(w[0]) ? inf : 'ni', k: 'a' }].concat(body(withDup));
+      const b = body(withDup); // first letter belongs to the first piece
+      return [{ s: w[0], k: b[0].k }, { s: inf, k: 'a' }, { s: b[0].s.slice(1), k: b[0].k }].concat(b.slice(1));
+    };
+    const suffixed = (suf, withDup) => {
+      const w = (withDup ? rd : '') + r, res = Conj.suffix(w, suf), piece = res.endsWith('h' + suf) ? 'h' + suf : suf, stem = res.slice(0, -piece.length);
+      return (withDup ? [{ s: stem.slice(0, rd.length), k: 'd' }, { s: stem.slice(rd.length), k: 'r' }] : [{ s: stem, k: 'r' }]).concat([{ s: piece, k: 'a' }]);
+    };
+    const prefixed = (pre, withDup) => [{ s: pre + (isV(r[0]) && /g$/.test(pre) ? '-' : ''), k: 'a' }].concat(body(withDup));
+    let out;
+    switch (af) {
+      case 'um': out = asp === 'con' ? body(true) : infixed('um', dup); break;
+      case 'mag': out = prefixed(asp === 'inf' || asp === 'con' ? 'mag' : 'nag', dup); break;
+      case 'ma': out = prefixed(asp === 'inf' || asp === 'con' ? 'ma' : 'na', dup); break;
+      case 'in': out = asp === 'inf' || asp === 'con' ? suffixed('in', dup) : infixed('in', dup); break;
+      case 'an': out = asp === 'inf' || asp === 'con' ? suffixed('an', dup) : infixed('in', dup).concat([{ s: Conj.suffix(Conj.infix((dup ? rd : '') + r, 'in'), 'an').endsWith('han') ? 'han' : 'an', k: 'a' }]); break;
+      case 'i': out = [{ s: 'i', k: 'a' }].concat(asp === 'inf' || asp === 'con' ? body(dup) : infixed('in', dup)); break;
+      default: return plain;
+    }
+    out = out.filter((x) => x.s);
+    // Merge neighbours of the same kind, then restore the caller's capitalization.
+    const merged = [];
+    out.forEach((x) => { const l = merged[merged.length - 1]; if (l && l.k === x.k) l.s += x.s; else merged.push({ s: x.s, k: x.k }); });
+    let pos = 0;
+    merged.forEach((x) => { x.s = form.slice(pos, pos + x.s.length); pos += x.s.length; });
+    if (pos !== form.length) return plain;
+    return merged;
   }
-  const formHTML = (form, root) => affixSplit(form, root).map((x) => (x.a ? '<span class="gs-a">' + esc(x.s) + '</span>' : esc(x.s))).join('');
-  const formPDF = (form, root, extra) => affixSplit(form, root).map((x) => Object.assign({ text: x.s }, x.a ? { bold: true, color: '#9a5b00' } : {}, extra || {}));
+  const formHTML = (form, root, af, asp) => affixSplit(form, root, af, asp).map((x) => (x.k === 'a' ? '<span class="gs-a">' + esc(x.s) + '</span>' : x.k === 'd' ? '<span class="gs-d">' + esc(x.s) + '</span>' : esc(x.s))).join('');
+  const formPDF = (form, root, af, asp, extra) => affixSplit(form, root, af, asp).map((x) => Object.assign({ text: x.s }, x.k === 'a' ? { bold: true, color: '#9a5b00' } : x.k === 'd' ? { italics: true, color: '#5b6480' } : {}, extra || {}));
   // Up to two sentences per aspect for one verb, bedside ones first.
   function verbSents(v) {
     const c = (s) => (/c/.test(s[4] || '') ? 1 : 0);
@@ -324,7 +358,7 @@
       h += '<section class="ho-sec"><h2>Aspect at a glance</h2><p class="gh-p">A Tagalog verb has two layers. The <b>affix</b> (focus) says who or what the sentence is about. The <b>aspect</b> says whether the action is done, going on, or still to come. Pieces that are not the root are marked in brown.</p>' +
         '<div class="ho-tw"><table class="gh-types"><tr><th>Aspect</th><th>Meaning</th><th>How it is built</th></tr>' + c.aspects.map((a) => '<tr><td><b>' + esc(a.label) + '</b></td><td>' + esc(a.mean) + '</td><td>' + esc(a.how) + '</td></tr>').join('') + '</table></div>' +
         '<h3>Worked examples</h3><div class="ho-tw"><table class="gh-vtab"><tr><th>Aspect</th><th>kain + -um-</th><th>kain + -in</th><th>luto + mag-</th></tr>' +
-        c.aspects.map((a) => '<tr><td>' + esc(aspHead(a.k, true)) + '</td>' + a.cells.map((w, i) => '<td class="tl"><b>' + formHTML(w, i < 2 ? 'kain' : 'luto') + '</b></td>').join('') + '</tr>').join('') + '</table></div>' +
+        c.aspects.map((a) => '<tr><td>' + esc(aspHead(a.k, true)) + '</td>' + a.cells.map((w, i) => '<td class="tl"><b>' + formHTML(w, i < 2 ? 'kain' : 'luto', ['um', 'in', 'mag'][i], a.k) + '</b></td>').join('') + '</tr>').join('') + '</table></div>' +
         '<h3>Which affix? Focus</h3><div class="ho-tw"><table class="gh-types"><tr><th>Affix</th><th>The ang-phrase is</th><th>Examples</th></tr>' + c.focus.map((f) => '<tr><td><b>' + esc(f.label) + '</b></td><td>' + esc(f.mean) + '</td><td class="tl">' + f.eg.map(esc).join(', ') + '</td></tr>').join('') + '</table></div>' +
         '<h3>Reduplication and placement</h3><ul class="gh-rules-l">' + c.rules.map((r) => '<li>' + esc(r) + '</li>').join('') + '</ul></section>';
     }
@@ -332,7 +366,7 @@
       h += '<section class="ho-sec"><h2>Conjugation tables</h2>' + m.table.map((t) =>
         '<div class="ho-tw gh-vt"><table class="gh-vtab"><tr class="gh-vh"><th colspan="5"><b class="tl">' + esc(t.v.r) + '</b>' + (en ? ' <span class="gh-en">' + esc(t.v.en) + '</span>' : '') + (t.v.clinical ? ' <span class="gh-tag">clinical</span>' : '') + '</th></tr>' +
         '<tr><th>Focus</th>' + ASP4.map((a) => '<th>' + esc(aspHead(a, sh)) + '</th>').join('') + '</tr>' +
-        t.rows.map(([af, f]) => '<tr><td>' + esc(focusOf(af)) + '</td>' + ASP4.map((a) => '<td class="tl"><b>' + formHTML(f[a], t.v.r) + '</b></td>').join('') + '</tr>').join('') + '</table></div>').join('') + '</section>';
+        t.rows.map(([af, f]) => '<tr><td>' + esc(focusOf(af)) + '</td>' + ASP4.map((a) => '<td class="tl"><b>' + formHTML(f[a], t.v.r, af, a) + '</b></td>').join('') + '</tr>').join('') + '</table></div>').join('') + '</section>';
     }
     if (m.sentences) {
       h += '<section class="ho-sec"><h2>Example sentences</h2><div class="gh-words">' + m.sentences.map((x) =>
@@ -350,7 +384,7 @@
     if (m.key) {
       const k = m.key;
       h += '<section class="ho-sec gh-key"><h2>Answer key</h2>';
-      if (k.A.length) h += '<h3>A. The four forms</h3><div class="ho-key">' + k.A.map((it, i) => '<div><span class="ho-num">' + (i + 1) + '</span><b class="tl">' + esc(it.v.r) + '</b> (' + esc(AFF_TAG[it.af] || it.af) + '): ' + ASP4.map((a) => formHTML(it.f[a], it.v.r)).join(' · ') + '</div>').join('') + '</div>';
+      if (k.A.length) h += '<h3>A. The four forms</h3><div class="ho-key">' + k.A.map((it, i) => '<div><span class="ho-num">' + (i + 1) + '</span><b class="tl">' + esc(it.v.r) + '</b> (' + esc(AFF_TAG[it.af] || it.af) + '): ' + ASP4.map((a) => formHTML(it.f[a], it.v.r, it.af, a)).join(' · ') + '</div>').join('') + '</div>';
       if (k.B.length) h += '<h3>B. Fill the blank</h3><ol class="gh-keyB">' + k.B.map((it) => '<li><b>' + letter(it.ans) + '</b> <b class="tl">' + esc(it.form) + '</b> <small>' + esc(aspHead(it.asp, true)) + '</small></li>').join('') + '</ol>';
       h += '</section>';
     }
@@ -368,7 +402,7 @@
       content.push({ text: [run('A Tagalog verb has two layers. The '), run('affix', { bold: true }), run(' (focus) says who or what the sentence is about. The '), run('aspect', { bold: true }), run(' says whether the action is done, going on, or still to come. Pieces that are not the root are in '), run('brown', { bold: true, color: AFFIX }), run('.')], margin: [0, 0, 0, 5] });
       content.push({ table: { headerRows: 1, dontBreakRows: true, widths: [a5 ? 62 : 84, '*', '*'], body: [[th('Aspect'), th('Meaning'), th('How it is built')]].concat(c.aspects.map((a) => [{ text: a.label, bold: true, fontSize: base - 1 }, { text: a.mean, fontSize: base - 0.5 }, { text: a.how, fontSize: base - 0.5 }])) }, layout });
       content.push(sub('Worked examples'));
-      content.push({ table: { headerRows: 1, widths: [a5 ? 60 : 80, '*', '*', '*'], body: [[th('Aspect'), th('kain + -um-'), th('kain + -in'), th('luto + mag-')]].concat(c.aspects.map((a) => [{ text: aspHead(a.k, true), color: MUTED, fontSize: base - 1 }].concat(a.cells.map((w, i) => ({ text: formPDF(w, i < 2 ? 'kain' : 'luto'), bold: true, fontSize: base + 0.5 }))))) }, layout });
+      content.push({ table: { headerRows: 1, widths: [a5 ? 60 : 80, '*', '*', '*'], body: [[th('Aspect'), th('kain + -um-'), th('kain + -in'), th('luto + mag-')]].concat(c.aspects.map((a) => [{ text: aspHead(a.k, true), color: MUTED, fontSize: base - 1 }].concat(a.cells.map((w, i) => ({ text: formPDF(w, i < 2 ? 'kain' : 'luto', ['um', 'in', 'mag'][i], a.k), bold: true, fontSize: base + 0.5 }))))) }, layout });
       content.push(sub('Which affix? Focus'));
       content.push({ table: { headerRows: 1, dontBreakRows: true, widths: [a5 ? 78 : 110, '*', a5 ? 56 : 80], body: [[th('Affix'), th('The ang-phrase is'), th('Examples')]].concat(c.focus.map((f) => [{ text: f.label, bold: true, fontSize: base - 1 }, { text: f.mean, fontSize: base - 0.5 }, { text: f.eg.join(', '), italics: true }])) }, layout });
       content.push(sub('Reduplication and placement'));
@@ -378,7 +412,7 @@
       content.push(Object.assign(heading('Conjugation tables', en ? 'focus and aspect, one verb at a time' : ''), { pageBreak: m.cheat ? 'before' : undefined }));
       m.table.forEach((t) => {
         const head = [{ colSpan: 5, fillColor: TINT, text: [run(t.v.r, { bold: true, color: NAVY, fontSize: base + 2 })].concat(en ? [run('   ' + t.v.en, { color: MUTED })] : []).concat(t.v.clinical ? [run('   clinical', { bold: true, color: AFFIX, fontSize: base - 2 })] : []) }, {}, {}, {}, {}];
-        const body = [head, [th('Focus')].concat(ASP4.map((a) => th(aspHead(a, sh))))].concat(t.rows.map(([af, f]) => [{ text: focusOf(af), fontSize: base - 1.5, color: MUTED }].concat(ASP4.map((a) => ({ text: formPDF(f[a], t.v.r), fontSize: base + 0.5 })))));
+        const body = [head, [th('Focus')].concat(ASP4.map((a) => th(aspHead(a, sh))))].concat(t.rows.map(([af, f]) => [{ text: focusOf(af), fontSize: base - 1.5, color: MUTED }].concat(ASP4.map((a) => ({ text: formPDF(f[a], t.v.r, af, a), fontSize: base + 0.5 })))));
         content.push({ stack: [{ table: { headerRows: 2, widths: [a5 ? 62 : 92, '*', '*', '*', '*'], body }, layout: { hLineWidth: (i, node) => (i === 0 || i === node.table.body.length ? 0.5 : i === 1 ? 0 : 0.5), vLineWidth: () => 0, hLineColor: () => LINE, paddingTop: () => 2.5, paddingBottom: () => 2.5, paddingLeft: (i) => (i === 0 ? 5 : 3), paddingRight: () => 3 } }], unbreakable: true, margin: [0, 0, 0, 7] });
       });
     }
@@ -415,7 +449,7 @@
       if (kk.A.length) {
         content.push(sub('A. The four forms'));
         const half = Math.ceil(kk.A.length / 2);
-        const row = (it, i) => ({ text: [run((i + 1) + '  ', { color: MUTED }), run(it.v.r, { bold: true }), run(' (' + (AFF_TAG[it.af] || it.af) + ')  ', { color: AFFIX, fontSize: base - 2 })].concat([].concat(...ASP4.map((a, j) => (j ? [run(' · ', { color: MUTED })] : []).concat(formPDF(it.f[a], it.v.r))))), fontSize: base - 1, margin: [0, 0, 0, 2] });
+        const row = (it, i) => ({ text: [run((i + 1) + '  ', { color: MUTED }), run(it.v.r, { bold: true }), run(' (' + (AFF_TAG[it.af] || it.af) + ')  ', { color: AFFIX, fontSize: base - 2 })].concat([].concat(...ASP4.map((a, j) => (j ? [run(' · ', { color: MUTED })] : []).concat(formPDF(it.f[a], it.v.r, it.af, a))))), fontSize: base - 1, margin: [0, 0, 0, 2] });
         content.push({ columns: [kk.A.slice(0, half), kk.A.slice(half)].map((part, c) => ({ stack: part.map((it, i) => row(it, i + c * half)), width: '*' })), columnGap: 14 });
       }
       if (kk.B.length) {

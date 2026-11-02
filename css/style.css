@@ -645,6 +645,7 @@ mark.vf { background: var(--warn-bg); color: var(--gold-ink); font-weight: 700; 
 .ho-paper .gh-vtab .gh-vh .gh-en { color: var(--p-muted); font-weight: 400; margin-left: 6px; }
 .gh-tag { color: #9a5b00; font-weight: 700; font-size: .78em; margin-left: 8px; }
 .gh-vtab .gs-a, .gh-vs .gs-a, .gh-key .gs-a { color: #9a5b00; font-weight: 700; }
+.gh-vtab .gs-d, .gh-vs .gs-d, .gh-key .gs-d { color: var(--p-muted); font-style: italic; font-weight: 400; }
 .gh-vs .gh-asp { color: var(--p-muted); font-size: .72em; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin-top: 3px; }
 .gh-vs .gh-s { margin-bottom: 2px; } .gh-vs .gh-s .gh-en { display: block; color: var(--p-muted); font-size: .86em; }
 .ho-paper .gh-wsA small { display: block; color: var(--p-muted); }
