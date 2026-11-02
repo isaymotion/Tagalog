@@ -77,7 +77,7 @@
       tile('#/psych/s/suicide', 'Risk', 'Suicide risk assessment', 'Direct, respectful questions from ideation to plan.') +
       tile('#/psych/mcases', 'Ward', 'Admission MSE practice', 'Interview, document, compare with a model answer.') +
       tile('#/psych', 'All sections', 'Open the psychiatry track', PSYCH_SECTIONS.length + ' sections, ' + PSYCH_CASES.length + ' cases, and the ward tools.') + '</div>' +
-      '<p class="muted small" style="margin-top:18px">Looking for something else? Every page is listed under <a href="#/more">More</a>, and the search box finds words, phrases, lessons and pages. Pin any page with the star beside its title to keep it here.</p>';
+      '<p class="muted small" style="margin-top:18px">The <a href="#/dict">Dictionary</a> and every other page are listed under <a href="#/more">More</a>, and the search box at the top finds words, phrases, lessons and pages from anywhere. Pin any page with the star beside its title to keep it here.</p>';
   };
 
   /* ---------- Search results ---------- */

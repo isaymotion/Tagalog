@@ -16,6 +16,7 @@
     [/^\/verbs$/, V.verbs, 'verbs'],
     [/^\/verbs\/(?<root>[\w-]+)$/, V.verb, 'verbs'],
     [/^\/affixes$/, V.affixes, 'affixes'],
+
     [/^\/lessons$/, V.lessons, 'lessons'],
     [/^\/lessons\/(?<id>[\w-]+)$/, V.lesson, 'lessons'],
     [/^\/reading$/, V.reading, 'reading'],
@@ -45,7 +46,7 @@
     [/^\/new$/, V.whatsnew, 'new'],
     [/^\/about$/, V.about, 'about']
   ];
-  const TITLES = { home: '', dict: 'Dictionary', flash: 'Flashcards', verbs: 'Verbs', affixes: 'Panlapi', lessons: 'Lessons', reading: 'Reading', speak: 'Speaking', psych: 'Psychiatry', placement: 'Placement', progress: 'Progress', settings: 'Settings', new: "What's New", about: 'About' };
+  const TITLES = { home: '', practice: 'Practice', dict: 'Dictionary', flash: 'Flashcards', verbs: 'Verbs', affixes: 'Panlapi', lessons: 'Lessons', reading: 'Reading', speak: 'Speaking', psych: 'Psychiatry', placement: 'Placement', progress: 'Progress', settings: 'Settings', new: "What's New", about: 'About' };
 
   /* ---------- Navigation rail + tab bar ---------- */
   const NAV = [
@@ -54,28 +55,49 @@
     ['You', [['placement', '#/placement', 'Placement test', icons.target], ['progress', '#/progress', 'Progress', icons.chart], ['settings', '#/settings', 'Settings', icons.gear], ['new', '#/new', "What's New", icons.spark], ['about', '#/about', 'About', icons.info]]]
   ];
   $('#rail').innerHTML = NAV.map(([g, items]) => '<h4>' + g + '</h4>' + items.map(([k, h, t, ic]) => '<a href="' + h + '" data-nav="' + k + '"' + (k === 'psych' ? ' class="psy"' : '') + '>' + ic + '<span>' + t + '</span>' + (k === 'new' && App.state.seenVersion !== APP_META.version ? ' <span class="pill warn" style="margin-left:auto">new</span>' : '') + '</a>').join('')).join('');
-  $('#tabbar').innerHTML = [['home', '#/', 'Home', icons.home], ['dict', '#/dict', 'Dictionary', icons.book], ['flash', '#/flash', 'Cards', icons.cards], ['psych', '#/psych', 'Psychiatry', icons.brain], ['more', '#/about', 'More', icons.info]]
+  $('#tabbar').innerHTML = [['home', '#/', 'Home', icons.home], ['psych', '#/psych', 'Psychiatry', icons.brain], ['practice', '#/practice', 'Practice', icons.target], ['flash', '#/flash', 'Cards', icons.cards], ['more', '#/about', 'More', icons.info]]
     .map(([k, h, t, ic]) => '<a href="' + (k === 'more' ? '#/more' : h) + '" data-nav="' + k + '">' + ic + '<span>' + t + '</span></a>').join('');
   $('#attrib').innerHTML = esc(APP_META.attribution.replace(' ' + APP_META.email, '')) + ' <a href="mailto:' + esc(APP_META.email) + '">' + esc(APP_META.email) + '</a> · <a href="#/new">What\'s New</a> · <a href="#/about">About</a>';
 
   // "More" page for phones
   const BLURB = {
+    dict: App.DICT.length + ' entries, both directions, root-word search',
     verbs: 'Aspect and focus drills, 78 verbs', affixes: 'Unlapi, gitlapi, hulapi: take words apart', lessons: 'Grammar and culture', reading: 'Graded passages', speak: 'Dialogues with listening and recording',
     placement: '20 questions to find your level', progress: 'Streak, stats, backup', settings: 'Register, voice, theme', new: 'What changed in each version', about: 'Credits and disclaimers'
   };
   const PSY_TOOLS = [['#/psych/cases', 'Case simulations'], ['#/psych/mcases', 'Admission MSE practice'], ['#/psych/dcases', 'Discharge practice'], ['#/psych/discharge', 'Discharge assessment'],
     ['#/psych/mood', 'Mood episode checker'], ['#/psych/sud', 'Substance use'], ['#/psych/withdrawal', 'Withdrawal and agitation'], ['#/psych/deesc', 'De-escalation'], ['#/psych/mse-sheet', 'MSE interviewer sheet'], ['#/psych/handout', 'Printable handout']];
+  V.practice = (el) => {
+    const s = App.state, due = App.decks().find((d) => d.id === 'due').ids.length;
+    const T = (h, eyebrow, title, p) => '<a class="tile" href="' + h + '"><span class="eyebrow">' + eyebrow + '</span><h3>' + title + '</h3><p>' + p + '</p></a>';
+    const best = (k) => { const o = s.done.affixes || {}; const v = Object.keys(o).filter((x) => x.startsWith(k)).map((x) => o[x]); return v.length ? 'Best ' + Math.max(...v) + '%' : 'Not tried yet'; };
+    el.innerHTML = '<h1>Practice</h1><p class="muted">Short drills you can finish in a few minutes. Scores feed your streak and XP.</p>' +
+      '<h2>Language</h2><div class="grid">' +
+      T('#/verbs', 'Drill · 10 questions', 'Verb trainer', 'Aspect and focus forms, then real sentences.') +
+      T('#/affixes', 'Drill · 10 questions', 'Panlapi', 'Name the affix, find the root, build the word. ' + best('type')) +
+      T('#/flash/due', 'Review', due ? due + ' cards due' : 'Flashcards', 'Spaced repetition across every deck.') +
+      T('#/lessons', 'Quiz', 'Lesson quizzes', Object.keys(s.done.lessons).length + ' of ' + LESSONS.length + ' lessons done.') +
+      T('#/reading', 'Read', 'Reading', 'Graded passages with questions.') +
+      T('#/speak', 'Speak', 'Speaking', 'Dialogues with listening and recording.') + '</div>' +
+      '<h2 style="margin-top:18px">Clinical</h2><div class="grid">' +
+      T('#/psych/cases', 'Simulate', 'Case simulations', PSYCH_CASES.length + ' interviews with feedback.') +
+      T('#/psych/interp', 'Listen', 'What is the patient saying?', 'Interpret patient and family lines.') +
+      T('#/psych/mcases', 'Document', 'Admission MSE practice', 'Interview, document, compare.') +
+      T('#/psych/dcases', 'Document', 'Discharge practice', 'Five patients, discharge or defer.') +
+      T('#/psych/deesc?tab=drill', 'Rapid drill', 'De-escalation', 'The 12 steps under time pressure.') + '</div>';
+  };
   V.more = (el) => {
     const recent = (App.state.recent || []).filter((r) => r.hash !== '#/more');
     const pins = (App.state.pins || []).slice().reverse();
     el.innerHTML = '<h1>More</h1>' +
       (pins.length ? '<h2>Pinned</h2><div class="row" style="margin-bottom:6px">' + pins.map((p) => '<a class="btn sm" href="' + esc(p.hash) + '">' + icons.starOn + ' ' + esc(p.title) + '</a>').join('') + '</div>' : '') +
       (recent.length ? '<h2>Recent</h2><div class="row" style="margin-bottom:6px">' + recent.slice(0, 6).map((r) => '<a class="btn sm" href="' + esc(r.hash) + '">' + esc(r.title) + '</a>').join('') + '</div>' : '') +
-      NAV.map(([g, items]) => { const its = items.filter(([k]) => !['home', 'dict', 'flash', 'psych'].includes(k)); return its.length ? '<h2>' + g + '</h2><div class="grid">' + its.map(([k, h, t, ic]) => '<a class="tile" href="' + h + '"><h3 class="row" style="gap:8px">' + ic + t + '</h3>' + (BLURB[k] ? '<p>' + BLURB[k] + '</p>' : '') + '</a>').join('') + '</div>' : ''; }).join('') +
+      NAV.map(([g, items]) => { const its = items.filter(([k]) => !['home', 'flash', 'psych'].includes(k)); return its.length ? '<h2>' + g + '</h2><div class="grid">' + its.map(([k, h, t, ic]) => '<a class="tile" href="' + h + '"><h3 class="row" style="gap:8px">' + ic + t + '</h3>' + (BLURB[k] ? '<p>' + BLURB[k] + '</p>' : '') + '</a>').join('') + '</div>' : ''; }).join('') +
       '<h2>Psychiatry tools</h2><div class="grid">' + PSY_TOOLS.map(([h, t]) => '<a class="tile" href="' + h + '"><h3>' + t + '</h3></a>').join('') + '<a class="tile" href="#/psych"><h3>All sections and phrases</h3></a></div>';
   };
   routes.push([/^\/more$/, V.more, 'more']);
-  const MORE_KEYS = ['verbs', 'affixes', 'lessons', 'reading', 'speak', 'placement', 'progress', 'settings', 'new', 'about', 'more'];
+  routes.push([/^\/practice$/, V.practice, 'practice']);
+  const MORE_KEYS = ['dict', 'lessons', 'reading', 'speak', 'placement', 'progress', 'settings', 'new', 'about', 'more'];
 
   /* ---------- Back / forward tracking ----------
      The browser history is the source of truth. Each entry gets an index so the

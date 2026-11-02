@@ -7,31 +7,41 @@
   const primary = (p) => (S().settings.register === 'c' ? p.c || p.f : p.f);
   const secondary = (p) => (S().settings.register === 'c' ? p.f : p.c);
 
-  V.psych = (el) => {
+  V.psych = (el, p, q) => {
     const groups = {};
     PSYCH_SECTIONS.forEach((s) => (groups[s.group] = groups[s.group] || []).push(s));
     const done = S().done;
+    const tab = (q && q.tab) || 'interview';
+    const T = (h, eyebrow, title, p) => '<a class="tile" href="' + h + '"><span class="eyebrow">' + eyebrow + '</span><h3>' + title + '</h3><p>' + p + '</p></a>';
+    const TABS = [['interview', 'Interview'], ['cases', 'Cases'], ['tools', 'Ward tools'], ['print', 'Print']];
+    const body = {
+      interview: Object.entries(groups).map(([g, ss]) => '<h2 style="margin-top:16px">' + esc(g) + '</h2><div class="grid">' + ss.map((s) =>
+        '<a class="tile" href="#/psych/s/' + s.id + '"><h3>' + esc(s.title) + '</h3><p>' + s.phrases.length + ' phrases' + (s.draft ? ' · draft for review' : '') + '</p>' + (done.sections[s.id] ? '<div class="meta"><span class="pill good">opened</span></div>' : '') + '</a>').join('') + '</div>').join('') +
+        '<h2 style="margin-top:20px">Related lessons</h2><div class="grid">' + ['politeness', 'values', 'folk', 'idioms-distress', 'kinship', 'storytelling'].map((id) => { const l = LESSONS.find((x) => x.id === id); return '<a class="tile" href="#/lessons/' + l.id + '"><h3>' + esc(l.title) + '</h3><p>' + esc(l.summary) + '</p></a>'; }).join('') + '</div>',
+      cases: '<div class="grid" style="margin-top:14px">' +
+        T('#/psych/cases', 'Simulate', 'Case simulations', PSYCH_CASES.length + ' interactive interviews with feedback and an MSE summary.') +
+        T('#/psych/mcases', 'Admission', 'Admission MSE practice', 'Interview a patient on admission, document each MSE domain, and name the evidence.') +
+        T('#/psych/dcases', 'Ward', 'Discharge practice', 'Interview, document the discharge MSE, compare with a model answer.') +
+        T('#/psych/interp', 'Listen', 'What is the patient saying?', PSYCH_INTERP.length + ' patient and family lines to interpret.') +
+        T('#/flash/psych', 'Memorize', 'Psychiatry flashcards', 'All phrases with spaced repetition.') +
+        T('https://isaymotion.github.io/MSEtrainer/#/practice?lang=tl', 'MSE Trainer', 'Name the finding in Tagalog', 'Quick cases in your MSE Trainer, in Filipino.') + '</div>',
+      tools: '<div class="grid" style="margin-top:14px">' +
+        T('#/psych/mood', 'Checker', 'Mood episode', 'SIGECAPS and DIGFAST as tap-to-count DSM-5-TR criteria in Tagalog.') +
+        T('#/psych/sud', 'Screen · counsel', 'Substance use', 'Betel nut, tobacco, alcohol, shabu, gambling: criteria, severity, brief intervention.') +
+        T('#/psych/withdrawal', 'Ward · ED', 'Withdrawal and agitation', 'PAWSS, CIWA-Ar, cannabis withdrawal, agitation by cause.') +
+        T('#/psych/deesc', 'Bedside', 'De-escalation checklist', '12 steps with Tagalog phrases, outcome, and a copyable note.') +
+        T('#/psych/discharge', 'Ward', 'Discharge assessment', 'Each discharge summary field: what to ask and how to document it.') + '</div>',
+      print: '<div class="grid" style="margin-top:14px">' +
+        T('#/psych/mse-sheet', 'Print', 'MSE interviewer sheet', 'Four pages for the OPD and wards: every Tagalog screening question.') +
+        T('#/psych/handout', 'Print', 'Printable handout', 'Interview flow and MSE as a PDF, with or without English.') +
+        T('#/psych/handout?deesccard=1', 'Print', 'De-escalation pocket card', 'A6 card for the ward.') +
+        T('#/psych/handout?discharge=1', 'Print', 'Discharge guide', 'The discharge assessment as a printable guide.') + '</div>'
+    };
     el.innerHTML = '<h1>Psychiatry Tagalog</h1>' +
-      '<p class="muted">Phrases for the full psychiatric interview and mental status exam, each in a respectful form (<i>po</i>) and an everyday form. Switch the default in <a href="#/settings">Settings → Register</a>.</p>' +
-      '<div class="notice info" style="margin-bottom:14px">These are practice phrasings for training, not validated translations of research instruments. Confirm wording with your supervisors and adapt to each patient. Crisis line: NCMH <b>1553</b>.</div>' +
-      '<div class="grid">' +
-      '<a class="tile" href="#/psych/cases"><span class="eyebrow">Simulate</span><h3>Case simulations</h3><p>' + PSYCH_CASES.length + ' interactive interviews with feedback and an MSE summary.</p></a>' +
-      '<a class="tile" href="#/psych/interp"><span class="eyebrow">Listen</span><h3>What is the patient saying?</h3><p>' + PSYCH_INTERP.length + ' patient and family lines to interpret, with clinical significance.</p></a>' +
-      '<a class="tile" href="#/psych/discharge"><span class="eyebrow">Ward</span><h3>Discharge assessment</h3><p>Each discharge summary field: what to ask in Tagalog and how to document it.</p></a>' +
-      '<a class="tile" href="#/psych/dcases"><span class="eyebrow">Ward</span><h3>Discharge practice</h3><p>Interview a simulated patient, document the discharge MSE, and compare it with a model answer.</p></a>' +
-      '<a class="tile" href="#/psych/mcases"><span class="eyebrow">Admission</span><h3>Admission MSE practice</h3><p>Interview a patient on admission, document each MSE domain, and name the evidence for key findings.</p></a>' +
-      '<a class="tile" href="https://isaymotion.github.io/MSEtrainer/#/practice?lang=tl" target="_blank" rel="noopener"><span class="eyebrow">MSE Trainer</span><h3>Name the finding in Tagalog</h3><p>Quick cases in your MSE Trainer app: Tagalog patient lines and Filipino culture-or-pathology look-alikes.</p></a>' +
-      '<a class="tile" href="#/psych/mood"><span class="eyebrow">Checker</span><h3>Mood episode</h3><p>Depressed mood + SIGECAPS and elevated/irritable mood + DIGFAST as tap-to-count DSM-5-TR criteria in Tagalog, with duration, features, PHQ-9 and MDQ, and a copyable chart line.</p></a>' +
-      '<a class="tile" href="#/psych/sud"><span class="eyebrow">Screen · counsel</span><h3>Substance use</h3><p>Betel nut, tobacco, alcohol, shabu, gambling: the DSM-5-TR criteria in Tagalog with mild/moderate/severe and codes, AUDIT-C and Fagerström, a brief motivational interview, and a nurse script.</p></a>' +
-      '<a class="tile" href="#/psych/withdrawal"><span class="eyebrow">Ward · ED</span><h3>Withdrawal and agitation</h3><p>Alcohol withdrawal (PAWSS, CIWA-Ar scored on the page, benzodiazepines, phenobarbital, thiamine), cannabis withdrawal and CHS, the agitated patient from de-escalation to restraint, special populations and practice cases, with Tagalog lines and a nurse monitoring script.</p></a>' +
-      '<a class="tile" href="#/psych/deesc"><span class="eyebrow">Bedside</span><h3>De-escalation checklist</h3><p>12 steps with Tagalog phrases, outcome, and a copyable note.</p></a>' +
-      '<a class="tile" href="#/psych/mse-sheet"><span class="eyebrow">Print</span><h3>MSE interviewer sheet</h3><p>Four pages for the OPD and wards: every Tagalog screening question for the MSE (DISAECGP, mania, suicide and violence risk, cognition, insight and judgment), then substance use screening and the brief intervention.</p></a>' +
-      '<a class="tile" href="#/psych/handout"><span class="eyebrow">Print</span><h3>Printable handout</h3><p>Interview flow and MSE as a PDF, with or without English.</p></a>' +
-      '<a class="tile" href="#/flash/psych"><span class="eyebrow">Memorize</span><h3>Psychiatry flashcards</h3><p>All phrases with spaced repetition.</p></a>' +
-      '<a class="tile" href="#/lessons/idioms-distress"><span class="eyebrow">Culture</span><h3>Idioms of distress</h3><p>Mabigat ang dibdib, nerbiyos, tulala, and more.</p></a></div>' +
-      Object.entries(groups).map(([g, ss]) => '<h2 style="margin-top:20px">' + esc(g) + '</h2><div class="grid">' + ss.map((s) =>
-        '<a class="tile" href="#/psych/s/' + s.id + '"><h3>' + esc(s.title) + '</h3><p>' + s.phrases.length + ' phrases' + (s.draft ? ' · draft for review' : '') + '</p>' + (done.sections[s.id] ? '<div class="meta"><span class="pill good">' + (done.sections[s.id] === true ? 'Opened' : done.sections[s.id] + '% quiz') + '</span></div>' : '') + '</a>').join('') + '</div>').join('') +
-      '<h2 style="margin-top:20px">Related lessons</h2><div class="grid">' + ['politeness', 'values', 'folk', 'idioms-distress', 'kinship', 'storytelling'].map((id) => { const l = LESSONS.find((x) => x.id === id); return l ? '<a class="tile" href="#/lessons/' + l.id + '"><h3>' + esc(l.title) + '</h3><p>' + esc(l.summary) + '</p></a>' : ''; }).join('') + '</div>';
+      '<p class="muted" style="margin-top:4px">Phrases for the psychiatric interview and MSE, each in a respectful (<i>po</i>) and an everyday form.</p>' +
+      '<div class="ptabs" role="tablist">' + TABS.map(([k, t]) => '<a role="tab" aria-selected="' + (k === tab) + '" class="' + (k === tab ? 'on' : '') + '" href="#/psych?tab=' + k + '">' + t + '</a>').join('') + '</div>' +
+      (tab === 'interview' ? '<div class="notice info" style="margin-top:12px">Practice phrasings for training, not validated translations. Confirm wording with your supervisors and adapt to each patient.</div>' : '') +
+      body[tab];
   };
 
   V.psychSection = (el, p, q) => {

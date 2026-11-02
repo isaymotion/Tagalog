@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.6.0',
+  version: '2.7.0',
   updated: 'November 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,14 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.7.0', date: 'November 2026', title: 'Psychiatry in four tabs, and a Practice tab',
+    items: [
+      ['new', 'The Psychiatry hub is split into Interview (phrase sections), Cases (simulations, admission and discharge practice, interpretation drill), Ward tools (mood, substance use, withdrawal, de-escalation, discharge assessment) and Print. Each tab has its own link.'],
+      ['new', 'A Practice tab in the phone bar gathers every drill in one place: verbs, Panlapi, flashcards due, lesson quizzes, reading, speaking, and the clinical drills.'],
+      ['improved', 'The phone bar is now Home, Psychiatry, Practice, Cards, More. The Dictionary moved under More; the search box at the top still looks up any word from anywhere.']
+    ]
+  },
   {
     version: '2.6.0', date: 'November 2026', title: 'A Home screen built around today',
     items: [

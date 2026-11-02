@@ -32,7 +32,7 @@
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. |
 | **You** | Placement test, streaks, XP, progress stats, backup export/import, settings, What's New, About. |
 
-Also: a Home screen built around today (cards due, a rotating quick practice, next lesson, pinned and recent pages), pin-to-Home stars on every page, uniform breadcrumbs, dark/light mode, adjustable text size (Aa button), back/forward buttons, offline support, and install-to-home-screen (PWA).
+Also: a tabbed Psychiatry hub (Interview, Cases, Ward tools, Print), a Practice tab listing every drill, a Home screen built around today (cards due, a rotating quick practice, next lesson, pinned and recent pages), pin-to-Home stars on every page, uniform breadcrumbs, dark/light mode, adjustable text size (Aa button), back/forward buttons, offline support, and install-to-home-screen (PWA).
 
 ## Publish it with GitHub Pages
 
