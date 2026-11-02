@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.4.0',
+  version: '2.4.1',
   updated: 'November 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,14 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.4.1', date: 'November 2026', title: 'Easier to find things',
+    items: [
+      ['new', 'Panlapi now has its own entry in the side menu and on the More screen, next to the Verb trainer.'],
+      ['new', 'The More screen is grouped (Learn, You, Psychiatry tools) with a line about each page, and starts with the pages you opened most recently.'],
+      ['new', 'Search finds every page by name, including the psychiatry tools (try "mood", "withdrawal", "panlapi").']
+    ]
+  },
   {
     version: '2.4.0', date: 'November 2026', title: 'Panlapi: the affix trainer',
     items: [

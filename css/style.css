@@ -165,6 +165,7 @@ footer.attrib a { color: var(--muted); }
 .pill.good { background: var(--good-bg); color: var(--good); }
 .pill.warn { background: var(--warn-bg); color: var(--warn); }
 .tile.on { border-color: var(--gold); }
+.tile h3 svg { width: 20px; height: 20px; color: var(--gold-ink); flex: none; }
 .segw .seg-a { color: var(--gold-ink); font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
 .segw .seg-r { font-weight: 500; }
 .segw .seg-d { color: var(--muted); font-style: italic; }

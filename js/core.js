@@ -196,7 +196,7 @@
   });
   (window.PSYCH_CASES || []).forEach((c) => push('Case', c.title, c.setting, '', '#/psych/case/' + c.id));
   (window.VERBS || []).forEach((v) => push('Verb', v.r, v.en, (v.ex || '') + ' ' + ((window.VERB_SENTENCES || {})[v.r] || []).map((s) => s[0] + ' ' + s[1]).join(' '), '#/verbs/' + v.r));
-  [['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Panlapi affix trainer', '#/affixes'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp'], ['De-escalation checklist', '#/psych/deesc'], ['Discharge assessment', '#/psych/discharge'], ['Discharge practice cases', '#/psych/dcases'], ['Admission MSE practice', '#/psych/mcases'], ['Printable handout', '#/psych/handout']]
+  [['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Panlapi affix trainer', '#/affixes'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp'], ['De-escalation checklist', '#/psych/deesc'], ['Discharge assessment', '#/psych/discharge'], ['Discharge practice cases', '#/psych/dcases'], ['Admission MSE practice', '#/psych/mcases'], ['Printable handout', '#/psych/handout'], ['Mood episode checker', '#/psych/mood'], ['Substance use screener', '#/psych/sud'], ['Withdrawal and agitation', '#/psych/withdrawal'], ['MSE interviewer sheet', '#/psych/mse-sheet'], ['Lessons', '#/lessons'], ['Reading', '#/reading'], ['Speaking', '#/speak'], ['Case simulations', '#/psych/cases'], ['More', '#/more']]
     .forEach(([t, r]) => push('Page', t, '', '', r));
   App.searchAll = (q, limit) => {
     const nq = norm(q);
@@ -428,6 +428,7 @@
     book: I('<path d="M4 4h10a4 4 0 014 4v12H8a4 4 0 01-4-4z"/><path d="M4 16a4 4 0 014-4h10"/>'),
     cards: I('<rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 012 2v12"/>'),
     verb: I('<path d="M4 7h16M4 12h10M4 17h6"/><path d="M17 14l3 3-3 3"/>'),
+    affix: I('<rect x="3" y="8" width="5" height="8" rx="1.5"/><rect x="9.5" y="8" width="5" height="8" rx="1.5"/><rect x="16" y="8" width="5" height="8" rx="1.5"/>'),
     lesson: I('<path d="M2 8l10-5 10 5-10 5z"/><path d="M6 10v5c3 2 9 2 12 0v-5"/>'),
     read: I('<path d="M2 5h7a3 3 0 013 3v12a2 2 0 00-2-2H2z"/><path d="M22 5h-7a3 3 0 00-3 3v12a2 2 0 012-2h8z"/>'),
     speak: I('<path d="M21 12a8 8 0 01-11.6 7.1L3 21l1.9-6.4A8 8 0 1121 12z"/>'),

@@ -15,7 +15,7 @@
     [/^\/flash\/(?<deck>[\w-]+)$/, V.review, 'flash'],
     [/^\/verbs$/, V.verbs, 'verbs'],
     [/^\/verbs\/(?<root>[\w-]+)$/, V.verb, 'verbs'],
-    [/^\/affixes$/, V.affixes, 'verbs'],
+    [/^\/affixes$/, V.affixes, 'affixes'],
     [/^\/lessons$/, V.lessons, 'lessons'],
     [/^\/lessons\/(?<id>[\w-]+)$/, V.lesson, 'lessons'],
     [/^\/reading$/, V.reading, 'reading'],
@@ -45,11 +45,11 @@
     [/^\/new$/, V.whatsnew, 'new'],
     [/^\/about$/, V.about, 'about']
   ];
-  const TITLES = { home: '', dict: 'Dictionary', flash: 'Flashcards', verbs: 'Verbs', lessons: 'Lessons', reading: 'Reading', speak: 'Speaking', psych: 'Psychiatry', placement: 'Placement', progress: 'Progress', settings: 'Settings', new: "What's New", about: 'About' };
+  const TITLES = { home: '', dict: 'Dictionary', flash: 'Flashcards', verbs: 'Verbs', affixes: 'Panlapi', lessons: 'Lessons', reading: 'Reading', speak: 'Speaking', psych: 'Psychiatry', placement: 'Placement', progress: 'Progress', settings: 'Settings', new: "What's New", about: 'About' };
 
   /* ---------- Navigation rail + tab bar ---------- */
   const NAV = [
-    ['Learn', [['home', '#/', 'Home', icons.home], ['dict', '#/dict', 'Dictionary', icons.book], ['flash', '#/flash', 'Flashcards', icons.cards], ['verbs', '#/verbs', 'Verb trainer', icons.verb], ['lessons', '#/lessons', 'Lessons', icons.lesson], ['reading', '#/reading', 'Reading', icons.read], ['speak', '#/speak', 'Speaking', icons.speak]]],
+    ['Learn', [['home', '#/', 'Home', icons.home], ['dict', '#/dict', 'Dictionary', icons.book], ['flash', '#/flash', 'Flashcards', icons.cards], ['verbs', '#/verbs', 'Verb trainer', icons.verb], ['affixes', '#/affixes', 'Panlapi', icons.affix], ['lessons', '#/lessons', 'Lessons', icons.lesson], ['reading', '#/reading', 'Reading', icons.read], ['speak', '#/speak', 'Speaking', icons.speak]]],
     ['Clinical', [['psych', '#/psych', 'Psychiatry Tagalog', icons.brain]]],
     ['You', [['placement', '#/placement', 'Placement test', icons.target], ['progress', '#/progress', 'Progress', icons.chart], ['settings', '#/settings', 'Settings', icons.gear], ['new', '#/new', "What's New", icons.spark], ['about', '#/about', 'About', icons.info]]]
   ];
@@ -59,12 +59,21 @@
   $('#attrib').innerHTML = esc(APP_META.attribution.replace(' ' + APP_META.email, '')) + ' <a href="mailto:' + esc(APP_META.email) + '">' + esc(APP_META.email) + '</a> · <a href="#/new">What\'s New</a> · <a href="#/about">About</a>';
 
   // "More" page for phones
+  const BLURB = {
+    verbs: 'Aspect and focus drills, 78 verbs', affixes: 'Unlapi, gitlapi, hulapi: take words apart', lessons: 'Grammar and culture', reading: 'Graded passages', speak: 'Dialogues with listening and recording',
+    placement: '20 questions to find your level', progress: 'Streak, stats, backup', settings: 'Register, voice, theme', new: 'What changed in each version', about: 'Credits and disclaimers'
+  };
+  const PSY_TOOLS = [['#/psych/cases', 'Case simulations'], ['#/psych/mcases', 'Admission MSE practice'], ['#/psych/dcases', 'Discharge practice'], ['#/psych/discharge', 'Discharge assessment'],
+    ['#/psych/mood', 'Mood episode checker'], ['#/psych/sud', 'Substance use'], ['#/psych/withdrawal', 'Withdrawal and agitation'], ['#/psych/deesc', 'De-escalation'], ['#/psych/mse-sheet', 'MSE interviewer sheet'], ['#/psych/handout', 'Printable handout']];
   V.more = (el) => {
-    el.innerHTML = '<h1>More</h1><div class="grid">' + NAV.flatMap(([, items]) => items).filter(([k]) => !['home', 'dict', 'flash', 'psych'].includes(k))
-      .map(([k, h, t]) => '<a class="tile" href="' + h + '"><h3>' + t + '</h3></a>').join('') + '</div>';
+    const recent = (App.state.recent || []).filter((r) => r.hash !== '#/more');
+    el.innerHTML = '<h1>More</h1>' +
+      (recent.length ? '<h2>Recent</h2><div class="row" style="margin-bottom:6px">' + recent.slice(0, 6).map((r) => '<a class="btn sm" href="' + esc(r.hash) + '">' + esc(r.title) + '</a>').join('') + '</div>' : '') +
+      NAV.map(([g, items]) => { const its = items.filter(([k]) => !['home', 'dict', 'flash', 'psych'].includes(k)); return its.length ? '<h2>' + g + '</h2><div class="grid">' + its.map(([k, h, t, ic]) => '<a class="tile" href="' + h + '"><h3 class="row" style="gap:8px">' + ic + t + '</h3>' + (BLURB[k] ? '<p>' + BLURB[k] + '</p>' : '') + '</a>').join('') + '</div>' : ''; }).join('') +
+      '<h2>Psychiatry tools</h2><div class="grid">' + PSY_TOOLS.map(([h, t]) => '<a class="tile" href="' + h + '"><h3>' + t + '</h3></a>').join('') + '<a class="tile" href="#/psych"><h3>All sections and phrases</h3></a></div>';
   };
   routes.push([/^\/more$/, V.more, 'more']);
-  const MORE_KEYS = ['verbs', 'lessons', 'reading', 'speak', 'placement', 'progress', 'settings', 'new', 'about', 'more'];
+  const MORE_KEYS = ['verbs', 'affixes', 'lessons', 'reading', 'speak', 'placement', 'progress', 'settings', 'new', 'about', 'more'];
 
   /* ---------- Back / forward tracking ----------
      The browser history is the source of truth. Each entry gets an index so the
@@ -104,6 +113,11 @@
     try { fn(view, params, q); } catch (e) { console.error(e); view.innerHTML = '<h1>Something went wrong</h1><p class="muted">' + esc(e.message) + '</p><p><a href="#/">Go home</a></p>'; }
     document.querySelectorAll('[data-nav]').forEach((a) => a.classList.toggle('on', a.dataset.nav === key || (a.dataset.nav === 'more' && MORE_KEYS.includes(key))));
     document.title = (TITLES[key] ? TITLES[key] + ' · ' : '') + 'Usap Tayo';
+    if (key && key !== 'home' && key !== 'more' && key !== '') { // remember the last pages visited for the More screen
+      const h1 = view.querySelector('h1'); const title = (h1 ? h1.textContent : TITLES[key] || key).trim().slice(0, 40);
+      const hash = '#' + path + (q && Object.keys(q).length && !q.p ? '?' + new URLSearchParams(q) : '');
+      App.state.recent = [{ hash, title }].concat((App.state.recent || []).filter((r) => r.hash !== hash)).slice(0, 8); App.save();
+    }
     if (!q.p) window.scrollTo(0, 0);
     syncHistory();
     hideSuggest();
