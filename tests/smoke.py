@@ -17,7 +17,7 @@ ROUTES = ['#/', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/
   '#/psych/s/hallucinations', '#/psych/cases', '#/psych/case/jomar', '#/psych/interp', '#/placement', '#/progress', '#/settings', '#/new',
   '#/about', '#/more', '#/psych/handout', '#/psych/handout?s=suicide', '#/psych/deesc', '#/psych/handout?deesc=1', '#/psych/s/deescalation',
   '#/psych/deesc?tab=drill', '#/psych/deesc?tab=after', '#/psych/deesc?tab=practice', '#/psych/case/agitated', '#/speak/case-agitated',
-  '#/psych/handout?deesccard=1', '#/psych/discharge', '#/psych/handout?discharge=1', '#/psych/s/discharge', '#/psych/dcases', '#/psych/dcase/ramon', '#/psych/dcase/liza', '#/psych/dcase/carlo', '#/psych/dcase/arnel', '#/psych/dcase/mika', '#/psych/mcases', '#/psych/mcase/ramon', '#/affixes', '#/affixes?t=gitlapi', '#/lessons/panlapi', '#/practice', '#/psych?tab=cases', '#/psych?tab=tools', '#/psych?tab=print']
+  '#/psych/handout?deesccard=1', '#/psych/discharge', '#/psych/handout?discharge=1', '#/psych/s/discharge', '#/psych/dcases', '#/psych/dcase/ramon', '#/psych/dcase/liza', '#/psych/dcase/carlo', '#/psych/dcase/arnel', '#/psych/dcase/mika', '#/psych/mcases', '#/psych/mcase/ramon', '#/affixes', '#/affixes?t=gitlapi', '#/lessons/panlapi', '#/practice', '#/psych?tab=cases', '#/psych?tab=tools', '#/psych?tab=print', '#/affixes/handout', '#/affixes/handout?t=hulapi&set=clinical']
 
 LOAD_PDFMAKE = """async () => { if (!window.pdfMake) await new Promise((r) => { const s = document.createElement('script'); s.src = 'js/vendor/pdfmake.min.js';
   s.onload = () => { const t = document.createElement('script'); t.src = 'js/vendor/vfs_fonts.js'; t.onload = r; document.head.appendChild(t); }; document.head.appendChild(s); }); }"""
@@ -138,6 +138,15 @@ async def main(base, out):
                           return await new Promise((r) => pdfMake.createPdf(App.handoutDoc(o)).getBase64(r)); }""", [k, eng])
                         fn = f'{out}/{k}_{eng}.pdf'; open(fn, 'wb').write(base64.b64decode(b64))
                         if os.path.getsize(fn) < 3000: fails.append(f'pdf {k}/{eng} too small')
+                # Grammar handout: A4 with English, A5 Tagalog-only clinical hulapi; worksheet pairs must be spread apart.
+                for name, o in [('grammar_a4', {}), ('grammar_a5', {'paper': 'A5', 'size': 'small', 'english': 'hide', 'type': 'hulapi', 'set': 'clinical'})]:
+                    b64 = await pg.evaluate("async (o) => await new Promise((r) => pdfMake.createPdf(App.grammarHandoutDoc(o)).getBase64(r))", o)
+                    fn = f'{out}/{name}_show.pdf'; open(fn, 'wb').write(base64.b64decode(b64))
+                    if os.path.getsize(fn) < 3000: fails.append(f'pdf {name} too small')
+                ws = await pg.evaluate("App.grammarHandoutBuild(Object.assign({}, {topic:'panlapi',type:'all',set:'all',cheat:true,rules:true,words:true,worksheet:true,key:true,english:'show',paper:'A4',size:'normal'})).worksheet.focus.map((f) => f.a.map((x) => x.toLowerCase()).sort().join('|'))")
+                if any(ws[i] == ws[i + 1] for i in range(len(ws) - 1)): fails.append('grammar worksheet: paired focus items are adjacent')
+                if any(len(set(a.split('|'))) < 3 for a in ws): fails.append('grammar worksheet: an item has fewer than 3 options')
+                presets = presets + ['grammar_a4', 'grammar_a5']
                 if shutil.which('pdfinfo'):
                     for k in presets:
                         pages = subprocess.run(['pdfinfo', f'{out}/{k}_show.pdf'], capture_output=True, text=True).stdout.split('Pages:')[1].split()[0]
