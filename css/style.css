@@ -209,6 +209,11 @@ select.input { max-width: 100%; }
 .progress > i { display: block; height: 100%; background: var(--gold); border-radius: 4px; }
 .breadcrumb { font-size: .88rem; margin-bottom: 8px; color: var(--muted); }
 .breadcrumb a { color: var(--muted); }
+h1.has-pin { display: flex; align-items: flex-start; gap: 10px; }
+h1.has-pin .pin { margin-left: auto; flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--muted); display: inline-grid; place-items: center; cursor: pointer; }
+h1.has-pin .pin svg { width: 20px; height: 20px; }
+h1.has-pin .pin.on { color: var(--gold-ink); border-color: var(--gold); }
+.tile .eyebrow + h3 { margin-top: 4px; }
 table { border-collapse: collapse; width: 100%; font-size: .95rem; }
 th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }

@@ -67,7 +67,9 @@
     ['#/psych/mood', 'Mood episode checker'], ['#/psych/sud', 'Substance use'], ['#/psych/withdrawal', 'Withdrawal and agitation'], ['#/psych/deesc', 'De-escalation'], ['#/psych/mse-sheet', 'MSE interviewer sheet'], ['#/psych/handout', 'Printable handout']];
   V.more = (el) => {
     const recent = (App.state.recent || []).filter((r) => r.hash !== '#/more');
+    const pins = (App.state.pins || []).slice().reverse();
     el.innerHTML = '<h1>More</h1>' +
+      (pins.length ? '<h2>Pinned</h2><div class="row" style="margin-bottom:6px">' + pins.map((p) => '<a class="btn sm" href="' + esc(p.hash) + '">' + icons.starOn + ' ' + esc(p.title) + '</a>').join('') + '</div>' : '') +
       (recent.length ? '<h2>Recent</h2><div class="row" style="margin-bottom:6px">' + recent.slice(0, 6).map((r) => '<a class="btn sm" href="' + esc(r.hash) + '">' + esc(r.title) + '</a>').join('') + '</div>' : '') +
       NAV.map(([g, items]) => { const its = items.filter(([k]) => !['home', 'dict', 'flash', 'psych'].includes(k)); return its.length ? '<h2>' + g + '</h2><div class="grid">' + its.map(([k, h, t, ic]) => '<a class="tile" href="' + h + '"><h3 class="row" style="gap:8px">' + ic + t + '</h3>' + (BLURB[k] ? '<p>' + BLURB[k] + '</p>' : '') + '</a>').join('') + '</div>' : ''; }).join('') +
       '<h2>Psychiatry tools</h2><div class="grid">' + PSY_TOOLS.map(([h, t]) => '<a class="tile" href="' + h + '"><h3>' + t + '</h3></a>').join('') + '<a class="tile" href="#/psych"><h3>All sections and phrases</h3></a></div>';
@@ -113,10 +115,11 @@
     try { fn(view, params, q); } catch (e) { console.error(e); view.innerHTML = '<h1>Something went wrong</h1><p class="muted">' + esc(e.message) + '</p><p><a href="#/">Go home</a></p>'; }
     document.querySelectorAll('[data-nav]').forEach((a) => a.classList.toggle('on', a.dataset.nav === key || (a.dataset.nav === 'more' && MORE_KEYS.includes(key))));
     document.title = (TITLES[key] ? TITLES[key] + ' · ' : '') + 'Usap Tayo';
+    App.decorate(view, path, q, key);
     if (key && key !== 'home' && key !== 'more' && key !== '') { // remember the last pages visited for the More screen
       const h1 = view.querySelector('h1'); const title = (h1 ? h1.textContent : TITLES[key] || key).trim().slice(0, 40);
       const hash = '#' + path + (q && Object.keys(q).length && !q.p ? '?' + new URLSearchParams(q) : '');
-      App.state.recent = [{ hash, title }].concat((App.state.recent || []).filter((r) => r.hash !== hash)).slice(0, 8); App.save();
+      App.state.recent = [{ hash, title, sec: App._section || '' }].concat((App.state.recent || []).filter((r) => r.hash !== hash)).slice(0, 8); App.save();
     }
     if (!q.p) window.scrollTo(0, 0);
     syncHistory();
@@ -124,6 +127,38 @@
   }
   window.addEventListener('hashchange', render);
   window.addEventListener('popstate', syncHistory);
+
+  /* ---------- Breadcrumbs and pins, the same on every page ----------
+     A view that draws its own .breadcrumb keeps it. Otherwise a deep page (two or more path segments) gets
+     "Section / Page" built from the route, and nested practice pages get their list page in between. */
+  const PARENT = { '/psych/dcase': ['Discharge practice', '#/psych/dcases'], '/psych/mcase': ['Admission MSE practice', '#/psych/mcases'], '/psych/case': ['Case simulations', '#/psych/cases'], '/psych/s': null };
+  const NO_PIN = new Set(['home', 'more', 'search', 'settings', 'progress', 'new', 'about', 'placement', '']);
+  App.decorate = (view, path, q, key) => {
+    const h1 = view.querySelector('h1');
+    App._section = TITLES[key] || '';
+    const segs = path.split('/').filter(Boolean);
+    if (h1 && !view.querySelector('.breadcrumb') && segs.length >= 2) {
+      const top = TITLES[key] || segs[0];
+      const mid = PARENT['/' + segs.slice(0, 2).join('/')];
+      const items = [[top, '#/' + segs[0]]].concat(mid ? [mid] : [], [[h1.textContent.trim().slice(0, 48)]]);
+      h1.insertAdjacentHTML('beforebegin', '<div class="breadcrumb">' + items.map(([t, h]) => (h ? '<a href="' + h + '">' + esc(t) + '</a>' : esc(t))).join(' / ') + '</div>');
+    }
+    if (h1 && !NO_PIN.has(key)) {
+      const hash = '#' + path + (q && Object.keys(q).length && !q.p ? '?' + new URLSearchParams(q) : '');
+      const title = h1.textContent.trim().slice(0, 40);
+      const b = document.createElement('button');
+      const bc = view.querySelector('.breadcrumb'); const sec = bc ? [...bc.querySelectorAll('a')].map((a) => a.textContent).pop() || '' : App._section; App._section = sec; b.className = 'pin'; b.type = 'button';
+      const draw = () => { const on = App.isPinned(hash); b.innerHTML = (on ? icons.starOn : icons.star); b.title = on ? 'Unpin from Home' : 'Pin to Home'; b.setAttribute('aria-label', b.title); b.classList.toggle('on', on); };
+      b.onclick = () => { App.togglePin(hash, title, sec); draw(); App.toast(App.isPinned(hash) ? 'Pinned to Home' : 'Unpinned'); };
+      draw(); h1.classList.add('has-pin'); h1.appendChild(b);
+    }
+  };
+  App.isPinned = (hash) => (App.state.pins || []).some((p) => p.hash === hash);
+  App.togglePin = (hash, title, sec) => {
+    const pins = App.state.pins || [];
+    App.state.pins = App.isPinned(hash) ? pins.filter((p) => p.hash !== hash) : pins.concat({ hash, title, sec: sec || '' }).slice(-12);
+    App.save();
+  };
 
   /* ---------- Text size ---------- */
   const TEXT_SIZES = [['90', 'Smaller'], ['100', 'Default'], ['112.5', 'Larger'], ['125', 'Largest']];

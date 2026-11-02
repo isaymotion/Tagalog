@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.5.0',
+  version: '2.6.0',
   updated: 'November 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,15 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.6.0', date: 'November 2026', title: 'A Home screen built around today',
+    items: [
+      ['new', 'Home now opens with Today: your cards due, one quick practice that rotates daily, and your next lesson. Pinned and Continue follow, then the psychiatry shortcuts.'],
+      ['new', 'Pin any page: tap the star beside a page title to keep it on Home and at the top of More. Tap again to unpin.'],
+      ['new', 'Every deep page now has the same breadcrumb trail (Psychiatry / Discharge practice / Ramon), so a shared link always leads back to its section.'],
+      ['improved', 'The "Everything" grid left Home; the More screen lists every page, grouped.']
+    ]
+  },
   {
     version: '2.5.0', date: 'November 2026', title: 'Text size',
     items: [

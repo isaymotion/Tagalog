@@ -49,6 +49,12 @@
     const lessonsDone = Object.keys(s.done.lessons).length;
     const nextLesson = (window.LESSONS || []).find((l) => !(l.id in s.done.lessons));
     const isNew = s.seenVersion !== APP_META.version;
+    const tile = (h, eyebrow, title, p) => '<a class="tile" href="' + h + '"><span class="eyebrow">' + eyebrow + '</span><h3>' + title + '</h3>' + (p ? '<p>' + p + '</p>' : '') + '</a>';
+    const pins = (s.pins || []).slice().reverse();
+    const recent = (s.recent || []).filter((r) => !/^#\/(more|settings|progress|new|about|search)/.test(r.hash) && !App.isPinned(r.hash)).slice(0, 4);
+    // One quick drill a day, rotating so the Home screen nudges different skills.
+    const quick = [['#/verbs', 'Verb trainer', '10 aspect questions'], ['#/affixes', 'Panlapi', 'Take 10 words apart'], ['#/psych/interp', 'What is the patient saying?', 'Interpret 10 lines'], ['#/flash/psych', 'Psychiatry flashcards', 'A quick review'], ['#/psych/cases', 'Case simulation', 'One interview, with feedback']];
+    const qd = quick[Math.floor(Date.now() / 864e5) % quick.length];
     el.innerHTML =
       '<section class="hero"><svg class="rays" viewBox="0 0 100 100" aria-hidden="true">' + Array.from({ length: 8 }, (_, k) => '<rect x="47" y="2" width="6" height="30" fill="#e3b53f" transform="rotate(' + k * 45 + ' 50 50)"/>').join('') + '<circle cx="50" cy="50" r="16" fill="#e3b53f"/></svg>' +
       '<img src="icons/logo-96.png" alt=""><div><h1>Usap Tayo</h1><p>Tagalog for everyday life and for the psychiatric interview.</p></div></section>' +
@@ -58,19 +64,20 @@
       '<div class="stat"><b>' + due + '</b><span>cards due</span></div>' +
       '<div class="stat"><b>' + lessonsDone + '/' + LESSONS.length + '</b><span>lessons done</span></div>' +
       '<div class="stat"><b>' + s.xp + '</b><span>XP · level ' + esc(s.level || '—') + '</span></div></div>' +
-      '<h2 style="margin-top:22px">Continue</h2><div class="grid">' +
-      (due ? '<a class="tile" href="#/flash/due"><span class="eyebrow">Review</span><h3>' + due + ' cards due</h3><p>Spaced repetition keeps words fresh.</p></a>' : '<a class="tile" href="#/flash"><span class="eyebrow">Flashcards</span><h3>Start a deck</h3><p>Vocabulary, verbs, and psychiatry phrases.</p></a>') +
-      (nextLesson ? '<a class="tile" href="#/lessons/' + nextLesson.id + '"><span class="eyebrow">Next lesson · ' + esc(nextLesson.level) + '</span><h3>' + esc(nextLesson.title) + '</h3><p>' + esc(nextLesson.summary) + '</p></a>' : '') +
-      (!s.level ? '<a class="tile" href="#/placement"><span class="eyebrow">New here?</span><h3>Take the placement test</h3><p>20 questions to find your level.</p></a>' : '') +
+      '<h2 style="margin-top:22px">Today</h2><div class="grid">' +
+      (due ? tile('#/flash/due', 'Review', due + ' cards due', 'Spaced repetition keeps words fresh.') : tile('#/flash', 'Flashcards', 'Start a deck', 'Vocabulary, verbs, and psychiatry phrases.')) +
+      tile(qd[0], 'Quick practice', qd[1], qd[2]) +
+      (nextLesson ? tile('#/lessons/' + nextLesson.id, 'Next lesson · ' + esc(nextLesson.level), esc(nextLesson.title), esc(nextLesson.summary)) : '') +
+      (!s.level ? tile('#/placement', 'New here?', 'Take the placement test', '20 questions to find your level.') : '') +
       '</div>' +
+      (pins.length ? '<h2 style="margin-top:22px">Pinned</h2><div class="grid">' + pins.map((p) => tile(esc(p.hash), esc(p.sec || 'Pinned'), esc(p.title))).join('') + '</div>' : '') +
+      (recent.length ? '<h2 style="margin-top:22px">Continue</h2><div class="grid">' + recent.map((r) => tile(esc(r.hash), esc(r.sec || 'Recent'), esc(r.title))).join('') + '</div>' : '') +
       '<h2 style="margin-top:22px">Psychiatry Tagalog</h2><div class="grid">' +
-      '<a class="tile" href="#/psych/s/hallucinations"><span class="eyebrow">Interview</span><h3>Hallucinations</h3><p>"May bumubulong ba sa iyo?" and more.</p></a>' +
-      '<a class="tile" href="#/psych/s/suicide"><span class="eyebrow">Risk</span><h3>Suicide risk assessment</h3><p>Direct, respectful questions from ideation to plan.</p></a>' +
-      '<a class="tile" href="#/psych/case/jomar"><span class="eyebrow">Case simulation</span><h3>First-episode psychosis</h3><p>Interview Jomar and his mother.</p></a>' +
-      '<a class="tile" href="#/psych"><span class="eyebrow">All sections</span><h3>Open the psychiatry track</h3><p>' + PSYCH_SECTIONS.length + ' sections, ' + PSYCH_CASES.length + ' cases.</p></a></div>' +
-      '<h2 style="margin-top:22px">Everything</h2><div class="grid">' +
-      [['#/dict', 'Dictionary', App.DICT.length + ' entries, both directions, root-word search'], ['#/verbs', 'Verb trainer', 'Aspect and affix drills'], ['#/affixes', 'Panlapi', 'Unlapi, gitlapi, hulapi: take words apart'], ['#/lessons', 'Lessons', 'Grammar and culture'], ['#/reading', 'Reading', 'Graded passages with questions'], ['#/speak', 'Speaking', 'Dialogues with listening and recording'], ['#/progress', 'Progress', 'Stats and backup']]
-        .map(([h, t, p]) => '<a class="tile" href="' + h + '"><h3>' + t + '</h3><p>' + p + '</p></a>').join('') + '</div>';
+      tile('#/psych/s/hallucinations', 'Interview', 'Hallucinations', '"May bumubulong ba sa iyo?" and more.') +
+      tile('#/psych/s/suicide', 'Risk', 'Suicide risk assessment', 'Direct, respectful questions from ideation to plan.') +
+      tile('#/psych/mcases', 'Ward', 'Admission MSE practice', 'Interview, document, compare with a model answer.') +
+      tile('#/psych', 'All sections', 'Open the psychiatry track', PSYCH_SECTIONS.length + ' sections, ' + PSYCH_CASES.length + ' cases, and the ward tools.') + '</div>' +
+      '<p class="muted small" style="margin-top:18px">Looking for something else? Every page is listed under <a href="#/more">More</a>, and the search box finds words, phrases, lessons and pages. Pin any page with the star beside its title to keep it here.</p>';
   };
 
   /* ---------- Search results ---------- */
@@ -542,7 +549,7 @@
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'usap-tayo-backup-' + App.today() + '.json'; document.body.appendChild(a); a.click(); a.remove();
       App.toast('Backup downloaded. If nothing downloaded, copy the text backup below.');
     };
-    const load = (txt) => { try { const o = JSON.parse(txt); if (!o || typeof o !== 'object' || !o.settings) throw 0; App.importState(o); App.applyTheme(); App.toast('Backup restored.'); V.progress(el); } catch (e) { App.toast('That file is not a Usap Tayo backup.'); } };
+    const load = (txt) => { try { const o = JSON.parse(txt); if (!o || typeof o !== 'object' || !o.settings) throw 0; App.importState(o); App.applyTheme(); App.applyTextSize(); App.toast('Backup restored.'); V.progress(el); } catch (e) { App.toast('That file is not a Usap Tayo backup.'); } };
     el.querySelector('#imp').onchange = (e) => { const f = e.target.files[0]; if (f) f.text().then(load); };
     el.querySelector('#bkload').onclick = () => load(el.querySelector('#bk').value);
   };
