@@ -5,7 +5,7 @@
 - **Owner:** Ma. Isabella P. Navarro, MD, incoming PGY-1 psychiatry resident at MMWGH. Nurses there also request features.
 - **Repo:** github.com/isaymotion/Tagalog (git remote also works as `isaymotion/tagalog`). Branches: `main` = the app (served by GitHub Pages); `dev-tools` = tests + this doc (not published).
 - **Live:** https://isaymotion.github.io/tagalog/ (Pages deploys `main` root automatically).
-- **Current version:** 2.7.0 (Nov 2026). Service worker cache `usaptayo-2.7.0`. Releases on 2026-11-02: 2.4.0 Panlapi trainer, 2.4.1 Panlapi in the menu + grouped More screen, 2.5.0 text size adjuster, 2.6.0 task-driven Home + pins + central breadcrumbs, 2.7.0 tabbed Psychiatry hub + Practice tab + new phone bar. (1.9 to 2.3 added the MSE interviewer sheet, substance use screener, mood episode checker, withdrawal and agitation guide and Shea techniques; the README feature table is kept current.)
+- **Current version:** 2.8.0 (Nov 2026). Service worker cache `usaptayo-2.8.0`. Releases on 2026-11-02: 2.8.0 printable Panlapi grammar handout, 2.4.0 Panlapi trainer, 2.4.1 Panlapi in the menu + grouped More screen, 2.5.0 text size adjuster, 2.6.0 task-driven Home + pins + central breadcrumbs, 2.7.0 tabbed Psychiatry hub + Practice tab + new phone bar. (1.9 to 2.3 added the MSE interviewer sheet, substance use screener, mood episode checker, withdrawal and agitation guide and Shea techniques; the README feature table is kept current.)
 - **Linked app:** MSE Trainer, repo `isaymotion/MSEtrainer`, live https://isaymotion.github.io/MSEtrainer/ (see section 10). Her other study apps are in section 11.
 
 ## 2. Fixed rules
@@ -22,7 +22,7 @@
 - For UI changes she wants to see first, prototype on a scratch branch in the real app and send phone screenshots (light + dark rows); she decides from those ("ship it" / "drop it"). Squash-merge the branch into main when shipping.
 
 ## 3. Architecture and data formats
-Static site, vanilla JS, no build step. `index.html` loads scripts in order: data files (ending with `affixes.js`, then `meta.js`) → `conjugate.js` → `audio-key.js` → `core.js` → `views.js` → `psych-views.js` → `handout.js` → `mse-sheet.js` → `sud.js` → `mood.js` → `withdrawal.js` → `deesc.js` → `discharge.js` → `discharge-practice.js` → `mse-practice.js` → `affixes.js` → `app.js`. Hash routing (`#/path?query`) in `app.js` `routes`.
+Static site, vanilla JS, no build step. `index.html` loads scripts in order: data files (ending with `affixes.js`, then `meta.js`) → `conjugate.js` → `audio-key.js` → `core.js` → `views.js` → `psych-views.js` → `handout.js` → `mse-sheet.js` → `sud.js` → `mood.js` → `withdrawal.js` → `deesc.js` → `discharge.js` → `discharge-practice.js` → `mse-practice.js` → `affixes.js` → `grammar-handout.js` → `app.js`. Hash routing (`#/path?query`) in `app.js` `routes`.
 
 Navigation conventions (2.4.1 to 2.7.0, all in `app.js` unless noted):
 - Phone tab bar: Home, Psychiatry, Practice, Cards, More. Dictionary is reachable from the header search, the desktop rail, More (first under Learn) and the Home footer line. `#/practice` (`V.practice` in app.js, registered with `routes.push` after `V.more` because it is defined after the routes array) lists every drill in Language and Clinical groups.
@@ -51,7 +51,8 @@ Navigation conventions (2.4.1 to 2.7.0, all in `app.js` unless noted):
 | `js/data/psych-mse-sheet.js`, `psych-sud.js`, `psych-mood.js`, `psych-withdrawal.js`, `psych-shea.js` | Later modules (MSE interviewer sheet, substance use screener, mood episode checker, withdrawal/agitation guide, Shea techniques); README section "Data files" documents them. `collect-texts.js` sweeps every `PSYCH_*`/`SHEA_*` export for `tl`/`f`/`c` strings |
 | `js/data/meta.js` | `APP_META`, `WHATS_NEW`, `PLACEMENT` |
 | `js/core.js` | storage (`localStorage` key `usaptayo.v1`), dictionary index, root-word stemmer `App.findRoots`, search, SRS, speech (`App.speakAsync`, audio pack first, then Filipino device voice, then id/ms/es voice, never English), `icons` (incl. `affix`, `star`, `starOn`) |
-| `js/handout.js` | handout/PDF generator (pdfmake in `js/vendor/`, lazy-loaded); presets `full, mse, risk, pocket, discharge, deesccard, everything` |
+| `js/handout.js` | psychiatry handout/PDF generator (pdfmake in `js/vendor/`, lazy-loaded); presets `full, mse, risk, pocket, discharge, deesccard, everything`. Exposes `App.pdfKit = { load, logo, fixGlyphs, NAVY, GOLD, MUTED, LINE, TINT }` for other handout modules |
+| `js/grammar-handout.js` | grammar handout (`#/affixes/handout`, `?t=<type>&set=clinical`), options in `state.settings.ghandout`: cheat sheet (AFFIX_TYPES + AFFIX_LIST), rules, word list in two columns with affix pieces in brown (`App.affixPieces`), worksheet A (24 sampled words, root + type blanks) and B (focus drill, 3 same-root options: from AFFIX_ITEMS sharing `r`, else the drill item's `alt`; paired items spread apart by `spreadPairs`), answer key. `App.grammarHandoutDoc(o)` / `App.grammarHandoutBuild(o)` for tests. Footer = attribution only (she asked for no URL). Pattern to copy for the next grammar handouts (verbs, lessons) |
 | `audio/` | `manifest.json` + `<16-hex>.mp3` clips; key = `AudioKey(text)` in `js/audio-key.js` (NFC, trim, collapse spaces, lowercase, two FNV-1a 32-bit hashes over UTF-8) |
 | `tools/` | `collect-texts.js` (lists all speakable Tagalog → `texts.json`; affix words, rule examples and filled focus sentences are added explicitly), `make_audio_pack.py` (edge-tts `fil-PH-BlessicaNeural`; `--engine mms` alt) |
 | `.github/workflows/audio-pack.yml` | records missing clips on push to `js/data/**`, `tools/**`, or the workflow; manual dispatch with voice/rate/rebuild |
@@ -78,14 +79,15 @@ python3 /home/claude/devtools/tests/smoke.py --base http://localhost:8765/index.
 gh run list -R isaymotion/tagalog -w "Build Tagalog audio pack" -L 3             # audio job status
 gh api -X POST repos/isaymotion/tagalog/actions/workflows/audio-pack.yml/dispatches -f ref=main   # rerun audio job
 ```
-Baseline (v2.7.0, 2026-11-02): data_check prints `{"version":"2.7.0","dict":1658,"sections":38,"phrases":662,"cases":7,"lessons":23,"reading":12,"dialogues":8,"verbs":78,"dcases":5,"mcases":1,"affixes":216}` and `DATA OK`; smoke prints PDF page counts (full 13, mse 6, risk 6, pocket 16, discharge 4, deesccard 2, everything 38) and `SMOKE OK · 56 routes × 2 viewports` (smoke also runs discharge practice flows on Ramon, Liza and Mika, the command-hallucination flag, the admission MSE flow on Ramon, all four panlapi drills to the score screen, pin / breadcrumb / Home checks, hub tabs and Dictionary under More). Audio: 4,690 clips after the 2.4.0 job.
-Last verified clean: 2026-11-02 after the 2.7.0 release (both tests pass).
+Baseline (v2.8.0, 2026-11-02): data_check prints `{"version":"2.8.0","dict":1658,"sections":38,"phrases":662,"cases":7,"lessons":23,"reading":12,"dialogues":8,"verbs":78,"dcases":5,"mcases":1,"affixes":216}` and `DATA OK`; smoke prints PDF page counts (full 13, mse 6, risk 6, pocket 16, discharge 4, deesccard 2, everything 38, grammar_a4 13, grammar_a5 6) and `SMOKE OK · 58 routes × 2 viewports` (smoke also checks the grammar worksheet has 3 options per item and no adjacent pairs) (smoke also runs discharge practice flows on Ramon, Liza and Mika, the command-hallucination flag, the admission MSE flow on Ramon, all four panlapi drills to the score screen, pin / breadcrumb / Home checks, hub tabs and Dictionary under More). Audio: 4,690 clips after the 2.4.0 job.
+Last verified clean: 2026-11-02 after the 2.8.0 release (both tests pass).
 
 ## 6. Status
 | Area | Done |
 |---|---|
 | Core learning | Dictionary 1,658 (root search), search, SRS flashcards + mistakes deck, verb trainer (78 verbs, 628 sentences), 23 lessons, 12 readings, 8 dialogues, placement, progress/backup, settings, What's New, About, dark/light, text size, back/forward, PWA offline |
 | Navigation (2.4.1 to 2.7.0) | Task-driven Home (Today / Pinned / Continue), pin stars on every page, uniform breadcrumbs, grouped More screen with Recent and Psychiatry tools, all pages searchable by name, Psychiatry hub in four tabs (Interview / Cases / Ward tools / Print), Practice tab in the phone bar listing every drill |
+| Grammar handout (2.8.0) | `#/affixes/handout`: Panlapi cheat sheet, rules, word list, worksheet + key as preview/print/PDF; Print button on the Panlapi page |
 | Panlapi (2.4.0) | `#/affixes`: five affix positions, 216 words (120 clinical) with segmentation, 9 rules, 26 affix meanings, drills (name the type, find the root, build the word, choose the affix the sentence forces), lesson `panlapi`, verb trainer link, mistakes deck. Data drafted by Claude; her review pending |
 | Psychiatry | 38 sections / 662 phrases, 7 case sims, interpretation drill, interview flow + MSE structure, MSE interviewer sheet, SUD screener, mood episode checker, withdrawal/agitation guide, Shea techniques (see README) |
 | Handouts | PDF/print generator, 7 presets, English show/hide/answer key, A4/Letter/A5/A6 |
@@ -95,10 +97,10 @@ Last verified clean: 2026-11-02 after the 2.7.0 release (both tests pass).
 | Audio | 4,690 clips (incl. MSE Trainer lines), Filipino neural voice, auto-updating GitHub job |
 
 ## 7. Next steps
-Next release = **2.7.1** (affix data corrections, or nurse feedback on the new navigation) or **2.8.0** (new feature).
+Next release = **2.8.1** (affix data corrections) or **2.9.0** (new feature). Grammar handout follow-ups agreed in principle: a `verbs` handout (conjugation tables from `verbs.js` + sentences, clinical filter) and a `lesson` handout (one lesson body + quiz; needs a small HTML→pdfmake converter limited to h2/h3/p/ul/ol/table/strong/em; audit the 23 lesson bodies first). Build them as sections of `grammar-handout.js` with a `topic` option.
 - **Waiting on her:** corrections to `js/data/affixes.js`. Flagged for her: kabilaan used for any two affixes (`sub` uh/gh/ug) vs the strict prefix+suffix textbook definition; roots given for kamatayan (matay), pabayaan (bayaa); irregular doubling in katotohanan, pinagtawanan; higaan without h; kasiyahan (saya → siya-); magkaroon (doon, d→r). Clinical register in the focus drill (patulugin ang pasyente for sedation, Ikinalulungkot ko).
 - All navigation suggestions are now shipped (2.4.1 to 2.7.0) except a keyboard shortcut for search as a command palette. Watch for nurse feedback on Dictionary leaving the phone bar; the fallback is a Dictionary tile in Home's Today row.
-- Panlapi follow-ups offered: a "panlapi cheat sheet" handout preset; a clinical-only drill set keyed to ward roots; a drill that gives a dictionary word and asks for its root using `App.findRoots` on the whole 1,658-word dictionary.
+- Panlapi follow-ups offered: a clinical-only drill set keyed to ward roots; a drill that gives a dictionary word and asks for its root using `App.findRoots` on the whole 1,658-word dictionary.
 - **Waiting on her:** the Tagalog review workbook `tagalog-review-2026-10.xlsx` (413 draft lines). When she sends it back, apply each "Fix" row (column A says where), rerun `tools/import-msetrainer.js` if MSE Trainer lines changed, and push both. Rebuild the workbook with `tests/msetrainer/review_collect.js` + `review_build.py`.
 - **Waiting on her:** initial admission form photo → Liza's admission MSE case (same pattern as Ramon). Check whether the initial form's MSE section matches the readmission order; if not, add a second domain list keyed by `form` on the case.
 - Admission MSE cases for Carlo (flight of ideas, pressured speech, clanging in Tagalog), Arnel, and Mika (thought blocking).
