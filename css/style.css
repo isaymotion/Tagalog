@@ -635,3 +635,25 @@ mark.vf { background: var(--warn-bg); color: var(--gold-ink); font-weight: 700; 
 .gh-keyB li { margin-bottom: 3px; } .gh-keyB small { color: var(--p-muted); }
 .gh-key { break-before: page; }
 @media (max-width: 560px) { .gh-words, .ho-paper .gh-rules { columns: 1; grid-template-columns: 1fr; } }
+/* Verb and lesson handouts (js/grammar-handout.js) */
+.ho-paper .gh-p { margin: 0 0 6px; }
+.ho-paper .gh-rules-l { margin: 2px 0 6px; padding-left: 1.3em; } .ho-paper .gh-rules-l li { margin-bottom: 3px; }
+.gh-vt { margin-bottom: 8px; break-inside: avoid; }
+.ho-paper .gh-vtab td, .ho-paper .gh-vtab th { padding: 3px 6px 3px 0; }
+.ho-paper .gh-vtab td:first-child { color: var(--p-muted); font-size: .86em; }
+.ho-paper .gh-vtab .gh-vh th { background: var(--p-tint); color: var(--p-navy); text-transform: none; letter-spacing: 0; font-size: 1em; padding: 4px 6px; }
+.ho-paper .gh-vtab .gh-vh .gh-en { color: var(--p-muted); font-weight: 400; margin-left: 6px; }
+.gh-tag { color: #9a5b00; font-weight: 700; font-size: .78em; margin-left: 8px; }
+.gh-vtab .gs-a, .gh-vs .gs-a, .gh-key .gs-a { color: #9a5b00; font-weight: 700; }
+.gh-vs .gh-asp { color: var(--p-muted); font-size: .72em; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin-top: 3px; }
+.gh-vs .gh-s { margin-bottom: 2px; } .gh-vs .gh-s .gh-en { display: block; color: var(--p-muted); font-size: .86em; }
+.ho-paper .gh-wsA small { display: block; color: var(--p-muted); }
+.gh-quiz, .gh-qopts { padding-left: 1.4em; } .gh-quiz > li { margin-bottom: 8px; break-inside: avoid; } .gh-qopts { list-style: upper-alpha; margin: 2px 0 0; }
+.gh-keyQ small { color: var(--p-muted); }
+/* A lesson body inside the always-light preview paper: use the paper tokens, not the theme ones. */
+.ho-paper .lesson-body .ex { background: var(--p-tint); border-left-color: var(--p-gold); }
+.ho-paper .lesson-body .ex span { color: var(--p-muted); }
+.ho-paper .lesson-body .note { background: var(--p-tint); color: var(--p-ink); }
+.ho-paper .lesson-body p, .ho-paper .lesson-body li { max-width: none; }
+.ho-paper .lesson-body dl dt { margin-top: 8px; }
+.ho-paper .lesson-body .ex { margin: 5px 0; padding: 6px 10px; }

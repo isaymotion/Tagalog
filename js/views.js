@@ -251,7 +251,7 @@
   }
 
   V.verbs = (el) => {
-    el.innerHTML = '<h1>Verb trainer</h1><p class="muted">Tagalog verbs change by <b>focus</b> (affix) and <b>aspect</b> (completed, ongoing, future). Drill the forms until they are automatic, then meet each form in real sentences: every verb has natural examples for each aspect, ' + sentCount() + ' sentences in all, most of them bedside lines like <span class="tl">Ininom na po ba ninyo yung gamot?</span> Verbs marked <span class="pill">clinical</span> come up constantly in interviews.</p>' +
+    el.innerHTML = '<h1>Verb trainer</h1><div class="row" style="margin:-6px 0 10px"><a class="btn sm" href="#/verbs/handout">' + App.icons.book + ' Print handout</a></div><p class="muted">Tagalog verbs change by <b>focus</b> (affix) and <b>aspect</b> (completed, ongoing, future). Drill the forms until they are automatic, then meet each form in real sentences: every verb has natural examples for each aspect, ' + sentCount() + ' sentences in all, most of them bedside lines like <span class="tl">Ininom na po ba ninyo yung gamot?</span> Verbs marked <span class="pill">clinical</span> come up constantly in interviews.</p>' +
       '<div class="card stack"><h2 style="margin:0">Drill</h2><div class="row">' +
       '<label class="small">Verbs <select class="input" id="vset" style="width:auto"><option value="all">All verbs</option><option value="clinical">Clinical verbs</option></select></label>' +
       '<label class="small">Mode <select class="input" id="vmode" style="width:auto"><optgroup label="Forms"><option value="type">Type the form</option><option value="mc">Multiple choice</option><option value="id">Identify the aspect</option></optgroup><optgroup label="Sentences"><option value="fill">Fill the blank in a sentence</option><option value="tr">Translate the sentence</option></optgroup></select></label>' +
@@ -375,7 +375,7 @@
     const l = LESSONS.find((x) => x.id === p.id);
     if (!l) { el.innerHTML = '<p>Lesson not found.</p>'; return; }
     const idx = LESSONS.indexOf(l), next = LESSONS[idx + 1], prev = LESSONS[idx - 1];
-    el.innerHTML = crumb([['Lessons', '#/lessons'], [l.title]]) + '<div class="row">' + lvPill(l.level) + '<span class="muted small">' + esc(l.unit) + '</span></div><h1 style="margin-top:6px">' + esc(l.title) + '</h1>' +
+    el.innerHTML = crumb([['Lessons', '#/lessons'], [l.title]]) + '<div class="row">' + lvPill(l.level) + '<span class="muted small">' + esc(l.unit) + '</span></div><h1 style="margin-top:6px">' + esc(l.title) + '</h1><div class="row" style="margin:-6px 0 10px"><a class="btn sm" href="#/lessons/handout?id=' + l.id + '">' + App.icons.book + ' Print handout</a></div>' +
       '<div class="lesson-body">' + l.body.replace(/<table>/g, '<div class="tablewrap"><table>').replace(/<\/table>/g, '</table></div>') + '</div>' +
       '<h2 style="margin-top:20px">Check yourself</h2><div id="lq"></div>' +
       '<div class="spread" style="margin-top:16px">' + (prev ? '<a class="btn" href="#/lessons/' + prev.id + '">← ' + esc(prev.title) + '</a>' : '<span></span>') + (next ? '<a class="btn" href="#/lessons/' + next.id + '">' + esc(next.title) + ' →</a>' : '') + '</div>';

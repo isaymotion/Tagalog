@@ -14,11 +14,13 @@
     [/^\/flash$/, V.flash, 'flash'],
     [/^\/flash\/(?<deck>[\w-]+)$/, V.review, 'flash'],
     [/^\/verbs$/, V.verbs, 'verbs'],
+    [/^\/verbs\/handout$/, V.ghandoutVerbs, 'verbs'],
     [/^\/verbs\/(?<root>[\w-]+)$/, V.verb, 'verbs'],
     [/^\/affixes$/, V.affixes, 'affixes'],
     [/^\/affixes\/handout$/, V.ghandout, 'affixes'],
 
     [/^\/lessons$/, V.lessons, 'lessons'],
+    [/^\/lessons\/handout$/, V.ghandoutLesson, 'lessons'],
     [/^\/lessons\/(?<id>[\w-]+)$/, V.lesson, 'lessons'],
     [/^\/reading$/, V.reading, 'reading'],
     [/^\/reading\/(?<id>[\w-]+)$/, V.passage, 'reading'],

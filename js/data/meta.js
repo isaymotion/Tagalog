@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.8.0',
+  version: '2.9.0',
   updated: 'November 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,14 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.9.0', date: 'November 2026', title: 'Verb and lesson handouts',
+    items: [
+      ['new', 'A verb handout: conjugation tables for every verb or just the clinical ones, example sentences for each aspect, an "aspect at a glance" page, and a worksheet with an answer key. Pick a single verb to print a one-verb sheet.'],
+      ['new', 'A lesson handout: print any lesson with its examples and tables, the quiz questions, and an answer key on its own page.'],
+      ['improved', 'The Verb trainer and every lesson page have a Print handout button, and both handouts print on A4, Letter or A5 or download as a PDF.']
+    ]
+  },
   {
     version: '2.8.0', date: 'November 2026', title: 'Printable Panlapi handout',
     items: [
