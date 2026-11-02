@@ -136,7 +136,7 @@
   V.affixes = (el, p, q) => {
     const type = (q && q.t) || 'all';
     const counts = {}; ITEMS.forEach((it) => (counts[it.t] = (counts[it.t] || 0) + 1));
-    el.innerHTML = '<h1>Panlapi: affix trainer</h1>' +
+    el.innerHTML = '<h1>Panlapi: affix trainer</h1><div class="row" style="margin:-6px 0 10px"><a class="btn sm" href="#/affixes/handout' + (type !== 'all' ? '?t=' + type : '') + '">' + App.icons.book + ' Print handout</a></div>' +
       '<p class="muted">Tagalog builds words by attaching affixes (<span class="tl">panlapi</span>) to a root (<span class="tl">salitang-ugat</span>). Where the affix sits gives it its name: <b>unlapi</b> before the root, <b>gitlapi</b> inside it, <b>hulapi</b> after it, <b>kabilaan</b> two at once, <b>laguhan</b> all three. Once you can take a word apart you can look it up, say it, and know who the sentence is about. ' + ITEMS.length + ' words, ' + ITEMS.filter((i) => i.clin).length + ' of them from the ward.</p>' +
       '<div class="card stack"><h2 style="margin:0">Drill</h2><div class="row">' +
       '<label class="small" style="max-width:100%">Mode <select class="input" id="amode" style="width:auto;max-width:100%">' +

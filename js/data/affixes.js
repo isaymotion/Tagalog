@@ -339,12 +339,13 @@ window.AFFIX_ITEMS = [
 
 /* "Piliin" drill: the pronoun and marker in the sentence decide the focus, so only one affix fits.
    q = sentence with ____, en = meaning, ok = correct word, no = tempting wrong word, why = explanation. */
+/* `alt` = a third, same-root wrong option for the printed worksheet when no other AFFIX_ITEMS word shares the root. */
 window.AFFIX_FOCUS_DRILL = [
   { q: '____ ka ng gamot.', en: 'Take some medicine.', ok: 'Uminom', no: 'Inumin',
     why: 'ka + ng = the doer is the topic, so actor focus -um-. Inumin would need "mo ... ang gamot".', clin: true },
   { q: '____ mo ang gamot.', en: 'Take the medicine.', ok: 'Inumin', no: 'Uminom',
     why: 'mo + ang = the medicine is the topic, so object focus -in.', clin: true },
-  { q: 'Hindi ko ____ ang sinasabi niyo po.', en: "I can't understand what you are saying.", ok: 'maintindihan', no: 'intindihin',
+  { q: 'Hindi ko ____ ang sinasabi niyo po.', en: "I can't understand what you are saying.", alt: 'naiintindihan', ok: 'maintindihan', no: 'intindihin',
     why: 'ma- -an = ability. Intindihin is a command: "understand it".', clin: true },
   { q: '____ mo ang pinto.', en: 'Open the door.', ok: 'Buksan', no: 'Bumukas',
     why: 'mo + ang pinto = the door is the topic: -an. Bumukas ang pinto = the door opened by itself.' },
@@ -374,7 +375,7 @@ window.AFFIX_FOCUS_DRILL = [
     why: 'nakaka- = causes fear (the dark is frightening). Natatakot = someone is afraid.', clin: true },
   { q: '____ ako sa dilim.', en: 'I am afraid of the dark.', ok: 'Natatakot', no: 'Nakakatakot',
     why: 'ako = I feel the fear: ma- stative. Nakakatakot describes the thing.', clin: true },
-  { q: 'Ito po ang ____ ninyo sa gabi.', en: 'This is your sleeping pill for the night.', ok: 'pampatulog', no: 'patulugin',
+  { q: 'Ito po ang ____ ninyo sa gabi.', en: 'This is your sleeping pill for the night.', alt: 'patulog', ok: 'pampatulog', no: 'patulugin',
     why: 'pang- + pa + tulog = the thing used to make someone sleep. Patulugin is a verb.', clin: true },
   { q: 'Kailangan nating ____ ang pasyente.', en: 'We need to put the patient to sleep (sedate).', ok: 'patulugin', no: 'pampatulog',
     why: 'nating + ang pasyente = the patient is the topic of a causative verb: pa- -in.', clin: true },
@@ -382,8 +383,8 @@ window.AFFIX_FOCUS_DRILL = [
     why: 'Sino ang = the doer is the topic: -um-. Ginamot ka = you were treated.', clin: true },
   { q: '____ ka na ba dati sa ibang ospital?', en: 'Were you treated before at another hospital?', ok: 'Ginamot', no: 'Gumamot',
     why: 'ka = you, the one treated, is the topic: -in-.', clin: true },
-  { q: 'Hindi ko po ____ ang sinabi niya kanina.', en: "I can't remember what he said earlier.", ok: 'matandaan', no: 'tandaan',
+  { q: 'Hindi ko po ____ ang sinabi niya kanina.', en: "I can't remember what he said earlier.", alt: 'natandaan', ok: 'matandaan', no: 'tandaan',
     why: 'ma- -an = ability. Tandaan mo = remember it (command).', clin: true },
-  { q: '____ niyo po ang susunod na check-up.', en: 'Remember the next check-up.', ok: 'Tandaan', no: 'Matandaan',
+  { q: '____ niyo po ang susunod na check-up.', en: 'Remember the next check-up.', alt: 'Natandaan', ok: 'Tandaan', no: 'Matandaan',
     why: 'A command uses the plain -an form; matandaan is about being able to.', clin: true }
 ];

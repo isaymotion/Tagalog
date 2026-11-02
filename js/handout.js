@@ -315,6 +315,7 @@
       styles: { h1: { fontSize: a5 ? base + 5 : base + 8, bold: true, color: NAVY }, h2: { fontSize: base + 2, bold: true, color: NAVY, margin: [0, 4, 0, 4] }, meta: { color: MUTED, fontSize: base - 1 } }
     };
   }
+  App.pdfKit = { load: loadPdfMake, logo: logoDataURL, fixGlyphs, NAVY, GOLD, MUTED, LINE, TINT }; // shared with grammar-handout.js
   App.handoutPresets = PRESETS;
   App.handoutDoc = (o) => docDef(build(Object.assign({}, DEFAULTS, PRESETS.full.o, o))); // exposed for testing
 

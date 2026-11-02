@@ -27,6 +27,7 @@
 | **Flashcards** | Spaced repetition with topic decks, psychiatry decks, verb-form decks, and an automatic "My mistakes" deck. |
 | **Verb trainer** | 78 verbs across -um-, mag-, ma-, -in, i-, -an with type-the-form, multiple-choice, and identify-the-aspect drills, plus 628 natural sample sentences (one set per aspect, most of them bedside lines) with fill-the-blank and translate-the-sentence drills. |
 | **Panlapi (affix trainer)** | Take words apart into root and affix: unlapi, gitlapi, hulapi, kabilaan, laguhan. 216 words (120 clinical), 9 sound-change and placement rules, 26 affix meanings, and four drills (name the type, find the root, build the word, choose the affix the sentence forces). `js/data/affixes.js`, `js/affixes.js`, route `#/affixes`. |
+| **Grammar handout** | Printable Panlapi reference from the trainer page: affix cheat sheet, sound-change rules, word list with the affix marked, worksheet and answer key. Filter by type or clinical words, hide English, A4/Letter/A5, PDF or print. |
 | **Lessons** | 22 grammar and culture lessons with quizzes: markers, focus, aspect, particles, po/opo, numbers/time/money, Taglish, hiya, utang na loob, folk beliefs, idioms of distress. |
 | **Reading** | 12 graded passages (A1–B2) with glossaries and comprehension questions. |
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. |
@@ -103,6 +104,7 @@ js/sud.js               Substance use screening, brief intervention, nurse scrip
 js/mood.js              Mood episode checker (SIGECAPS, DIGFAST, PHQ-9, MDQ)
 js/withdrawal.js        Withdrawal and agitation: PAWSS, CIWA-Ar, cannabis withdrawal counter, teaching reference, nurse script
 js/affixes.js           Panlapi affix trainer: type, root, build and focus drills over js/data/affixes.js
+js/grammar-handout.js   Grammar handout generator (#/affixes/handout): Panlapi cheat sheet, rules, word list, worksheet, PDF via App.pdfKit
 handouts/               Ready-made PDFs (Tagalog MSE Interviewer Guide)
 js/vendor/              pdfmake (PDF library, MIT license)
 js/app.js               Routing, navigation, theme, search bar

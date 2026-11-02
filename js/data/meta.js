@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.7.0',
+  version: '2.8.0',
   updated: 'November 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,13 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.8.0', date: 'November 2026', title: 'Printable Panlapi handout',
+    items: [
+      ['new', 'A grammar handout generator for the Panlapi trainer: the affix cheat sheet, the sound-change rules, the word list with each affix marked, and a worksheet (find the root, choose the form the sentence needs) with an answer key. Filter by affix type or clinical words, hide English, print on A4, Letter or A5, or download a PDF.'],
+      ['improved', 'The Panlapi page has a Print handout button, and the handout is searchable by name.']
+    ]
+  },
   {
     version: '2.7.0', date: 'November 2026', title: 'Psychiatry in four tabs, and a Practice tab',
     items: [

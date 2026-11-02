@@ -16,6 +16,7 @@
     [/^\/verbs$/, V.verbs, 'verbs'],
     [/^\/verbs\/(?<root>[\w-]+)$/, V.verb, 'verbs'],
     [/^\/affixes$/, V.affixes, 'affixes'],
+    [/^\/affixes\/handout$/, V.ghandout, 'affixes'],
 
     [/^\/lessons$/, V.lessons, 'lessons'],
     [/^\/lessons\/(?<id>[\w-]+)$/, V.lesson, 'lessons'],

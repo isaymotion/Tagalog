@@ -611,3 +611,27 @@ mark.vf { background: var(--warn-bg); color: var(--gold-ink); font-weight: 700; 
 .ptabs { position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--top)); z-index: 5; display: flex; gap: 4px; margin: 10px -16px 0; padding: 8px 16px; background: var(--bg); border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
 .ptabs a { flex: none; padding: 8px 14px; border-radius: 999px; font-weight: 600; font-size: .92rem; color: var(--muted); text-decoration: none; white-space: nowrap; }
 .ptabs a.on { background: var(--accent); color: var(--accent-fg); }
+
+/* Grammar handout (js/grammar-handout.js) */
+.ho-paper h3 { font-size: 1em; color: var(--p-navy); margin: 12px 0 4px; }
+.ho-paper .gh-h2en { font-weight: 400; opacity: .8; font-size: .9em; }
+.gh-seg .gs-a { color: #9a5b00; font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 2px; }
+.gh-seg .gs-d { color: var(--p-muted); font-style: italic; }
+.gh-rules { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px 16px; }
+.gh-rule { break-inside: avoid; padding: 4px 0; border-top: 1px solid var(--p-line); }
+.gh-rule p { margin: 2px 0; } .gh-rule p.tl { font-style: italic; }
+.gh-rule small { color: var(--p-muted); display: block; }
+.gh-words { columns: 2; column-gap: 20px; }
+.gh-w { break-inside: avoid; padding: 3px 0; border-top: 1px solid var(--p-line); font-size: .95em; }
+.gh-w .gh-seg { font-size: 1.08em; margin-right: 8px; }
+.gh-w .gh-root, .gh-w .gh-en { color: var(--p-muted); font-size: .86em; margin-right: 8px; }
+.gh-w .gh-en { color: #333a52; }
+.gh-w small { display: block; color: var(--p-muted); font-style: italic; font-size: .8em; }
+.gh-wsA td { height: 1.9em; border: 1px solid var(--p-line); padding: 4px 6px; }
+.gh-wsA th { border: 1px solid var(--p-line); padding: 4px 6px; }
+.gh-wsB, .gh-keyB { padding-left: 1.4em; }
+.gh-wsB li { margin-bottom: 7px; break-inside: avoid; }
+.gh-opts { display: flex; gap: 24px; margin: 2px 0 0 6px; }
+.gh-keyB li { margin-bottom: 3px; } .gh-keyB small { color: var(--p-muted); }
+.gh-key { break-before: page; }
+@media (max-width: 560px) { .gh-words, .ho-paper .gh-rules { columns: 1; grid-template-columns: 1fr; } }
