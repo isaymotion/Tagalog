@@ -2,7 +2,7 @@
 window.APP_META = {
   name: 'Usap Tayo',
   tagline: 'Tagalog for clinicians',
-  version: '2.4.1',
+  version: '2.5.0',
   updated: 'November 2026',
   author: 'Isabella Navarro, MD',
   email: 'isaymotion@gmail.com',
@@ -13,6 +13,12 @@ window.APP_META = {
 
 /* Newest first. type: new | improved | fixed | content */
 window.WHATS_NEW = [
+  {
+    version: '2.5.0', date: 'November 2026', title: 'Text size',
+    items: [
+      ['new', 'Tap Aa in the top bar (or open Settings) to make text smaller or larger: Smaller, Default, Larger, Largest. Your choice is saved on this device and works offline.']
+    ]
+  },
   {
     version: '2.4.1', date: 'November 2026', title: 'Easier to find things',
     items: [

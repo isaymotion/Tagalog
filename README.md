@@ -32,7 +32,7 @@
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. |
 | **You** | Placement test, streaks, XP, progress stats, backup export/import, settings, What's New, About. |
 
-Also: dark/light mode, back/forward buttons, offline support, and install-to-home-screen (PWA).
+Also: dark/light mode, adjustable text size (Aa button), back/forward buttons, offline support, and install-to-home-screen (PWA).
 
 ## Publish it with GitHub Pages
 

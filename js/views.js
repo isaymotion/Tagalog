@@ -553,7 +553,7 @@
     const voices = App.voices();
     const fil = App.filipinoVoices();
     el.innerHTML = '<h1>Settings</h1><div class="stack">' +
-      '<div class="card stack"><h2 style="margin:0">Appearance</h2><div class="seg" role="group" aria-label="Theme">' + [['system', 'System'], ['light', 'Light'], ['dark', 'Dark']].map(([k, t]) => '<button data-theme="' + k + '" class="' + (s.theme === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div></div>' +
+      '<div class="card stack"><h2 style="margin:0">Appearance</h2><div class="seg" role="group" aria-label="Theme">' + [['system', 'System'], ['light', 'Light'], ['dark', 'Dark']].map(([k, t]) => '<button data-theme="' + k + '" class="' + (s.theme === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div><p class="muted small" style="margin:10px 0 6px">Text size (also under the <b>Aa</b> button in the top bar)</p>' + App.textSizeSeg() + '</div>' +
       '<div class="card stack"><h2 style="margin:0">Register</h2><p class="muted" style="margin:0">Which version of each psychiatry phrase to show first. Respectful uses <i>po</i> and <i>kayo</i> (for elders, most adult patients, and family). Everyday uses <i>ka/mo</i> and some Taglish (for younger patients and peers).</p>' +
       '<div class="seg" role="group" aria-label="Register">' + [['f', 'Respectful (po)'], ['c', 'Everyday / Taglish']].map(([k, t]) => '<button data-reg="' + k + '" class="' + (s.register === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div></div>' +
       '<div class="card stack"><h2 style="margin:0">Voice</h2>' + voiceCard(s, voices) + '</div>' +
@@ -562,6 +562,7 @@
       '<div class="card stack"><h2 style="margin:0">Reset</h2><p class="muted" style="margin:0">Erase all progress on this device. Export a backup first if you want to keep it.</p><div class="row"><button class="btn" id="reset1">Erase progress…</button><span id="reset2" hidden><span class="small">Are you sure? </span><button class="btn sm" id="resetyes" style="color:var(--bad);border-color:var(--bad)">Yes, erase everything</button> <button class="btn sm" id="resetno">Cancel</button></span></div></div>' +
       '</div>';
     el.querySelectorAll('[data-theme]').forEach((b) => (b.onclick = () => { s.theme = b.dataset.theme; App.save(); App.applyTheme(); V.settings(el); }));
+    el.querySelectorAll('[data-ts]').forEach((b) => (b.onclick = () => { s.textSize = b.dataset.ts; App.save(); App.applyTextSize(); V.settings(el); }));
     el.querySelectorAll('[data-reg]').forEach((b) => (b.onclick = () => { s.register = b.dataset.reg; App.save(); V.settings(el); }));
     el.querySelector('#voice').onchange = (e) => { s.voice = e.target.value; App.save(); };
     el.querySelectorAll('[data-vsrc]').forEach((b) => (b.onclick = () => { s.voiceSource = b.dataset.vsrc; App.save(); V.settings(el); }));

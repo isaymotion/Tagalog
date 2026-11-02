@@ -20,6 +20,7 @@
 <script>
   // Apply the saved theme before first paint to avoid a flash.
   try { var t = JSON.parse(localStorage.getItem('usaptayo.v1') || '{}').settings; if (t && t.theme && t.theme !== 'system') document.documentElement.setAttribute('data-theme', t.theme); } catch (e) {}
+  try { var z = JSON.parse(localStorage.getItem('usaptayo.v1') || '{}').settings.textSize; if (z === '90' || z === '112.5' || z === '125') document.documentElement.style.fontSize = z + '%'; } catch (e) {}
 </script>
 </head>
 <body>
@@ -34,8 +35,10 @@
     <svg class="sicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
     <div class="suggest" id="gsuggest" role="listbox" hidden></div>
   </div>
+  <button class="iconbtn" id="textSizeBtn" title="Text size" aria-label="Text size" aria-expanded="false" aria-controls="textSizePanel"><span class="aa" aria-hidden="true">A<small>A</small></span></button>
   <button class="iconbtn" id="themeBtn" title="Switch light/dark mode" aria-label="Switch light/dark mode"></button>
 </header>
+<div class="tspanel" id="textSizePanel" role="dialog" aria-label="Text size" hidden></div>
 
 <div class="shell">
   <nav class="rail" id="rail" aria-label="Sections"></nav>

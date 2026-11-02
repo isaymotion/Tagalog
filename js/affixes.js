@@ -139,7 +139,7 @@
     el.innerHTML = '<h1>Panlapi: affix trainer</h1>' +
       '<p class="muted">Tagalog builds words by attaching affixes (<span class="tl">panlapi</span>) to a root (<span class="tl">salitang-ugat</span>). Where the affix sits gives it its name: <b>unlapi</b> before the root, <b>gitlapi</b> inside it, <b>hulapi</b> after it, <b>kabilaan</b> two at once, <b>laguhan</b> all three. Once you can take a word apart you can look it up, say it, and know who the sentence is about. ' + ITEMS.length + ' words, ' + ITEMS.filter((i) => i.clin).length + ' of them from the ward.</p>' +
       '<div class="card stack"><h2 style="margin:0">Drill</h2><div class="row">' +
-      '<label class="small">Mode <select class="input" id="amode" style="width:auto">' +
+      '<label class="small" style="max-width:100%">Mode <select class="input" id="amode" style="width:auto;max-width:100%">' +
       '<option value="type">Hiwalayin: name the affix type</option><option value="root">Hanapin ang ugat: find the root</option><option value="build">Buuin: build the word</option><option value="focus">Piliin: which affix does the sentence need?</option></select></label>' +
       '<label class="small">Words <select class="input" id="aset" style="width:auto"><option value="all">All words</option><option value="clinical">Clinical words</option></select></label>' +
       '<label class="small" id="atypewrap">Type <select class="input" id="atype" style="width:auto"><option value="all">All types</option>' + TYPES.map((t) => '<option value="' + t.id + '"' + (t.id === type ? ' selected' : '') + '>' + esc(t.tl) + '</option>').join('') + '</select></label>' +

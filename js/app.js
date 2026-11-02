@@ -125,6 +125,25 @@
   window.addEventListener('hashchange', render);
   window.addEventListener('popstate', syncHistory);
 
+  /* ---------- Text size ---------- */
+  const TEXT_SIZES = [['90', 'Smaller'], ['100', 'Default'], ['112.5', 'Larger'], ['125', 'Largest']];
+  App.applyTextSize = () => {
+    const v = App.state.settings.textSize || '100';
+    document.documentElement.style.fontSize = TEXT_SIZES.some(([k]) => k === v) && v !== '100' ? v + '%' : '';
+  };
+  App.textSizeSeg = () => '<div class="seg" role="group" aria-label="Text size">' + TEXT_SIZES.map(([k, t], i) => '<button data-ts="' + k + '" class="' + ((App.state.settings.textSize || '100') === k ? 'on' : '') + '" style="font-size:' + (0.82 + i * 0.1) + 'rem">' + t + '</button>').join('') + '</div>';
+  (() => {
+    const btn = $('#textSizeBtn'), panel = $('#textSizePanel');
+    const build = () => { panel.innerHTML = '<span class="eyebrow">Text size</span>' + App.textSizeSeg(); panel.querySelectorAll('[data-ts]').forEach((b) => (b.onclick = () => { App.state.settings.textSize = b.dataset.ts; App.save(); App.applyTextSize(); build(); })); };
+    const open = () => { build(); panel.hidden = false; btn.setAttribute('aria-expanded', 'true'); const on = panel.querySelector('.on'); if (on) on.focus(); };
+    const close = () => { if (panel.hidden) return; panel.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+    btn.onclick = (e) => { e.stopPropagation(); if (panel.hidden) open(); else close(); };
+    document.addEventListener('click', (e) => { if (!panel.hidden && !panel.contains(e.target) && e.target !== btn) close(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) { close(); btn.focus(); } });
+    window.addEventListener('hashchange', close);
+    App.applyTextSize();
+  })();
+
   /* ---------- Theme ---------- */
   App.applyTheme = () => {
     const t = App.state.settings.theme;

@@ -15,7 +15,7 @@
   /* ---------- Storage ---------- */
   const KEY = 'usaptayo.v1';
   const defaults = () => ({
-    settings: { theme: 'system', register: 'f', voice: '', voiceSource: 'pack', rate: 0.85, cardDir: 'tl-en', newPerDay: 20 },
+    settings: { theme: 'system', textSize: '100', register: 'f', voice: '', voiceSource: 'pack', rate: 0.85, cardDir: 'tl-en', newPerDay: 20 },
     srs: {}, mistakes: [], newToday: { date: '', n: 0 },
     done: { lessons: {}, reading: {}, cases: {}, dialogues: {}, sections: {} },
     streak: { last: '', count: 0, best: 0, days: [] },
