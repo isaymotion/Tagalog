@@ -12,7 +12,7 @@ async def main():
             pg.on('console', lambda m: errs.append(f'{name} console: {m.text}') if m.type=='error' and 'Failed to load resource' not in m.text and 'fonts.g' not in m.text and 'ERR_' not in m.text else None)
             await pg.goto(BASE); await pg.wait_for_timeout(400)
             ov = lambda: pg.evaluate("document.documentElement.scrollWidth > window.innerWidth")
-            if 'Made by Isabella Navarro, MD. Latest version October 2026.' not in await pg.inner_text('footer'): fails.append(f'{name}: attribution')
+            if 'Made by Isabella Navarro, MD. Latest version November 2026.' not in await pg.inner_text('footer'): fails.append(f'{name}: attribution')
             # Tagalog only, culture domain via deep link
             await pg.evaluate("location.hash='#/practice?lang=tl&dom=fc'"); await pg.wait_for_timeout(300)
             if not await pg.query_selector('.case .langtag'): fails.append(f'{name}: deep link tagalog')
@@ -33,7 +33,10 @@ async def main():
                 if not o: break
                 await o.click(); await pg.wait_for_timeout(60)
             # language filter: English only has no Tagalog tags
-            await pg.select_option('#lang', 'en'); await pg.click('[data-all]'); await pg.wait_for_timeout(150)
+            await pg.evaluate("location.hash='#/custom'"); await pg.wait_for_timeout(300)
+            await pg.select_option('#lang', 'en')
+            await pg.evaluate("document.querySelectorAll('[data-grp]').forEach(a=>{ if(!a.checked){ a.checked=true; a.dispatchEvent(new Event('change')); } })")  # every domain group, so the pool is not empty
+            await pg.click('#customStart'); await pg.wait_for_timeout(200)
             if await pg.query_selector('.case .langtag'): fails.append(f'{name}: english filter')
             # views, back/forward
             for v in ['glossary','progress','new','about']:
@@ -41,12 +44,19 @@ async def main():
                 if await pg.evaluate(f"document.querySelector('#v-{v}').hidden"): fails.append(f'{name}: view {v}')
                 if await ov(): fails.append(f'{name}: overflow {v}')
             if 'Tagalog cases' not in await pg.inner_text('#news'): fails.append(f'{name}: whats new')
-            await pg.click('#navBack'); await pg.wait_for_timeout(200)
-            if await pg.evaluate("location.hash") != '#/new': fails.append(f'{name}: back button')
-            await pg.click('#navFwd'); await pg.wait_for_timeout(200)
-            if await pg.evaluate("location.hash") != '#/about': fails.append(f'{name}: forward button')
-            # tab clicks
-            await pg.click('.tabs [data-view="glossary"]'); await pg.wait_for_timeout(150)
+            await pg.go_back(); await pg.wait_for_timeout(200)
+            if await pg.evaluate("location.hash") != '#/new': fails.append(f'{name}: back')
+            await pg.go_forward(); await pg.wait_for_timeout(200)
+            if await pg.evaluate("location.hash") != '#/about': fails.append(f'{name}: forward')
+            # text size
+            await pg.click('#textSizeBtn'); await pg.wait_for_timeout(100)
+            await pg.click('#textSizePanel label:has-text("Largest")'); await pg.wait_for_timeout(100)
+            if await pg.evaluate("document.documentElement.style.fontSize") != '125%': fails.append(f'{name}: text size')
+            await pg.evaluate("location.hash='#/home'"); await pg.wait_for_timeout(200)
+            if await ov(): fails.append(f'{name}: overflow home at 125%')
+            await pg.click('#textSizeBtn'); await pg.click('#textSizePanel label:has-text("Default")'); await pg.wait_for_timeout(100)
+            # glossary
+            await pg.evaluate("location.hash='#/glossary'"); await pg.wait_for_timeout(150)
             await pg.fill('#q','hiya'); await pg.wait_for_timeout(100)
             if 'Hiya' not in await pg.inner_text('#gloss'): fails.append(f'{name}: glossary search')
             # theme cycle
