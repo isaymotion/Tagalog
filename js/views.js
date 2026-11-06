@@ -58,7 +58,7 @@
     el.innerHTML =
       '<section class="hero"><svg class="rays" viewBox="0 0 100 100" aria-hidden="true">' + Array.from({ length: 8 }, (_, k) => '<rect x="47" y="2" width="6" height="30" fill="#e3b53f" transform="rotate(' + k * 45 + ' 50 50)"/>').join('') + '<circle cx="50" cy="50" r="16" fill="#e3b53f"/></svg>' +
       '<img src="icons/logo-96.png" alt=""><div><h1>Usap Tayo</h1><p>Tagalog for everyday life and for the psychiatric interview.</p></div></section>' +
-      (isNew ? '<a class="tile" href="#/new" style="margin-top:12px;border-color:var(--gold)"><span class="eyebrow">What\'s New · v' + esc(APP_META.version) + '</span><h3 style="margin-top:4px">' + esc(WHATS_NEW[0].title) + '</h3><p>See what\'s in this version.</p></a>' : '') +
+      (isNew ? '<a class="tile" href="#/new" style="margin-top:12px;border-color:var(--gold)"><span class="eyebrow">What\'s New · v' + esc(APP_META.version) + '</span><h3 style="margin-top:4px">' + esc(APP_CHANGELOG[0].title) + '</h3><p>See what\'s in this version.</p></a>' : '') +
       '<div class="stats" style="margin-top:14px">' +
       '<div class="stat"><b>' + App.streakNow() + '</b><span>day streak</span></div>' +
       '<div class="stat"><b>' + due + '</b><span>cards due</span></div>' +
@@ -540,18 +540,15 @@
       '<h2 style="margin-top:18px">Completion</h2><div class="card stack">' +
       [['Lessons', Object.keys(s.done.lessons).length, LESSONS.length], ['Reading passages', Object.keys(s.done.reading).length, READING.length], ['Dialogues', Object.keys(s.done.dialogues).length, DIALOGUES.length + PSYCH_CASES.length], ['Psychiatry sections opened', secSeen, sec], ['Case simulations', Object.keys(s.done.cases).length, PSYCH_CASES.length]]
         .map(([t, a, b]) => '<div><div class="spread small"><span>' + t + '</span><span class="muted">' + a + ' / ' + b + '</span></div><div class="progress"><i style="width:' + Math.round((100 * a) / Math.max(1, b)) + '%"></i></div></div>').join('') + '</div>' +
-      '<h2 style="margin-top:18px">Backup</h2><div class="card stack"><p style="margin:0">Progress is saved on this device. Export a backup file to move it to another phone or browser.</p>' +
-      '<div class="row"><button class="btn" id="exp">Export backup</button><label class="btn" for="imp">Import backup</label><input type="file" id="imp" accept="application/json,.json" hidden></div>' +
+      '<h2 style="margin-top:18px">Backup</h2><div class="card stack"><p style="margin:0">Progress is saved on this device. Export a backup file to move it to another phone or browser. The same buttons are in the footer of every page.</p>' +
+      '<div class="row"><button class="btn" id="exp">Export backup</button><label class="btn" for="imp">Import backup</label><input type="file" id="imp" class="sr-only" accept="application/json,.json"></div>' +
+      '<p class="small muted" style="margin:0">' + esc(App.t('backup.onDevice').replace('{summary}', App.backup.summary())) + '</p>' +
       '<details><summary class="small muted">Copy backup as text instead</summary><textarea class="input" id="bk" rows="4" style="margin-top:8px;font-family:ui-monospace,monospace;font-size:.75rem"></textarea><div class="row" style="margin-top:6px"><button class="btn sm" id="bkload">Load from text</button></div></details></div>';
-    el.querySelector('#bk').value = JSON.stringify(s);
-    el.querySelector('#exp').onclick = () => {
-      const blob = new Blob([JSON.stringify(s, null, 1)], { type: 'application/json' });
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'usap-tayo-backup-' + App.today() + '.json'; document.body.appendChild(a); a.click(); a.remove();
-      App.toast('Backup downloaded. If nothing downloaded, copy the text backup below.');
-    };
-    const load = (txt) => { try { const o = JSON.parse(txt); if (!o || typeof o !== 'object' || !o.settings) throw 0; App.importState(o); App.applyTheme(); App.applyTextSize(); App.toast('Backup restored.'); V.progress(el); } catch (e) { App.toast('That file is not a Usap Tayo backup.'); } };
-    el.querySelector('#imp').onchange = (e) => { const f = e.target.files[0]; if (f) f.text().then(load); };
-    el.querySelector('#bkload').onclick = () => load(el.querySelector('#bk').value);
+    // Same functions as the footer backup panel (js/app.js App.backup): confirm before replacing, undo from the footer.
+    el.querySelector('#bk').value = JSON.stringify(App.backup.payload());
+    el.querySelector('#exp').onclick = () => App.backup.export();
+    el.querySelector('#imp').onchange = (e) => { const f = e.target.files[0]; if (f) App.backup.importFile(f); e.target.value = ''; };
+    el.querySelector('#bkload').onclick = () => App.backup.importText(el.querySelector('#bk').value);
   };
 
   /* ---------- Settings ---------- */
@@ -560,17 +557,20 @@
     const voices = App.voices();
     const fil = App.filipinoVoices();
     el.innerHTML = '<h1>Settings</h1><div class="stack">' +
-      '<div class="card stack"><h2 style="margin:0">Appearance</h2><div class="seg" role="group" aria-label="Theme">' + [['system', 'System'], ['light', 'Light'], ['dark', 'Dark']].map(([k, t]) => '<button data-theme="' + k + '" class="' + (s.theme === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div><p class="muted small" style="margin:10px 0 6px">Text size (also under the <b>Aa</b> button in the top bar)</p>' + App.textSizeSeg() + '</div>' +
+      '<div class="card stack"><h2 style="margin:0">Appearance</h2><div class="seg" role="group" aria-label="Theme">' + ['system', 'light', 'dark'].map((k) => '<button type="button" data-theme="' + k + '" aria-pressed="' + ((s.theme || 'system') === k) + '" class="' + ((s.theme || 'system') === k ? 'on' : '') + '">' + esc(App.themeName(k)) + '</button>').join('') + '</div><p class="muted small" style="margin:10px 0 6px">Text size (also under the <b>Aa</b> button in the top bar)</p>' + App.textSizeSeg() + '</div>' +
       '<div class="card stack"><h2 style="margin:0">Register</h2><p class="muted" style="margin:0">Which version of each psychiatry phrase to show first. Respectful uses <i>po</i> and <i>kayo</i> (for elders, most adult patients, and family). Everyday uses <i>ka/mo</i> and some Taglish (for younger patients and peers).</p>' +
       '<div class="seg" role="group" aria-label="Register">' + [['f', 'Respectful (po)'], ['c', 'Everyday / Taglish']].map(([k, t]) => '<button data-reg="' + k + '" class="' + (s.register === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div></div>' +
       '<div class="card stack"><h2 style="margin:0">Voice</h2>' + voiceCard(s, voices) + '</div>' +
       '<div class="card stack"><h2 style="margin:0">Flashcards</h2><label>New cards per day <input class="input" type="number" id="npd" min="5" max="100" value="' + s.newPerDay + '" style="width:120px"></label></div>' +
       '<div class="card stack"><h2 style="margin:0">Install</h2><p style="margin:0">Add Usap Tayo to your home screen to use it like an app, even offline. iPhone: Safari → Share → <b>Add to Home Screen</b>. Android: Chrome menu → <b>Install app</b>.</p><div class="row"><button class="btn" id="install" hidden>Install now</button></div></div>' +
+      '<div class="card stack"><h2 style="margin:0">Backup</h2><p class="muted" style="margin:0">Save your progress to a file, or restore one (including backups made before version 3). You can undo an import from the footer.</p><div class="row"><button class="btn" type="button" id="sexp">Export backup</button><label class="btn" for="simp">Import backup</label><input type="file" id="simp" class="sr-only" accept="application/json,.json"></div></div>' +
       '<div class="card stack"><h2 style="margin:0">Reset</h2><p class="muted" style="margin:0">Erase all progress on this device. Export a backup first if you want to keep it.</p><div class="row"><button class="btn" id="reset1">Erase progress…</button><span id="reset2" hidden><span class="small">Are you sure? </span><button class="btn sm" id="resetyes" style="color:var(--bad);border-color:var(--bad)">Yes, erase everything</button> <button class="btn sm" id="resetno">Cancel</button></span></div></div>' +
       '</div>';
     el.querySelectorAll('[data-theme]').forEach((b) => (b.onclick = () => { s.theme = b.dataset.theme; App.save(); App.applyTheme(); V.settings(el); }));
     el.querySelectorAll('[data-ts]').forEach((b) => (b.onclick = () => { s.textSize = b.dataset.ts; App.save(); App.applyTextSize(); V.settings(el); }));
     el.querySelectorAll('[data-reg]').forEach((b) => (b.onclick = () => { s.register = b.dataset.reg; App.save(); V.settings(el); }));
+    el.querySelector('#sexp').onclick = () => App.backup.export();
+    el.querySelector('#simp').onchange = (e) => { const f = e.target.files[0]; if (f) App.backup.importFile(f); e.target.value = ''; };
     el.querySelector('#voice').onchange = (e) => { s.voice = e.target.value; App.save(); };
     el.querySelectorAll('[data-vsrc]').forEach((b) => (b.onclick = () => { s.voiceSource = b.dataset.vsrc; App.save(); V.settings(el); }));
     const dl = el.querySelector('#dlAudio');
@@ -594,7 +594,7 @@
     if (App.installPrompt) { const b = el.querySelector('#install'); b.hidden = false; b.onclick = () => App.installPrompt.prompt(); }
     el.querySelector('#reset1').onclick = () => { el.querySelector('#reset2').hidden = false; };
     el.querySelector('#resetno').onclick = () => { el.querySelector('#reset2').hidden = true; };
-    el.querySelector('#resetyes').onclick = () => { App.reset(); App.applyTheme(); App.toast('Progress erased.'); V.settings(el); };
+    el.querySelector('#resetyes').onclick = () => { App.reset(); App.applyTheme(); App.applyTextSize(); App.backup.paint(); App.updateBadges(); App.toast('Progress erased.'); V.settings(el); };
     if (!voices.length && App.canSpeak) setTimeout(() => { if (App.voices().length && location.hash.startsWith('#/settings')) V.settings(el); }, 600);
   };
 
@@ -617,11 +617,13 @@
 
   /* ---------- What's New ---------- */
   V.whatsnew = (el) => {
-    S().seenVersion = APP_META.version; App.save();
-    const label = { new: ['New', 'good'], improved: ['Improved', ''], fixed: ['Fixed', 'warn'], content: ['Content', ''] };
+    S().seenVersion = APP_META.version; App.save(); App.updateBadges();
+    const label = { feature: ['New', 'good'], update: ['Improved', ''], correction: ['Fixed', 'warn'], content: ['Content', ''] };
+    const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const when = (d) => { const m = /^(\d{4})-(\d{2})(?:-(\d{2}))?$/.exec(d || ''); return m ? (m[3] ? MONTHS[+m[2] - 1] + ' ' + (+m[3]) + ', ' + m[1] : MONTHS[+m[2] - 1] + ' ' + m[1]) : esc(d || ''); };
     el.innerHTML = '<h1>What\'s New</h1><p class="muted">Latest version ' + esc(APP_META.version) + ' · ' + esc(APP_META.updated) + '</p>' +
-      WHATS_NEW.map((r) => '<div class="card stack" style="margin-bottom:12px"><div class="spread"><h2 style="margin:0">Version ' + esc(r.version) + ' · ' + esc(r.title) + '</h2><span class="muted small">' + esc(r.date) + '</span></div><div class="chg">' +
-        r.items.map(([t, txt]) => '<span class="pill ' + (label[t] || ['', ''])[1] + '">' + (label[t] || [t])[0] + '</span><span>' + esc(txt) + '</span>').join('') + '</div></div>').join('') +
+      APP_CHANGELOG.map((r) => '<div class="card stack" style="margin-bottom:12px"><div class="spread"><h2 style="margin:0">Version ' + esc(r.version) + ' · ' + esc(r.title) + '</h2><time class="muted small" datetime="' + esc(r.date) + '">' + when(r.date) + '</time></div><div class="chg">' +
+        r.items.map((it) => '<span class="pill ' + (label[it.type] || ['', ''])[1] + '">' + (label[it.type] || [it.type])[0] + '</span><span>' + esc(it.text) + '</span>').join('') + '</div></div>').join('') +
       '<p class="muted small">Suggestions or corrections? Email <span style="user-select:all">' + esc(APP_META.email) + '</span>.</p>';
   };
 
@@ -630,11 +632,15 @@
     el.innerHTML = '<div class="card stack" style="text-align:center;align-items:center;justify-items:center"><img src="icons/icon-192.png" alt="Usap Tayo icon" width="96" height="96" style="border-radius:22px"><h1 style="margin:0">Usap Tayo</h1><p class="muted" style="margin:0">' + esc(APP_META.tagline) + ' · version ' + esc(APP_META.version) + '</p>' +
       '<p style="margin:8px 0 0"><b>App created by ' + esc(APP_META.author) + '.</b><br>Latest version ' + esc(APP_META.updated) + '.<br><a href="mailto:' + esc(APP_META.email) + '">' + esc(APP_META.email) + '</a></p>' +
       '<div class="row" style="justify-content:center"><a class="btn" href="#/new">What\'s New</a><button class="btn" id="copymail">Copy email</button></div></div>' +
+      '<h2 style="margin-top:18px">' + esc(App.t('about.settings')) + '</h2><div class="card stack"><div><p style="margin:0 0 8px;font-weight:600">' + esc(App.t('about.language')) + '</p><div class="seg" role="group" aria-label="' + esc(App.t('about.language')) + '">' +
+        [['en', 'about.langEn'], ['tl', 'about.langTl']].map(([k, l]) => '<button type="button" data-lang="' + k + '" aria-pressed="' + ((S().settings.uiLang || 'en') === k) + '" class="' + ((S().settings.uiLang || 'en') === k ? 'on' : '') + '">' + esc(App.t(l)) + '</button>').join('') + '</div><p class="muted small" style="margin:8px 0 0">' + esc(App.t('about.langNote')) + '</p></div>' +
+        '<p class="small" style="margin:0">Theme, text size, voice and register: <a href="#/settings">Settings</a>.</p></div>' +
       '<h2 style="margin-top:18px">About the content</h2><div class="card stack"><p style="margin:0">"Usap tayo" means "let\'s talk." The app teaches conversational Tagalog (Filipino) to English speakers, with a training track for psychiatric interviews with Filipino-speaking patients.</p>' +
       '<p style="margin:0">Psychiatry phrases are practice phrasings written for training. They are <b>not</b> validated translations of research instruments (such as the PHQ-9 or C-SSRS). Use validated Filipino versions where your institution requires them, and confirm wording with your supervisors, nurses, and patients. Regional languages (Cebuano, Ilocano, Hiligaynon, and others) are not covered.</p>' +
       '<p style="margin:0">The cognitive questions are bedside items written for this app and do not reproduce copyrighted tests.</p>' +
       '<p style="margin:0">Crisis line in the Philippines: NCMH Crisis Hotline <b>1553</b> (24/7). Verify current numbers locally.</p></div>' +
       '<h2 style="margin-top:18px">Keyboard shortcuts</h2><div class="card"><p style="margin:0"><span class="kbd">/</span> search · <span class="kbd">Alt</span>+<span class="kbd">←</span>/<span class="kbd">→</span> back/forward · <span class="kbd">Space</span> flip flashcard · <span class="kbd">1</span>–<span class="kbd">4</span> grade card</p></div>';
+    el.querySelectorAll('[data-lang]').forEach((b) => (b.onclick = () => App.setLang(b.dataset.lang)));
     el.querySelector('#copymail').onclick = () => { navigator.clipboard && navigator.clipboard.writeText(APP_META.email).then(() => App.toast('Email copied.'), () => App.toast(APP_META.email)); };
   };
 })();

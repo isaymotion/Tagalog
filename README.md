@@ -6,6 +6,8 @@
 
 **App created by Isabella Navarro, MD. Latest version November 2026. isaymotion@gmail.com**
 
+Version **3.0.0** (2026-11-06): design refresh to match the other isaymotion apps.
+
 ## What's inside
 
 | Section | What it does |
@@ -33,7 +35,19 @@
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. |
 | **You** | Placement test, streaks, XP, progress stats, backup export/import, settings, What's New, About. |
 
-Also: a tabbed Psychiatry hub (Interview, Cases, Ward tools, Print), a Practice tab listing every drill, a Home screen built around today (cards due, a rotating quick practice, next lesson, pinned and recent pages), pin-to-Home stars on every page, uniform breadcrumbs, dark/light mode, adjustable text size (Aa button), back/forward buttons, offline support, and install-to-home-screen (PWA).
+## Version 3.0.0: design refresh
+
+- **Same look as the other isaymotion apps**: shared colour tokens, buttons, cards and footer, with Usap Tayo's navy and gold kept. Top bar, desktop side rail, the five phone tabs (Home, Psychiatry, Practice, Cards, More) and every screen and link work as before.
+- **More opens a grouped menu** on phones and tablets (under 1100px): Recent pages at the top, then Home and Practice; **Learn** (Lessons, Reading, Speaking, Dictionary); **Drill** (Flashcards, Verb trainer, Panlapi, Placement test); **Interview** (Psychiatry Tagalog, Case simulations, What is the patient saying?, Admission MSE practice, Discharge practice); **Clinical tools** (Mood episode checker, Substance use, Withdrawal and agitation, De-escalation, Discharge assessment, MSE interviewer sheet, Printable handout); **App** (Progress, Settings, What's New, About). The desktop rail uses the same groups, and `#/more` shows the same list as a page.
+- **Footer on every page** with What's new, About, Settings, a **backup panel** (export, import with a confirmation, and *Undo last import*; installed phone apps get the share sheet), the attribution and a disclaimer. Export and import on the Progress and Settings pages use the same functions.
+- **Theme button** cycles Match device → Light → Dark (the Settings page has the same three choices); the browser bar colour follows. **Aa** keeps the four text sizes.
+- **Language of the app's own labels** (menu groups, footer, backup) can be switched to Tagalog on the About page. The Tagalog wording is a draft for review; lessons and phrases are bilingual as before.
+- On phones the search box sits on its own row under the top bar so the full placeholder shows; all top-bar buttons are 44px. Back/forward also work with Alt+Left/Right and return to where you were on the page.
+- **Fix:** the offline cache no longer deletes the other isaymotion apps' offline files when Usap Tayo updates (all the apps share isaymotion.github.io).
+
+**Upgrading from 2.9.1: nothing to do.** Progress stays where it was (`usaptayo.v1` in the browser), and backup files made with 2.9.1 or earlier still restore with *Import backup*.
+
+Also: a tabbed Psychiatry hub (Interview, Cases, Ward tools, Print), a Practice tab listing every drill, a Home screen built around today (cards due, a rotating quick practice, next lesson, pinned and recent pages), pin-to-Home stars on every page, uniform breadcrumbs, match-device/light/dark theme, adjustable text size (Aa button), back/forward buttons, offline support, and install-to-home-screen (PWA).
 
 ## Publish it with GitHub Pages
 
@@ -76,9 +90,9 @@ All content lives in plain JavaScript files under `js/data/`. No build step.
 - **Cases and interpretation items**: `psych-cases.js`.
 - **Handout order and MSE table**: `psych-flow.js` (interview steps, key phrases for pocket cards, MSE domains).
 - **Lessons, readings, dialogues, verbs**: `lessons.js`, `reading.js`, `dialogues.js`, `verbs.js`, `verb-sentences.js` (sample sentences per verb and aspect).
-- **What's New**: add a new entry at the top of `WHATS_NEW` in `meta.js`, and update `version` and `updated` in `APP_META`.
+- **What's New**: add a new entry at the top of `APP_CHANGELOG` in `data/changelog.js` (semver `version`, ISO `date`, items typed `feature`, `update`, `correction` or `content`), then set the same `version` (and `updated` month) in `data/app-meta.js`.
 
-After changing files, bump `VERSION` in `sw.js` so installed copies pick up the update.
+After changing files, bump `VERSION` in `sw.js` (`PREFIX + 'x.y.z'`, the same number as `data/app-meta.js` and the newest changelog entry) so installed copies pick up the update. The service worker only deletes caches whose names start with `usaptayo-`, and keeps `usaptayo-audio`; never change that rule, because every isaymotion app shares the same site.
 
 ## Important note on clinical content
 
@@ -92,7 +106,11 @@ Crisis line in the Philippines: NCMH Crisis Hotline **1553** (24/7).
 index.html              App shell
 manifest.webmanifest    Install metadata
 sw.js                   Offline cache
-css/style.css           Styles (light and dark themes)
+css/style.css           Styles: shared isaymotion tokens (light and dark), shell, screens
+data/app-meta.js        Name, version, attribution, institution, APP_LINKS (Other apps menu, off)
+data/changelog.js       What's New (APP_CHANGELOG)
+data/hospital.js        Shared hospital and program constants (same file in every app)
+data/strings.js         English and Tagalog (draft) labels for the menu, footer and backup
 icons/                  App icons
 js/core.js              Storage, dictionary index, root-word stemmer, search, spaced repetition, speech
 js/conjugate.js         Verb conjugation engine
@@ -107,6 +125,6 @@ js/affixes.js           Panlapi affix trainer: type, root, build and focus drill
 js/grammar-handout.js   Grammar handout generator (#/affixes/handout, #/verbs/handout, #/lessons/handout): Panlapi, verbs and lesson topics, lesson HTML to PDF converter, PDF via App.pdfKit
 handouts/               Ready-made PDFs (Tagalog MSE Interviewer Guide)
 js/vendor/              pdfmake (PDF library, MIT license)
-js/app.js               Routing, navigation, theme, search bar
+js/app.js               Routing, rail / tab bar / More drawer, back-forward, theme, text size, search bar, backup
 js/data/                All content
 ```

@@ -6,48 +6,92 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Learn Tagalog (Filipino) for everyday life and psychiatric interviewing. App created by Isabella Navarro, MD.">
 <meta name="author" content="Isabella Navarro, MD">
-<meta name="theme-color" content="#1e3265">
+<meta name="theme-color" content="#1C346E">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Usap Tayo">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Figtree:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<!-- Literata: the Tagalog text face, kept from 2.x -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
 <link rel="stylesheet" href="css/style.css">
 <script>
-  // Apply the saved theme before first paint to avoid a flash.
-  try { var t = JSON.parse(localStorage.getItem('usaptayo.v1') || '{}').settings; if (t && t.theme && t.theme !== 'system') document.documentElement.setAttribute('data-theme', t.theme); } catch (e) {}
+  // Before first paint. Theme lives in the progress blob (settings.theme: system | light | dark);
+  // only light or dark sets the attribute, so nothing saved = match device.
+  try { var t = JSON.parse(localStorage.getItem('usaptayo.v1') || '{}').settings; if (t && (t.theme === 'light' || t.theme === 'dark')) document.documentElement.setAttribute('data-theme', t.theme); } catch (e) {}
   try { var z = JSON.parse(localStorage.getItem('usaptayo.v1') || '{}').settings.textSize; if (z === '90' || z === '112.5' || z === '125') document.documentElement.style.fontSize = z + '%'; } catch (e) {}
+  try { var d = document.documentElement.getAttribute('data-theme'); if (d === 'dark' || (d !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)) document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0F1830'); } catch (e) {}
 </script>
 </head>
 <body>
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
 <header class="topbar">
-  <a class="brand" href="#/" aria-label="Usap Tayo home"><img src="icons/logo-96.png" alt=""><span>Usap Tayo</span></a>
-  <div class="navbtns">
-    <button class="iconbtn" id="navBack" title="Back (Alt+←)" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-    <button class="iconbtn" id="navFwd" title="Forward (Alt+→)" aria-label="Forward"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+  <a class="brand" href="#/" aria-label="Usap Tayo home"><img src="icons/logo-96.png" alt="" width="34" height="34"><span>Usap Tayo</span></a>
+  <div class="navbtns" role="group" aria-label="Page history">
+    <button class="iconbtn" id="navBack" type="button" title="Back (Alt+←)" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="iconbtn" id="navFwd" type="button" title="Forward (Alt+→)" aria-label="Forward"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
   </div>
-  <div class="searchwrap">
-    <input id="gsearch" type="search" placeholder="Search words, phrases, lessons…" autocomplete="off" aria-label="Search everything" aria-controls="gsuggest">
-    <svg class="sicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+  <div class="searchwrap" role="search">
+    <input id="gsearch" type="search" placeholder="Search words, phrases, lessons…" autocomplete="off" spellcheck="false" aria-label="Search everything" aria-controls="gsuggest">
+    <svg class="sicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <kbd class="skbd" aria-hidden="true">/</kbd>
     <div class="suggest" id="gsuggest" role="listbox" hidden></div>
   </div>
-  <button class="iconbtn" id="textSizeBtn" title="Text size" aria-label="Text size" aria-expanded="false" aria-controls="textSizePanel"><span class="aa" aria-hidden="true">A<small>A</small></span></button>
-  <button class="iconbtn" id="themeBtn" title="Switch light/dark mode" aria-label="Switch light/dark mode"></button>
+  <button class="iconbtn" id="textSizeBtn" type="button" title="Text size" aria-label="Text size" aria-expanded="false" aria-controls="textSizePanel"><span class="aa" aria-hidden="true">A<small>A</small></span></button>
+  <button class="iconbtn" id="themeBtn" type="button" title="Theme: Match device" aria-label="Theme: Match device"></button>
 </header>
 <div class="tspanel" id="textSizePanel" role="dialog" aria-label="Text size" hidden></div>
 
 <div class="shell">
-  <nav class="rail" id="rail" aria-label="Sections"></nav>
-  <main id="main" tabindex="-1"><div class="page" id="view"></div>
-    <footer class="attrib" id="attrib"></footer>
-  </main>
+  <!-- Desktop (1100px and wider): docked rail. Phones and tablets: the same list opens as a drawer from the More tab. -->
+  <nav class="rail" id="rail" aria-label="Sections" data-i18n-attr="aria-label:menu.main">
+    <div class="rail__head">
+      <span class="rail__title" data-i18n="menu.title">Menu</span>
+      <button class="iconbtn rail__close" id="navClose" type="button" aria-label="Close menu" data-i18n-attr="aria-label:menu.close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="rail__recent" id="railRecent"></div>
+    <div class="rail__body" id="railBody"></div>
+  </nav>
+  <div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+  <div class="content">
+    <main id="main" tabindex="-1"><div class="page" id="view"></div></main>
+
+    <footer class="site-foot">
+      <div class="site-foot__inner">
+        <p class="foot-links"><a href="#/new"><span data-i18n="foot.whatsNew">What’s new</span> <span class="badge" data-badge="news" hidden></span></a><a href="#/about" data-i18n="foot.about">About</a><a href="#/settings" data-i18n="foot.settings">Settings</a></p>
+        <section class="backup" id="backup" aria-labelledby="backup-title">
+          <div class="backup__head">
+            <svg class="backup__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0l-4-4m4 4l4-4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div><h2 class="backup__title" id="backup-title" data-i18n="backup.title">Back up your progress</h2>
+            <p class="backup__text" data-i18n="backup.text">Your streak, XP, flashcards, finished lessons, pins and settings live only in this browser. Export a backup file to keep them safe, then import it on another phone, tablet or computer to pick up where you left off.</p></div>
+          </div>
+          <div class="backup__actions">
+            <button type="button" class="btn backup__btn" id="bk-export" data-i18n="backup.export">Export backup</button>
+            <input type="file" id="bk-file" class="sr-only" accept=".json,application/json">
+            <label class="btn backup__btn" for="bk-file" id="bk-import-label" data-i18n="backup.import">Import backup</label>
+            <button type="button" class="link-btn backup__undo" id="bk-undo" data-i18n="backup.undo" hidden>Undo last import</button>
+          </div>
+          <p class="backup__meta" id="bk-meta"></p>
+          <p class="backup__status" id="bk-status" role="status" aria-live="polite"></p>
+        </section>
+        <p class="attribution">App created by Isabella Navarro, MD. Latest version November 2026. <a href="mailto:isaymotion@gmail.com">isaymotion@gmail.com</a></p>
+        <p class="disclaimer" data-i18n="foot.disclaimer">A Tagalog learning and interview aid for the psychiatry service; translations are teaching material, not certified interpretation. Progress stays in this browser unless you export it.</p>
+      </div>
+    </footer>
+  </div>
 </div>
 <nav class="tabbar" id="tabbar" aria-label="Main"></nav>
 
+<script src="data/app-meta.js"></script>
+<script src="data/changelog.js"></script>
+<script src="data/hospital.js"></script>
+<script src="data/strings.js"></script>
 <script src="js/data/dict-core.js"></script>
 <script src="js/data/dict-everyday.js"></script>
 <script src="js/data/dict-clinical.js"></script>
