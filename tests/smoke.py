@@ -14,7 +14,7 @@ from playwright.async_api import async_playwright
 
 ROUTES = ['#/', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/d10', '#/flash', '#/flash/psych', '#/verbs', '#/verbs/kain',
   '#/lessons', '#/lessons/markers', '#/reading', '#/reading/sulat-nanay', '#/speak', '#/speak/meet', '#/speak/case-jomar', '#/psych',
-  '#/psych/s/hallucinations', '#/psych/cases', '#/psych/case/jomar', '#/psych/interp', '#/placement', '#/progress', '#/settings', '#/new',
+  '#/psych/s/hallucinations', '#/psych/point', '#/psych/point?s=suicide', '#/psych/listen', '#/psych/listen?s=depression', '#/lessons/interpreting', '#/psych/cases', '#/psych/case/jomar', '#/psych/interp', '#/placement', '#/progress', '#/settings', '#/new',
   '#/about', '#/more', '#/psych/handout', '#/psych/handout?s=suicide', '#/psych/deesc', '#/psych/handout?deesc=1', '#/psych/s/deescalation',
   '#/psych/deesc?tab=drill', '#/psych/deesc?tab=after', '#/psych/deesc?tab=practice', '#/psych/case/agitated', '#/speak/case-agitated',
   '#/psych/handout?deesccard=1', '#/psych/discharge', '#/psych/handout?discharge=1', '#/psych/s/discharge', '#/psych/dcases', '#/psych/dcase/ramon', '#/psych/dcase/liza', '#/psych/dcase/carlo', '#/psych/dcase/arnel', '#/psych/dcase/mika', '#/psych/mcases', '#/psych/mcase/ramon', '#/affixes', '#/affixes?t=gitlapi', '#/lessons/panlapi', '#/practice', '#/psych?tab=cases', '#/psych?tab=tools', '#/psych?tab=print', '#/affixes/handout', '#/affixes/handout?t=hulapi&set=clinical',

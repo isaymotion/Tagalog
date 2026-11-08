@@ -7,13 +7,20 @@ const repo = path.resolve(process.argv[2] || '.');
 const ctx = { console, TextEncoder, Buffer, localStorage: { getItem: () => null, setItem() {} }, navigator: {}, document: { querySelector: () => null }, fetch: () => Promise.reject(new Error('no fetch')) };
 ctx.window = ctx; vm.createContext(ctx);
 const html = fs.readFileSync(path.join(repo, 'index.html'), 'utf8');
-const scripts = [...html.matchAll(/src="(js\/[^"]+)"/g)].map((m) => m[1]).filter((f) => f.includes('/data/') || /conjugate|audio-key|core|discharge-practice|mse-practice/.test(f));
+const scripts = [...html.matchAll(/src="((?:js|data)\/[^"]+)"/g)].map((m) => m[1]).filter((f) => f.startsWith('data/') || f.includes('/data/') || /conjugate|audio-key|lang|core|discharge-practice|mse-practice/.test(f));
 for (const f of scripts) vm.runInContext(fs.readFileSync(path.join(repo, f), 'utf8'), ctx, { filename: f });
 const C = ctx;
 let fails = 0; const bad = (m) => { fails++; console.log('FAIL', m); };
 const sec = (id) => C.PSYCH_SECTIONS.find((s) => s.id === id);
 const ref = (r) => { const [s, i] = r.split(':'); return sec(s) && sec(s).phrases[+i]; };
 
+// Point board / listening drill replies (3.1.0): every section covered, every item [tl, en, note?, say?], no duplicate Tagalog within a list.
+if (C.PSYCH_ANSWERS) {
+  { const missing = C.PSYCH_SECTIONS.filter((s) => !(C.PSYCH_ANSWERS.sections[s.id] || []).length && !s.phrases.some((p) => p.answers)).map((s) => s.id); if (missing.length) console.log('WARN sections with only general replies on the point board (' + missing.length + '): ' + missing.join(', ')); }
+  const lists = C.PSYCH_ANSWERS.common.map((g) => [g.title, g.items]).concat(Object.entries(C.PSYCH_ANSWERS.sections));
+  lists.forEach(([name, items]) => { const seen = new Set(); items.forEach((it, i) => { if (!Array.isArray(it) || !it[0] || !it[1]) bad('psych-answers ' + name + ' item ' + i); else if (seen.has(it[0])) bad('psych-answers duplicate in ' + name + ': ' + it[0]); seen.add(it[0]); if (it[2] && it[2].split(/\s+/).length > 16) bad('psych-answers note too long ' + name + ' ' + i); }); });
+  Object.keys(C.PSYCH_ANSWERS.sections).forEach((id) => { if (!sec(id)) bad('psych-answers unknown section ' + id); });
+} else bad('PSYCH_ANSWERS missing');
 C.LESSONS.forEach((l) => l.quiz.forEach((q) => { if (q[2] >= q[1].length) bad('lesson quiz index ' + l.id); }));
 C.READING.forEach((r) => { if (r.tl.length !== r.en.length) bad('reading paragraphs ' + r.id); r.q.forEach((q) => { if (q[2] >= q[1].length) bad('reading quiz ' + r.id); }); });
 C.PSYCH_CASES.forEach((c) => c.steps.forEach((s, i) => { if (!s.choices.some((x) => x.score === 2)) bad('case without best choice ' + c.id + ' step ' + i); }));
@@ -86,7 +93,7 @@ if (C.AFFIX_ITEMS) {
   C.AFFIX_FOCUS_DRILL.forEach((f) => { if (!f.q.includes('____') || f.ok === f.no || !f.why) bad('affix focus ' + f.q); });
   C.AFFIX_LIST.forEach((a) => { if (!types.has(a.t)) bad('affix list type ' + a.a); });
 }
-const counts = { version: C.APP_META.version, dict: C.App.DICT.length, sections: C.PSYCH_SECTIONS.length, phrases: C.PSYCH_SECTIONS.reduce((a, s) => a + s.phrases.length, 0), cases: C.PSYCH_CASES.length, lessons: C.LESSONS.length, reading: C.READING.length, dialogues: C.DIALOGUES.length, verbs: C.VERBS.length, dcases: (C.PSYCH_DISCHARGE_CASES || []).length, mcases: (C.PSYCH_MSE_CASES || []).length, affixes: (C.AFFIX_ITEMS || []).length };
+const counts = { version: C.APP_META.version, answers: C.PSYCH_ANSWERS ? C.PSYCH_ANSWERS.common.reduce((a, g) => a + g.items.length, 0) + Object.values(C.PSYCH_ANSWERS.sections).reduce((a, l) => a + l.length, 0) : 0, dict: C.App.DICT.length, sections: C.PSYCH_SECTIONS.length, phrases: C.PSYCH_SECTIONS.reduce((a, s) => a + s.phrases.length, 0), cases: C.PSYCH_CASES.length, lessons: C.LESSONS.length, reading: C.READING.length, dialogues: C.DIALOGUES.length, verbs: C.VERBS.length, dcases: (C.PSYCH_DISCHARGE_CASES || []).length, mcases: (C.PSYCH_MSE_CASES || []).length, affixes: (C.AFFIX_ITEMS || []).length };
 console.log(JSON.stringify(counts));
 console.log(fails ? fails + ' FAILURES' : 'DATA OK');
 process.exit(fails ? 1 : 0);
