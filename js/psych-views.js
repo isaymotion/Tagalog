@@ -17,15 +17,17 @@
     const body = {
       interview: Object.entries(groups).map(([g, ss]) => '<h2 style="margin-top:16px">' + esc(g) + '</h2><div class="grid">' + ss.map((s) =>
         '<a class="tile" href="#/psych/s/' + s.id + '"><h3>' + esc(s.title) + '</h3><p>' + s.phrases.length + ' phrases' + (s.draft ? ' · draft for review' : '') + '</p>' + (done.sections[s.id] ? '<div class="meta"><span class="pill good">opened</span></div>' : '') + '</a>').join('') + '</div>').join('') +
-        '<h2 style="margin-top:20px">Related lessons</h2><div class="grid">' + ['politeness', 'values', 'folk', 'idioms-distress', 'kinship', 'storytelling'].map((id) => { const l = LESSONS.find((x) => x.id === id); return '<a class="tile" href="#/lessons/' + l.id + '"><h3>' + esc(l.title) + '</h3><p>' + esc(l.summary) + '</p></a>'; }).join('') + '</div>',
+        '<h2 style="margin-top:20px">Related lessons</h2><div class="grid">' + ['politeness', 'values', 'folk', 'idioms-distress', 'interpreting', 'kinship', 'storytelling'].map((id) => { const l = LESSONS.find((x) => x.id === id); return '<a class="tile" href="#/lessons/' + l.id + '"><h3>' + esc(l.title) + '</h3><p>' + esc(l.summary) + '</p></a>'; }).join('') + '</div>',
       cases: '<div class="grid" style="margin-top:14px">' +
         T('#/psych/cases', 'Simulate', 'Case simulations', PSYCH_CASES.length + ' interactive interviews with feedback and an MSE summary.') +
         T('#/psych/mcases', 'Admission', 'Admission MSE practice', 'Interview a patient on admission, document each MSE domain, and name the evidence.') +
         T('#/psych/dcases', 'Ward', 'Discharge practice', 'Interview, document the discharge MSE, compare with a model answer.') +
         T('#/psych/interp', 'Listen', 'What is the patient saying?', PSYCH_INTERP.length + ' patient and family lines to interpret.') +
+        T('#/psych/listen', 'Listen', 'Listening drill', 'Hear a patient reply at natural speed, choose the meaning, then see the text.') +
         T('#/flash/psych', 'Memorize', 'Psychiatry flashcards', 'All phrases with spaced repetition.') +
         T('https://isaymotion.github.io/MSEtrainer/#/practice?lang=tl', 'MSE Trainer', 'Name the finding in Tagalog', 'Quick cases in your MSE Trainer, in Filipino.') + '</div>',
       tools: '<div class="grid" style="margin-top:14px">' +
+        T('#/psych/point', 'Bedside', 'Point board (Ituro)', 'Turn the phone around: the patient points to a reply, the phone speaks it, you read the English.') +
         T('#/psych/mood', 'Checker', 'Mood episode', 'SIGECAPS and DIGFAST as tap-to-count DSM-5-TR criteria in Tagalog.') +
         T('#/psych/sud', 'Screen · counsel', 'Substance use', 'Betel nut, tobacco, alcohol, shabu, gambling: criteria, severity, brief intervention.') +
         T('#/psych/withdrawal', 'Ward · ED', 'Withdrawal and agitation', 'PAWSS, CIWA-Ar, cannabis withdrawal, agitation by cause.') +
@@ -38,7 +40,7 @@
         T('#/psych/handout?discharge=1', 'Print', 'Discharge guide', 'The discharge assessment as a printable guide.') + '</div>'
     };
     el.innerHTML = '<h1>Psychiatry Tagalog</h1>' +
-      '<p class="muted" style="margin-top:4px">Phrases for the psychiatric interview and MSE, each in a respectful (<i>po</i>) and an everyday form.</p>' +
+      '<p class="muted" style="margin-top:4px">Phrases for the psychiatric interview and MSE, ' + LANG.registerIntro + '.</p>' +
       '<div class="ptabs" role="tablist">' + TABS.map(([k, t]) => '<a role="tab" aria-selected="' + (k === tab) + '" class="' + (k === tab ? 'on' : '') + '" href="#/psych?tab=' + k + '">' + t + '</a>').join('') + '</div>' +
       (tab === 'interview' ? '<div class="notice info" style="margin-top:12px">Practice phrasings for training, not validated translations. Confirm wording with your supervisors and adapt to each patient.</div>' : '') +
       body[tab];
@@ -74,7 +76,7 @@
           '<div class="en">' + esc(ph.en) + '</div><div class="acts">' + App.sayBtn(primary(ph)) +
           '<button class="say" data-addcard="' + id + '" title="' + (inDeck ? 'In your review deck' : 'Add to flashcards') + '" aria-label="Add to flashcards">' + (inDeck ? icons.check : icons.plus) + '</button></div>' +
           '<div class="main" style="grid-column:1/-1" data-reveal>' + esc(primary(ph)) + '</div>' +
-          (secondary(ph) && secondary(ph) !== primary(ph) ? '<div class="alt" style="grid-column:1/-1" data-reveal><b>' + (S().settings.register === 'c' ? 'Respectful' : 'Everyday') + '</b>' + esc(secondary(ph)) + ' ' + '</div>' : '') +
+          (secondary(ph) && secondary(ph) !== primary(ph) ? '<div class="alt" style="grid-column:1/-1" data-reveal><b>' + (S().settings.register === 'c' ? LANG.registers.f.short : LANG.registers.c.short) + '</b>' + esc(secondary(ph)) + ' ' + '</div>' : '') +
           (ph.n ? '<div class="note">' + esc(ph.n) + '</div>' : '') +
           (ph.answers ? '<div class="ans"><span class="eyebrow">Patients may answer</span>' + ph.answers.map(([t, e]) => '<div><span>' + esc(t) + '</span> <span class="muted">— ' + esc(e) + '</span></div>').join('') + '</div>' : '') +
           '</div>';
@@ -91,9 +93,9 @@
     const draftNote = s.draft && ST ? '<div class="notice warn" style="margin-bottom:12px">' + esc(ST.draftNotice) + '</div>' : '';
     el.innerHTML = crumb([['Psychiatry', '#/psych'], [s.title]]) + '<span class="eyebrow">' + esc(s.group) + '</span><h1>' + esc(s.title) + '</h1><p class="muted">' + esc(s.intro) + '</p>' + draftNote + sheaLink +
       '<div class="spread" style="margin-bottom:12px"><div class="seg" role="group" aria-label="Mode">' +
-      [['study', 'Study'], ['recall', 'Recall'], ['quiz', 'Quiz EN→TL'], ['reverse', 'Quiz TL→EN']].map(([k, t]) => '<button data-m="' + k + '" class="' + (mode === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div>' +
-      '<div class="row">' + (s.id === 'deescalation' ? '<a class="btn sm primary" href="#/psych/deesc">Open the checklist</a>' : '') + '<a class="btn sm" href="#/psych/handout?s=' + s.id + '">Handout of this section</a><button class="btn sm" id="addall">' + icons.plus + ' Add all to flashcards</button></div></div>' +
-      '<p class="muted small" id="modehelp">Recall hides the Tagalog: say it aloud from the English, then tap to check.</p>' +
+      [['study', 'Study'], ['recall', 'Recall'], ['quiz', 'Quiz ' + LANG.quiz.toTarget], ['reverse', 'Quiz ' + LANG.quiz.toEnglish]].map(([k, t]) => '<button data-m="' + k + '" class="' + (mode === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div>' +
+      '<div class="row">' + (s.id === 'deescalation' ? '<a class="btn sm primary" href="#/psych/deesc">Open the checklist</a>' : '') + '<a class="btn sm" href="#/psych/point?s=' + s.id + '">Point board</a><a class="btn sm" href="#/psych/listen?s=' + s.id + '">Listen</a><a class="btn sm" href="#/psych/handout?s=' + s.id + '">Handout of this section</a><button class="btn sm" id="addall">' + icons.plus + ' Add all to flashcards</button></div></div>' +
+      '<p class="muted small" id="modehelp">Recall hides the ' + LANG.name + ': say it aloud from the English, then tap to check.</p>' +
       '<div id="pbody"></div>' +
       '<div class="spread" style="margin-top:16px">' + (prev ? '<a class="btn" href="#/psych/s/' + prev.id + '">← ' + esc(prev.title) + '</a>' : '<span></span>') + (next ? '<a class="btn" href="#/psych/s/' + next.id + '">' + esc(next.title) + ' →</a>' : '') + '</div>';
     el.querySelectorAll('[data-m]').forEach((b) => (b.onclick = () => { mode = b.dataset.m; el.querySelectorAll('[data-m]').forEach((x) => x.classList.toggle('on', x === b)); q.p = null; draw(); }));

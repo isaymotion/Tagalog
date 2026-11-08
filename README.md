@@ -6,13 +6,15 @@
 
 **App created by Isabella Navarro, MD. Latest version November 2026. isaymotion@gmail.com**
 
-Version **3.0.0** (2026-11-06): design refresh to match the other isaymotion apps.
+Version **3.1.0** (2026-11-08): point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
 
 ## What's inside
 
 | Section | What it does |
 |---|---|
 | **Psychiatry Tagalog** | 33 sections (452 phrases) covering opening and consent, HPI, depression, mania, anxiety/OCD, trauma, hallucinations, delusions, suicide and violence risk, de-escalation, substances (screening criteria, betel nut, gambling, AUDIT-C and Fagerström, motivational interviewing), history, collateral, MSE (cognition, abstraction, observations), explaining diagnosis, medication side effects, admission, children, elderly patients, closing, and Shea's validity techniques (gentle assumption, symptom amplification, denial of the specific, behavioral incidents, shame attenuation, normalization, anchor questions; draft for review). Each phrase has a respectful (*po*) form and an everyday/Taglish form. Every section links to the chapter of the [Psychiatric Interviewing Trainer](https://isaymotion.github.io/sheatrainer/) that teaches the technique behind it, and the trainer's study guides link back. |
+| **Point board (Ituro)** | When the patient's answer is too fast to follow, turn the phone around: the patient taps a reply, the phone speaks it and the interviewer reads the English. General replies (yes/no, how often, since when, how much, how I feel, I need…), a 0–10 scale spoken in Tagalog, and 7–11 likely replies for each of the 27 interview sections (`js/data/psych-answers.js`, draft for review). Patient view enlarges the tiles and hides the English; nothing is saved. Route `#/psych/point?s=<section>`. |
+| **Listening drill** | Hear a patient or family reply at natural speed (slower or faster on request), choose its meaning from four, then see the Tagalog. Pool: the point-board replies, the interpretation drill and the case simulations; filter by section. Route `#/psych/listen?s=<section>`. |
 | **Case simulations** | 7 interactive interviews (first-episode psychosis, depression with suicide risk, mania, delirium, alcohol withdrawal, agitated patient, betel nut use disorder) with feedback and an MSE summary. |
 | **Mood episode** | Tap-to-count DSM-5-TR checker: depressed mood + SIGECAPS (gate + 5 of 9, two weeks) and elevated/expansive or irritable mood + DIGFAST (3 of 7, or 4 if only irritable; mania vs hypomania by duration, hospitalization and psychosis), with features, a copyable chart line, and the PHQ-9 and MDQ in Tagalog. Nothing is saved. |
 | **Substance use** | Screen betel nut (nganga, bunga, mama, buyo, hitso), tobacco, alcohol, shabu, cannabis, other substances and gambling on the DSM-5-TR criteria in Tagalog; mild / moderate / severe, remission and other specifiers, ICD-10-CM code and a copyable chart line (nothing is saved). AUDIT-C and Fagerström scored on the page. Six-step motivational interview with substance-specific psychoeducation, a nurse screening and brief-advice script (Resident / Nurse switch), and a betel nut case simulation. Criteria paraphrased from DSM-5-TR. |
@@ -30,10 +32,20 @@ Version **3.0.0** (2026-11-06): design refresh to match the other isaymotion app
 | **Verb trainer** | 78 verbs across -um-, mag-, ma-, -in, i-, -an with type-the-form, multiple-choice, and identify-the-aspect drills, plus 628 natural sample sentences (one set per aspect, most of them bedside lines) with fill-the-blank and translate-the-sentence drills. |
 | **Panlapi (affix trainer)** | Take words apart into root and affix: unlapi, gitlapi, hulapi, kabilaan, laguhan. 216 words (120 clinical), 9 sound-change and placement rules, 26 affix meanings, and four drills (name the type, find the root, build the word, choose the affix the sentence forces). `js/data/affixes.js`, `js/affixes.js`, route `#/affixes`. |
 | **Grammar handouts** | Printable references with a Print handout button on the pages they come from. Panlapi: affix cheat sheet, sound-change rules, word list with the affix marked, worksheet and answer key. Verbs: conjugation tables for all, clinical or one verb, example sentences per aspect, an aspect-at-a-glance page, worksheet and key. Lessons: any lesson with its quiz and an answer key. Hide English where it applies, A4/Letter/A5, PDF or print. |
-| **Lessons** | 23 grammar and culture lessons with quizzes: markers, focus, aspect, particles, po/opo, numbers/time/money, Taglish, hiya, utang na loob, folk beliefs, idioms of distress. |
+| **Lessons** | 24 grammar and culture lessons with quizzes: markers, focus, aspect, particles, po/opo, numbers/time/money, Taglish, hiya, utang na loob, folk beliefs, idioms of distress, and when your Tagalog is not enough (interviewing alone vs a nurse interpreting, family as informants not interpreters, running an interpreted interview, which rating-scale version goes in the chart). |
 | **Reading** | 12 graded passages (A1–B2) with glossaries and comprehension questions. |
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. |
 | **You** | Placement test, streaks, XP, progress stats, backup export/import, settings, What's New, About. |
+
+## Version 3.1.0: point board, listening drill, interpreter lesson
+
+- **Point board (Ituro)** at `#/psych/point`, also from the *Point board* button on every phrase section and from Psychiatry → Ward tools.
+- **Listening drill** at `#/psych/listen`, in Practice, Psychiatry → Cases and the Home quick-practice rotation.
+- **Lesson** `interpreting` (Culture, B1), linked from the Psychiatry hub's Related lessons and from the Mood episode checker.
+- **PHQ-9 / MDQ source notes** in the Mood episode checker and the "PHQ-9 and MDQ in Tagalog" section.
+- **Language pack `js/lang.js`**: voice matching, speech-recognition tag, register labels, quiz words, dictionary and flashcard direction labels, Settings voice help. The engine (`core.js`, `views.js`, `psych-views.js`, `point-listen.js`, `app.js`) reads `window.LANG` instead of hard-coding Tagalog, so a sister app (e.g. a Spanish *Hablemos*) can replace `js/lang.js` and `js/data/*` and keep the engine. Still Tagalog-specific by design: the lessons, Panlapi, verb trainer (`conjugate.js`), dictionary, readings, dialogues and the audio-pack workflow voices.
+- **Audio**: `tools/collect-texts.js` now includes the point-board replies and the spoken 0–10 numbers (`tools/extra-texts/point-board.txt`); the audio-pack job records them on the next run.
+- **Files changed:** `index.html`, `sw.js`, `css/style.css`, `data/app-meta.js`, `data/changelog.js`, `js/lang.js` (new), `js/point-listen.js` (new), `js/data/psych-answers.js` (new), `js/core.js`, `js/views.js`, `js/psych-views.js`, `js/app.js`, `js/mood.js`, `js/data/psych-mood.js`, `js/data/lessons.js`, `tools/collect-texts.js`, `tools/extra-texts/point-board.txt`, `tools/texts.json`, `README.md`.
 
 ## Version 3.0.0: design refresh
 

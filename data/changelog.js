@@ -1,8 +1,19 @@
 /* What's New. Newest entry FIRST. version = semver string (also the key for the unseen badge on Home,
-   the menu and the footer). date = ISO: YYYY-MM-DD, or YYYY-MM for releases before 3.0.0 whose exact day
+   the menu and the footer). date = ISO: YYYY-MM-DD, or YYYY-MM for releases before version 3 whose exact day
    was not recorded. Item type: feature | update | correction | content.
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
+  {
+    version: '3.1.0', date: '2026-11-08', title: 'Point board, listening drill, interpreter lesson',
+    items: [
+      { type: 'feature', text: 'Point board (Ituro): when the answer is too fast, turn the phone around. The patient taps a reply, the phone speaks it and you read the English. General replies (yes/no, how often, since when, how much, how I feel, I need…), a 0–10 scale, and likely replies for every interview section. Nothing is saved. Psychiatry → Ward tools, or the Point board button on any section.' },
+      { type: 'feature', text: 'Listening drill: hear a patient or family reply at natural speed (or slower), choose its meaning, then see the Tagalog. Draws on the point-board replies, the interpretation drill and the case simulations; filter by section.' },
+      { type: 'content', text: 'New lesson: When your Tagalog is not enough — interviewing alone vs asking a nurse to interpret, why family should not interpret the patient\u2019s own account, how to run an interpreted interview, and which rating-scale version belongs in the chart.' },
+      { type: 'content', text: 'About 300 likely patient replies added across all 27 interview sections (draft for review). Audio for them is recorded by the next audio-pack run.' },
+      { type: 'update', text: 'Source and licence notes for the PHQ-9 and MDQ in the Mood episode checker: the lines in the app are training paraphrases; documented scores come from the published instruments.' },
+      { type: 'update', text: 'Under the hood: language-specific settings (voices, register labels, quiz words) moved to js/lang.js so a sister app for another language can reuse the engine.' }
+    ]
+  },
   {
     version: '3.0.0', date: '2026-11-06', title: 'Design refresh',
     items: [

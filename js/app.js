@@ -58,6 +58,8 @@
     [/^\/psych\/cases$/, V.psychCases, 'psych'],
     [/^\/psych\/case\/(?<id>[\w-]+)$/, V.psychCase, 'psych'],
     [/^\/psych\/interp$/, V.psychInterp, 'psych'],
+    [/^\/psych\/listen$/, V.psychListen, 'psych'],
+    [/^\/psych\/point$/, V.psychPoint, 'psych'],
     [/^\/psych\/handout$/, V.handout, 'psych'],
     [/^\/psych\/mse-sheet$/, V.mseSheet, 'psych'],
     [/^\/psych\/sud$/, V.sud, 'psych'],
@@ -79,9 +81,9 @@
 
   /* ---------- Navigation: one grouped list for the desktop rail, the phone drawer (More) and the #/more page ----------
      [key, href, label, icon]. Group labels are shell strings (data/strings.js); item labels are the app's own. */
-  const PSY_PRACTICE = [['p-cases', '#/psych/cases', 'Case simulations', icons.case], ['p-interp', '#/psych/interp', 'What is the patient saying?', icons.ear],
+  const PSY_PRACTICE = [['p-cases', '#/psych/cases', 'Case simulations', icons.case], ['p-interp', '#/psych/interp', 'What is the patient saying?', icons.ear], ['p-listen', '#/psych/listen', 'Listening drill', icons.sound],
     ['p-mcases', '#/psych/mcases', 'Admission MSE practice', icons.eye], ['p-dcases', '#/psych/dcases', 'Discharge practice', icons.check]];
-  const PSY_TOOLS = [['p-mood', '#/psych/mood', 'Mood episode checker', icons.chart], ['p-sud', '#/psych/sud', 'Substance use', icons.target],
+  const PSY_TOOLS = [['p-point', '#/psych/point', 'Point board (Ituro)', icons.speak], ['p-mood', '#/psych/mood', 'Mood episode checker', icons.chart], ['p-sud', '#/psych/sud', 'Substance use', icons.target],
     ['p-wd', '#/psych/withdrawal', 'Withdrawal and agitation', icons.spark], ['p-deesc', '#/psych/deesc', 'De-escalation', icons.speak],
     ['p-dis', '#/psych/discharge', 'Discharge assessment', icons.check], ['p-mse', '#/psych/mse-sheet', 'MSE interviewer sheet', icons.lesson],
     ['p-ho', '#/psych/handout', 'Printable handout', icons.read]];
@@ -195,6 +197,7 @@
       '<h2 style="margin-top:18px">Clinical</h2><div class="grid">' +
       T('#/psych/cases', 'Simulate', 'Case simulations', PSYCH_CASES.length + ' interviews with feedback.') +
       T('#/psych/interp', 'Listen', 'What is the patient saying?', 'Interpret patient and family lines.') +
+      T('#/psych/listen', 'Listen', 'Listening drill', 'Hear a reply at natural speed, choose the meaning.') +
       T('#/psych/mcases', 'Document', 'Admission MSE practice', 'Interview, document, compare.') +
       T('#/psych/dcases', 'Document', 'Discharge practice', 'Five patients, discharge or defer.') +
       T('#/psych/deesc?tab=drill', 'Rapid drill', 'De-escalation', 'The 12 steps under time pressure.') + '</div>';

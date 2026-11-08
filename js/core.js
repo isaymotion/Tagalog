@@ -196,7 +196,7 @@
   });
   (window.PSYCH_CASES || []).forEach((c) => push('Case', c.title, c.setting, '', '#/psych/case/' + c.id));
   (window.VERBS || []).forEach((v) => push('Verb', v.r, v.en, (v.ex || '') + ' ' + ((window.VERB_SENTENCES || {})[v.r] || []).map((s) => s[0] + ' ' + s[1]).join(' '), '#/verbs/' + v.r));
-  [['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Panlapi affix trainer', '#/affixes'], ['Panlapi handout (print)', '#/affixes/handout'], ['Verb handout (print)', '#/verbs/handout'], ['Lesson handout (print)', '#/lessons/handout'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp'], ['De-escalation checklist', '#/psych/deesc'], ['Discharge assessment', '#/psych/discharge'], ['Discharge practice cases', '#/psych/dcases'], ['Admission MSE practice', '#/psych/mcases'], ['Printable handout', '#/psych/handout'], ['Mood episode checker', '#/psych/mood'], ['Substance use screener', '#/psych/sud'], ['Withdrawal and agitation', '#/psych/withdrawal'], ['MSE interviewer sheet', '#/psych/mse-sheet'], ['Practice', '#/practice'], ['Psychiatry cases', '#/psych?tab=cases'], ['Ward tools', '#/psych?tab=tools'], ['Print', '#/psych?tab=print'], ['Lessons', '#/lessons'], ['Reading', '#/reading'], ['Speaking', '#/speak'], ['Case simulations', '#/psych/cases'], ['More', '#/more']]
+  [['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Panlapi affix trainer', '#/affixes'], ['Panlapi handout (print)', '#/affixes/handout'], ['Verb handout (print)', '#/verbs/handout'], ['Lesson handout (print)', '#/lessons/handout'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp'], ['Listening drill', '#/psych/listen'], ['Point board (Ituro): patient points to the answer', '#/psych/point'], ['De-escalation checklist', '#/psych/deesc'], ['Discharge assessment', '#/psych/discharge'], ['Discharge practice cases', '#/psych/dcases'], ['Admission MSE practice', '#/psych/mcases'], ['Printable handout', '#/psych/handout'], ['Mood episode checker', '#/psych/mood'], ['Substance use screener', '#/psych/sud'], ['Withdrawal and agitation', '#/psych/withdrawal'], ['MSE interviewer sheet', '#/psych/mse-sheet'], ['Practice', '#/practice'], ['Psychiatry cases', '#/psych?tab=cases'], ['Ward tools', '#/psych?tab=tools'], ['Print', '#/psych?tab=print'], ['Lessons', '#/lessons'], ['Reading', '#/reading'], ['Speaking', '#/speak'], ['Case simulations', '#/psych/cases'], ['More', '#/more']]
     .forEach(([t, r]) => push('Page', t, '', '', r));
   App.searchAll = (q, limit) => {
     const nq = norm(q);
@@ -315,8 +315,10 @@
      3. A device voice whose language reads Tagalog spelling closely (Indonesian, Malay, Spanish), never English. */
   const synth = window.speechSynthesis;
   App.voices = () => (synth ? synth.getVoices() : []);
-  App.filipinoVoices = () => App.voices().filter((v) => /^(fil|tl)([-_]|$)/i.test(v.lang) || /filipino|tagalog/i.test(v.name));
-  const NEAR = [/^id([-_]|$)/i, /^ms([-_]|$)/i, /^es([-_]|$)/i, /^it([-_]|$)/i];
+  const L = window.LANG;
+  App.filipinoVoices = () => App.voices().filter((v) => L.voiceLang.test(v.lang) || L.voiceNameMatch.test(v.name));
+  App.nativeVoices = App.filipinoVoices;
+  const NEAR = L.nearVoices;
   App.bestTagalogVoice = () => {
     const all = App.voices();
     const chosen = all.find((x) => x.name === state.settings.voice);
@@ -359,7 +361,7 @@
     if (!synth) { if (!opts.quiet) App.toast('Audio is not available in this browser.'); return setTimeout(done, 800); }
     const u = new SpeechSynthesisUtterance(text);
     if (opts.lang === 'en') u.lang = 'en-US';
-    else { const b = App.bestTagalogVoice(); if (b.voice) { u.voice = b.voice; u.lang = b.voice.lang; } else u.lang = 'fil-PH'; }
+    else { const b = App.bestTagalogVoice(); if (b.voice) { u.voice = b.voice; u.lang = b.voice.lang; } else u.lang = L.bcp47; }
     u.rate = rate;
     u.onend = done; u.onerror = done;
     current = { utter: u, done };
@@ -381,7 +383,7 @@
   App.listen = (onResult, onEnd) => {
     if (!SR) return null;
     const r = new SR();
-    r.lang = 'fil-PH'; r.interimResults = false; r.maxAlternatives = 3;
+    r.lang = L.bcp47; r.interimResults = false; r.maxAlternatives = 3;
     r.onresult = (ev) => { const alts = [...ev.results[0]].map((a) => a.transcript); onResult(alts); };
     r.onerror = (ev) => { App.toast(ev.error === 'not-allowed' ? 'Microphone permission was denied.' : 'Speech recognition stopped: ' + ev.error); };
     r.onend = () => onEnd && onEnd();

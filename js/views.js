@@ -14,7 +14,7 @@
     const draw = () => {
       if (i >= qs.length) {
         const pct = Math.round((100 * right) / qs.length);
-        el.innerHTML = '<div class="card stack"><h3>' + (pct >= 80 ? 'Magaling!' : pct >= 50 ? 'Ayos!' : 'Kaya mo yan!') + ' ' + right + ' / ' + qs.length + '</h3>' +
+        el.innerHTML = '<div class="card stack"><h3>' + (pct >= 80 ? LANG.quiz.great : pct >= 50 ? LANG.quiz.ok : LANG.quiz.keepGoing) + ' ' + right + ' / ' + qs.length + '</h3>' +
           '<div class="progress"><i style="width:' + pct + '%"></i></div>' +
           '<div class="row"><button class="btn primary" data-act="retry">Try again</button>' + (opts.after || '') + '</div></div>';
         el.querySelector('[data-act=retry]').onclick = () => { i = 0; right = 0; qs = shuffle(qs); draw(); };
@@ -23,16 +23,22 @@
       }
       const q = qs[i];
       const order = shuffle(q.opts.map((o, k) => k));
-      el.innerHTML = '<div class="card stack"><div class="spread"><span class="eyebrow">Question ' + (i + 1) + ' of ' + qs.length + '</span>' + (q.say ? App.sayBtn(q.say) : '') + '</div>' +
-        '<div class="' + (q.tlq ? 'tl' : '') + '" style="font-size:1.12rem;font-weight:600">' + esc(q.q) + '</div>' + (q.sub ? '<div class="muted">' + esc(q.sub) + '</div>' : '') +
+      // q.hideQ: listening item. The text is hidden until answered; the clip plays on load and from the big button.
+      const play = () => App.speak(q.say, q.rate ? { rate: q.rate } : undefined);
+      el.innerHTML = '<div class="card stack"><div class="spread"><span class="eyebrow">Question ' + (i + 1) + ' of ' + qs.length + '</span>' + (q.say && !q.hideQ ? App.sayBtn(q.say) : '') + '</div>' +
+        (q.hideQ
+          ? '<div class="listen-q"><button class="btn primary" data-act="play" aria-label="Play again">' + App.icons.sound + ' Play again</button><span class="muted small">' + esc(q.hideQ === true ? 'Listen, then choose what the patient means.' : q.hideQ) + '</span></div><div class="tl" data-qtext hidden style="font-size:1.12rem;font-weight:600">' + esc(q.q) + '</div>'
+          : '<div class="' + (q.tlq ? 'tl' : '') + '" style="font-size:1.12rem;font-weight:600">' + esc(q.q) + '</div>') + (q.sub ? '<div class="muted">' + esc(q.sub) + '</div>' : '') +
         '<div class="opts">' + order.map((k) => '<button class="opt' + (q.tlo ? ' tl' : '') + '" data-k="' + k + '">' + esc(q.opts[k]) + '</button>').join('') + '</div><div data-fb></div></div>';
+      if (q.hideQ) { el.querySelector('[data-act=play]').onclick = play; setTimeout(play, 150); }
       el.querySelectorAll('.opt').forEach((b) => (b.onclick = () => {
         const k = +b.dataset.k, ok = k === q.a;
         if (ok) right++;
         App.recordAnswer(ok, q.cardId);
         el.querySelectorAll('.opt').forEach((x) => { x.disabled = true; if (+x.dataset.k === q.a) x.classList.add('right'); });
         if (!ok) b.classList.add('wrong');
-        el.querySelector('[data-fb]').innerHTML = '<div class="feedback ' + (ok ? 'ok' : 'no') + '">' + (ok ? '<b>Tama!</b> ' : '<b>Mali.</b> ') + esc(q.exp || '') + '</div>' +
+        if (q.hideQ) { const qt = el.querySelector('[data-qtext]'); if (qt) qt.hidden = false; }
+        el.querySelector('[data-fb]').innerHTML = '<div class="feedback ' + (ok ? 'ok' : 'no') + '">' + '<b>' + (ok ? LANG.quiz.right : LANG.quiz.wrong) + '</b> ' + esc(q.exp || '') + '</div>' +
           '<div class="row" style="margin-top:10px"><button class="btn primary" data-act="next">' + (i + 1 < qs.length ? 'Next' : 'See score') + '</button></div>';
         el.querySelector('[data-act=next]').onclick = () => { i++; draw(); };
         el.querySelector('[data-act=next]').focus();
@@ -53,7 +59,7 @@
     const pins = (s.pins || []).slice().reverse();
     const recent = (s.recent || []).filter((r) => !/^#\/(more|settings|progress|new|about|search)/.test(r.hash) && !App.isPinned(r.hash)).slice(0, 4);
     // One quick drill a day, rotating so the Home screen nudges different skills.
-    const quick = [['#/verbs', 'Verb trainer', '10 aspect questions'], ['#/affixes', 'Panlapi', 'Take 10 words apart'], ['#/psych/interp', 'What is the patient saying?', 'Interpret 10 lines'], ['#/flash/psych', 'Psychiatry flashcards', 'A quick review'], ['#/psych/cases', 'Case simulation', 'One interview, with feedback']];
+    const quick = [['#/verbs', 'Verb trainer', '10 aspect questions'], ['#/affixes', 'Panlapi', 'Take 10 words apart'], ['#/psych/interp', 'What is the patient saying?', 'Interpret 10 lines'], ['#/psych/listen', 'Listening drill', 'Hear 10 replies, pick the meaning'], ['#/flash/psych', 'Psychiatry flashcards', 'A quick review'], ['#/psych/cases', 'Case simulation', 'One interview, with feedback']];
     const qd = quick[Math.floor(Date.now() / 864e5) % quick.length];
     el.innerHTML =
       '<section class="hero"><svg class="rays" viewBox="0 0 100 100" aria-hidden="true">' + Array.from({ length: 8 }, (_, k) => '<rect x="47" y="2" width="6" height="30" fill="#e3b53f" transform="rotate(' + k * 45 + ' 50 50)"/>').join('') + '<circle cx="50" cy="50" r="16" fill="#e3b53f"/></svg>' +
@@ -112,7 +118,7 @@
     el.innerHTML = '<h1>Dictionary</h1>' +
       '<div class="stack"><input class="input" id="dq" type="search" placeholder="Type Tagalog or English (e.g., bumubulong, sad)" value="' + esc(term) + '">' +
       '<div class="spread"><div class="seg" role="group" aria-label="Direction">' +
-      [['both', 'Both'], ['tl', 'Filipino → English'], ['en', 'English → Filipino']].map(([k, t]) => '<button data-dir="' + k + '" class="' + (dir === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div>' +
+      [['both', 'Both'], ['tl', LANG.dictDir.tl], ['en', LANG.dictDir.en]].map(([k, t]) => '<button data-dir="' + k + '" class="' + (dir === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div>' +
       '<select class="input" id="dcat" style="width:auto;max-width:100%"><option value="">All topics</option>' + Object.entries(App.CATS).map(([k, t]) => '<option value="' + k + '"' + (cat === k ? ' selected' : '') + '>' + esc(t) + '</option>').join('') + '</select></div>' +
       '<div class="letters" aria-label="Browse by letter">' + letters.map((L) => '<button data-l="' + L + '" class="' + (letter === L ? 'on' : '') + '">' + L.toUpperCase() + '</button>').join('') + '</div></div><div id="dres" style="margin-top:12px"></div>';
     const dq = el.querySelector('#dq');
@@ -160,7 +166,7 @@
     const now = Date.now();
     el.innerHTML = '<h1>Flashcards</h1><p class="muted">Spaced repetition: cards you know come back less often, cards you miss come back sooner. Wrong answers anywhere in the app go to <b>My mistakes</b>.</p>' +
       '<div class="row" style="margin-bottom:12px"><span class="muted small">Card front:</span><div class="seg" role="group">' +
-      [['tl-en', 'Filipino first'], ['en-tl', 'English first']].map(([k, t]) => '<button data-dirc="' + k + '" class="' + (S().settings.cardDir === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div></div>' +
+      [['tl-en', LANG.cardDir['tl-en']], ['en-tl', LANG.cardDir['en-tl']]].map(([k, t]) => '<button data-dirc="' + k + '" class="' + (S().settings.cardDir === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div></div>' +
       Object.entries(groups).map(([g, ds]) => '<h2>' + esc(g) + '</h2><div class="grid">' + ds.map((d) => {
         const seen = d.ids.filter((id) => S().srs[id]).length;
         const due = d.ids.filter((id) => S().srs[id] && S().srs[id].due <= now).length;
@@ -376,6 +382,7 @@
     if (!l) { el.innerHTML = '<p>Lesson not found.</p>'; return; }
     const idx = LESSONS.indexOf(l), next = LESSONS[idx + 1], prev = LESSONS[idx - 1];
     el.innerHTML = crumb([['Lessons', '#/lessons'], [l.title]]) + '<div class="row">' + lvPill(l.level) + '<span class="muted small">' + esc(l.unit) + '</span></div><h1 style="margin-top:6px">' + esc(l.title) + '</h1><div class="row" style="margin:-6px 0 10px"><a class="btn sm" href="#/lessons/handout?id=' + l.id + '">' + App.icons.book + ' Print handout</a></div>' +
+      (l.draft ? '<div class="notice warn" style="margin-bottom:12px">Draft for review: the Tagalog lines in this lesson are practice wording pending Dr. Navarro\u2019s check.</div>' : '') +
       '<div class="lesson-body">' + l.body.replace(/<table>/g, '<div class="tablewrap"><table>').replace(/<\/table>/g, '</table></div>') + '</div>' +
       '<h2 style="margin-top:20px">Check yourself</h2><div id="lq"></div>' +
       '<div class="spread" style="margin-top:16px">' + (prev ? '<a class="btn" href="#/lessons/' + prev.id + '">← ' + esc(prev.title) + '</a>' : '<span></span>') + (next ? '<a class="btn" href="#/lessons/' + next.id + '">' + esc(next.title) + ' →</a>' : '') + '</div>';
@@ -424,8 +431,8 @@
     const parts = [];
     if (st.pack) { /* recorded Filipino audio covers the app's phrases */ }
     else if (st.voiceKind === 'filipino' || st.voiceKind === 'chosen') { /* device Filipino voice */ }
-    else if (st.voiceKind === 'near') parts.push('The Filipino audio pack is not installed yet, so audio uses the closest voice on this device (' + esc(st.voiceName) + '). It sounds closer to Tagalog than an English voice, but not native.');
-    else parts.push(App.canSpeak ? 'No Filipino voice is available yet. Install the audio pack (see Settings → Voice) for natural Filipino audio.' : 'This browser has no text-to-speech.');
+    else if (st.voiceKind === 'near') parts.push('The ' + LANG.voiceName + ' audio pack is not installed yet, so audio uses the closest voice on this device (' + esc(st.voiceName) + '). It sounds closer to ' + LANG.name + ' than an English voice, but not native.');
+    else parts.push(App.canSpeak ? 'No ' + LANG.voiceName + ' voice is available yet. Install the audio pack (see Settings → Voice) for natural ' + LANG.voiceName + ' audio.' : 'This browser has no text-to-speech.');
     if (!App.canListen) parts.push('Speech scoring isn\'t available in this browser (it works best in Chrome). You can still use <b>Record</b> to compare.');
     return parts.length ? '<div class="notice" style="margin-bottom:12px">' + parts.join(' ') + ' <a href="#/settings">Voice settings</a></div>' : '';
   }
@@ -558,8 +565,8 @@
     const fil = App.filipinoVoices();
     el.innerHTML = '<h1>Settings</h1><div class="stack">' +
       '<div class="card stack"><h2 style="margin:0">Appearance</h2><div class="seg" role="group" aria-label="Theme">' + ['system', 'light', 'dark'].map((k) => '<button type="button" data-theme="' + k + '" aria-pressed="' + ((s.theme || 'system') === k) + '" class="' + ((s.theme || 'system') === k ? 'on' : '') + '">' + esc(App.themeName(k)) + '</button>').join('') + '</div><p class="muted small" style="margin:10px 0 6px">Text size (also under the <b>Aa</b> button in the top bar)</p>' + App.textSizeSeg() + '</div>' +
-      '<div class="card stack"><h2 style="margin:0">Register</h2><p class="muted" style="margin:0">Which version of each psychiatry phrase to show first. Respectful uses <i>po</i> and <i>kayo</i> (for elders, most adult patients, and family). Everyday uses <i>ka/mo</i> and some Taglish (for younger patients and peers).</p>' +
-      '<div class="seg" role="group" aria-label="Register">' + [['f', 'Respectful (po)'], ['c', 'Everyday / Taglish']].map(([k, t]) => '<button data-reg="' + k + '" class="' + (s.register === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div></div>' +
+      '<div class="card stack"><h2 style="margin:0">Register</h2><p class="muted" style="margin:0">Which version of each psychiatry phrase to show first. ' + LANG.registers.f.short + ' ' + LANG.registers.f.help + '. ' + LANG.registers.c.short + ' ' + LANG.registers.c.help + '.</p>' +
+      '<div class="seg" role="group" aria-label="Register">' + [['f', LANG.registers.f.label], ['c', LANG.registers.c.label]].map(([k, t]) => '<button data-reg="' + k + '" class="' + (s.register === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div></div>' +
       '<div class="card stack"><h2 style="margin:0">Voice</h2>' + voiceCard(s, voices) + '</div>' +
       '<div class="card stack"><h2 style="margin:0">Flashcards</h2><label>New cards per day <input class="input" type="number" id="npd" min="5" max="100" value="' + s.newPerDay + '" style="width:120px"></label></div>' +
       '<div class="card stack"><h2 style="margin:0">Install</h2><p style="margin:0">Add Usap Tayo to your home screen to use it like an app, even offline. iPhone: Safari → Share → <b>Add to Home Screen</b>. Android: Chrome menu → <b>Install app</b>.</p><div class="row"><button class="btn" id="install" hidden>Install now</button></div></div>' +
@@ -590,7 +597,7 @@
     };
     el.querySelector('#rate').oninput = (e) => { s.rate = +e.target.value; App.save(); };
     el.querySelector('#npd').onchange = (e) => { s.newPerDay = Math.max(5, Math.min(100, +e.target.value || 20)); App.save(); };
-    el.querySelector('#test').onclick = () => App.speak('Magandang umaga po. Kumusta po kayo?');
+    el.querySelector('#test').onclick = () => App.speak(LANG.testLine);
     if (App.installPrompt) { const b = el.querySelector('#install'); b.hidden = false; b.onclick = () => App.installPrompt.prompt(); }
     el.querySelector('#reset1').onclick = () => { el.querySelector('#reset2').hidden = false; };
     el.querySelector('#resetno').onclick = () => { el.querySelector('#reset2').hidden = true; };
@@ -604,15 +611,15 @@
       ? '<span class="pill good">Installed</span> ' + info.count + ' recorded clips · ' + esc(info.voice) + ' · ' + esc(info.generated) + ' · ' + (info.bytes / 1e6).toFixed(0) + ' MB'
       : (App.pack.ready ? '<span class="pill warn">Not installed yet</span> The recordings are made by a one-click job on GitHub. See "Audio pack" in the README.' : 'Checking…');
     const dev = App.bestTagalogVoice();
-    const devLine = dev.kind === 'filipino' || dev.kind === 'chosen' ? 'Filipino voice: ' + esc(dev.voice.name) : dev.kind === 'near' ? 'No Filipino voice on this device. Closest match: ' + esc(dev.voice.name + ' (' + dev.voice.lang + ')') + '.' : 'No usable voice on this device.';
-    return '<div class="seg" role="group" aria-label="Voice source" style="display:flex;flex-wrap:wrap">' + [['pack', 'Recorded Filipino voice'], ['device', 'Device voice']].map(([k, t]) => '<button data-vsrc="' + k + '" class="' + (s.voiceSource === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div>' +
+    const devLine = dev.kind === 'filipino' || dev.kind === 'chosen' ? LANG.voiceName + ' voice: ' + esc(dev.voice.name) : dev.kind === 'near' ? 'No ' + LANG.voiceName + ' voice on this device. Closest match: ' + esc(dev.voice.name + ' (' + dev.voice.lang + ')') + '.' : 'No usable voice on this device.';
+    return '<div class="seg" role="group" aria-label="Voice source" style="display:flex;flex-wrap:wrap">' + [['pack', 'Recorded ' + LANG.voiceName + ' voice'], ['device', 'Device voice']].map(([k, t]) => '<button data-vsrc="' + k + '" class="' + (s.voiceSource === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div>' +
       '<div class="small"><b>Audio pack:</b> ' + packLine + '</div>' +
       (info ? '<div class="row"><button class="btn sm" id="dlAudio">Save all audio for offline use</button><span class="small muted" id="dlStat"></span></div>' : '') +
-      '<div class="small"><b>Device voice:</b> ' + devLine + ' Used for anything without a recording' + (s.voiceSource === 'device' ? ' and, with this setting, for everything' : '') + '. It never uses an English voice for Tagalog unless you pick one below.</div>' +
+      '<div class="small"><b>Device voice:</b> ' + devLine + ' Used for anything without a recording' + (s.voiceSource === 'device' ? ' and, with this setting, for everything' : '') + '. It never uses an English voice for ' + LANG.name + ' unless you pick one below.</div>' +
       '<details><summary class="small">Choose a device voice</summary><label class="small" style="display:block;margin-top:6px">Voice <select class="input" id="voice"><option value="">Automatic</option>' + voices.map((v) => '<option value="' + esc(v.name) + '"' + (s.voice === v.name ? ' selected' : '') + '>' + esc(v.name + ' (' + v.lang + ')') + '</option>').join('') + '</select></label>' +
-      '<p class="small muted" style="margin:6px 0 0">Android: Settings → Google Text-to-speech → install Filipino. Microsoft Edge on a computer includes natural Filipino voices (Blessica, Angelo). iPhone has no Filipino voice, so use the recorded pack.</p></details>' +
+      '<p class="small muted" style="margin:6px 0 0">' + LANG.deviceVoiceHelp + '</p></details>' +
       '<label>Speed <input type="range" id="rate" min="0.5" max="1.2" step="0.05" value="' + s.rate + '" style="width:100%"></label>' +
-      '<div class="row"><button class="btn" id="test">' + icons.sound + ' Test: "Magandang umaga po. Kumusta po kayo?"</button></div>';
+      '<div class="row"><button class="btn" id="test">' + icons.sound + ' Test: "' + esc(LANG.testLine) + '"</button></div>';
   }
 
   /* ---------- What's New ---------- */

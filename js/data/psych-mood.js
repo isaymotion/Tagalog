@@ -86,7 +86,7 @@
 
   /* Publish the scales as a phrase section, so they get search, flashcards, the handout and audio. */
   const sec = { id: 'mood-screens', group: 'Interview', title: 'PHQ-9 and MDQ in Tagalog',
-    intro: 'The nine PHQ-9 items with the four frequency choices, and the thirteen MDQ items. Paraphrased for training, not validated translations. The checker in Psychiatry → Mood episode scores them.',
+    intro: 'The nine PHQ-9 items with the four frequency choices, and the thirteen MDQ items. Paraphrased for training, not validated translations. The checker in Psychiatry → Mood episode scores them. Sources: PHQ-9, Kroenke, Spitzer and Williams (2001), free to use, official translations including Filipino at phqscreeners.com; MDQ, Hirschfeld et al. (2000), © University of Texas Medical Branch, free for clinical and educational use, a screen and not a diagnosis. For a score that goes in the chart, use the published instrument.',
     phrases: [{ en: PHQ9.stem.en, f: PHQ9.stem.tl, n: PHQ9.opts.map((o) => o[0]).join(' / ') }]
       .concat(PHQ9.items.map((it, i) => ({ en: 'PHQ-9 ' + (i + 1) + '. ' + it.en, f: it.tl })))
       .concat([{ en: PHQ9.impairment.en, f: PHQ9.impairment.tl, n: PHQ9.impairment.opts.join(' / ') }])

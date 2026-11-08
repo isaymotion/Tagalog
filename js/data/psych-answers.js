@@ -1,0 +1,390 @@
+/* Likely patient replies for the point board (#/psych/point) and the listening drill (#/psych/listen).
+   Plain conversational Filipino as patients speak it; practice material, not validated translations.
+   DRAFT FOR REVIEW by Dr. Navarro before release.
+   common: groups of general replies shown on every point board. sections: replies specific to each PSYCH_SECTIONS id.
+   Each item: [tagalog, english, clinicalNote?]  clinicalNote = short (<= 14 words) what it signals clinically; optional. */
+window.PSYCH_ANSWERS = {
+  common: [
+    { id: 'yesno', title: 'Yes / no', items: [
+      ['Opo.', 'Yes.'],
+      ['Hindi po.', 'No.'],
+      ['Siguro po.', 'Maybe.'],
+      ['Minsan po.', 'Sometimes.'],
+      ['Hindi ko po alam.', 'I don\'t know.'],
+      ['Ayoko pong sagutin.', 'I don\'t want to answer.', 'Refusal; note topic and revisit gently later.'],
+      ['Dati po, ngayon hindi na.', 'It used to be, but not anymore.'],
+      ['Hindi po ako sigurado.', 'I\'m not sure.']
+    ] },
+    { id: 'freq', title: 'How often', items: [
+      ['Araw-araw po.', 'Every day.'],
+      ['Halos araw-araw po.', 'Almost every day.'],
+      ['Ilang beses po sa isang linggo.', 'A few times a week.'],
+      ['Isang beses lang po sa isang linggo.', 'Only once a week.'],
+      ['Minsan lang po.', 'Only once in a while.'],
+      ['Bihira po.', 'Rarely.'],
+      ['Ilang beses po sa isang araw.', 'Several times a day.'],
+      ['Hindi pa po nangyari.', 'It has never happened.']
+    ] },
+    { id: 'when', title: 'Since when', items: [
+      ['Ngayon lang po.', 'Just now / only today.'],
+      ['Kahapon pa po.', 'Since yesterday.'],
+      ['Mga ilang araw na po.', 'For a few days now.'],
+      ['Mga dalawang linggo na po.', 'About two weeks now.'],
+      ['Isang buwan na po.', 'A month now.'],
+      ['Ilang buwan na po.', 'Several months now.'],
+      ['Isang taon na po.', 'A year now.'],
+      ['Matagal na po, bata pa ako.', 'A long time, since I was young.'],
+      ['Hindi ko na po matandaan.', 'I can no longer remember.']
+    ] },
+    { id: 'howmuch', title: 'How much', items: [
+      ['Wala po.', 'None.'],
+      ['Konti lang po.', 'Just a little.'],
+      ['Katamtaman lang po.', 'Moderate.'],
+      ['Marami po.', 'A lot.'],
+      ['Sobrang dami po.', 'Way too much.'],
+      ['Mas lumala po ngayon.', 'It has gotten worse lately.'],
+      ['Mas gumaan po kaysa dati.', 'It\'s lighter than before.'],
+      ['Hindi ko na po kaya.', 'I can\'t take it anymore.', 'Unbearable distress; ask about hopelessness and suicide.']
+    ] },
+    { id: 'feel', title: 'How I feel', items: [
+      ['Okay lang po ako.', 'I\'m okay.'],
+      ['Malungkot po ako.', 'I\'m sad.'],
+      ['Kinakabahan po ako.', 'I\'m nervous.', 'Common idiom for anxiety; ask about palpitations and worry.'],
+      ['Natatakot po ako.', 'I\'m scared.'],
+      ['Galit po ako.', 'I\'m angry.'],
+      ['Pagod na pagod po ako.', 'I\'m exhausted.'],
+      ['Parang wala po akong nararamdaman.', 'I feel like I feel nothing.', 'Possible emotional numbness; consider depression, trauma, dissociation.'],
+      ['Nahihilo po ako.', 'I feel dizzy.', 'Somatic idiom; rule out medical cause and anxiety.'],
+      ['Nahihiya po ako.', 'I\'m embarrassed.']
+    ] },
+    { id: 'help', title: 'I need…', items: [
+      ['Pakiulit po.', 'Please repeat that.'],
+      ['Hindi ko po naintindihan.', 'I didn\'t understand.'],
+      ['Pakibagalan po ang pagsasalita.', 'Please speak slower.'],
+      ['Pwede po bang mag-English?', 'Can we speak English?'],
+      ['Gusto ko pong makita ang pamilya ko.', 'I want to see my family.'],
+      ['Magpapahinga po muna ako.', 'I need a break.'],
+      ['Masakit po ang katawan ko.', 'My body hurts.'],
+      ['Gutom na po ako.', 'I\'m hungry.'],
+      ['Kailangan ko pong mag-CR.', 'I need the toilet.']
+    ] }
+  ],
+  sections: {
+    opening: [
+      ['Magandang umaga po, Doc.', 'Good morning, Doc.'],
+      ['Okay lang po sa akin ang Tagalog.', 'Tagalog is fine with me.'],
+      ['Mas gusto ko po ang English.', 'I prefer English.'],
+      ['Tawagin n\'yo na lang po akong Ate.', 'Just call me Ate.'],
+      ['Kinakabahan po ako.', 'I\'m nervous.', 'Anxiety about the interview; reassure before proceeding.'],
+      ['Hindi ko po alam kung bakit ako nandito.', 'I don\'t know why I\'m here.', 'Possible poor insight or involuntary presentation.'],
+      ['Dinala lang po ako ng pamilya ko.', 'My family just brought me.', 'Family-initiated; explore patient\'s own view.'],
+      ['Gusto ko na po umuwi.', 'I want to go home already.'],
+      ['Sige po, handa na po ako.', 'Okay, I\'m ready.']
+    ],
+    consent: [
+      ['Opo, naiintindihan ko po.', 'Yes, I understand.'],
+      ['Hindi ko po naintindihan, pakiulit.', 'I didn\'t understand, please repeat.'],
+      ['Okay lang po na kausapin n\'yo ang pamilya ko.', 'It\'s fine to talk to my family.'],
+      ['Ayoko pong malaman ng asawa ko.', 'I don\'t want my spouse to know.', 'Specific confidentiality limit; clarify what and why.'],
+      ['Ayoko pong malaman ng magulang ko.', 'I don\'t want my parents to know.'],
+      ['Baka po masabi n\'yo sa iba.', 'You might tell other people.', 'Fear about trust and stigma.'],
+      ['Wala po akong tinatago.', 'I\'m not hiding anything.'],
+      ['Pwede po bang ako muna ang magsabi sa kanila?', 'Can I be the one to tell them first?'],
+      ['Sige po, pumapayag ako.', 'Okay, I agree.']
+    ],
+    'cc-hpi': [
+      ['Hindi po ako makatulog.', 'I can\'t sleep.'],
+      ['Sobrang lungkot ko po.', 'I\'m extremely sad.'],
+      ['Kinakabahan po ako palagi.', 'I\'m always nervous.', 'Anxiety idiom; ask about panic and worry.'],
+      ['Nakakarinig po ako ng boses.', 'I hear voices.', 'Possible auditory hallucinations; explore content and commands.'],
+      ['Sumasakit po ang dibdib ko.', 'My chest hurts.', 'Somatic presentation of anxiety or depression; rule out cardiac cause.'],
+      ['Nag-aaway po kami sa bahay.', 'We keep fighting at home.'],
+      ['Ang pamilya ko po ang may gusto na pumunta ako dito.', 'My family wanted me to come here.', 'Family-driven presentation; assess patient insight.'],
+      ['Nawalan po ako ng trabaho at hindi na ako okay.', 'I lost my job and I haven\'t been okay since.'],
+      ['Sabi po ng iba, nag-iiba raw ang ugali ko.', 'People say my behavior has changed.', 'Others notice change; limited insight.'],
+      ['Wala po akong sakit, okay lang ako.', 'I\'m not sick, I\'m fine.', 'Denial of illness; poor insight.']
+    ],
+    depression: [
+      ['Opo, lagi po akong malungkot.', 'Yes, I\'m always sad.'],
+      ['Wala na po akong gana sa kahit ano.', 'I have no interest in anything anymore.', 'Anhedonia.'],
+      ['Hindi po ako makatulog, gising ako hanggang madaling-araw.', 'I can\'t sleep, I\'m awake until dawn.', 'Insomnia; early morning waking.'],
+      ['Wala po akong ganang kumain.', 'I have no appetite.'],
+      ['Mabigat po ang dibdib ko.', 'My chest feels heavy.', 'Idiom of distress in depression or anxiety.'],
+      ['Wala po akong silbi.', 'I\'m useless.', 'Worthlessness; ask about suicidal thoughts.'],
+      ['Sinisisi ko po ang sarili ko sa lahat.', 'I blame myself for everything.', 'Excessive guilt.'],
+      ['Hindi po ako makapag-concentrate.', 'I can\'t concentrate.'],
+      ['Pagod na pagod po ako kahit walang ginagawa.', 'I\'m exhausted even when I do nothing.', 'Fatigue and low energy.'],
+      ['Okay lang po, hindi naman ako malungkot.', 'It\'s fine, I\'m not really sad.', 'Possible minimisation or masked depression; probe somatic symptoms.']
+    ],
+    mania: [
+      ['Opo, ang saya-saya ko po nitong mga nakaraang araw.', 'Yes, I\'ve been very happy these past days.'],
+      ['Tatlong araw na po akong hindi natutulog pero hindi ako pagod.', 'I haven\'t slept for three days but I\'m not tired.', 'Decreased need for sleep; core manic sign.'],
+      ['Mabilis po ang isip ko, ang daming ideya.', 'My mind is fast, I have so many ideas.', 'Racing thoughts, flight of ideas.'],
+      ['Madali po akong mairita ngayon.', 'I get irritated easily now.', 'Irritable mood; consider mixed or manic episode.'],
+      ['Bumili po ako ng maraming bagay, nagastos ko na ang ipon ko.', 'I bought many things and spent my savings.', 'Excessive spending; risky behavior.'],
+      ['Marami po akong plano, magpapatayo ako ng negosyo.', 'I have many plans, I\'m going to start a business.', 'Possible grandiosity or increased goal-directed activity.'],
+      ['Sabi nila, sobrang daldal ko raw.', 'They say I talk too much.', 'Pressured speech reported by others.'],
+      ['Wala po akong problema, okay na okay ako.', 'I have no problem, I\'m perfectly fine.', 'Lack of insight in mania.'],
+      ['Hindi po, normal lang ang tulog ko.', 'No, my sleep is normal.']
+    ],
+    anxiety: [
+      ['Opo, lagi po akong nag-aalala.', 'Yes, I\'m always worrying.'],
+      ['Hindi ko po mapigilan ang pag-iisip.', 'I can\'t stop the thinking.', 'Uncontrollable worry; GAD or obsessions.'],
+      ['Bigla pong tumitibok nang mabilis ang puso ko.', 'My heart suddenly beats fast.', 'Palpitations; panic attack.'],
+      ['Parang hindi po ako makahinga.', 'It feels like I can\'t breathe.', 'Dyspnea in panic; rule out medical cause.'],
+      ['Akala ko po mamamatay na ako.', 'I thought I was going to die.', 'Fear of dying; panic attack.'],
+      ['Nanginginig po ang kamay ko at pinagpapawisan ako.', 'My hands shake and I sweat.'],
+      ['Paulit-ulit ko pong chine-check ang pinto.', 'I keep checking the door again and again.', 'Checking compulsion; OCD.'],
+      ['Takot po akong madumihan, kaya hugas ako nang hugas.', 'I\'m afraid of getting dirty, so I wash over and over.', 'Contamination obsession and washing compulsion.'],
+      ['Natatakot po akong lumabas o makipag-usap sa tao.', 'I\'m afraid to go out or talk to people.', 'Social anxiety or agoraphobia.'],
+      ['Nerbiyos lang po \'yan.', 'It\'s just nerves.', 'Common lay term; may minimise anxiety disorder.']
+    ],
+    trauma: [
+      ['Opo, may nangyari po sa akin dati.', 'Yes, something happened to me before.'],
+      ['Ayoko pong pag-usapan.', 'I don\'t want to talk about it.', 'Avoidance; do not push, offer to return later.'],
+      ['Bumabalik-balik po sa isip ko ang nangyari.', 'It keeps coming back to my mind.', 'Intrusive memories.'],
+      ['Nananaginip po ako ng masama halos gabi-gabi.', 'I have bad dreams almost every night.', 'Trauma-related nightmares.'],
+      ['Parang nangyayari ulit po ngayon.', 'It feels like it\'s happening again now.', 'Flashbacks.'],
+      ['Nagugulat po ako sa maliit na ingay.', 'I get startled by small noises.', 'Hypervigilance, exaggerated startle.'],
+      ['Iniiwasan ko po ang lugar na \'yon.', 'I avoid that place.', 'Avoidance symptom.'],
+      ['Parang ako\'y nawawala sa sarili.', 'It\'s like I\'m losing myself.', 'Dissociation idiom; ask about depersonalisation or blanking out.'],
+      ['Sinisisi ko po ang sarili ko sa nangyari.', 'I blame myself for what happened.', 'Trauma-related guilt.'],
+      ['Matagal na po \'yon, okay na ako.', 'That was long ago, I\'m fine now.', 'Possible minimisation or avoidance.']
+    ],
+    hallucinations: [
+      ['Opo, nakakarinig po ako ng boses.', 'Yes, I hear voices.', 'Auditory hallucinations.'],
+      ['Hindi po, wala akong naririnig.', 'No, I don\'t hear anything.'],
+      ['Opo, sa kaliwang tenga ko po.', 'Yes, in my left ear.'],
+      ['Minsan po, pag gabi.', 'Sometimes, at night.'],
+      ['Boses po ng lalaki na hindi ko kilala.', 'The voice of a man I don\'t know.'],
+      ['Sinasabi po na wala akong kwenta.', 'It says I\'m worthless.', 'Derogatory voices; raises suicide risk.'],
+      ['Minumura po ako.', 'It curses at me.'],
+      ['Inuutusan po akong saktan ang sarili ko.', 'It tells me to hurt myself.', 'Command hallucination (self-harm); urgent risk assessment.'],
+      ['Inuutusan po akong saktan ang ibang tao.', 'It tells me to hurt other people.', 'Command hallucination (harm to others); urgent risk assessment.'],
+      ['Nakakakita po ako ng anino at multo.', 'I see shadows and ghosts.', 'Visual hallucinations; consider delirium, substances, or culture-bound experience.'],
+      ['Naririnig ko po ang yumaong nanay ko.', 'I hear my late mother.', 'Grief hallucination can be normal; assess context.']
+    ],
+    delusions: [
+      ['Opo, may gustong manakit sa akin.', 'Yes, someone wants to hurt me.', 'Persecutory delusion; assess risk of acting on it.'],
+      ['Sinusundan po ako ng mga tao.', 'People are following me.', 'Persecutory delusion.'],
+      ['Pinag-uusapan po nila ako kahit hindi nila sinasabi.', 'They talk about me even if they don\'t say it.', 'Ideas of reference.'],
+      ['Naglalagay po sila ng lason sa pagkain ko.', 'They put poison in my food.', 'Paranoid delusion; may lead to refusing food and meds.'],
+      ['Alam po ng iba ang iniisip ko.', 'Other people know what I\'m thinking.', 'Thought broadcasting.'],
+      ['May nagpapasok po ng mga iniisip sa utak ko.', 'Someone puts thoughts into my head.', 'Thought insertion; first-rank symptom.'],
+      ['Kinokontrol po nila ang katawan ko.', 'They control my body.', 'Delusion of control; first-rank symptom.'],
+      ['Pinili po ako ng Diyos para sa isang misyon.', 'God chose me for a mission.', 'Grandiose or religious delusion; consider mania and cultural context.'],
+      ['Kinulam po ako ng kapitbahay namin.', 'Our neighbor put a curse on me.', 'Kulam belief; check if culturally shared before calling delusional.'],
+      ['Hindi po, wala namang ganoon.', 'No, nothing like that.']
+    ],
+    suicide: [
+      ['Hindi po, hindi ko naiisip \'yon.', 'No, I don\'t think about that.', 'Denial; observe consistency with mood and behavior.'],
+      ['Minsan po, iniisip ko na sana hindi na lang ako magising.', 'Sometimes I wish I wouldn\'t wake up.', 'Passive suicidal ideation.'],
+      ['Opo, iniisip ko pong magpakamatay.', 'Yes, I think about killing myself.', 'Active suicidal ideation; assess plan, intent, means.'],
+      ['Opo, may plano na po ako.', 'Yes, I already have a plan.', 'Suicide plan; high risk, needs immediate safety measures.'],
+      ['Iinumin ko po ang lahat ng gamot ko.', 'I would take all my medicines.', 'Overdose plan; restrict access to medication.'],
+      ['Nagtangka na po ako dati.', 'I tried before.', 'Previous attempt; strongest predictor of future attempt.'],
+      ['Pagod na po ako sa buhay.', 'I\'m tired of life.', 'Passive ideation or hopelessness; ask directly about suicide.'],
+      ['Hindi ko po gagawin dahil sa mga anak ko.', 'I wouldn\'t do it because of my children.', 'Protective factor; does not exclude risk.'],
+      ['Nasasaktan ko po ang sarili ko para gumaan ang loob ko.', 'I hurt myself to feel relief.', 'Non-suicidal self-injury; assess frequency and escalation.'],
+      ['Drama lang po \'yon, hindi ko naman talaga gagawin.', 'That was just drama, I wouldn\'t really do it.', 'Minimisation; still take seriously and assess intent.']
+    ],
+    violence: [
+      ['Hindi po, wala akong balak manakit.', 'No, I don\'t plan to hurt anyone.'],
+      ['Opo, galit na galit po ako sa kanya.', 'Yes, I\'m very angry at him/her.', 'Anger toward a specific person; identify target.'],
+      ['Gusto ko po siyang saktan.', 'I want to hurt him/her.', 'Homicidal ideation; assess plan, means, and warn as required.'],
+      ['Iniisip ko pong patayin siya.', 'I think about killing him/her.', 'Homicidal ideation with intent; urgent safety response.'],
+      ['Nakasuntok na po ako ng tao dati.', 'I have punched someone before.', 'Past violence; risk factor.'],
+      ['May itak po kami sa bahay.', 'We have a bolo knife at home.', 'Access to weapon; discuss securing it.'],
+      ['May baril po ako.', 'I have a gun.', 'Firearm access; urgent means restriction.'],
+      ['Sinasabi po ng boses na saktan ko siya.', 'The voices tell me to hurt him/her.', 'Command hallucination with violence; high risk.'],
+      ['Nasaktan ko lang po siya dahil lasing ako.', 'I only hurt him/her because I was drunk.', 'Intoxication-related violence; also minimisation.']
+    ],
+    deescalation: [
+      ['Gusto ko na pong umuwi!', 'I want to go home now!'],
+      ['Ayoko dito, pabayaan n\'yo ako!', 'I don\'t want to be here, leave me alone!', 'Agitation; give space and reduce stimulation.'],
+      ['Huwag n\'yo po akong hawakan!', 'Don\'t touch me!'],
+      ['Galit na galit po ako!', 'I\'m furious!'],
+      ['Kinakabahan po ako, natatakot ako.', 'I\'m nervous, I\'m scared.', 'Fear underlying agitation.'],
+      ['Sige po, kakalma na po ako.', 'Okay, I\'ll calm down.'],
+      ['Pwede po bang uminom ng tubig?', 'Can I have some water?'],
+      ['Gusto ko pong makausap ang nanay ko.', 'I want to talk to my mother.'],
+      ['Ayoko pong magpa-injection.', 'I don\'t want an injection.', 'Refusal of IM medication; offer oral option.'],
+      ['Lalabas po ako, hindi n\'yo ako mapipigilan.', 'I\'m leaving, you can\'t stop me.', 'Elopement risk; assess capacity and safety.']
+    ],
+    substance: [
+      ['Hindi po ako umiinom.', 'I don\'t drink.'],
+      ['Umiinom po ako tuwing weekend.', 'I drink on weekends.'],
+      ['Araw-araw po akong umiinom.', 'I drink every day.', 'Daily use; screen for dependence and withdrawal.'],
+      ['Mga limang bote po ng beer.', 'About five bottles of beer.'],
+      ['Isang bote po ng gin kada gabi.', 'A bottle of gin every night.', 'Heavy use; risk of alcohol withdrawal.'],
+      ['Nanginginig po ang kamay ko kapag hindi ako nakakainom.', 'My hands shake when I can\'t drink.', 'Withdrawal tremor; assess for severe withdrawal.'],
+      ['Gumagamit po ako ng shabu.', 'I use shabu.', 'Methamphetamine use; assess psychosis and risk.'],
+      ['Nag-marijuana lang po ako minsan.', 'I only tried marijuana once in a while.'],
+      ['Nagsusugal po ako, nalubog na ako sa utang.', 'I gamble, and I\'m deep in debt.', 'Gambling disorder; assess financial stress and suicide risk.'],
+      ['Konti lang po \'yon, hindi naman problema.', 'That\'s just a little, it\'s not a problem.', 'Minimisation; use Shea-style specific quantity questions.'],
+      ['Hindi ko po kayang tumigil.', 'I can\'t stop.', 'Loss of control.']
+    ],
+    history: [
+      ['Opo, nagpa-check up na po ako dati.', 'Yes, I\'ve had a check-up before.'],
+      ['Hindi pa po ako nakapunta sa psychiatrist.', 'I\'ve never seen a psychiatrist.'],
+      ['Na-admit na po ako sa NCMH.', 'I was admitted to NCMH.', 'Prior psychiatric hospitalisation.'],
+      ['Hindi ko na po maalala ang pangalan ng gamot.', 'I can\'t remember the name of the medicine.'],
+      ['Tumigil na po ako uminom ng gamot.', 'I stopped taking the medicine.', 'Non-adherence; ask why.'],
+      ['Wala na po kaming pambili.', 'We had no more money to buy it.'],
+      ['Gumaling na po kasi ako.', 'Because I got better already.', 'Common reason for stopping meds; psychoeducation on relapse.'],
+      ['Nakakaantok po kasi.', 'It made me sleepy.', 'Side-effect-driven non-adherence.'],
+      ['May high blood po ako.', 'I have high blood pressure.'],
+      ['May diabetes po ako.', 'I have diabetes.'],
+      ['Allergic po ako sa gamot.', 'I\'m allergic to a medicine.']
+    ],
+    'family-hx': [
+      ['Wala po sa pamilya namin.', 'No one in our family.'],
+      ['Opo, ang tatay ko po ay nagkasakit din ng ganito.', 'Yes, my father had the same illness.', 'Family history of mental illness.'],
+      ['Ang tita ko po ay naospital sa NCMH.', 'My aunt was admitted to NCMH.'],
+      ['Ang lolo ko po ay nagpakamatay.', 'My grandfather took his own life.', 'Family history of suicide; raises risk.'],
+      ['Ang kuya ko po ay adik.', 'My older brother is addicted to drugs.'],
+      ['Ang tatay ko po ay laging lasing.', 'My father was always drunk.', 'Family history of alcohol use.'],
+      ['Hindi po ako sigurado, hindi nila pinag-uusapan.', 'I\'m not sure, they don\'t talk about it.', 'Stigma; collateral may be needed.'],
+      ['Sabi po nila, baliw daw ang kamag-anak namin.', 'They say our relative was crazy.', 'Lay label for possible psychosis; clarify details.']
+    ],
+    social: [
+      ['Lumaki po ako sa probinsya.', 'I grew up in the province.'],
+      ['Lola ko po ang nagpalaki sa akin.', 'My grandmother raised me.'],
+      ['Hanggang high school lang po ang natapos ko.', 'I only finished high school.'],
+      ['Wala po akong trabaho ngayon.', 'I have no job now.'],
+      ['Nagtatrabaho po ako sa ibang bansa dati.', 'I used to work abroad.'],
+      ['Mag-isa na lang po ako sa bahay.', 'I\'m alone at home now.', 'Social isolation; risk factor.'],
+      ['Hiwalay na po kami ng asawa ko.', 'My spouse and I are separated.'],
+      ['Sinasaktan po ako ng partner ko.', 'My partner hurts me.', 'Possible intimate partner violence; ask privately about safety.'],
+      ['Mahirap po ang buhay namin, kulang ang pera.', 'Life is hard, we don\'t have enough money.'],
+      ['Masaya naman po ang pagkabata ko.', 'My childhood was happy.']
+    ],
+    collateral: [
+      ['Asawa po niya ako.', 'I\'m his/her spouse.'],
+      ['Anak po niya ako.', 'I\'m his/her child.'],
+      ['Nanay po niya ako.', 'I\'m his/her mother.'],
+      ['Nag-iiba po ang ugali niya nitong mga nakaraang buwan.', 'His/her behavior has changed these past months.'],
+      ['Nagsasalita at tumatawa po siyang mag-isa.', 'He/she talks and laughs alone.', 'Observed responding to internal stimuli; possible psychosis.'],
+      ['Hindi na po siya natutulog at gala nang gala.', 'He/she no longer sleeps and keeps going out.', 'Possible manic episode.'],
+      ['Ayaw na po niyang kumain at umiiyak lagi.', 'He/she doesn\'t want to eat and cries all the time.'],
+      ['Sinabi po niyang gusto na niyang mamatay.', 'He/she said he/she wants to die.', 'Family-reported suicidal statement; take seriously.'],
+      ['Nanakit po siya at nagbabasag ng gamit.', 'He/she hits people and breaks things.', 'Aggression; assess risk to family.'],
+      ['Sinapian daw po siya, kaya nagpatawas kami.', 'They say he/she was possessed, so we had a healer perform tawas.', 'Explanatory model of possession; ask about prior healer consultation.']
+    ],
+    'mse-cog': [
+      ['Ang pangalan ko po ay ______.', 'My name is ______.'],
+      ['Tatlumpu\'t limang taon na po ako.', 'I\'m thirty-five years old.'],
+      ['Hindi ko po alam kung anong petsa ngayon.', 'I don\'t know today\'s date.', 'Disorientation to time.'],
+      ['Nasa ospital po ako.', 'I\'m in a hospital.'],
+      ['Hindi ko po alam kung nasaan ako.', 'I don\'t know where I am.', 'Disorientation to place; consider delirium or dementia.'],
+      ['Isa, dalawa, tatlo...', 'One, two, three...'],
+      ['Sandali lang po, nakalimutan ko na po.', 'Wait, I forgot already.', 'Impaired recall.'],
+      ['Hindi ko po kaya, mahirap po.', 'I can\'t do it, it\'s hard.', 'Effort refusal vs true deficit; assess attention.'],
+      ['Nagkamali po ako, pasensya na po.', 'I made a mistake, sorry.']
+    ],
+    'mse-abstract': [
+      ['Parehong prutas po sila.', 'They are both fruits.', 'Abstract answer.'],
+      ['Pareho po silang sasakyan.', 'They are both vehicles.', 'Abstract answer.'],
+      ['Pareho po silang matamis.', 'They are both sweet.', 'Concrete answer.'],
+      ['Kapag matiyaga ka, may magandang kalalabasan.', 'If you persevere, good things come.', 'Abstract interpretation of proverb.'],
+      ['Kasi po kailangan magluto ng nilaga.', 'Because you need to cook nilaga.', 'Concrete interpretation of proverb.'],
+      ['Hindi ko po alam ang ibig sabihin.', 'I don\'t know what it means.'],
+      ['Hihingi po ako ng tulong sa guard.', 'I would ask the guard for help.', 'Reasonable judgment.'],
+      ['Kukunin ko po at itatago.', 'I would take it and keep it.', 'Poor judgment on found-wallet question.'],
+      ['Wala po akong sakit, hindi ko kailangan ng gamutan.', 'I\'m not sick, I don\'t need treatment.', 'Absent insight.'],
+      ['Siguro po nai-stress lang ako, pero kailangan ko ng tulong.', 'Maybe I\'m just stressed, but I need help.', 'Partial insight.']
+    ],
+    'mse-describe': [
+      ['Okay lang po ako.', 'I\'m okay.'],
+      ['Hindi po ako nakaligo nitong mga nakaraang araw.', 'I haven\'t bathed these past days.', 'Poor self-care.'],
+      ['Hindi po ako mapakali, hindi ako makaupo.', 'I can\'t settle, I can\'t sit still.', 'Psychomotor agitation or akathisia.'],
+      ['Mabagal po ang kilos ko ngayon.', 'I\'m moving slowly now.', 'Psychomotor retardation.'],
+      ['Nahihiya po akong tumingin.', 'I\'m shy to look at you.', 'Poor eye contact may be cultural respect, not pathology.'],
+      ['Wala po akong gustong sabihin.', 'I have nothing I want to say.', 'Poverty of speech or guardedness.'],
+      ['Nanginginig po ang kamay ko.', 'My hands are trembling.', 'Tremor; consider medication effect, anxiety, withdrawal.'],
+      ['Naririnig n\'yo rin po ba \'yon?', 'Can you hear that too?', 'Responding to internal stimuli.'],
+      ['Pagod lang po ako, hindi ako nakatulog.', 'I\'m just tired, I didn\'t sleep.']
+    ],
+    explain: [
+      ['Opo, naiintindihan ko po.', 'Yes, I understand.'],
+      ['Ibig sabihin po ba baliw ako?', 'Does that mean I\'m crazy?', 'Stigma concern; address directly.'],
+      ['Gagaling pa po ba ako?', 'Will I get better?'],
+      ['Hindi po ako naniniwala na may sakit ako.', 'I don\'t believe I\'m sick.', 'Poor insight; explore explanatory model.'],
+      ['Sa tingin ko po ay kulam o sumpa ito.', 'I think this is kulam or a curse.', 'Cultural explanatory model; respect and incorporate, do not dismiss.'],
+      ['Mas gusto ko po munang magpa-albularyo.', 'I would rather see a traditional healer first.'],
+      ['Ayokong uminom ng gamot habambuhay.', 'I don\'t want to take medicine forever.', 'Adherence concern; discuss duration and options.'],
+      ['Nahihiya po ako na may ganito ako.', 'I\'m ashamed to have this.'],
+      ['Salamat po, gumaan ang pakiramdam ko.', 'Thank you, I feel lighter.']
+    ],
+    meds: [
+      ['Opo, iniinom ko po araw-araw.', 'Yes, I take it every day.'],
+      ['Nakakalimutan ko po minsan.', 'I forget sometimes.'],
+      ['Dalawang beses po akong hindi nakainom ngayong linggo.', 'I missed it twice this week.'],
+      ['Wala po kaming pambili ng gamot.', 'We have no money to buy the medicine.'],
+      ['Inaantok po ako buong araw.', 'I\'m sleepy all day.', 'Sedation side effect.'],
+      ['Nanginginig po ang kamay ko mula nang uminom nito.', 'My hands have trembled since I started this.', 'Possible extrapyramidal side effect.'],
+      ['Naninigas po ang leeg at panga ko.', 'My neck and jaw feel stiff.', 'Possible acute dystonia; urgent.'],
+      ['Hindi po ako mapakali, parang gusto kong tumayo palagi.', 'I can\'t stay still, I always want to get up.', 'Possible akathisia.'],
+      ['Tumaba po ako at nawalan ng gana sa sex.', 'I gained weight and lost my sex drive.', 'Side effects causing non-adherence; ask sensitively.'],
+      ['Itinigil ko na po dahil gumaling na ako.', 'I stopped because I got better.'],
+      ['Nahihilo po ako pag tumatayo.', 'I get dizzy when I stand up.', 'Orthostatic hypotension; check blood pressure.']
+    ],
+    admission: [
+      ['Ayoko pong ma-admit.', 'I don\'t want to be admitted.', 'Refusal; assess capacity and risk.'],
+      ['Sige po, papayag na po ako.', 'Okay, I agree.'],
+      ['Gaano po katagal ako dito?', 'How long will I be here?'],
+      ['Pwede po bang dalawin ako ng pamilya ko?', 'Can my family visit me?'],
+      ['Sino po ang mag-aalaga sa mga anak ko?', 'Who will take care of my children?'],
+      ['Mawawalan po ako ng trabaho.', 'I will lose my job.'],
+      ['Wala po kaming pambayad.', 'We can\'t afford to pay.'],
+      ['Natatakot po ako dito.', 'I\'m scared here.'],
+      ['Kailan po ako makakauwi?', 'When can I go home?']
+    ],
+    child: [
+      ['Ako po si ______, walong taon na po ako.', 'I\'m ______, I\'m eight years old.'],
+      ['Grade 5 po ako.', 'I\'m in Grade 5.'],
+      ['Gusto ko pong maglaro ng mobile games.', 'I like playing mobile games.'],
+      ['Wala po akong kaibigan.', 'I have no friends.', 'Social isolation; ask about bullying.'],
+      ['Binu-bully po ako sa school.', 'I get bullied at school.', 'Bullying; assess safety and mood.'],
+      ['Ayoko pong pumasok.', 'I don\'t want to go to school.', 'School refusal; explore anxiety, bullying, mood.'],
+      ['Nag-aaway po sina Mama at Papa.', 'Mama and Papa fight.'],
+      ['Masakit po ang tiyan ko lagi.', 'My stomach always hurts.', 'Somatic complaint in children; consider anxiety.'],
+      ['Hindi ko po maupo nang matagal.', 'I can\'t sit for long.'],
+      ['May nananakit po sa akin.', 'Someone hurts me.', 'Possible abuse; follow child protection procedures.']
+    ],
+    elderly: [
+      ['Magandang umaga rin po.', 'Good morning to you too.'],
+      ['Ano po? Hindi ko marinig.', 'What? I can\'t hear.', 'Hearing impairment; adjust approach before cognitive testing.'],
+      ['Nakakalimutan ko po ang mga bagay ngayon.', 'I forget things now.', 'Subjective memory decline.'],
+      ['Naliligaw po ako kahit sa kapitbahayan namin.', 'I get lost even in our neighborhood.', 'Disorientation; dementia concern.'],
+      ['Hindi ko po alam kung anong araw ngayon.', 'I don\'t know what day it is.'],
+      ['Gabi-gabi po akong hindi mapakali at nagkakamali ng akala.', 'Every night I\'m restless and mistaken about things.', 'Sundowning or delirium.'],
+      ['Nakikita ko po ang mga taong wala naman.', 'I see people who aren\'t there.', 'Visual hallucinations; consider delirium or Lewy body disease.'],
+      ['Mag-isa na po ako, wala nang dumadalaw.', 'I\'m alone now, no one visits.', 'Isolation; screen for depression.'],
+      ['Hindi po ako makatulog at laging masakit ang katawan.', 'I can\'t sleep and my body always hurts.']
+    ],
+    closing: [
+      ['Salamat po, Doc.', 'Thank you, Doc.'],
+      ['Opo, tama po ang buod n\'yo.', 'Yes, your summary is correct.'],
+      ['Hindi po, may nakalimutan po kayo.', 'No, you missed something.'],
+      ['Meron pa po akong gustong sabihin.', 'There\'s something else I want to say.'],
+      ['Gusto ko pong itanong kung gagaling ako.', 'I want to ask if I will get better.'],
+      ['Kailan po ang susunod na balik ko?', 'When is my next visit?'],
+      ['Wala na po akong tanong.', 'I have no more questions.'],
+      ['Kinakabahan pa rin po ako pero gumaan ang loob ko.', 'I\'m still nervous but I feel a bit lighter.'],
+      ['Sana po matulungan n\'yo ako.', 'I hope you can help me.']
+    ],
+    'shea-techniques': [
+      ['Mga sampung bote po ng beer sa isang upuan.', 'About ten bottles of beer in one sitting.', 'Large quantity; shows value of normalising and specific numbers.'],
+      ['Hindi ko po mabilang, basta lasing ako.', 'I can\'t count, I just get drunk.', 'Heavy use; possible minimisation or blackouts.'],
+      ['Konti lang po talaga.', 'It\'s really just a little.', 'Likely minimisation; probe with specific amounts.'],
+      ['Naisip ko na pong uminom ng lahat ng gamot ko.', 'I thought of taking all my medicines.', 'Overdose ideation; assess plan and means.'],
+      ['Naisip ko pong magbigti.', 'I thought of hanging myself.', 'Specific method; high lethality, assess intent.'],
+      ['Naisip ko pong tumalon.', 'I thought of jumping.', 'Specific method; assess access and intent.'],
+      ['Nahihiya po akong sabihin.', 'I\'m embarrassed to say it.', 'Shame; reassure and normalise before asking again.'],
+      ['Nagkakaroon na rin po ako ng ganoong iniisip.', 'I\'ve also had thoughts like that.', 'Disclosure after normalising question.'],
+      ['Oo po, mas marami pa nga po kaysa doon.', 'Yes, actually even more than that.', 'Gentle assumption elicited higher true amount.'],
+      ['Hindi po, hindi ko naisip \'yon.', 'No, I haven\'t thought of that.']
+    ]
+  }
+};

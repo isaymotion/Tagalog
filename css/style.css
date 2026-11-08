@@ -735,3 +735,22 @@ mark.vf { background: var(--warn-bg); color: var(--gold-ink); font-weight: 700; 
 .ho-paper .lesson-body p, .ho-paper .lesson-body li { max-width: none; }
 .ho-paper .lesson-body dl dt { margin-top: 8px; }
 .ho-paper .lesson-body .ex { margin: 5px 0; padding: 6px 10px; }
+
+/* Point board (#/psych/point): big tiles the patient taps; strip the interviewer reads. */
+.pstrip { position: sticky; top: calc(var(--top, 56px) + 8px); z-index: 5; margin-bottom: 14px; }
+.pstrip__tl { font-size: 1.35rem; font-weight: 600; line-height: 1.25; }
+.pstrip__en { font-size: 1.05rem; color: var(--fg); margin-top: 2px; }
+.pgroup h2 { font-size: 1rem; margin: 18px 0 8px; color: var(--muted); font-weight: 600; letter-spacing: .01em; }
+.ptiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.ptiles.scale { grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); }
+.ptile { min-height: 72px; padding: 12px 14px; border-radius: var(--r-lg); border: 1px solid var(--rule); background: var(--surface); color: var(--fg); text-align: left; cursor: pointer; display: grid; align-content: center; gap: 4px; }
+.ptiles.scale .ptile { min-height: 56px; text-align: center; font-size: 1.3rem; font-weight: 700; padding: 8px; }
+.ptile:hover { border-color: var(--ink-3); }
+.ptile.on { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+.ptile__tl { font-size: 1.15rem; font-weight: 600; line-height: 1.25; }
+.ptile__en { font-size: .85rem; color: var(--muted); font-family: var(--sans); }
+.pointboard-patient .ptile { min-height: 88px; }
+.pointboard-patient .ptile__tl { font-size: 1.35rem; }
+.pointboard-patient .pstrip { display: none; }
+.pbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-radius: var(--r-md); background: var(--surface-2); margin-bottom: 10px; font-size: 1.05rem; }
+.listen-q { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }

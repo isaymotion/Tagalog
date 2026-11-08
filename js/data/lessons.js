@@ -520,5 +520,61 @@ window.LESSONS = [
     ['"unti-unti" means:', ['suddenly', 'gradually', 'again'], 1, 'Gradual onset.'],
     ['"Simula noon" means:', ['since then', 'before that', 'at first'], 0, 'since then.']
   ]
+},
+{
+  id: 'interpreting', level: 'B1', unit: 'Culture', title: 'When your Tagalog is not enough: nurses, family and the point board',
+  summary: 'When to interview alone, when to ask a nurse to interpret, when never to use the family, and how to keep an interpreted interview clinically sound.',
+  draft: true,
+  body: `
+<p>Usap Tayo gets you to a working interview, not to native fluency. Knowing when to stop and get help is a clinical skill, and patients respect it. This lesson is about the three situations you will meet on the ward and in the OPD.</p>
+<h3>1. Interview in Tagalog yourself when…</h3>
+<ul>
+<li>the questions are routine: mood, sleep, appetite, side effects, orientation, daily functioning, follow-up of a known patient;</li>
+<li>you can follow the gist of the answers and the patient is not in crisis;</li>
+<li>you have time to repeat and clarify (<i>Pakiulit po</i>, <i>Ano po ang ibig ninyong sabihin?</i>).</li>
+</ul>
+<p>Tell the patient at the start that you are still learning, and invite correction. Most patients slow down and help.</p>
+<div class="ex"><b>Nag-aaral pa po ako ng Tagalog. Sabihin po ninyo kung hindi ninyo ako maintindihan.</b><span>I am still learning Tagalog. Tell me if you do not understand me.</span></div>
+<div class="ex"><b>Puwede po bang dahan-dahan lang?</b><span>Could you go slowly, please?</span></div>
+<h3>2. Ask a nurse or a colleague to interpret when…</h3>
+<ul>
+<li><b>risk is on the table</b>: suicide or violence risk assessment, an agitated or intoxicated patient, a decision about admission or restraint;</li>
+<li><b>consent or rights</b>: explaining the diagnosis and treatment, informed consent for medication or admission, the patient's rights under RA 11036 (Mental Health Act). A patient cannot consent to what was not explained in a language they understand;</li>
+<li><b>thought disorder</b>: loose associations, neologisms, tangential speech. You cannot rate what you cannot follow, and a second language hides formal thought disorder;</li>
+<li><b>children, elderly patients with cognitive impairment, trauma disclosures</b>, or anything where a misunderstood word changes the plan.</li>
+</ul>
+<div class="ex"><b>Puwede po bang tumulong ang nurse na magsalin, para sigurado akong tama ang pagkakaintindi ko?</b><span>May the nurse help interpret, so I am sure I understand you correctly?</span></div>
+<p>Good practice for a nurse-interpreted interview:</p>
+<ul>
+<li>Brief the nurse first: the purpose, that you want <b>everything</b> interpreted (not summarized), including swearing, tangents and silences.</li>
+<li>Speak to the <b>patient</b>, in the first person, and keep looking at them. Short segments, one question at a time.</li>
+<li>Ask the nurse to flag anything that does not translate ("the patient used a word for a spirit I cannot translate") rather than smoothing it over.</li>
+<li>After the interview, ask the nurse what they noticed about speech, affect and wording. Document "interviewed with [role] interpreting"; never record the nurse's name as an informant.</li>
+</ul>
+<h3>3. Family members: helpers for history, not interpreters for the patient's own account</h3>
+<p>Family give invaluable <a href="#/psych/s/collateral">collateral history</a>. But using a relative to interpret the patient's own words has predictable failures:</p>
+<ul>
+<li><b>Filtering by hiya</b>: relatives soften or omit suicidal thoughts, sexual content, substance use, and complaints about the family itself.</li>
+<li><b>Answering for the patient</b>: "Okay naman siya, Dok" when the patient has not spoken.</li>
+<li><b>Safety</b>: if the family member is the one the patient fears (violence, coercion, financial abuse), the patient will never say so through them. Always find a moment alone with the patient, using a nurse if needed.</li>
+<li><b>Confidentiality</b>: the patient may not want the relative to hear the answer. Ask first.</li>
+</ul>
+<div class="ex"><b>Puwede po bang makausap ko muna siya nang mag-isa? Babalikan ko po kayo pagkatapos.</b><span>May I speak with him/her alone first? I will come back to you afterwards.</span></div>
+<h3>4. Tools in this app for the gap in between</h3>
+<ul>
+<li><a href="#/psych/point">Point board (Ituro)</a>: when you understand the question but not the fast answer, turn the phone around and let the patient tap. The phone speaks the line and shows you the English. Useful for frequency, duration, severity and the common replies in each section; it is not a substitute for an interpreter in a risk assessment.</li>
+<li><a href="#/psych/listen">Listening drill</a>: train the ear on real replies at natural speed, so you need the point board less.</li>
+<li><a href="#/psych/mse-sheet">MSE interviewer sheet</a>: read the question off the page when your pronunciation fails you.</li>
+</ul>
+<h3>5. Rating scales: use the real translation when the score goes in the chart</h3>
+<p>The PHQ-9 and MDQ in the <a href="#/psych/mood">Mood episode checker</a> are <b>paraphrased for training</b> so you learn to ask the items. When a score is documented, administer the published instrument: the PHQ-9 (Kroenke, Spitzer and Williams, 2001; free to use, with official translations including Filipino distributed through the PHQ screeners site) and the MDQ (Hirschfeld et al., 2000; © University of Texas Medical Branch, free for clinical and educational use; a screen, not a diagnosis). A paraphrased item is a different item, and the cut-offs no longer apply.</p>
+<div class="note">Clinical tip: write down, in the patient's own Tagalog words, any line you did not fully understand and ask a nurse about it afterwards. These lines are often the idioms of distress that carry the diagnosis.</div>`,
+  quiz: [
+    ['A depressed patient mentions "pagod na ako sa buhay." You caught the words but are not sure of the weight. What next?', ['Note it as fatigue and move on', 'Ask the nurse to interpret and assess suicide risk directly', 'Ask the daughter what he meant'], 1, 'Risk is on the table: get a nurse to interpret and ask directly. The daughter may filter the answer.'],
+    ['Which interview is reasonable to do alone with ward-level Tagalog?', ['Informed consent for admission', 'Follow-up of sleep, appetite and side effects in a known patient', 'Assessment of loose associations'], 1, 'Routine review questions with a known patient. Consent and thought disorder need an interpreter.'],
+    ['When a nurse interprets, you should', ['speak to the nurse in the third person: "Ask him if…"', 'speak to the patient in the first person, in short segments', 'let the nurse summarize to save time'], 1, 'First person, to the patient, short segments; everything interpreted, not summarized.'],
+    ['The point board is best used for', ['risk assessment instead of an interpreter', 'fast answers about frequency, duration, severity and common replies', 'documenting the patient\'s identity'], 1, 'It bridges a fast answer; it never replaces an interpreter for risk or consent, and it saves nothing.'],
+    ['A PHQ-9 score for the chart should come from', ['the paraphrased items in the Mood episode checker', 'the published PHQ-9 in its official Filipino translation', 'your own translation on the spot'], 1, 'Paraphrased items are training wording; cut-offs apply only to the published instrument.']
+  ]
 }
 ];

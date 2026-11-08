@@ -10,7 +10,7 @@ ctx.window = ctx;
 vm.createContext(ctx);
 const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
 ['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js',
- 'js/data/reading.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js', 'js/data/psych-sud.js', 'js/data/psych-withdrawal.js', 'js/data/psych-mood.js', 'js/data/psych-shea.js', 'js/data/affixes.js',
+ 'js/data/reading.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js', 'js/data/psych-sud.js', 'js/data/psych-withdrawal.js', 'js/data/psych-mood.js', 'js/data/psych-shea.js', 'js/data/psych-answers.js', 'js/data/affixes.js',
  'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js'].forEach(load);
 
 const out = new Map();
@@ -28,6 +28,8 @@ const add = (t) => {
 (ctx.READING || []).forEach((r) => r.tl.forEach(add));
 (ctx.PSYCH_CASES || []).forEach((c) => c.steps.forEach((s) => { add(s.line[0]); s.choices.forEach((x) => add(x.tl)); }));
 (ctx.PSYCH_INTERP || []).forEach((x) => add(x[0]));
+// Point board and listening drill replies (numbers 0-10 on the board are spoken by the device voice).
+if (ctx.PSYCH_ANSWERS) { ctx.PSYCH_ANSWERS.common.forEach((g) => g.items.forEach((it) => add(it[0]))); Object.values(ctx.PSYCH_ANSWERS.sections).forEach((l) => l.forEach((it) => add(it[0]))); }
 (ctx.PSYCH_DISCHARGE_CASES || []).forEach((c) => Object.values(c.fields).forEach((f) => Object.values(f.ans || {}).forEach((a) => add(a[0]))));
 add('Opo, Dok.'); // default discharge practice answer
 (ctx.PSYCH_MSE_SHEET ? ctx.PSYCH_MSE_SHEET.sections : []).forEach((s) => (s.blocks || []).forEach((b) => b.items.forEach((it) => add(it.tl)))); // MSE interviewer sheet lines not already in PSYCH_SECTIONS
