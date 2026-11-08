@@ -6,14 +6,14 @@
 
 **App created by Isabella Navarro, MD. Latest version November 2026. isaymotion@gmail.com**
 
-Version **3.1.0** (2026-11-08): point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
+Version **3.1.1** (2026-11-08): point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
 
 ## What's inside
 
 | Section | What it does |
 |---|---|
 | **Psychiatry Tagalog** | 33 sections (452 phrases) covering opening and consent, HPI, depression, mania, anxiety/OCD, trauma, hallucinations, delusions, suicide and violence risk, de-escalation, substances (screening criteria, betel nut, gambling, AUDIT-C and Fagerström, motivational interviewing), history, collateral, MSE (cognition, abstraction, observations), explaining diagnosis, medication side effects, admission, children, elderly patients, closing, and Shea's validity techniques (gentle assumption, symptom amplification, denial of the specific, behavioral incidents, shame attenuation, normalization, anchor questions; draft for review). Each phrase has a respectful (*po*) form and an everyday/Taglish form. Every section links to the chapter of the [Psychiatric Interviewing Trainer](https://isaymotion.github.io/sheatrainer/) that teaches the technique behind it, and the trainer's study guides link back. |
-| **Point board (Ituro)** | When the patient's answer is too fast to follow, turn the phone around: the patient taps a reply, the phone speaks it and the interviewer reads the English. General replies (yes/no, how often, since when, how much, how I feel, I need…), a 0–10 scale spoken in Tagalog, and 7–11 likely replies for each of the 27 interview sections (`js/data/psych-answers.js`, draft for review). Patient view enlarges the tiles and hides the English; nothing is saved. Route `#/psych/point?s=<section>`. |
+| **Point board (Ituro)** | When the patient's answer is too fast to follow, turn the phone around: the patient taps a reply, the phone speaks it and the interviewer reads the English. General replies (yes/no, how often, since when, how much, how I feel, I need…), a 0–10 scale spoken in Tagalog, and 7–11 likely replies for each of the 38 sections (`js/data/psych-answers.js`, draft for review). Patient view enlarges the tiles and hides the English; nothing is saved. Route `#/psych/point?s=<section>`. |
 | **Listening drill** | Hear a patient or family reply at natural speed (slower or faster on request), choose its meaning from four, then see the Tagalog. Pool: the point-board replies, the interpretation drill and the case simulations; filter by section. Route `#/psych/listen?s=<section>`. |
 | **Case simulations** | 7 interactive interviews (first-episode psychosis, depression with suicide risk, mania, delirium, alcohol withdrawal, agitated patient, betel nut use disorder) with feedback and an MSE summary. |
 | **Mood episode** | Tap-to-count DSM-5-TR checker: depressed mood + SIGECAPS (gate + 5 of 9, two weeks) and elevated/expansive or irritable mood + DIGFAST (3 of 7, or 4 if only irritable; mania vs hypomania by duration, hospitalization and psychosis), with features, a copyable chart line, and the PHQ-9 and MDQ in Tagalog. Nothing is saved. |
@@ -36,6 +36,12 @@ Version **3.1.0** (2026-11-08): point board (Ituro), listening drill, interprete
 | **Reading** | 12 graded passages (A1–B2) with glossaries and comprehension questions. |
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. |
 | **You** | Placement test, streaks, XP, progress stats, backup export/import, settings, What's New, About. |
+
+## Version 3.1.1: replies for every section, lesson example fix
+
+- **Point board / listening drill**: `js/data/psych-answers.js` now has section-specific replies for `sud-screen`, `sud-betel`, `sud-other`, `sud-gambling`, `sud-screens`, `mi`, `mood-screens`, `wd-alcohol`, `wd-cannabis`, `wd-agitation` (100 items, draft for review), so every section's board shows its own replies above the general groups.
+- **Fix**: lesson example boxes (`.lesson-body .ex`) placed the English in a second column beside a zero-width Tagalog column once the speaker button was appended (`views.js` set the grid position on a wrapper that was never inserted). The button now gets class-based placement (`.ex.has-say` in `css/style.css`).
+- **Files changed:** `sw.js`, `css/style.css`, `data/app-meta.js`, `data/changelog.js`, `js/views.js`, `js/data/psych-answers.js`, `tools/texts.json`, `README.md`.
 
 ## Version 3.1.0: point board, listening drill, interpreter lesson
 

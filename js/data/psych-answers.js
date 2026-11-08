@@ -385,6 +385,126 @@ window.PSYCH_ANSWERS = {
       ['Nagkakaroon na rin po ako ng ganoong iniisip.', 'I\'ve also had thoughts like that.', 'Disclosure after normalising question.'],
       ['Oo po, mas marami pa nga po kaysa doon.', 'Yes, actually even more than that.', 'Gentle assumption elicited higher true amount.'],
       ['Hindi po, hindi ko naisip \'yon.', 'No, I haven\'t thought of that.']
+    ],
+    'sud-screen': [
+      ['Mas marami na po akong nagagamit ngayon kaysa dati, hindi ko po mapigilan.', 'I use more now than before; I can\'t stop myself.', 'Larger amounts than intended; criterion 1.'],
+      ['Sinubukan ko na pong tumigil, pero bumabalik din po ako sa loob ng ilang araw.', 'I tried to stop, but I went back within a few days.', 'Unsuccessful efforts to cut down; criterion 2.'],
+      ['Hindi po ako makapag-isip ng iba kapag naghahanap ako ng gin.', 'I can\'t think of anything else when I\'m looking for gin.', 'Craving; criterion 4.'],
+      ['Nawalan po ako ng trabaho dahil laging may hangover.', 'I lost my job because I was always hungover.', 'Role failure; criterion 5.'],
+      ['Nag-aaway po kami ng asawa ko dahil dito, pero ginagawa ko pa rin.', 'My spouse and I fight over it, but I keep doing it.', 'Continued use despite interpersonal problems; criterion 6.'],
+      ['Nagmamaneho po ako ng tricycle kahit may tama na.', 'I drive the tricycle even when I\'m already tipsy.', 'Hazardous use; safety and legal risk.'],
+      ['Dati po isang bilog lang, ngayon dalawa na ang kailangan ko.', 'I used to need one round bottle, now I need two.', 'Tolerance; criterion 10.'],
+      ['Kapag hindi po ako nakakainom, nanginginig po ako at hindi makatulog.', 'When I can\'t drink, I shake and can\'t sleep.', 'Withdrawal; criterion 11. Ask about last drink and seizures.'],
+      ['Mga tatlong buwan na po akong hindi gumagamit.', 'I haven\'t used for about three months now.', 'Early remission; ask what helped and about triggers.'],
+      ['Wala po akong ganyan, hindi naman po ako gumagamit nang sobra.', 'None of that applies; I don\'t use excessively.', 'Possible minimisation; compare with collateral history.']
+    ],
+    'sud-betel': [
+      ['Opo, buyo po ang tawag namin dito sa amin.', 'Yes, we call it buyo where I\'m from.'],
+      ['Bunga, ikmo, at apog lang po. Walang tabako.', 'Just areca nut, betel leaf, and lime. No tobacco.'],
+      ['May halo pong tabako, mas masarap po kasi.', 'It has tobacco; it tastes better.', 'Tobacco in quid raises oral cancer risk.'],
+      ['Mga sampu po sa isang araw, mga bente taon na po.', 'About ten a day, for around twenty years.', 'Heavy long-term exposure; examine the mouth.'],
+      ['Iniluluwa ko po, hindi ko nilululon, kaya pula ang mga ngipin ko.', 'I spit it all out, that\'s why my teeth are red.'],
+      ['Opo, may puting parang sugat po sa pisngi ko na ilang buwan na.', 'Yes, I have a white sore-like patch on my cheek for several months.', 'Possible leukoplakia; needs urgent oral examination and referral.'],
+      ['Masakit po kapag nakakain ako ng maanghang, at hindi ko na po maibuka nang malaki ang bibig.', 'It hurts when I eat spicy food, and I can\'t open my mouth wide.', 'Trismus suggests submucous fibrosis; examine and refer.'],
+      ['Matanda na po ako, buong buhay ko na pong ginagawa ito, kaya ayos lang po.', 'I\'m old and have done this all my life, so it\'s fine.', 'Minimisation; cultural normalisation of betel use.'],
+      ['Buntis po ako at nagnganganga pa rin po. Masama po ba?', 'I\'m pregnant and still chewing. Is that bad?', 'Counsel on fetal risk; offer support to stop.'],
+      ['Gusto ko pong tanggalin muna ang tabako, kaya ko po \'yon.', 'I\'d like to take out the tobacco first; I can do that.']
+    ],
+    'sud-other': [
+      ['Mga limang stick lang po, \'yung tingi po.', 'Only about five sticks, the single ones.'],
+      ['Pagkagising ko po, agad akong nagyoyosi.', 'Right after waking, I smoke.', 'Early first cigarette suggests higher nicotine dependence.'],
+      ['Gin po, bilog, kasama ang mga kainuman ko tuwing Sabado.', 'Gin, round bottle, with my drinking friends on Saturdays.'],
+      ['Dalawa o tatlong bote po ng Red Horse, mga apat na araw sa isang linggo.', 'Two or three bottles of Red Horse, about four days a week.', 'Roughly 8 to 12 drinks weekly; screen with AUDIT-C.'],
+      ['Lambanog po, mga isang lapad araw-araw bago matulog.', 'Lambanog, about a flat bottle every day before bed.', 'Daily heavy drinking; assess withdrawal risk before advising abrupt stop.'],
+      ['Nanginginig po ang kamay ko kapag hindi ako nakakainom, pero hindi pa po ako nakumbulsyon.', 'My hands shake when I can\'t drink, but I\'ve never had a seizure.'],
+      ['Minsan po, nakakita ako ng mga bagay na wala naman doon, noong tumigil ako sa pag-inom.', 'Once I saw things that weren\'t there when I stopped drinking.', 'Prior withdrawal hallucinosis or DT; high risk, admit and monitor.'],
+      ['Nag-shabu po ako dati, \'yung isang bato lang po, hinihithit.', 'I used shabu before, just a single "bato," smoked.'],
+      ['Nagkaroon po ako ng paranoya, akala ko may sumusunod sa akin.', 'I got paranoid; I thought someone was following me.', 'Stimulant-related psychosis; assess ongoing risk and safety.'],
+      ['Gusto ko po sanang magpa-rehab, pero wala po kaming pera.', 'I would like rehab, but we have no money.', 'Motivation present; explore local and government programmes.']
+    ],
+    'sud-gambling': [
+      ['Sabong po, e-sabong po sa cellphone minsan.', 'Cockfighting, sometimes e-sabong on my phone.'],
+      ['Online casino po sa GCash, gabi-gabi po.', 'Online casino through GCash, every night.', 'Nightly online play; ask about e-wallet limits.'],
+      ['Nagsimula po sa limandaan, ngayon libo-libo na po ang pusta ko.', 'It started at five hundred, now I bet thousands.', 'Escalating bets: tolerance criterion.'],
+      ['Mga tatlumpung libo po ang natalo ko nitong buwan.', 'I lost around thirty thousand pesos this month.'],
+      ['Nababawi ko naman po lagi, kaya bumabalik ako.', 'I always win it back, that\'s why I return.', 'Chasing losses with cognitive distortion.'],
+      ['May utang po ako sa 5-6 at sa mga kaibigan ko.', 'I owe money to 5-6 lenders and my friends.', 'Debt burden; ask about threats and suicidal thoughts.'],
+      ['Nagsisinungaling po ako sa asawa ko kung saan napunta ang sweldo.', 'I lie to my wife about where my salary went.'],
+      ['Nawalan po ako ng trabaho kasi lagi akong puyat sa laro at late pumasok.', 'I lost my job because I was always up all night playing and late for work.'],
+      ['Minsan po naiisip kong wala nang saysay ang lahat dahil sa utang.', 'Sometimes I think nothing matters anymore because of the debt.', 'Hopelessness with debt; assess suicide risk directly and immediately.'],
+      ['Hindi naman po ako sugarol na malala, kaya kong tumigil kahit kailan.', 'I\'m not that bad with gambling, I can stop whenever I want.', 'Denial and illusion of control.']
+    ],
+    'sud-screens': [
+      ['Dalawa hanggang apat na beses po sa isang buwan.', 'Two to four times a month.'],
+      ['Dalawa hanggang tatlong beses po sa isang linggo.', 'Two to three times a week.'],
+      ['Apat na beses o higit pa po sa isang linggo.', 'Four or more times a week.', 'Highest AUDIT-C frequency band; screen for dependence.'],
+      ['Isang bilog na gin po, kami pong dalawa ang naghahati.', 'One round bottle of gin, shared between two of us.'],
+      ['Anim o higit pa po, halos tuwing inuman.', 'Six or more, almost every drinking session.', 'Binge pattern; elevated AUDIT-C risk.'],
+      ['Hindi po ako umiinom nang ganoon karami.', 'I don\'t drink that much.'],
+      ['Sa loob po ng limang minuto pagkagising.', 'Within five minutes of waking.', 'Fagerström: highest time-to-first-cigarette score.'],
+      ['Mahirap po. Lumalabas talaga ako ng simbahan para magyosi.', 'It\'s hard. I really step out of church to smoke.'],
+      ['Ang una po sa umaga ang pinakamahirap iwanan.', 'The first one in the morning is the hardest to give up.'],
+      ['Mga sampu po o mas kaunti.', 'About ten or fewer.']
+    ],
+    mi: [
+      ['Hindi pa po ako handang tumigil.', 'I\'m not ready to quit yet.', 'Precontemplation; avoid arguing, respect autonomy, and keep the door open.'],
+      ['Nakakatanggal po ng stress at antok, \'yan po ang gusto ko.', 'It relieves stress and sleepiness; that\'s what I like.'],
+      ['Mga lima po sa sampu.', 'About five out of ten.', 'Ambivalence; ask why not lower, not why not higher.'],
+      ['Walo po sa sampu, kasi may apo na po ako at gusto ko siyang makitang lumaki.', 'Eight out of ten, because I have a grandchild and want to see him grow.', 'Strong value-based reason for change.'],
+      ['Dalawa lang po sa sampu, wala namang masama sa akin.', 'Only two out of ten; nothing is wrong with me.'],
+      ['Mga tatlo po ang kumpiyansa ko, kasi ilang beses na po akong nabigo.', 'My confidence is about three, because I\'ve failed several times.', 'Low self-efficacy; recall past successes and plan small steps.'],
+      ['Baka po bawasan ko muna, kalahati lang po muna.', 'Maybe I\'ll cut down first, just half for now.'],
+      ['Sa Lunes po ako magsisimula, itatapon ko na po ang natitira.', 'I\'ll start on Monday and throw away what\'s left.'],
+      ['Ang misis ko po ang tutulong sa akin.', 'My wife will help me.'],
+      ['Ayaw ko na pong pag-usapan, napag-usapan na natin ito dati.', 'I don\'t want to talk about it, we already did before.', 'Sustain talk or discord; step back and reflect feelings.']
+    ],
+    'mood-screens': [
+      ['Higit sa kalahati ng mga araw po.', 'More than half the days.'],
+      ['Wala na po akong gana sa mga dati kong ginagawa, kahit sa pagluluto.', 'I have no interest in what I used to do, even cooking.', 'PHQ-9 item 1; anhedonia.'],
+      ['Mabigat po ang pakiramdam ko, parang walang patutunguhan.', 'I feel heavy, as if there\'s no way forward.', 'Hopelessness; follow with suicide screening.'],
+      ['Gising po ako hanggang alas-tres, tapos gising na naman ng alas-singko.', 'I\'m awake until three, then awake again at five.'],
+      ['Madalas ko pong sinisisi ang sarili ko, parang pabigat po ako sa pamilya.', 'I often blame myself, like I\'m a burden to my family.', 'Guilt and perceived burdensomeness; ask about suicidal thoughts.'],
+      ['Minsan po naiisip kong mas mabuti pang mawala na lang ako.', 'Sometimes I think it would be better if I just disappeared.', 'Passive suicidal ideation; do full risk assessment now.'],
+      ['Opo, may panahon pong sobrang sigla ko, apat na araw akong halos hindi natulog.', 'Yes, there was a time I was so energetic, I barely slept for four days.', 'Possible manic or hypomanic episode; assess duration and impact.'],
+      ['Opo, sobrang init po ng ulo ko noon, nakikipag-away ako sa kahit sino.', 'Yes, I was so irritable then, I fought with anyone.'],
+      ['Nag-utang po ako at bumili ng motor nang hindi nag-iisip.', 'I took a loan and bought a motorbike without thinking.', 'Reckless spending; MDQ item 13.'],
+      ['Nangyari po ang lahat ng iyon nang sabay, noong nakaraang taon.', 'All of that happened together, last year.', 'MDQ clustering criterion met.']
+    ],
+    'wd-alcohol': [
+      ['Kaninang umaga pa po ang huling inom ko, mga alas-sais.', 'My last drink was this morning, around six.'],
+      ['Dalawang linggo na po akong umiinom araw-araw, mga dalawang bilog sa isang araw.', 'I\'ve been drinking daily for two weeks, about two round bottles a day.', 'Heavy daily intake; high risk of significant withdrawal.'],
+      ['Opo, nanginginig po ang kamay ko at pawis na pawis ako.', 'Yes, my hands shake and I\'m drenched in sweat.'],
+      ['Opo, nakumbulsyon po ako noong tumigil ako noong isang taon.', 'Yes, I had a seizure when I stopped last year.', 'Prior withdrawal seizure; high risk, follow the withdrawal protocol closely.'],
+      ['Nakakita po ako ng mga daga sa kuwarto, pero wala naman daw po.', 'I saw rats in the room, but they say there are none.', 'Visual hallucinations; possible early delirium tremens.'],
+      ['Parang may gumagapang po sa balat ko.', 'It feels like something is crawling on my skin.', 'Tactile disturbance; CIWA-Ar item.'],
+      ['Hindi po ako makatulog, kinakabahan po ako.', 'I can\'t sleep; I feel anxious.'],
+      ['Nahulog po ako sa hagdan kahapon at nauntog.', 'I fell down the stairs yesterday and hit my head.', 'Head injury; consider CT before attributing symptoms to withdrawal.'],
+      ['Hindi ko po alam kung anong araw na.', 'I don\'t know what day it is.', 'Disorientation; possible delirium, escalate monitoring.'],
+      ['Okay lang po ako, hangover lang po \'to.', 'I\'m fine, this is just a hangover.', 'Minimisation; check vitals and scores objectively.']
+    ],
+    'wd-cannabis': [
+      ['Opo, damo po, hinihithit ko araw-araw.', 'Yes, weed, I smoke it every day.'],
+      ['Tatlong araw na po akong hindi gumagamit.', 'I haven\'t used for three days.', 'Day three is near peak withdrawal; expect irritability and insomnia.'],
+      ['Mainit po ang ulo ko, sinisigawan ko na ang nanay ko.', 'I\'m short-tempered; I\'ve started shouting at my mother.'],
+      ['Kinakabahan po ako at hindi mapakali.', 'I\'m anxious and restless.'],
+      ['Hindi po ako makatulog, tapos ang gulo po ng panaginip ko.', 'I can\'t sleep, and my dreams are chaotic.', 'Vivid dreams and insomnia are typical and can last weeks.'],
+      ['Malungkot po ako at parang walang gana sa lahat.', 'I feel sad and uninterested in everything.', 'Depressed mood in withdrawal; screen for suicidal thoughts.'],
+      ['Nanginginig po ako at giniginaw, pero walang lagnat.', 'I\'m shaking and chilly, but no fever.'],
+      ['Paulit-ulit po akong nagsusuka, tapos gumagaan lang kapag naliligo ako sa mainit na tubig.', 'I keep vomiting, and it only eases when I take a hot shower.', 'Suggests cannabinoid hyperemesis; resolves only with sustained abstinence.'],
+      ['Gusto ko na pong bumalik sa paggamit para lang gumaan ang pakiramdam.', 'I want to go back to using just to feel better.', 'Craving driving relapse; plan sleep and anxiety support.'],
+      ['Nakakaapekto po sa trabaho ko, lagi po akong galit sa mga kasamahan ko.', 'It\'s affecting my work; I\'m always angry at my coworkers.']
+    ],
+    'wd-agitation': [
+      ['Ang tagal ko na pong naghihintay, walang pumapansin sa akin!', 'I\'ve waited so long and nobody pays attention to me!', 'Frustration over waiting; validate and give a time estimate.'],
+      ['Ayoko pong uminom ng gamot, baka may lason po \'yan.', 'I don\'t want to take medicine; it might be poison.', 'Paranoid refusal; offer choice and explain, avoid forcing early.'],
+      ['Kapag lumapit pa po kayo, susuntukin ko kayo.', 'If you come any closer, I\'ll punch you.', 'Explicit threat; keep distance, de-escalate, call for help.'],
+      ['Pwede po ba akong uminom ng tubig muna?', 'May I have some water first?', 'Cooperative request; accept and use to rebuild rapport.'],
+      ['Sige po, iinumin ko po ang gamot.', 'Okay, I\'ll take the medicine.'],
+      ['May mga insektong gumagapang po sa akin, tanggalin n\'yo po!', 'Bugs are crawling on me, get them off!', 'Tactile hallucination; check CIWA-Ar and vitals.'],
+      ['Nasa labas po ang mga kalaban ko, gusto nila akong patayin.', 'My enemies are outside and want me killed.', 'Persecutory belief; ask about voices, weapons, and plans to act.'],
+      ['Ayoko na pong mabuhay, hayaan n\'yo na lang po ako.', 'I don\'t want to live anymore, just leave me alone.', 'Suicidal statement during agitation; assess risk before any restraint decision.'],
+      ['Kapag itinali n\'yo po ako, ipapakulong ko po kayo.', 'If you tie me down, I\'ll have you jailed.', 'Threat of legal action; stay calm, explain safety rationale.'],
+      ['Kumalma na po ako, pwede n\'yo na pong tanggalin ito.', 'I\'ve calmed down; you can remove this now.', 'Meets release criterion if calm; reassess against restraint protocol.']
     ]
   }
 };
