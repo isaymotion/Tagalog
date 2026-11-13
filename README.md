@@ -6,7 +6,7 @@
 
 **App created by Isabella Navarro, MD. Latest version November 2026. isaymotion@gmail.com**
 
-Version **3.1.1** (2026-11-08): point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
+Version **3.1.2** (2026-11-13): phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
 
 ## What's inside
 

@@ -2,7 +2,7 @@
    All isaymotion apps share one origin (isaymotion.github.io), so this worker only ever deletes caches that
    start with its own PREFIX. 'usaptayo-audio' holds the recorded clips and is kept across versions. */
 const PREFIX = 'usaptayo-';
-const VERSION = PREFIX + '3.1.1';
+const VERSION = PREFIX + '3.1.2';
 const KEEP = ['usaptayo-audio'];
 const FILES = [
   './', 'index.html', 'manifest.webmanifest', 'css/style.css',

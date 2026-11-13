@@ -4,6 +4,12 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.1.2', date: '2026-11-13', title: 'Menu scrolling fixed',
+    items: [
+      { type: 'correction', text: 'The menu that opens from More now scrolls on phones and tablets. Before, it was taller than the screen and could not be scrolled, so the items at the bottom of the list (such as Settings and About) could not be reached from it.' }
+    ]
+  },
+  {
     version: '3.1.1', date: '2026-11-08', title: 'Replies for every section, lesson example fix',
     items: [
       { type: 'content', text: 'Point board and listening drill: likely patient replies for the ten sections that showed only the general replies (substance use screening, betel, other substances, gambling, screening tools, motivational interviewing, PHQ-9 and MDQ, alcohol and cannabis withdrawal, agitation). Draft for review; audio follows on the next audio-pack run.' },

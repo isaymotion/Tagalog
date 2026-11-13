@@ -163,7 +163,8 @@ main {
 @media (max-width: 1099px) {
   .shell { grid-template-columns: minmax(0, 1fr); }
   .rail {
-    position: fixed; top: 0; left: 0; bottom: 0; height: auto; z-index: 90; width: min(330px, 88vw);
+    /* align-self: the rail is a child of the .shell grid, where "start" would make this fixed box as tall as its content (so it could not scroll) */
+    position: fixed; top: 0; left: 0; bottom: 0; height: auto; max-height: 100vh; max-height: 100dvh; align-self: stretch; -webkit-overflow-scrolling: touch; z-index: 90; width: min(330px, 88vw);
     padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
     transform: translateX(-102%); visibility: hidden; transition: transform .25s cubic-bezier(.2, .7, .2, 1), visibility 0s linear .25s;
   }
