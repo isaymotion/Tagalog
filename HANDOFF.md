@@ -173,3 +173,6 @@ All on GitHub Pages under isaymotion, default branch `main`, pushed directly. Ea
 - **MemorablePsychiatry** (Psychiatry Mnemonic Reviewer): `app.js`/`style.css`/`sw.js`, versioned by README "Pass N" + index badge + cache `pmr-passN-v1` (now Pass 19 / v1.18.0), key `pmr-textSize`; all px font sizes converted to rem.
 - Attribution months: only Usap Tayo and MSE Trainer say November 2026; KaplanStudy and the five above still say October 2026 (never updated per release in their history), left as is.
 - Not touched: `case-psychinterview` (case presentation slides) and `reviewpsychinterview` (an older copy of MSE Trainer), judged not to be study apps she uses day to day; ask if she wants them done.
+
+## Note, 13 Nov 2026 (version 3.1.2, pushed)
+- Phone menu fix: the menu that opens from More could not scroll on phones (the fixed `.rail` took the height of its content inside the `.shell` grid). The phone rule in `css/style.css` now sets `align-self: stretch` and a max-height. Found and fixed first in Hanashimashō (`isaymotion/Japanese` 0.12.1); test with `qa/drawer-any.py <port> <label>` on that repo's dev-tools branch ("scrolls OK" at 390×844, 360×640 and 820×1180). Version bumped in app-meta.js, changelog.js, sw.js and README.
