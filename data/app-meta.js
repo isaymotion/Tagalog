@@ -3,7 +3,7 @@ window.APP_META = {
   name: 'Usap Tayo',
   short: 'Usap Tayo',
   tagline: 'Tagalog for the psychiatric interview',
-  version: '3.1.2',
+  version: '3.2.0',
   repo: 'Tagalog',
   updated: 'November 2026',
   author: 'Isabella Navarro, MD',

@@ -7,9 +7,23 @@
   const primary = (p) => (S().settings.register === 'c' ? p.c || p.f : p.f);
   const secondary = (p) => (S().settings.register === 'c' ? p.f : p.c);
 
+  /* Resident / Nurse role (3.2.0, ported from Hanashimasho 0.16.0). settings.role is shared with the substance use and withdrawal tools.
+     Nurse view: the nurse sections (role: 'nurse') first, then the resident sections most used on the ward.
+     Flashcards, search, the point board and the listening drill still see every section. */
+  const NURSE_ALSO = ['deescalation', 'suicide', 'violence', 'meds', 'admission', 'elderly'];
+  const NURSE_NOTICE = 'Nurse scripts are pending Nursing Service review, and their Tagalog is a draft for review. Use them for practice and check the wording with your ward before using it with patients.';
+  const hasNurse = () => PSYCH_SECTIONS.some((s) => s.role === 'nurse');
+  const role = () => (hasNurse() && S().settings.role === 'nurse' ? 'nurse' : 'resident');
+  App.roleSeg = () => '<div class="seg role-seg" role="group" aria-label="Role">' + [['resident', 'Resident'], ['nurse', 'Nurse']].map(([k, t]) => '<button type="button" data-role="' + k + '" class="' + (role() === k ? 'on' : '') + '" aria-pressed="' + (role() === k) + '">' + t + '</button>').join('') + '</div>';
+  /* Sections in the order the current role sees them; prev / next on a section page follow it. */
+  const roleSections = (r) => r === 'nurse'
+    ? PSYCH_SECTIONS.filter((s) => s.role === 'nurse').concat(NURSE_ALSO.map((id) => PSYCH_SECTIONS.find((s) => s.id === id)).filter(Boolean))
+    : PSYCH_SECTIONS.filter((s) => s.role !== 'nurse');
+
   V.psych = (el, p, q) => {
     const groups = {};
-    PSYCH_SECTIONS.forEach((s) => (groups[s.group] = groups[s.group] || []).push(s));
+    const R = role();
+    roleSections(R).forEach((s) => { const g = R === 'nurse' && s.role !== 'nurse' ? 'Also useful on the ward' : s.group; (groups[g] = groups[g] || []).push(s); });
     const done = S().done;
     const tab = (q && q.tab) || 'interview';
     const T = (h, eyebrow, title, p) => '<a class="tile" href="' + h + '"><span class="eyebrow">' + eyebrow + '</span><h3>' + title + '</h3><p>' + p + '</p></a>';
@@ -42,15 +56,19 @@
     el.innerHTML = '<h1>Psychiatry Tagalog</h1>' +
       '<p class="muted" style="margin-top:4px">Phrases for the psychiatric interview and MSE, ' + LANG.registerIntro + '.</p>' +
       '<div class="ptabs" role="tablist">' + TABS.map(([k, t]) => '<a role="tab" aria-selected="' + (k === tab) + '" class="' + (k === tab ? 'on' : '') + '" href="#/psych?tab=' + k + '">' + t + '</a>').join('') + '</div>' +
+      (tab === 'interview' && hasNurse() ? '<div class="row" style="margin-top:12px;gap:10px;flex-wrap:wrap;align-items:center"><span class="muted small">I am a</span>' + App.roleSeg() + '</div>' : '') +
+      (tab === 'interview' && R === 'nurse' ? '<div class="notice warn" style="margin-top:12px">' + esc(NURSE_NOTICE) + '</div>' : '') +
       (tab === 'interview' ? '<div class="notice info" style="margin-top:12px">Practice phrasings for training, not validated translations. Confirm wording with your supervisors and adapt to each patient.</div>' : '') +
       body[tab];
+    el.querySelectorAll('[data-role]').forEach((b) => (b.onclick = () => { S().settings.role = b.dataset.role; App.save(); V.psych(el, p, q); }));
   };
 
   V.psychSection = (el, p, q) => {
     const s = PSYCH_SECTIONS.find((x) => x.id === p.id);
     if (!s) { el.innerHTML = '<p>Section not found. <a href="#/psych">Psychiatry</a></p>'; return; }
     if (!S().done.sections[s.id]) { S().done.sections[s.id] = true; App.save(); }
-    const idx = PSYCH_SECTIONS.indexOf(s), next = PSYCH_SECTIONS[idx + 1], prev = PSYCH_SECTIONS[idx - 1];
+    const list = roleSections(s.role === 'nurse' ? 'nurse' : role()), idx = list.indexOf(s);
+    const next = idx < 0 ? null : list[idx + 1], prev = idx < 0 ? null : list[idx - 1];
     let mode = 'study';
     const draw = () => {
       const body = el.querySelector('#pbody');
@@ -90,7 +108,8 @@
     const sheaLink = shea.length && ST ? (shea.length === 1
       ? '<p class="small"><b>Technique notes:</b> ' + sheaA(shea[0]) + ' in the ' + esc(ST.name) + ' explains why these questions are worded this way.</p>'
       : '<div class="small"><b>Technique notes</b> in the ' + esc(ST.name) + ', on why these questions are worded this way:<ul style="margin:4px 0 12px;padding-left:20px">' + shea.map((l) => '<li>' + sheaA(l) + '</li>').join('') + '</ul></div>') : '';
-    const draftNote = s.draft && ST ? '<div class="notice warn" style="margin-bottom:12px">' + esc(ST.draftNotice) + '</div>' : '';
+    const draftNote = s.role === 'nurse' ? '<div class="notice warn" style="margin-bottom:12px">' + esc(NURSE_NOTICE) + '</div>'
+      : (s.draft && ST ? '<div class="notice warn" style="margin-bottom:12px">' + esc(ST.draftNotice) + '</div>' : '');
     el.innerHTML = crumb([['Psychiatry', '#/psych'], [s.title]]) + '<span class="eyebrow">' + esc(s.group) + '</span><h1>' + esc(s.title) + '</h1><p class="muted">' + esc(s.intro) + '</p>' + draftNote + sheaLink +
       '<div class="spread" style="margin-bottom:12px"><div class="seg" role="group" aria-label="Mode">' +
       [['study', 'Study'], ['recall', 'Recall'], ['quiz', 'Quiz ' + LANG.quiz.toTarget], ['reverse', 'Quiz ' + LANG.quiz.toEnglish]].map(([k, t]) => '<button data-m="' + k + '" class="' + (mode === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div>' +

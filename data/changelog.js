@@ -4,6 +4,14 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.2.0', date: '2026-11-14', title: 'Resident / Nurse switch and nurse phrase sections',
+    items: [
+      { type: 'feature', text: 'Psychiatry → Interview now has a Resident / Nurse switch. The Nurse view shows six nurse sections first, then the resident sections most used on the ward (de-escalation, suicide, violence, medicines, admission, older patients). Prev / next on a section page follow the list you see. The switch is the same setting the substance use and withdrawal tools already use for their nurse scripts.' },
+      { type: 'content', text: 'Six nurse sections, 125 phrases in respectful (po) and everyday forms: arriving on the ward, giving medicines and checking side effects, sleep and daily care, safety checks for suicide risk and agitation, calming things down, and teaching patients and families. Each has 10 likely replies on the point board and in the listening drill. Draft for review; nurse content is pending Nursing Service review.' },
+      { type: 'update', text: 'Flashcards, search, the point board and the listening drill include the nurse sections in both views. Audio for the new lines follows on the next audio-pack run.' }
+    ]
+  },
+  {
     version: '3.1.2', date: '2026-11-13', title: 'Menu scrolling fixed',
     items: [
       { type: 'correction', text: 'The menu that opens from More now scrolls on phones and tablets. Before, it was taller than the screen and could not be scrolled, so the items at the bottom of the list (such as Settings and About) could not be reached from it.' }

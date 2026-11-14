@@ -6,14 +6,15 @@
 
 **App created by Isabella Navarro, MD. Latest version November 2026. isaymotion@gmail.com**
 
-Version **3.1.2** (2026-11-13): phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
+Version **3.2.0** (2026-11-14): Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
 
 ## What's inside
 
 | Section | What it does |
 |---|---|
 | **Psychiatry Tagalog** | 33 sections (452 phrases) covering opening and consent, HPI, depression, mania, anxiety/OCD, trauma, hallucinations, delusions, suicide and violence risk, de-escalation, substances (screening criteria, betel nut, gambling, AUDIT-C and Fagerström, motivational interviewing), history, collateral, MSE (cognition, abstraction, observations), explaining diagnosis, medication side effects, admission, children, elderly patients, closing, and Shea's validity techniques (gentle assumption, symptom amplification, denial of the specific, behavioral incidents, shame attenuation, normalization, anchor questions; draft for review). Each phrase has a respectful (*po*) form and an everyday/Taglish form. Every section links to the chapter of the [Psychiatric Interviewing Trainer](https://isaymotion.github.io/sheatrainer/) that teaches the technique behind it, and the trainer's study guides link back. |
-| **Point board (Ituro)** | When the patient's answer is too fast to follow, turn the phone around: the patient taps a reply, the phone speaks it and the interviewer reads the English. General replies (yes/no, how often, since when, how much, how I feel, I need…), a 0–10 scale spoken in Tagalog, and 7–11 likely replies for each of the 38 sections (`js/data/psych-answers.js`, draft for review). Patient view enlarges the tiles and hides the English; nothing is saved. Route `#/psych/point?s=<section>`. |
+| **Nurse phrases (Resident / Nurse switch)** | Psychiatry → Interview has a Resident / Nurse switch (`settings.role`, shared with the substance use and withdrawal nurse scripts). The Nurse view lists six nurse sections first (125 phrases: arriving on the ward, giving medicines and side effects, sleep and daily care, safety checks for suicide risk and agitation, calming things down, teaching patients and families), then the resident sections most used on the ward. Each nurse section has 10 point-board replies. Flashcards, search, point board and listening drill see every section in both views. `js/data/psych-phrases-nurse.js`, `js/data/psych-answers-nurse.js`. Draft for review; pending Nursing Service review. |
+| **Point board (Ituro)** | When the patient's answer is too fast to follow, turn the phone around: the patient taps a reply, the phone speaks it and the interviewer reads the English. General replies (yes/no, how often, since when, how much, how I feel, I need…), a 0–10 scale spoken in Tagalog, and 7–11 likely replies for each of the 44 sections (`js/data/psych-answers.js`, draft for review). Patient view enlarges the tiles and hides the English; nothing is saved. Route `#/psych/point?s=<section>`. |
 | **Listening drill** | Hear a patient or family reply at natural speed (slower or faster on request), choose its meaning from four, then see the Tagalog. Pool: the point-board replies, the interpretation drill and the case simulations; filter by section. Route `#/psych/listen?s=<section>`. |
 | **Case simulations** | 7 interactive interviews (first-episode psychosis, depression with suicide risk, mania, delirium, alcohol withdrawal, agitated patient, betel nut use disorder) with feedback and an MSE summary. |
 | **Mood episode** | Tap-to-count DSM-5-TR checker: depressed mood + SIGECAPS (gate + 5 of 9, two weeks) and elevated/expansive or irritable mood + DIGFAST (3 of 7, or 4 if only irritable; mania vs hypomania by duration, hospitalization and psychosis), with features, a copyable chart line, and the PHQ-9 and MDQ in Tagalog. Nothing is saved. |
@@ -36,6 +37,12 @@ Version **3.1.2** (2026-11-13): phone menu scrolls again. 3.1.1: point-board rep
 | **Reading** | 12 graded passages (A1–B2) with glossaries and comprehension questions. |
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. |
 | **You** | Placement test, streaks, XP, progress stats, backup export/import, settings, What's New, About. |
+
+## Version 3.2.0: Resident / Nurse switch and nurse phrase sections
+
+- **Role switch**: `js/psych-views.js` adds `App.roleSeg()`, `roleSections(role)` and `NURSE_ALSO` (ported from Hanashimasho 0.16.0). The Interview tab shows the switch; the Nurse view lists the `role: 'nurse'` sections, then `deescalation`, `suicide`, `violence`, `meds`, `admission`, `elderly` under "Also useful on the ward", with a notice that nurse scripts are pending Nursing Service review. Section prev / next follow the role's list. Flashcards, search, point board and listening drill are unchanged and see all sections.
+- **Content**: `js/data/psych-phrases-nurse.js` appends six sections (`nurse-admit` 16, `nurse-meds` 24, `nurse-daily` 21, `nurse-risk` 23, `nurse-calm` 17, `nurse-educ` 24 = 125 phrases) to the end of `PSYCH_SECTIONS`; `js/data/psych-answers-nurse.js` merges 60 replies into `PSYCH_ANSWERS.sections`. Written in Tagalog from the English of the Japanese app and adapted to a Philippine public ward (nurses' station instead of a call button, CR, prescription or medicine list, 911 plus the NCMH Crisis Hotline 1553). Draft for review.
+- **Files changed:** `index.html`, `sw.js`, `data/app-meta.js`, `data/changelog.js`, `js/psych-views.js`, `js/data/psych-phrases-nurse.js` (new), `js/data/psych-answers-nurse.js` (new), `tools/collect-texts.js`, `tools/texts.json`, `README.md`.
 
 ## Version 3.1.1: replies for every section, lesson example fix
 
