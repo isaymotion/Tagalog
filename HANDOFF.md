@@ -84,6 +84,7 @@ node /home/claude/devtools/tests/data_check.js /home/claude/tagalog            #
 # start a server with the Bash tool's run_in_background (not "&"):
 python3 -m http.server 8765 --directory /home/claude/tagalog
 python3 /home/claude/devtools/tests/smoke.py --base http://localhost:8765/index.html --out <scratchpad>/suite   # expect "SMOKE OK"
+python3 /home/claude/devtools/tests/phone_shots.py http://localhost:8765/index.html <outdir> '#/psych/mcases' '#/psych/mcase/carlo'   # phone screenshots, 125%, light + dark
 gh run list -R isaymotion/tagalog -w "Build Tagalog audio pack" -L 3             # audio job status
 gh api -X POST repos/isaymotion/tagalog/actions/workflows/audio-pack.yml/dispatches -f ref=main   # rerun audio job
 ```
@@ -110,6 +111,7 @@ Last verified clean: 2026-11-16 on 3.3.0 (data_check, smoke, check_sw.py and che
 
 ## 7. Next steps
 Next release = **3.3.1** (review corrections) or **3.4.0** (new feature). Next changelog entry goes above 3.3.0 in `data/changelog.js`; next cache `usaptayo-3.3.1`. On 2026-11-16 she was asked and no Nursing Service confirmation or corrections had come in, so item 0 still waits.
+**Very next unit (unless she sends corrections or the initial admission form first):** 3.4.0 = reading and dialogue handouts, same topic pattern as the lesson handout (`js/grammar-handout.js` `topic: 'lesson'` → add topics `reading` (`#/reading/handout?id=`) and `dialogue` (`#/dialogues/handout?id=`), settings under `ghandout.reading` / `ghandout.dialogue`, Print handout button on each reading and dialogue page, smoke PDF page-count lines for one of each). Ask her first whether she wants this or something else; she picked the MSE cases over it on 2026-11-16. Corrections she sends always come first as 3.3.1.
 0. **Nurse view follow-ups** (port from Hanashimashō 0.18.0, same pattern as 3.2.0): nurse pocket card (handout preset), nurse case simulations, nurse scripts inside de-escalation and discharge. Do these only after she confirms the 3.2.0 nurse sections with Nursing Service; corrections to the 125 nurse phrases come first.
 1. ~~Hablemos passes 1–3~~ done 2026-11-08 (v0.3.0, Pages live). Pass 4 (clinical tools) is described in `claude/hablemos-handoff.md` section 4; work on it in the "Habla Espanol" project.
 2. ~~Usap Tayo 3.1.1~~ shipped 2026-11-08 (100 replies via a Sonnet subagent, Tagalog corrected in the main session). **Waiting on her:** corrections to `psych-answers.js` (all 413 items are still a Claude draft), the `interpreting` lesson and the `strings.js` Tagalog draft. Check `audio/last-run.json` after the 3.1.1 audio job for the ~100 new clips.
