@@ -7,7 +7,7 @@ const repo = path.resolve(process.argv[2] || '.');
 const ctx = { console, TextEncoder, Buffer, localStorage: { getItem: () => null, setItem() {} }, navigator: {}, document: { querySelector: () => null }, fetch: () => Promise.reject(new Error('no fetch')) };
 ctx.window = ctx; vm.createContext(ctx);
 const html = fs.readFileSync(path.join(repo, 'index.html'), 'utf8');
-const scripts = [...html.matchAll(/src="((?:js|data)\/[^"]+)"/g)].map((m) => m[1]).filter((f) => f.startsWith('data/') || f.includes('/data/') || /conjugate|audio-key|lang|core|discharge-practice|mse-practice/.test(f));
+const scripts = [...html.matchAll(/src="((?:js|data)\/[^"]+)"/g)].map((m) => m[1]).filter((f) => f.startsWith('data/') || f.includes('/data/') || /conjugate|audio-key|pronounce|lang|core|discharge-practice|mse-practice/.test(f));
 for (const f of scripts) vm.runInContext(fs.readFileSync(path.join(repo, f), 'utf8'), ctx, { filename: f });
 const C = ctx;
 let fails = 0; const bad = (m) => { fails++; console.log('FAIL', m); };
