@@ -337,7 +337,7 @@
   // Stage directions are not spoken: a "(...)" at the start of a line or next to an ellipsis, as in
   // "(tumango) ...Hindi po." Parentheses inside a sentence ("nganga (bunga, mama, buyo)") stay.
   // tools/collect-texts.js applies the same rule, so audio keys match.
-  App.spoken = (t) => String(t || '').replace(/^\s*\([^)]*\)\s*/, '').replace(/(\.\.\.|…)\s*\([^)]*\)/g, '$1').replace(/\([^)]*\)\s*(?=\.\.\.|…)/g, '').replace(/\s+/g, ' ').trim();
+  App.spoken = (t) => (window.PRONOUNCE || String)(String(t || '').replace(/^\s*\([^)]*\)\s*/, '').replace(/(\.\.\.|…)\s*\([^)]*\)/g, '$1').replace(/\([^)]*\)\s*(?=\.\.\.|…)/g, '')).replace(/\s+/g, ' ').trim(); // PRONOUNCE: js/pronounce.js (Doc → Dok, NCMH → en-si-em-eyts)
   App.hasClip = (text) => state.settings.voiceSource !== 'device' && App.pack.keys.has(AudioKey(App.spoken(text)));
   let current = null; // { audio } or { utter }
   const haltCurrent = () => {

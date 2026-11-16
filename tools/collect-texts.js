@@ -11,17 +11,23 @@ vm.createContext(ctx);
 const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
 ['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js',
  'js/data/reading.js', 'js/data/listening.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js', 'js/data/psych-sud.js', 'js/data/psych-withdrawal.js', 'js/data/psych-mood.js', 'js/data/psych-shea.js', 'js/data/psych-phrases-nurse.js', 'js/data/psych-answers.js', 'js/data/psych-answers-nurse.js', 'js/data/affixes.js',
- 'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js'].forEach(load);
+ 'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js', 'js/pronounce.js'].forEach(load);
 
 const out = new Map();
-const add = (t) => {
+const addText = (t, raw) => {
   if (!t || typeof t !== 'string') return;
-  // Same rule as App.spoken in js/core.js: drop stage directions ("(tumango) ...").
-  t = t.replace(/^\s*\([^)]*\)\s*/, '').replace(/(\.\.\.|…)\s*\([^)]*\)/g, '$1').replace(/\([^)]*\)\s*(?=\.\.\.|…)/g, '').replace(/\s+/g, ' ').trim();
+  // Same rule as App.spoken in js/core.js: drop stage directions ("(tumango) ..."), then respell for the voice
+  // (js/pronounce.js). raw = lines another app keys itself (MSE Trainer): stage directions only, no respelling.
+  t = t.replace(/^\s*\([^)]*\)\s*/, '').replace(/(\.\.\.|…)\s*\([^)]*\)/g, '$1').replace(/\([^)]*\)\s*(?=\.\.\.|…)/g, '');
+  if (!raw) t = ctx.PRONOUNCE(t);
+  t = t.replace(/\s+/g, ' ').trim();
   if (!t || !/[a-zA-ZñÑ]/.test(t)) return;
   const key = ctx.AudioKey(t);
   if (!out.has(key)) out.set(key, t);
 };
+// Two names, not an optional flag: lists call add through forEach, which passes the index as a 2nd argument.
+const add = (t) => addText(t, false);
+const addRaw = (t) => addText(t, true);
 
 (ctx.DICT_RAW || []).join('\n').split('\n').forEach((line) => { line = line.trim(); if (line && !line.startsWith('#')) add(line.split('|')[0]); });
 (ctx.PSYCH_SECTIONS || []).forEach((s) => s.phrases.forEach((p) => { add(p.f); add(p.c); (p.answers || []).forEach((a) => add(a[0])); }));
@@ -77,7 +83,7 @@ const seenObj = new Set();
 Object.keys(ctx).filter((k) => /^(PSYCH_|SHEA_)/.test(k)).forEach((k) => sweep(ctx[k], seenObj));
 // Lines other apps play from this audio pack (one per line, # for comments). See tools/import-msetrainer.js.
 const extra = path.join(__dirname, 'extra-texts');
-if (fs.existsSync(extra)) fs.readdirSync(extra).filter((f) => f.endsWith('.txt')).forEach((f) => fs.readFileSync(path.join(extra, f), 'utf8').split('\n').forEach((l) => { if (!l.startsWith('#')) add(l); }));
+if (fs.existsSync(extra)) fs.readdirSync(extra).filter((f) => f.endsWith('.txt')).forEach((f) => fs.readFileSync(path.join(extra, f), 'utf8').split('\n').forEach((l) => { if (!l.startsWith('#')) (f === 'msetrainer.txt' ? addRaw : add)(l); }));
 
 const list = [...out.entries()].map(([key, text]) => ({ key, text })).sort((a, b) => a.key.localeCompare(b.key));
 fs.writeFileSync(path.join(__dirname, 'texts.json'), JSON.stringify(list, null, 0));

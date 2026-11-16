@@ -4,6 +4,12 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.6.2', date: '2026-11-16', title: 'Clearer audio across the whole app',
+    items: [
+      { type: 'correction', text: 'The voice now says abbreviations the way a Filipino speaker would, everywhere in the app: Doc as "Dok", Dr. and Dra. as Doktor and Doktora, NCMH, OPD, ER, CR, TV, OT, ATM and other acronyms letter by letter, the 1553 and 911 hotlines digit by digit, "y medya" as "i medya", and I-summarize or I-check at the start of a sentence with an "ee" sound. All-caps headings such as PARA SA are read as words. About 60 clips were re-recorded. The text on screen is unchanged.' }
+    ]
+  },
+  {
     version: '3.6.1', date: '2026-11-16', title: 'Clearer audio in the listening exercises',
     items: [
       { type: 'correction', text: 'Lines with abbreviations were read strangely by the voice: PRN, BP, BHW, NCMH, Dr., Dra., Doc, I-inform, bed and gate numbers, the 1553 hotline and "y medya". They are now recorded from a spelling the voice reads correctly (pi-ar-en, Dok, i-inform with an "ee" sound). The text on screen and the dictation answers keep the normal spelling.' }

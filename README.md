@@ -6,7 +6,7 @@
 
 **App created by Isabella Navarro, MD. Latest version November 2026. isaymotion@gmail.com**
 
-Version **3.6.1** (2026-11-16): listening audio respelled for abbreviations. 3.6.0: listening handouts and three more recordings. 3.5.0: listening exercises and five harder readings. 3.4.0: print handouts for readings and dialogues. 3.3.0: admission MSE cases for Carlo, Arnel and Mika. 3.2.0: Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
+Version **3.6.2** (2026-11-16): app-wide pronunciation fixes for abbreviations. 3.6.1: listening audio respelled for abbreviations. 3.6.0: listening handouts and three more recordings. 3.5.0: listening exercises and five harder readings. 3.4.0: print handouts for readings and dialogues. 3.3.0: admission MSE cases for Carlo, Arnel and Mika. 3.2.0: Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
 
 ## What's inside
 
@@ -38,6 +38,11 @@ Version **3.6.1** (2026-11-16): listening audio respelled for abbreviations. 3.6
 | **Listening** | Nine audio-first recordings (B1–C1): clinic voicemail, terminal announcement, radio typhoon bulletin, nurse shift endorsement, family conversation, radio interview, a resident's phone call to a patient's sister, OPD triage, barangay assembly. Print handout per recording (`#/listen/handout?id=`): notes box, questions, dictation, transcript, key. Play all, replay a line, slow down; questions, transcript with optional English, and dictation. Data in `js/data/listening.js`, view `js/listen.js` (`#/listen`, `#/listen/<id>`). |
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. Print handout per dialogue (clinical ones included): script and a role-play worksheet with your lines blank under the English cue, plus an answer key. |
 | **You** | Placement test, streaks, XP, progress stats, backup export/import, settings, What's New, About. |
+
+## Version 3.6.2: app-wide pronunciation rule
+
+- **Correction**: `js/pronounce.js` defines `window.PRONOUNCE(text)`, applied by `App.spoken` (`js/core.js`) before playing or keying a clip and by `tools/collect-texts.js` when recording, so clip names match. Doc → Dok, Dr./Dra. → Doktor/Doktora, acronyms in its `ACRONYMS` list spelled with Filipino letter names (NCMH → en-si-em-eyts), other all-caps words lowercased (headings), 1553 and 911 digit by digit, `y medya` → `i medya`, sentence-initial `I-verb` → `i-verb`. Lines in `tools/extra-texts/msetrainer.txt` are recorded without it (MSE Trainer keys clips from its own text). Add new acronyms to `ACRONYMS`, or they are lowercased. Screen text is unchanged.
+- **Files changed:** `js/pronounce.js` (new), `js/core.js`, `tools/collect-texts.js`, `index.html`, `sw.js`, `data/app-meta.js`, `data/changelog.js`, `README.md`.
 
 ## Version 3.6.1: spoken versions for listening lines
 
