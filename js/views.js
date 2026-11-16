@@ -407,7 +407,7 @@
       el.querySelector('#trbtn').textContent = showTr ? 'Hide translation' : 'Show translation';
     };
     el.innerHTML = crumb([['Reading', '#/reading'], [r.title]]) + '<div class="row">' + lvPill(r.level) + '</div><h1 class="tl" style="margin-top:6px">' + esc(r.title) + '</h1><p class="muted">' + esc(r.titleEn) + '</p>' +
-      '<div class="row"><button class="btn" id="readall">' + icons.sound + ' Listen</button><button class="btn" id="trbtn"></button></div>' +
+      '<div class="row"><button class="btn" id="readall">' + icons.sound + ' Listen</button><button class="btn" id="trbtn"></button><a class="btn" href="#/reading/handout?id=' + r.id + '">' + icons.book + ' Print handout</a></div>' +
       '<div class="card passage" id="pbody" style="margin-top:12px"></div>' +
       '<h2 style="margin-top:16px">Glossary</h2><div class="gloss">' + r.gloss.map(([t, e]) => '<span><b>' + esc(t) + '</b> — ' + esc(e) + '</span>').join('') + '</div>' +
       '<h2 style="margin-top:16px">Questions</h2><div id="rq"></div>';
@@ -495,7 +495,7 @@
         try { rec = await App.record(); q('#rec').innerHTML = '<span class="recdot"></span> Stop'; } catch (e) { App.toast('Microphone unavailable or permission denied.'); }
       };
     };
-    el.innerHTML = crumb([['Speaking', '#/speak'], [d.title]]) + '<div class="row">' + lvPill(d.level) + '</div><h1 style="margin-top:6px">' + esc(d.title) + '</h1>' + (d.setting ? '<p class="muted">' + esc(d.setting) + '</p>' : '') + speechSupportNote() +
+    el.innerHTML = crumb([['Speaking', '#/speak'], [d.title]]) + '<div class="row">' + lvPill(d.level) + '</div><h1 style="margin-top:6px">' + esc(d.title) + '</h1><div class="row" style="margin:-6px 0 10px"><a class="btn sm" href="#/speak/handout?id=' + d.id + '">' + icons.book + ' Print handout</a></div>' + (d.setting ? '<p class="muted">' + esc(d.setting) + '</p>' : '') + speechSupportNote() +
       '<div class="seg" role="group" aria-label="Mode" style="margin-bottom:12px">' + [['listen', 'Listen'], ['shadow', 'Shadow'], ['role', 'Role-play']].map(([k, t]) => '<button data-m="' + k + '" class="' + (mode === k ? 'on' : '') + '">' + t + '</button>').join('') + '</div>' +
       '<div class="dlg" id="dlg"></div><div class="row" id="dctl" style="margin-top:14px;position:sticky;bottom:calc(70px + env(safe-area-inset-bottom,0px));background:var(--bg);padding:8px 0"></div>';
     el.querySelectorAll('[data-m]').forEach((b) => (b.onclick = () => { mode = b.dataset.m; step = 0; scores = []; recUrl = {}; el.querySelectorAll('[data-m]').forEach((x) => x.classList.toggle('on', x === b)); draw(); const c = d.lines[0]; if (mode === 'role' && c[0] !== d.you) setTimeout(() => App.speak(textOf(c)), 250); }));

@@ -1,7 +1,9 @@
-/* Grammar handout generator. Topics: panlapi (affixes), verbs (conjugation tables, sentences, worksheet), lesson (any lesson).
+/* Grammar handout generator. Topics: panlapi (affixes), verbs (conjugation tables, sentences, worksheet), lesson (any lesson),
+   reading (any passage) and dialogue (any dialogue, including the clinical ones from the case simulations).
    Same pattern as the psychiatry handout: one content model from the options, rendered as an on-screen
    preview (also used for printing) and as a PDF through pdfmake (App.pdfKit, shared with handout.js).
-   Data: AFFIX_* in js/data/affixes.js; VERBS and VERB_SENTENCES (verbs.js, verb-sentences.js); LESSONS (lessons.js). */
+   Data: AFFIX_* in js/data/affixes.js; VERBS and VERB_SENTENCES (verbs.js, verb-sentences.js); LESSONS (lessons.js);
+   READING (reading.js); DIALOGUES (dialogues.js) + PSYCH_CASES through App.caseDialogue. */
 (function () {
   const { esc } = App;
   const V = (App.views = App.views || {});
@@ -15,17 +17,20 @@
   const DEF = {
     panlapi: DEFAULTS,
     verbs: { topic: 'verbs', set: 'all', verb: 'all', english: 'show', paper: 'A4', size: 'normal', table: true, sentences: true, cheat: true, worksheet: true, key: true, title: 'Tagalog Verbs: Focus and Aspect', preparedFor: '' },
-    lesson: { topic: 'lesson', lesson: '', english: 'show', paper: 'A4', size: 'normal', body: true, quiz: true, key: true, title: '', preparedFor: '' }
+    lesson: { topic: 'lesson', lesson: '', english: 'show', paper: 'A4', size: 'normal', body: true, quiz: true, key: true, title: '', preparedFor: '' },
+    reading: { topic: 'reading', reading: '', english: 'show', paper: 'A4', size: 'normal', passage: true, gloss: true, quiz: true, key: true, title: '', preparedFor: '' },
+    dialogue: { topic: 'dialogue', dialogue: '', english: 'show', register: 'f', paper: 'A4', size: 'normal', script: true, role: true, key: true, title: '', preparedFor: '' }
   };
+  const SUBKEYS = ['verbs', 'lesson', 'reading', 'dialogue'];
   // Panlapi keeps its old flat place in settings.ghandout; the other topics live in sub-keys so they never clobber it.
   function opts(topic) {
     const g = S().settings.ghandout || {};
-    if (!topic || topic === 'panlapi') { const flat = Object.assign({}, g); delete flat.verbs; delete flat.lesson; return Object.assign({}, DEFAULTS, flat); }
+    if (!topic || topic === 'panlapi') { const flat = Object.assign({}, g); SUBKEYS.forEach((k) => delete flat[k]); return Object.assign({}, DEFAULTS, flat); }
     return Object.assign({}, DEF[topic], g[topic] || {});
   }
   function saveOpts(o, topic) {
     const g = S().settings.ghandout || {};
-    if (!topic || topic === 'panlapi') { const n = Object.assign({}, o); if (g.verbs) n.verbs = g.verbs; if (g.lesson) n.lesson = g.lesson; S().settings.ghandout = n; }
+    if (!topic || topic === 'panlapi') { const n = Object.assign({}, o); SUBKEYS.forEach((k) => { if (g[k]) n[k] = g[k]; }); S().settings.ghandout = n; }
     else S().settings.ghandout = Object.assign({}, g, { [topic]: o });
     App.save();
   }
@@ -84,6 +89,8 @@
   function renderHTML(m) {
     if (m.topic === 'verbs') return verbsHTML(m);
     if (m.topic === 'lesson') return lessonHTML(m);
+    if (m.topic === 'reading') return readingHTML(m);
+    if (m.topic === 'dialogue') return dialogueHTML(m);
     const o = m.o, en = o.english === 'show';
     let h = '<header class="ho-head"><img src="icons/logo-96.png" alt=""><div><h1>' + esc(m.title) + '</h1><p>' + (m.preparedFor ? 'Prepared for ' + esc(m.preparedFor) + ' · ' : '') + esc(m.date) + ' · ' + esc(m.scope) + '</p></div></header>';
     if (m.cheat) {
@@ -162,6 +169,8 @@
   function docDef(m, logo) {
     if (m.topic === 'verbs') return verbsDoc(m, logo);
     if (m.topic === 'lesson') return lessonDoc(m, logo);
+    if (m.topic === 'reading') return readingDoc(m, logo);
+    if (m.topic === 'dialogue') return dialogueDoc(m, logo);
     const k = kit(m, logo), { K, NAVY, MUTED, LINE, TINT, o, en, base, a5, content, heading, sub, th, layout, grid } = k, AFFIX = '#9a5b00';
     // Segmented word: affix pieces in bold brown, repeated syllable in italics.
     const segText = (seg, size) => ({ text: pieces(seg).map((x) => (x.k === 'a' ? { text: x.s, bold: true, color: AFFIX } : x.k === 'd' ? { text: x.s, italics: true, color: MUTED } : { text: x.s })), fontSize: size });
@@ -582,9 +591,132 @@
     return finish(m, k, 'Tagalog lesson handout');
   }
 
+  /* ===================== Topic: reading ===================== */
+  // English: 'show' = translation under each paragraph, 'end' = translation on its own page, 'hide' = Tagalog only.
+  const RD = () => window.READING || [];
+  const today = () => new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' });
+  function readingBuild(o) {
+    const r = RD().find((x) => x.id === o.reading) || RD()[0] || { id: '', title: 'Reading', titleEn: '', level: '', tl: [], en: [], gloss: [], q: [] };
+    const paras = r.tl.map((t, i) => ({ tl: t, en: r.en[i] || '' }));
+    return {
+      topic: 'reading', r, o, title: o.title || r.title, preparedFor: o.preparedFor, date: today(),
+      scope: (r.titleEn ? r.titleEn + ' · ' : '') + r.level + (r.psych ? ' · clinical' : ''),
+      passage: o.passage ? paras : null, gloss: o.gloss && r.gloss.length ? r.gloss : null,
+      quiz: o.quiz && r.q.length ? r.q : null, key: o.key && r.q.length ? r.q : null,
+      translation: o.passage && o.english === 'end' ? paras : null
+    };
+  }
+  const readingCanPrint = (o) => o.passage || o.gloss || o.quiz || o.key;
+  function quizHTML(qs) { return '<section class="ho-sec gh-ws"><h2>Questions</h2><ol class="gh-quiz">' + qs.map((q) => '<li><b>' + esc(q[0]) + '</b><ol type="A" class="gh-qopts">' + q[1].map((x) => '<li>' + esc(x) + '</li>').join('') + '</ol></li>').join('') + '</ol></section>'; }
+  function keyHTML(qs, cls) { return '<section class="ho-sec' + (cls || ' gh-key') + '"><h2>Answer key</h2><ol class="gh-keyB gh-keyQ">' + qs.map((q) => '<li><b>' + letter(q[2]) + '. ' + esc(q[1][q[2]]) + '</b> <small>' + esc(q[3]) + '</small></li>').join('') + '</ol></section>'; }
+  function readingHTML(m) {
+    const show = m.o.english === 'show';
+    let h = headHTML(m);
+    if (m.passage) h += '<section class="ho-sec"><div class="gh-passage">' + m.passage.map((p) => '<p class="tl">' + esc(p.tl) + '</p>' + (show ? '<p class="gh-tr">' + esc(p.en) + '</p>' : '')).join('') + '</div></section>';
+    if (m.gloss) h += '<section class="ho-sec"><h2>Glossary</h2><div class="gh-gloss">' + m.gloss.map(([t, e]) => '<div><b class="tl">' + esc(t) + '</b> ' + esc(e) + '</div>').join('') + '</div></section>';
+    if (m.quiz) h += quizHTML(m.quiz);
+    if (m.translation) h += '<section class="ho-sec gh-key"><h2>Translation</h2><div class="gh-passage">' + m.translation.map((p) => '<p>' + esc(p.en) + '</p>').join('') + '</div></section>';
+    if (m.key) h += keyHTML(m.key, m.translation ? ' ' : ' gh-key');
+    return h + footHTML();
+  }
+  function quizDoc(k, qs, title) {
+    const { MUTED, content, heading } = k, run = (t, x) => Object.assign({ text: t }, x || {});
+    content.push(heading(title, qs.length + ' questions'));
+    qs.forEach((q, i) => content.push({ stack: [{ text: [run((i + 1) + '. ', { color: MUTED }), run(q[0], { bold: true })] }].concat(q[1].map((x, j) => ({ text: [run(letter(j) + '.  ', { color: MUTED }), run(x)], margin: [16, 1, 0, 0] }))), unbreakable: true, margin: [0, 0, 0, 7] }));
+  }
+  function keyDoc(k, qs, sub, breakBefore) {
+    const { MUTED, base, content, heading } = k, run = (t, x) => Object.assign({ text: t }, x || {});
+    content.push(Object.assign(heading('Answer key', sub), { pageBreak: breakBefore ? 'before' : undefined }));
+    qs.forEach((q, i) => content.push({ text: [run((i + 1) + '  ', { color: MUTED }), run(letter(q[2]) + '. ' + q[1][q[2]], { bold: true }), run('  ' + q[3], { color: MUTED, fontSize: base - 1.5 })], margin: [0, 0, 0, 4] }));
+  }
+  function readingDoc(m, logo) {
+    const k = kit(m, logo), { MUTED, base, content, heading } = k, show = m.o.english === 'show';
+    if (m.passage) m.passage.forEach((p) => {
+      content.push({ text: p.tl, fontSize: base + 1, lineHeight: 1.3, margin: [0, 0, 0, show ? 2 : 8] });
+      if (show) content.push({ text: p.en, italics: true, color: MUTED, fontSize: base - 0.5, margin: [0, 0, 0, 9] });
+    });
+    if (m.gloss) {
+      content.push(heading('Glossary', m.gloss.length + ' words'));
+      const half = Math.ceil(m.gloss.length / 2), entry = ([t, e]) => ({ text: [{ text: t, bold: true }, { text: '  ' + e, color: '#333a52' }], margin: [0, 0, 0, 3] });
+      content.push({ columns: [m.gloss.slice(0, half), m.gloss.slice(half)].map((part) => ({ stack: part.map(entry), width: '*' })), columnGap: 16 });
+    }
+    if (m.quiz) quizDoc(k, m.quiz, 'Questions');
+    if (m.translation) {
+      content.push(Object.assign(heading('Translation', m.r.titleEn), { pageBreak: content.length > 1 ? 'before' : undefined }));
+      m.translation.forEach((p) => content.push({ text: p.en, margin: [0, 0, 0, 7] }));
+    }
+    if (m.key) keyDoc(k, m.key, m.r.title, !m.translation && content.length > 1);
+    return finish(m, k, 'Tagalog reading handout');
+  }
+
+  /* ===================== Topic: dialogue ===================== */
+  // Everyday dialogues plus the clinical ones made from the case simulations (same list as the Speaking page).
+  const DL = () => (window.DIALOGUES || []).concat((window.PSYCH_CASES || []).map((c) => App.caseDialogue(c)));
+  const pageW = (o) => ({ A4: 515, LETTER: 532, A5: 363 })[o.paper] || 515;
+  // "you are Nurse"; the roles named You / You (doctor) need no label.
+  const youAre = (d) => (/^you\b/i.test(d.roles[d.you] || '') ? '' : 'you are ' + d.roles[d.you]);
+  function dialogueBuild(o) {
+    const d = DL().find((x) => x.id === o.dialogue) || DL()[0] || { id: '', title: 'Dialogue', level: '', roles: [], you: 0, lines: [] };
+    const lines = d.lines.map((l) => ({ me: l[0] === d.you, who: l[4] || d.roles[l[0]], tl: o.register === 'c' && l[3] ? l[3] : l[1], en: l[2] }));
+    const mine = lines.filter((l) => l.me);
+    return {
+      topic: 'dialogue', d, o, title: o.title || d.title, preparedFor: o.preparedFor, date: today(),
+      scope: d.level + ' · ' + d.lines.length + ' lines' + (youAre(d) ? ' · ' + youAre(d) : ''),
+      setting: d.setting || '', hasTaglish: d.lines.some((l) => l[3]),
+      script: o.script ? lines : null, role: o.role && mine.length ? lines : null, key: o.key && o.role && mine.length ? mine : null,
+      translation: o.script && o.english === 'end' ? lines : null
+    };
+  }
+  const dialogueCanPrint = (o) => o.script || o.role;
+  function dialogueHTML(m) {
+    const show = m.o.english === 'show';
+    let h = headHTML(m);
+    if (m.setting) h += '<p class="ho-goal">' + esc(m.setting) + '</p>';
+    if (m.script) h += '<section class="ho-sec"><h2>Dialogue</h2><div class="gh-dlg">' + m.script.map((l) => '<div class="gh-dl' + (l.me ? ' me' : '') + '"><span class="gh-who">' + esc(l.who) + '</span><div><span class="tl">' + esc(l.tl) + '</span>' + (show ? '<span class="gh-en">' + esc(l.en) + '</span>' : '') + '</div></div>').join('') + '</div></section>';
+    if (m.translation) h += '<section class="ho-sec gh-key"><h2>Translation</h2><div class="gh-dlg">' + m.translation.map((l) => '<div class="gh-dl"><span class="gh-who">' + esc(l.who) + '</span><div>' + esc(l.en) + '</div></div>').join('') + '</div></section>';
+    if (m.role) {
+      let n = 0;
+      h += '<section class="ho-sec gh-ws' + (m.script ? ' gh-key' : '') + '"><h2>Role-play worksheet</h2><p class="ho-goal">Name: ____________________ Date: __________ · Write your lines in Tagalog from the English cue.</p><div class="gh-dlg">' +
+        m.role.map((l) => '<div class="gh-dl' + (l.me ? ' me' : '') + '"><span class="gh-who">' + (l.me ? (++n) + '. ' : '') + esc(l.who) + '</span><div>' + (l.me ? '<span class="gh-en">' + esc(l.en) + '</span><span class="gh-blank"></span>' : '<span class="tl">' + esc(l.tl) + '</span>') + '</div></div>').join('') + '</div></section>';
+    }
+    if (m.key) h += '<section class="ho-sec gh-key"><h2>Answer key</h2><ol class="gh-keyB">' + m.key.map((l) => '<li><b class="tl">' + esc(l.tl) + '</b> <small>' + esc(l.en) + '</small></li>').join('') + '</ol></section>';
+    return h + footHTML();
+  }
+  function dialogueDoc(m, logo) {
+    const k = kit(m, logo), { MUTED, LINE, NAVY, base, a5, content, heading } = k, show = m.o.english === 'show';
+    const whoW = a5 ? 62 : 86, lineW = pageW(m.o) - whoW - 12;
+    const row = (who, stack, me) => ({ columns: [{ text: who, width: whoW, bold: true, color: me ? NAVY : MUTED, fontSize: base - 1 }, { stack, width: '*' }], columnGap: 8, margin: [0, 0, 0, 6], unbreakable: true });
+    const rule = () => ({ canvas: [{ type: 'line', x1: 0, y1: 0, x2: lineW, y2: 0, lineWidth: 0.6, lineColor: LINE }], margin: [0, 14, 0, 0] }); // fresh node each time: pdfmake mutates nodes
+    if (m.setting) content.push({ text: m.setting, color: MUTED, italics: true, margin: [0, 0, 0, 6] });
+    if (m.script) {
+      content.push(heading('Dialogue', m.d.roles.join(' · ')));
+      m.script.forEach((l) => content.push(row(l.who, [{ text: l.tl, fontSize: base + 0.5 }].concat(show ? [{ text: l.en, italics: true, color: MUTED, fontSize: base - 1, margin: [0, 1, 0, 0] }] : []), l.me)));
+    }
+    if (m.translation) {
+      content.push(Object.assign(heading('Translation', ''), { pageBreak: content.length > 1 ? 'before' : undefined }));
+      m.translation.forEach((l) => content.push(row(l.who, [{ text: l.en }], l.me)));
+    }
+    if (m.role) {
+      let n = 0;
+      content.push(Object.assign(heading('Role-play worksheet', youAre(m.d)), { pageBreak: content.length > 1 ? 'before' : undefined }));
+      content.push({ text: 'Name: ______________________   Date: ____________', margin: [0, 2, 0, 2] });
+      content.push({ text: 'Write your lines in Tagalog from the English cue.', color: MUTED, fontSize: base - 1, margin: [0, 0, 0, 6] });
+      m.role.forEach((l) => {
+        if (!l.me) { content.push(row(l.who, [{ text: l.tl }], false)); return; }
+        const rules = Array.from({ length: Math.max(1, Math.ceil(l.tl.length / (a5 ? 42 : 62))) }, rule);
+        content.push(row((++n) + '. ' + l.who, [{ text: l.en, italics: true, color: MUTED, fontSize: base - 0.5 }].concat(rules), true));
+      });
+    }
+    if (m.key) {
+      content.push(Object.assign(heading('Answer key', m.d.title), { pageBreak: 'before' }));
+      m.key.forEach((l, i) => content.push({ text: [{ text: (i + 1) + '  ', color: MUTED }, { text: l.tl, bold: true }, { text: '  ' + l.en, color: MUTED, fontSize: base - 1.5 }], margin: [0, 0, 0, 4] }));
+    }
+    return finish(m, k, 'Tagalog dialogue handout');
+  }
+
   function build(o) {
     const t = o.topic || 'panlapi';
-    return t === 'verbs' ? verbsBuild(o) : t === 'lesson' ? lessonBuild(o) : panlapiBuild(o);
+    return t === 'verbs' ? verbsBuild(o) : t === 'lesson' ? lessonBuild(o) : t === 'reading' ? readingBuild(o) : t === 'dialogue' ? dialogueBuild(o) : panlapiBuild(o);
   }
   // For tests and callers: {topic, ...} gets that topic's defaults filled in.
   const withDefaults = (o) => Object.assign({}, DEF[(o && o.topic) || 'panlapi'] || DEFAULTS, o);
@@ -593,11 +725,13 @@
 
 
   /* ---------- Page ---------- */
-  const canPrint = (o) => (o.topic === 'verbs' ? verbsCanPrint(o) : o.topic === 'lesson' ? lessonCanPrint(o) : panlapiCanPrint(o));
+  const canPrint = (o) => ({ verbs: verbsCanPrint, lesson: lessonCanPrint, reading: readingCanPrint, dialogue: dialogueCanPrint }[o.topic] || panlapiCanPrint)(o);
   const PAGE = {
     panlapi: { h1: 'Grammar handout', crumb: '<a href="#/affixes">Panlapi</a> / Handout', intro: 'Print the affix cheat sheet, the sound-change rules, the word list, and a worksheet with its answer key. Your choices are remembered on this device.', file: 'grammar-handout' },
     verbs: { h1: 'Verb handout', crumb: '<a href="#/verbs">Verbs</a> / Handout', intro: 'Print conjugation tables for the verbs you pick, example sentences for each aspect, an "aspect at a glance" page, and a worksheet with its answer key. Your choices are remembered on this device.', file: 'verb-handout' },
-    lesson: { h1: 'Lesson handout', crumb: '<a href="#/lessons">Lessons</a> / Handout', intro: 'Print any lesson with its quiz and an answer key on a separate page. Your choices are remembered on this device.', file: 'lesson-handout' }
+    lesson: { h1: 'Lesson handout', crumb: '<a href="#/lessons">Lessons</a> / Handout', intro: 'Print any lesson with its quiz and an answer key on a separate page. Your choices are remembered on this device.', file: 'lesson-handout' },
+    reading: { h1: 'Reading handout', crumb: '<a href="#/reading">Reading</a> / Handout', intro: 'Print any passage with its glossary, questions and an answer key. Put the translation under each paragraph, on its own page, or leave it out. Your choices are remembered on this device.', file: 'reading-handout' },
+    dialogue: { h1: 'Dialogue handout', crumb: '<a href="#/speak">Speaking</a> / Handout', intro: 'Print any dialogue as a script, and a role-play worksheet where you write your own lines from the English cue, with an answer key. Your choices are remembered on this device.', file: 'dialogue-handout' }
   };
   function page(topic, el, p, q) {
     let o = opts(topic);
@@ -607,13 +741,22 @@
     } else if (topic === 'verbs') {
       if (q.set === 'clinical') o = Object.assign({}, o, { set: 'clinical' });
       if (q.v && VB().some((v) => v.r === q.v)) o = Object.assign({}, o, { verb: q.v });
-    } else if (q.id && LV().some((l) => l.id === q.id)) o = Object.assign({}, o, { lesson: q.id, title: '' });
-    if (topic === 'lesson' && !LV().some((l) => l.id === o.lesson)) o.lesson = (LV()[0] || {}).id;
+    } else if (topic === 'lesson') {
+      if (q.id && LV().some((l) => l.id === q.id)) o = Object.assign({}, o, { lesson: q.id, title: '' });
+      if (!LV().some((l) => l.id === o.lesson)) o.lesson = (LV()[0] || {}).id;
+    } else if (topic === 'reading') {
+      if (q.id && RD().some((r) => r.id === q.id)) o = Object.assign({}, o, { reading: q.id, title: '' });
+      if (!RD().some((r) => r.id === o.reading)) o.reading = (RD()[0] || {}).id;
+    } else if (topic === 'dialogue') {
+      if (q.id && DL().some((d) => d.id === q.id)) o = Object.assign({}, o, { dialogue: q.id, title: '' });
+      if (!DL().some((d) => d.id === o.dialogue)) o.dialogue = (DL()[0] || {}).id;
+    }
     const pg = PAGE[topic];
     const chk = (k, label, hint) => '<label class="ho-chk"><input type="checkbox" data-o="' + k + '"' + (o[k] ? ' checked' : '') + '> <span>' + label + (hint ? '<small class="muted"> ' + hint + '</small>' : '') + '</span></label>';
     const seg = (k, items) => '<div class="seg" role="group">' + items.map(([v, t]) => '<button data-seg="' + k + '" data-v="' + v + '" class="' + (o[k] === v ? 'on' : '') + '">' + t + '</button>').join('') + '</div>';
     const paperSize = '<div><div class="eyebrow">Paper</div>' + seg('paper', [['A4', 'A4'], ['LETTER', 'Letter'], ['A5', 'A5 booklet']]) + '</div><div><div class="eyebrow">Text size</div>' + seg('size', [['small', 'Small'], ['normal', 'Normal'], ['large', 'Large']]) + '</div>';
     const englishSeg = '<div><div class="eyebrow">English</div>' + seg('english', [['show', 'Show'], ['hide', 'Hide']]) + '<p class="small muted" style="margin:4px 0 0">Hide it for a Tagalog-only sheet.</p></div>';
+    const trSeg = '<div><div class="eyebrow">English</div>' + seg('english', [['show', 'Under each line'], ['end', 'On its own page'], ['hide', 'Leave out']]) + '<p class="small muted" style="margin:4px 0 0">Leave it out for a Tagalog-only sheet.</p></div>';
     const controls = () => {
       if (topic === 'verbs') {
         const sel = '<div><div class="eyebrow">Verbs</div><select class="input" id="ghVerb"><option value="all">' + (o.set === 'clinical' ? 'All clinical verbs' : 'All verbs') + '</option>' + VB().map((v) => '<option value="' + esc(v.r) + '"' + (o.verb === v.r ? ' selected' : '') + '>' + esc(v.r) + ' · ' + esc(v.en) + '</option>').join('') + '</select><p class="small muted" style="margin:4px 0 0">Pick one verb for a single-verb sheet.</p></div>';
@@ -627,16 +770,30 @@
         return '<div class="ho-grid">' + sel + paperSize + '</div>' +
           '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('body', 'Lesson text', 'with examples and tables') + chk('quiz', 'Quiz questions', 'lettered options, no answers') + chk('key', 'Answer key', 'answers and explanations, on its own page') + '</div></div>';
       }
+      if (topic === 'reading') {
+        const grp = (lab, rs) => rs.length ? '<optgroup label="' + lab + '">' + rs.map((r) => '<option value="' + esc(r.id) + '"' + (o.reading === r.id ? ' selected' : '') + '>' + esc(r.title) + ' · ' + esc(r.titleEn) + ' (' + esc(r.level) + ')</option>').join('') + '</optgroup>' : '';
+        const sel = '<div><div class="eyebrow">Passage</div><select class="input" id="ghReading">' + grp('Everyday', RD().filter((r) => !r.psych)) + grp('Clinical', RD().filter((r) => r.psych)) + '</select></div>';
+        return '<div class="ho-grid">' + sel + trSeg + paperSize + '</div>' +
+          '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('passage', 'Passage', 'the Tagalog text') + chk('gloss', 'Glossary', 'key words with meanings') + chk('quiz', 'Questions', 'lettered options, no answers') + chk('key', 'Answer key', 'answers and explanations') + '</div></div>';
+      }
+      if (topic === 'dialogue') {
+        const grp = (lab, ds) => '<optgroup label="' + lab + '">' + ds.map((d) => '<option value="' + esc(d.id) + '"' + (o.dialogue === d.id ? ' selected' : '') + '>' + esc(d.title) + ' (' + esc(d.level) + ')</option>').join('') + '</optgroup>';
+        const all = DL(), sel = '<div><div class="eyebrow">Dialogue</div><select class="input" id="ghDialogue">' + grp('Everyday', all.filter((d) => !/^case-/.test(d.id))) + grp('Clinical', all.filter((d) => /^case-/.test(d.id))) + '</select></div>';
+        const cur = all.find((d) => d.id === o.dialogue) || {}, tag = (cur.lines || []).some((l) => l[3]);
+        const regSeg = '<div><div class="eyebrow">Wording</div>' + seg('register', [['f', 'Respectful'], ['c', 'Everyday']]) + '<p class="small muted" style="margin:4px 0 0">' + (tag ? 'Everyday uses the Taglish version of lines that have one.' : 'This dialogue has one wording only.') + '</p></div>';
+        return '<div class="ho-grid">' + sel + trSeg + regSeg + paperSize + '</div>' +
+          '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('script', 'Script', 'every line in Tagalog') + chk('role', 'Role-play worksheet', 'your lines blank, with the English cue') + chk('key', 'Answer key', 'your lines, for the worksheet') + '</div></div>';
+      }
       return '<div class="ho-grid">' +
         '<div><div class="eyebrow">Affix type</div>' + seg('type', [['all', 'All']].concat(TYPES().map((t) => [t.id, t.tl]))) + '</div>' +
         '<div><div class="eyebrow">Words</div>' + seg('set', [['all', 'All words'], ['clinical', 'Clinical only']]) + '</div>' + englishSeg + paperSize + '</div>' +
         '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('cheat', 'Cheat sheet', 'affix positions and what each affix does') + chk('rules', 'Sound changes and rules') + chk('words', 'Word list', 'with the affix marked and the root') + chk('worksheet', 'Worksheet', 'find the root, choose the affix') + chk('key', 'Answer key', 'on its own page') + '</div></div>';
     };
-    const defTitle = () => (topic === 'lesson' ? (LV().find((l) => l.id === o.lesson) || {}).title || '' : '');
+    const defTitle = () => (topic === 'lesson' ? (LV().find((l) => l.id === o.lesson) || {}).title || '' : topic === 'reading' ? (RD().find((r) => r.id === o.reading) || {}).title || '' : topic === 'dialogue' ? (DL().find((d) => d.id === o.dialogue) || {}).title || '' : '');
     const draw = () => {
       el.innerHTML = '<div class="breadcrumb">' + pg.crumb + '</div><h1>' + pg.h1 + '</h1><p class="muted">' + pg.intro + '</p>' +
         '<div class="card stack ho-controls">' + controls() +
-        '<div class="ho-grid"><label class="small">Title<input class="input" id="ghTitle" value="' + esc(o.title) + '"' + (topic === 'lesson' ? ' placeholder="' + esc(defTitle()) + '"' : '') + '></label><label class="small">Prepared for (optional)<input class="input" id="ghFor" value="' + esc(o.preparedFor) + '" placeholder="e.g., PGY-1, Dept. of Psychiatry"></label></div>' +
+        '<div class="ho-grid"><label class="small">Title<input class="input" id="ghTitle" value="' + esc(o.title) + '"' + (defTitle() ? ' placeholder="' + esc(defTitle()) + '"' : '') + '></label><label class="small">Prepared for (optional)<input class="input" id="ghFor" value="' + esc(o.preparedFor) + '" placeholder="e.g., First years, Dept. of Psychiatry"></label></div>' +
         '<div class="row"><button class="btn primary" id="ghPdf">' + App.icons.book + ' Download PDF</button><button class="btn" id="ghPrint">Print</button><span class="muted small" id="ghStat"></span></div></div>' +
         '<h2 style="margin-top:18px">Preview</h2><div class="ho-paper ho-' + o.paper + ' ho-size-' + o.size + '" id="ghPaper"></div>';
       bind();
@@ -660,6 +817,8 @@
       el.querySelectorAll('[data-o]').forEach((c) => (c.onchange = () => update({ [c.dataset.o]: c.checked })));
       const vs = el.querySelector('#ghVerb'); if (vs) vs.onchange = () => update({ verb: vs.value });
       const ls = el.querySelector('#ghLesson'); if (ls) ls.onchange = () => update({ lesson: ls.value, title: '' }, true);
+      const rs = el.querySelector('#ghReading'); if (rs) rs.onchange = () => update({ reading: rs.value, title: '' }, true);
+      const ds = el.querySelector('#ghDialogue'); if (ds) ds.onchange = () => update({ dialogue: ds.value, title: '' }, true);
       el.querySelector('#ghTitle').oninput = (e) => update({ title: e.target.value });
       el.querySelector('#ghFor').oninput = (e) => update({ preparedFor: e.target.value });
       el.querySelector('#ghPrint').onclick = () => window.print();
@@ -685,4 +844,6 @@
   V.ghandout = (el, p, q) => page('panlapi', el, p, q);
   V.ghandoutVerbs = (el, p, q) => page('verbs', el, p, q);
   V.ghandoutLesson = (el, p, q) => page('lesson', el, p, q);
+  V.ghandoutReading = (el, p, q) => page('reading', el, p, q);
+  V.ghandoutDialogue = (el, p, q) => page('dialogue', el, p, q);
 })();

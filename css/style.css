@@ -758,3 +758,17 @@ mark.vf { background: var(--warn-bg); color: var(--gold-ink); font-weight: 700; 
 .pointboard-patient .pstrip { display: none; }
 .pbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-radius: var(--r-md); background: var(--surface-2); margin-bottom: 10px; font-size: 1.05rem; }
 .listen-q { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+/* Reading and dialogue handouts (3.4.0) */
+.ho-paper .gh-passage p { margin: 0 0 6px; line-height: 1.5; }
+.ho-paper .gh-passage p.tl { font-size: 1.06em; }
+.ho-paper .gh-passage p.gh-tr { color: var(--p-muted); font-style: italic; font-size: .92em; margin: -3px 0 10px; }
+.gh-gloss { columns: 2; column-gap: 20px; }
+.gh-gloss div { break-inside: avoid; margin-bottom: 3px; color: #333a52; }
+.gh-gloss b { color: var(--p-navy); margin-right: 4px; }
+.gh-dlg { display: grid; gap: 6px; }
+.gh-dl { display: grid; grid-template-columns: 6.5em minmax(0, 1fr); gap: 8px; break-inside: avoid; }
+.gh-dl .gh-who { color: var(--p-muted); font-weight: 700; font-size: .86em; padding-top: 1px; overflow-wrap: anywhere; }
+.gh-dl.me .gh-who { color: var(--p-navy); }
+.gh-dl .gh-en { display: block; color: var(--p-muted); font-style: italic; font-size: .9em; }
+.gh-dl .gh-blank { display: block; height: 1.6em; border-bottom: 1px solid var(--p-line); }
+@media (max-width: 560px) { .gh-gloss { columns: 1; } .gh-dl { grid-template-columns: minmax(0, 1fr); gap: 0; } }

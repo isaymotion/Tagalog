@@ -4,6 +4,14 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.4.0', date: '2026-11-16', title: 'Print handouts for readings and dialogues',
+    items: [
+      { type: 'feature', text: 'Every reading passage now has a Print handout button. The handout has the Tagalog passage, the glossary, the questions with lettered options and an answer key. Put the English under each paragraph, on its own page, or leave it out for a Tagalog-only sheet.' },
+      { type: 'feature', text: 'Every dialogue, including the clinical ones from the case simulations, has a Print handout button too. It prints the script and a role-play worksheet: the other speakers\' lines are shown, and your lines are left blank with the English cue for you to write in Tagalog. The answer key lists your lines. You can choose the respectful or the everyday (Taglish) wording.' },
+      { type: 'update', text: 'Both handouts download as PDF or print on A4, Letter or an A5 booklet, and remember your choices on this device.' }
+    ]
+  },
+  {
     version: '3.3.0', date: '2026-11-16', title: 'Three more admission MSE cases',
     items: [
       { type: 'content', text: 'Admission MSE practice has three new patients, each seen on the day of admission: Carlo (mania: pressured speech, flight of ideas with clanging in Tagalog, grandiose delusions), Arnel (shabu-induced psychosis: hypervigilance, visual hallucinations, a threat to a neighbor) and Mika (first-episode schizophrenia: thought blocking, command hallucinations, found on a rooftop ledge). Each links to the same patient\'s discharge case for the admission vs discharge comparison.' },

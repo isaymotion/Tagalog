@@ -6,7 +6,7 @@
 
 **App created by Isabella Navarro, MD. Latest version November 2026. isaymotion@gmail.com**
 
-Version **3.3.0** (2026-11-16): admission MSE cases for Carlo, Arnel and Mika. 3.2.0: Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
+Version **3.4.0** (2026-11-16): print handouts for readings and dialogues. 3.3.0: admission MSE cases for Carlo, Arnel and Mika. 3.2.0: Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
 
 ## What's inside
 
@@ -34,9 +34,15 @@ Version **3.3.0** (2026-11-16): admission MSE cases for Carlo, Arnel and Mika. 3
 | **Panlapi (affix trainer)** | Take words apart into root and affix: unlapi, gitlapi, hulapi, kabilaan, laguhan. 216 words (120 clinical), 9 sound-change and placement rules, 26 affix meanings, and four drills (name the type, find the root, build the word, choose the affix the sentence forces). `js/data/affixes.js`, `js/affixes.js`, route `#/affixes`. |
 | **Grammar handouts** | Printable references with a Print handout button on the pages they come from. Panlapi: affix cheat sheet, sound-change rules, word list with the affix marked, worksheet and answer key. Verbs: conjugation tables for all, clinical or one verb, example sentences per aspect, an aspect-at-a-glance page, worksheet and key. Lessons: any lesson with its quiz and an answer key. Hide English where it applies, A4/Letter/A5, PDF or print. |
 | **Lessons** | 24 grammar and culture lessons with quizzes: markers, focus, aspect, particles, po/opo, numbers/time/money, Taglish, hiya, utang na loob, folk beliefs, idioms of distress, and when your Tagalog is not enough (interviewing alone vs a nurse interpreting, family as informants not interpreters, running an interpreted interview, which rating-scale version goes in the chart). |
-| **Reading** | 12 graded passages (A1–B2) with glossaries and comprehension questions. |
-| **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. |
+| **Reading** | 12 graded passages (A1–B2) with glossaries and comprehension questions. Print handout per passage: passage, glossary, questions, answer key; English under each paragraph, on its own page, or left out. |
+| **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. Print handout per dialogue (clinical ones included): script and a role-play worksheet with your lines blank under the English cue, plus an answer key. |
 | **You** | Placement test, streaks, XP, progress stats, backup export/import, settings, What's New, About. |
+
+## Version 3.4.0: reading and dialogue handouts
+
+- **Feature**: two new topics in `js/grammar-handout.js`, same pattern as the lesson handout. `reading` (`#/reading/handout?id=<passage>`, settings in `ghandout.reading`): passage, glossary, questions, answer key; `english` is `show` (under each paragraph), `end` (translation on its own page) or `hide`. `dialogue` (`#/speak/handout?id=<dialogue>`, settings in `ghandout.dialogue`): script, role-play worksheet (learner's lines blank with the English cue and ruled lines), answer key; `register` `f`/`c` picks the Taglish line where a dialogue has one. The clinical dialogues built from `PSYCH_CASES` (`case-<id>`) are included.
+- Print handout buttons on every reading passage and dialogue page; both pages are in search. The "Prepared for" placeholder now says "First years" instead of PGY-1 (also in the psychiatry handout).
+- **Files changed:** `sw.js`, `data/app-meta.js`, `data/changelog.js`, `js/grammar-handout.js`, `js/handout.js`, `js/views.js`, `js/app.js`, `js/core.js`, `css/style.css`, `README.md`.
 
 ## Version 3.3.0: three more admission MSE cases
 
