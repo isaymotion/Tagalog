@@ -4,6 +4,12 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.6.1', date: '2026-11-16', title: 'Clearer audio in the listening exercises',
+    items: [
+      { type: 'correction', text: 'Lines with abbreviations were read strangely by the voice: PRN, BP, BHW, NCMH, Dr., Dra., Doc, I-inform, bed and gate numbers, the 1553 hotline and "y medya". They are now recorded from a spelling the voice reads correctly (pi-ar-en, Dok, i-inform with an "ee" sound). The text on screen and the dictation answers keep the normal spelling.' }
+    ]
+  },
+  {
     version: '3.6.0', date: '2026-11-16', title: 'Listening handouts and three more recordings',
     items: [
       { type: 'feature', text: 'Print any listening exercise: a notes box, the questions and two dictation lines, then the transcript and the answer key on their own pages. Use the Print handout button on each recording, or Print a listening handout on the Listening page. Play the audio from the app while the class works on paper.' },

@@ -23,6 +23,7 @@
     const normal = S().settings.rate || 0.85;
     let rate = normal, showTx = false, showEn = false, playing = -1;
     const who = (l) => x.speakers[l[0]] || '';
+    const sayOf = (l) => l[3] || l[1]; // 4th item: the line respelled for the voice (PRN → pi-ar-en)
     const stop = () => { App.stopSpeech(); playing = -1; mark(); };
     const mark = () => el.querySelectorAll('[data-line]').forEach((b) => b.classList.toggle('on', +b.dataset.line === playing));
     const playFrom = async (start, only) => {
@@ -30,7 +31,7 @@
       for (let i = start; i < x.lines.length; i++) {
         if (App._seq !== tok) return;
         playing = i; mark();
-        await App.speakAsync(x.lines[i][1], { rate });
+        await App.speakAsync(sayOf(x.lines[i]), { rate });
         if (only || App._seq !== tok) break;
         await new Promise((r) => setTimeout(r, 450));
       }
@@ -42,7 +43,7 @@
       el.querySelector('#enbtn').hidden = !showTx;
       el.querySelector('#enbtn').textContent = showEn ? 'Hide English' : 'Show English';
       t.hidden = !showTx;
-      t.innerHTML = x.lines.map((l, i) => '<div class="line' + (l[0] % 2 ? ' me' : '') + '"><div class="spread"><span class="who">' + (i + 1) + ' · ' + esc(who(l)) + '</span>' + App.sayBtn(l[1]) + '</div><div class="t">' + esc(l[1]) + '</div>' + (showEn ? '<div class="e">' + esc(l[2]) + '</div>' : '') + '</div>').join('');
+      t.innerHTML = x.lines.map((l, i) => '<div class="line' + (l[0] % 2 ? ' me' : '') + '"><div class="spread"><span class="who">' + (i + 1) + ' · ' + esc(who(l)) + '</span>' + App.sayBtn(sayOf(l)) + '</div><div class="t">' + esc(l[1]) + '</div>' + (showEn ? '<div class="e">' + esc(l[2]) + '</div>' : '') + '</div>').join('');
     };
     const dictCard = (li, n) => '<div class="card stack ldict" data-d="' + li + '"><div class="spread"><span class="eyebrow">Line ' + (n + 1) + ' of ' + x.dictation.length + '</span><span class="row" style="gap:6px"><button class="btn sm" data-dplay="' + li + '">' + icons.sound + ' Play</button><button class="btn sm" data-dslow="' + li + '">Slower</button></span></div>' +
       '<textarea class="input tl" rows="2" placeholder="Type what you hear" aria-label="Type line ' + (n + 1) + '"></textarea><div class="row"><button class="btn primary" data-dcheck="' + li + '">Check</button></div><div data-dfb></div></div>';
@@ -66,8 +67,8 @@
     el.querySelectorAll('[data-line]').forEach((b) => (b.onclick = () => playFrom(+b.dataset.line, true)));
     el.querySelector('#txbtn').onclick = () => { showTx = !showTx; drawTx(); };
     el.querySelector('#enbtn').onclick = () => { showEn = !showEn; drawTx(); };
-    el.querySelectorAll('[data-dplay]').forEach((b) => (b.onclick = () => App.speak(x.lines[+b.dataset.dplay][1], { rate: normal })));
-    el.querySelectorAll('[data-dslow]').forEach((b) => (b.onclick = () => App.speak(x.lines[+b.dataset.dslow][1], { rate: Math.max(0.6, normal - 0.25) })));
+    el.querySelectorAll('[data-dplay]').forEach((b) => (b.onclick = () => App.speak(sayOf(x.lines[+b.dataset.dplay]), { rate: normal })));
+    el.querySelectorAll('[data-dslow]').forEach((b) => (b.onclick = () => App.speak(sayOf(x.lines[+b.dataset.dslow]), { rate: Math.max(0.6, normal - 0.25) })));
     el.querySelectorAll('[data-dcheck]').forEach((b) => (b.onclick = () => {
       const card = b.closest('[data-d]'), l = x.lines[+b.dataset.dcheck];
       const typed = card.querySelector('textarea').value;

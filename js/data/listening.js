@@ -1,6 +1,7 @@
 /* Listening exercises (3.5.0): audio first, text hidden until you ask for it.
    { id, level, kind, title, titleEn, setting (English, what you are about to hear), psych?,
-     speakers: [names], lines: [[speakerIdx, tagalog, english]],
+     speakers: [names], lines: [[speakerIdx, tagalog, english, say?]]: say = the same line respelled for the voice
+     (acronyms, Dr./Dra., Doc, numbers); the screen and dictation use the tagalog, the audio uses say.
      q: [[question, [options], correctIdx, explanation]],  (same shape as READING.q)
      dictation: [lineIdx, ...] }  lines to type from the audio at the end.
    Keep each line one or two sentences: every line is one recorded clip. */
@@ -10,7 +11,7 @@ window.LISTENING = [
   setting: 'A voicemail left on a patient\'s phone by the clinic receptionist. Listen for the new day and time, what to bring, and the deadline.',
   speakers: ['Receptionist'],
   lines: [
-    [0, 'Magandang hapon po. Si Joy po ito, mula sa klinika ni Dra. Reyes.', 'Good afternoon. This is Joy, from Dr. Reyes\'s clinic.'],
+    [0, 'Magandang hapon po. Si Joy po ito, mula sa klinika ni Dra. Reyes.', 'Good afternoon. This is Joy, from Dr. Reyes\'s clinic.', 'Magandang hapon po. Si Joy po ito, mula sa klinika ni Doktora Reyes.'],
     [0, 'Tumatawag po ako para kay Ginoong Ramil Cruz, tungkol sa follow-up niya.', 'I\'m calling for Mr. Ramil Cruz, about his follow-up.'],
     [0, 'Inilipat po ang check-up ninyo mula Martes papuntang Huwebes, alas-diyes ng umaga, dahil may seminar po si Doktora.', 'Your check-up has been moved from Tuesday to Thursday, ten in the morning, because the doctor has a seminar.'],
     [0, 'Pakidala po ang lahat ng gamot na iniinom ninyo ngayon, pati ang resulta ng laboratoryo noong nakaraang buwan.', 'Please bring all the medicines you are taking now, and the lab results from last month.'],
@@ -31,9 +32,9 @@ window.LISTENING = [
   speakers: ['Announcer'],
   lines: [
     [0, 'Atensyon po sa lahat ng pasahero.', 'Attention, all passengers.'],
-    [0, 'Ang bus na papuntang Mariveles, na nakatakdang umalis nang alas-tres y medya, ay maaantala nang mga apatnapu\'t limang minuto.', 'The bus to Mariveles, scheduled to leave at three thirty, will be delayed by about forty-five minutes.'],
+    [0, 'Ang bus na papuntang Mariveles, na nakatakdang umalis nang alas-tres y medya, ay maaantala nang mga apatnapu\'t limang minuto.', 'The bus to Mariveles, scheduled to leave at three thirty, will be delayed by about forty-five minutes.', 'Ang bus na papuntang Mariveles, na nakatakdang umalis nang alas-tres i medya, ay maaantala nang mga apatnapu\'t limang minuto.'],
     [0, 'Ito po ay dahil sa isang aksidente sa highway malapit sa San Fernando.', 'This is because of an accident on the highway near San Fernando.'],
-    [0, 'Ang mga pasaherong may tiket para sa biyaheng iyon ay maghintay na lamang po sa Gate 4, hindi na sa Gate 2.', 'Passengers with tickets for that trip should wait at Gate 4, no longer at Gate 2.'],
+    [0, 'Ang mga pasaherong may tiket para sa biyaheng iyon ay maghintay na lamang po sa Gate 4, hindi na sa Gate 2.', 'Passengers with tickets for that trip should wait at Gate 4, no longer at Gate 2.', 'Ang mga pasaherong may tiket para sa biyaheng iyon ay maghintay na lamang po sa geyt por, hindi na sa geyt tu.'],
     [0, 'Para sa mga gustong lumipat sa mas maagang biyahe papuntang Balanga, lumapit lamang po sa ticket booth bago mag-alas-tres.', 'Those who want to switch to an earlier trip to Balanga, please go to the ticket booth before three.'],
     [0, 'Paalala rin po: huwag iwanan ang inyong bagahe nang walang bantay.', 'A reminder too: do not leave your baggage unattended.'],
     [0, 'Maraming salamat po sa inyong pang-unawa.', 'Thank you very much for your understanding.']
@@ -72,17 +73,17 @@ window.LISTENING = [
   setting: 'Two ward nurses hand over a new patient at 6 am. Real endorsements mix Tagalog and English (Taglish). Listen for the night\'s events, medication, vital signs and what to watch for.',
   speakers: ['Dan (night shift)', 'Kaye (morning shift)'],
   lines: [
-    [0, 'Kaye, i-endorse ko na \'yung Bed 7, si Tatay na bagong admit kahapon.', 'Kaye, let me endorse Bed 7, the older man admitted yesterday.'],
+    [0, 'Kaye, i-endorse ko na \'yung Bed 7, si Tatay na bagong admit kahapon.', 'Kaye, let me endorse Bed 7, the older man admitted yesterday.', 'Kaye, i-endors ko na \'yung bed seben, si Tatay na bagong admit kahapon.'],
     [0, 'Hindi siya nakatulog hanggang alas-dos. Pabalik-balik siya sa pinto, sinasabing may susundo raw sa kanya.', 'He didn\'t sleep until two. He kept going back and forth to the door, saying someone was coming to fetch him.'],
-    [0, 'Binigyan ko siya ng PRN na haloperidol bandang alas-dos y medya, ayon sa order ni Doc.', 'I gave him PRN haloperidol around two thirty, per the doctor\'s order.'],
+    [0, 'Binigyan ko siya ng PRN na haloperidol bandang alas-dos y medya, ayon sa order ni Doc.', 'I gave him PRN haloperidol around two thirty, per the doctor\'s order.', 'Binigyan ko siya ng pi-ar-en na haloperidol bandang alas-dos i medya, ayon sa order ni Dok.'],
     [0, 'Pagkatapos noon, kumalma naman siya at nakatulog nang mga apat na oras.', 'After that he calmed down and slept for about four hours.'],
     [1, 'Kumain ba siya? At \'yung vital signs?', 'Did he eat? And the vital signs?'],
-    [0, 'Kaunti lang ang kinain niya kagabi. Normal ang BP, pero medyo mataas ang pulso kaninang alas-singko, one-ten.', 'He ate very little last night. BP is normal, but his pulse was a bit high at five this morning, one-ten.'],
+    [0, 'Kaunti lang ang kinain niya kagabi. Normal ang BP, pero medyo mataas ang pulso kaninang alas-singko, one-ten.', 'He ate very little last night. BP is normal, but his pulse was a bit high at five this morning, one-ten.', 'Kaunti lang ang kinain niya kagabi. Normal ang bi-pi, pero medyo mataas ang pulso kaninang alas-singko, wan-ten.'],
     [1, 'Sige, babantayan ko. May tumawag ba sa pamilya?', 'Okay, I\'ll watch it. Did anyone from the family call?'],
     [0, 'Oo, tumawag ang anak niya. Darating daw siya mamayang tanghali, dala ang mga lumang reseta.', 'Yes, his son called. He said he\'ll come at noon today, bringing the old prescriptions.'],
     [1, 'Okay. Ano pa ang dapat kong abangan?', 'Okay. What else should I watch out for?'],
     [0, 'Pakibantayan kung nanginginig siya o pinagpapawisan. Sabi ng anak, malakas daw siyang uminom bago ma-admit.', 'Please watch for shaking or sweating. The son said he drank heavily before admission.'],
-    [1, 'Ah, kaya pala. I-inform ko si Doc para ma-check kung withdrawal.', 'Ah, that explains it. I\'ll inform the doctor so he can check for withdrawal.']
+    [1, 'Ah, kaya pala. I-inform ko si Doc para ma-check kung withdrawal.', 'Ah, that explains it. I\'ll inform the doctor so he can check for withdrawal.', 'Ah, kaya pala, i-inform ko si Dok para ma-tsek kung withdrawal.']
   ],
   q: [['Bakit hindi nakatulog ang pasyente?', ['pabalik-balik siya sa pinto at sinasabing may susundo sa kanya', 'masakit ang ulo niya', 'maingay sa ward'], 0, 'Night restlessness with a false belief: note it for the MSE.'],
       ['Ano ang ibinigay sa kanya, at kailan?', ['PRN na haloperidol, bandang alas-dos y medya', 'paracetamol, alas-singko', 'walang ibinigay'], 0, 'ayon sa order ni Doc.'],
@@ -121,7 +122,7 @@ window.LISTENING = [
   setting: 'A morning radio host interviews a psychiatrist. Listen for the reasons she gives, the comparison she uses, her view of faith and her advice to families.',
   speakers: ['Host', 'Dr. Lim (psychiatrist)'],
   lines: [
-    [0, 'Magandang umaga, mga tagapakinig. Kasama natin ngayon si Dr. Lim, isang psychiatrist.', 'Good morning, listeners. With us today is Dr. Lim, a psychiatrist.'],
+    [0, 'Magandang umaga, mga tagapakinig. Kasama natin ngayon si Dr. Lim, isang psychiatrist.', 'Good morning, listeners. With us today is Dr. Lim, a psychiatrist.', 'Magandang umaga, mga tagapakinig. Kasama natin ngayon si Doktora Lim, isang saykayatrist.'],
     [0, 'Doktora, bakit po kaya marami pa ring Pilipino ang ayaw magpatingin kahit hirap na hirap na sila?', 'Doctor, why do so many Filipinos still refuse to be seen even when they are really struggling?'],
     [1, 'Magandang umaga. Sa totoo lang, hindi iisa ang dahilan. Nariyan ang gastos, ang layo ng ospital, at siyempre, ang hiya.', 'Good morning. Honestly, there is no single reason. There\'s the cost, the distance to the hospital and, of course, hiya.'],
     [1, 'Marami ang nag-aakala na kapag nagpatingin ka, ibig sabihin ay mahina ka o kulang ang pananampalataya mo.', 'Many assume that if you get help, it means you are weak or your faith is lacking.'],
@@ -130,7 +131,7 @@ window.LISTENING = [
     [1, 'Pero ang depresyon ay hindi kakulangan sa dasal, kung paanong ang diyabetis ay hindi kakulangan sa disiplina.', 'But depression is not a lack of prayer, just as diabetes is not a lack of discipline.'],
     [0, 'Paano naman po kung ayaw talagang pumunta ng kapamilya?', 'And what if a family member really refuses to go?'],
     [1, 'Huwag muna ninyong pilitin. Makinig muna kayo, at itanong kung ano ang pinakamabigat para sa kanya.', 'Don\'t force them yet. Listen first, and ask what weighs on them most.'],
-    [1, 'Pero kung may banta na sa kanyang buhay, huwag nang maghintay. Tumawag sa 1553, ang crisis hotline ng NCMH, na bukas bente-kuwatro oras.', 'But if their life is at risk, don\'t wait. Call 1553, the NCMH crisis hotline, open 24 hours.']
+    [1, 'Pero kung may banta na sa kanyang buhay, huwag nang maghintay. Tumawag sa 1553, ang crisis hotline ng NCMH, na bukas bente-kuwatro oras.', 'But if their life is at risk, don\'t wait. Call 1553, the NCMH crisis hotline, open 24 hours.', 'Pero kung may banta na sa kanyang buhay, huwag nang maghintay. Tumawag sa wan, payb, payb, tri, ang krisis hatlayn ng en-si-em-eyts, na bukas bente-kuwatro oras.']
   ],
   q: [['Which reason does Dr. Lim NOT mention?', ['Too few doctors who speak Tagalog', 'Cost', 'Distance to the hospital'], 0, 'gastos, layo ng ospital, hiya.'],
       ['What comparison does she use?', ['Depression is not a lack of prayer, just as diabetes is not a lack of discipline', 'Depression is like a cold', 'Faith is like medicine'], 0, 'kung paanong = just as (introduces a parallel).'],
@@ -147,7 +148,7 @@ window.LISTENING = [
   speakers: ['Dr. Santos (resident)', 'Lorna (sister)'],
   lines: [
     [1, 'Hello? Sino po sila?', 'Hello? Who is this?'],
-    [0, 'Magandang hapon po. Si Dr. Santos po ito, ang resident na may hawak kay Boyet sa ward.', 'Good afternoon. This is Dr. Santos, the resident in charge of Boyet on the ward.'],
+    [0, 'Magandang hapon po. Si Dr. Santos po ito, ang resident na may hawak kay Boyet sa ward.', 'Good afternoon. This is Dr. Santos, the resident in charge of Boyet on the ward.', 'Magandang hapon po. Si Doktor Santos po ito, ang resident na may hawak kay Boyet sa ward.'],
     [0, 'May ilang tanong lang po ako para mas maintindihan namin ang nangyari bago siya dinala rito. May oras po ba kayo ngayon?', 'I just have a few questions so we can better understand what happened before he was brought here. Do you have time now?'],
     [1, 'Opo, Dok. Kumusta na po ba siya? Hindi po ako nakatulog kagabi kakaisip.', 'Yes, Doc. How is he? I couldn\'t sleep last night from worrying.'],
     [0, 'Mas kalmado na po siya ngayon, at kumain na siya kaninang tanghali. Kailan po ba siya huling uminom ng gamot niya?', 'He\'s calmer now, and he ate at lunch today. When did he last take his medicine?'],
@@ -176,7 +177,7 @@ window.LISTENING = [
     [1, 'Itong anak ko po, si Ella. Dalawang linggo na siyang halos hindi kumakain at laging umiiyak.', 'It\'s my daughter, Ella. For two weeks she has hardly eaten and cries all the time.'],
     [0, 'Sige po. Ella, ilang taon ka na?', 'All right. Ella, how old are you?'],
     [2, 'Labinsiyam po.', 'Nineteen.'],
-    [0, 'Kukunin ko muna ang BP mo at ang timbang mo, ha.', 'I\'ll take your blood pressure and weight first, okay?'],
+    [0, 'Kukunin ko muna ang BP mo at ang timbang mo, ha.', 'I\'ll take your blood pressure and weight first, okay?', 'Kukunin ko muna ang bi-pi mo at ang timbang mo, ha.'],
     [0, 'May iniinom ka bang gamot ngayon, o may allergy ka ba sa gamot?', 'Are you taking any medicine now, or are you allergic to any medicine?'],
     [2, 'Wala po.', 'No.'],
     [0, 'Itinatanong ko ito sa lahat ng pasyente. Nitong mga nakaraang araw, may naisip ka bang saktan ang sarili mo?', 'I ask every patient this. In the past few days, have you thought of hurting yourself?'],
@@ -202,13 +203,13 @@ window.LISTENING = [
     [0, 'Iisa lang po ang pangunahing paksa natin ngayong gabi: ang bagong programa para sa kalusugang pangkaisipan dito sa barangay.', 'We have only one main topic tonight: the new mental health program here in the barangay.'],
     [0, 'Simula sa susunod na buwan, may libreng konsulta tuwing ikalawang Martes ng buwan sa ating health center, kasama ang isang doktor mula sa ospital ng probinsya.', 'Starting next month, there will be free consultations every second Tuesday of the month at our health center, with a doctor from the provincial hospital.'],
     [0, 'Bukod diyan, sinanay na ang ating mga barangay health worker para bumisita sa mga pamilyang humihingi ng tulong.', 'Besides that, our barangay health workers have been trained to visit families who ask for help.'],
-    [1, 'Kapitana, may tanong lang po. Hindi po ba mapapahiya ang pamilya kapag nakita ng kapitbahay na binibisita sila ng BHW?', 'Captain, just a question. Won\'t the family be embarrassed when the neighbors see the health worker visiting them?'],
+    [1, 'Kapitana, may tanong lang po. Hindi po ba mapapahiya ang pamilya kapag nakita ng kapitbahay na binibisita sila ng BHW?', 'Captain, just a question. Won\'t the family be embarrassed when the neighbors see the health worker visiting them?', 'Kapitana, may tanong lang po. Hindi po ba mapapahiya ang pamilya kapag nakita ng kapitbahay na binibisita sila ng bi-eyts-dabol-yu?'],
     [0, 'Magandang tanong iyan, Mang Tony. Si Nurse Gina na po ang sasagot.', 'That\'s a good question, Mang Tony. Nurse Gina will answer.'],
-    [2, 'Salamat po. Ang pagbisita po ng BHW ay katulad lang ng pagbisita sa mga buntis o sa may altapresyon. Walang nakasulat sa labas kung ano ang dahilan.', 'Thank you. A health worker\'s visit is just like the visits to pregnant women or people with high blood pressure. Nothing outside says what the reason is.'],
+    [2, 'Salamat po. Ang pagbisita po ng BHW ay katulad lang ng pagbisita sa mga buntis o sa may altapresyon. Walang nakasulat sa labas kung ano ang dahilan.', 'Thank you. A health worker\'s visit is just like the visits to pregnant women or people with high blood pressure. Nothing outside says what the reason is.', 'Salamat po. Ang pagbisita po ng bi-eyts-dabol-yu ay katulad lang ng pagbisita sa mga buntis o sa may altapresyon. Walang nakasulat sa labas kung ano ang dahilan.'],
     [2, 'At kumpidensyal po ang lahat ng mapag-uusapan, ayon sa batas.', 'And everything discussed is confidential, by law.'],
     [1, 'E, paano po kung ayaw talaga ng pasyente?', 'Well, what if the patient really doesn\'t want it?'],
     [2, 'Hindi po namin pipilitin ang taong may kakayahang magdesisyon. Pero kung may panganib sa buhay niya o sa iba, tutulong po kami agad at kakausapin ang pamilya.', 'We won\'t force a person who is able to decide. But if there is danger to their life or to others, we will help right away and talk to the family.'],
-    [0, 'O, siya. Ipapaskil bukas sa labas ng barangay hall ang listahan ng mga BHW at ang kanilang mga numero.', 'All right, then. The list of health workers and their numbers will be posted outside the barangay hall tomorrow.']
+    [0, 'O, siya. Ipapaskil bukas sa labas ng barangay hall ang listahan ng mga BHW at ang kanilang mga numero.', 'All right, then. The list of health workers and their numbers will be posted outside the barangay hall tomorrow.', 'O, siya. Ipapaskil bukas sa labas ng barangay hall ang listahan ng mga bi-eyts-dabol-yu at ang kanilang mga numero.']
   ],
   q: [['Kailan ang libreng konsulta?', ['tuwing ikalawang Martes ng buwan', 'tuwing Lunes', 'isang beses sa isang taon'], 0, 'tuwing ikalawang Martes ng buwan.'],
       ['Who will hold the consultations?', ['A doctor from the provincial hospital', 'The barangay captain', 'A priest'], 0, 'kasama ang isang doktor mula sa ospital ng probinsya.'],

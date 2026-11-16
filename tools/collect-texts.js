@@ -27,7 +27,7 @@ const add = (t) => {
 (ctx.PSYCH_SECTIONS || []).forEach((s) => s.phrases.forEach((p) => { add(p.f); add(p.c); (p.answers || []).forEach((a) => add(a[0])); }));
 (ctx.DIALOGUES || []).forEach((d) => d.lines.forEach((l) => { add(l[1]); add(l[3]); }));
 (ctx.READING || []).forEach((r) => r.tl.forEach(add));
-(ctx.LISTENING || []).forEach((x) => x.lines.forEach((l) => add(l[1])));
+(ctx.LISTENING || []).forEach((x) => x.lines.forEach((l) => add(l[3] || l[1]))); // l[3] = respelled for the voice
 (ctx.PSYCH_CASES || []).forEach((c) => c.steps.forEach((s) => { add(s.line[0]); s.choices.forEach((x) => add(x.tl)); }));
 (ctx.PSYCH_INTERP || []).forEach((x) => add(x[0]));
 // Point board and listening drill replies (numbers 0-10 on the board are spoken by the device voice).

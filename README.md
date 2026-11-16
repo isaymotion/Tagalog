@@ -6,7 +6,7 @@
 
 **App created by Isabella Navarro, MD. Latest version November 2026. isaymotion@gmail.com**
 
-Version **3.6.0** (2026-11-16): listening handouts and three more recordings. 3.5.0: listening exercises and five harder readings. 3.4.0: print handouts for readings and dialogues. 3.3.0: admission MSE cases for Carlo, Arnel and Mika. 3.2.0: Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
+Version **3.6.1** (2026-11-16): listening audio respelled for abbreviations. 3.6.0: listening handouts and three more recordings. 3.5.0: listening exercises and five harder readings. 3.4.0: print handouts for readings and dialogues. 3.3.0: admission MSE cases for Carlo, Arnel and Mika. 3.2.0: Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
 
 ## What's inside
 
@@ -38,6 +38,11 @@ Version **3.6.0** (2026-11-16): listening handouts and three more recordings. 3.
 | **Listening** | Nine audio-first recordings (B1–C1): clinic voicemail, terminal announcement, radio typhoon bulletin, nurse shift endorsement, family conversation, radio interview, a resident's phone call to a patient's sister, OPD triage, barangay assembly. Print handout per recording (`#/listen/handout?id=`): notes box, questions, dictation, transcript, key. Play all, replay a line, slow down; questions, transcript with optional English, and dictation. Data in `js/data/listening.js`, view `js/listen.js` (`#/listen`, `#/listen/<id>`). |
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. Print handout per dialogue (clinical ones included): script and a role-play worksheet with your lines blank under the English cue, plus an answer key. |
 | **You** | Placement test, streaks, XP, progress stats, backup export/import, settings, What's New, About. |
+
+## Version 3.6.1: spoken versions for listening lines
+
+- **Correction**: a listening line may carry a 4th item, the same line respelled for the voice (`PRN` → `pi-ar-en`, `Doc` → `Dok`, `I-inform` → `i-inform` after a comma so it is not read as the English letter I, `BP` → `bi-pi`, `BHW`, `NCMH`, `Dr./Dra.`, bed and gate numbers, `y medya` → `i medya`). `js/listen.js` plays it (`sayOf`); `tools/collect-texts.js` records it; the screen, handouts and dictation use the normal text. `tests/data_check.js` (dev-tools) fails any listening line with an acronym, Dr./Dra., Doc or a bed/gate number and no spoken version.
+- **Files changed:** `js/data/listening.js`, `js/listen.js`, `tools/collect-texts.js`, `sw.js`, `data/app-meta.js`, `data/changelog.js`, `README.md`.
 
 ## Version 3.6.0: listening handouts and three more recordings
 
