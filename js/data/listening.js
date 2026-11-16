@@ -139,5 +139,83 @@ window.LISTENING = [
       ['When should the family not wait?', ['When there is a threat to the person\'s life: call 1553', 'When the person misses work', 'When the neighbors notice'], 0, 'kung may banta na sa kanyang buhay.'],
       ['"Sa totoo lang" is used to…', ['signal a frank answer', 'disagree with the host', 'change the topic'], 0, 'sa totoo lang = honestly, to tell the truth.']],
   dictation: [6, 8]
+},
+/* 3.6.0 */
+{
+  id: 'tawag-pamilya', level: 'B2', kind: 'Phone call', title: 'Tawag sa Kapatid ng Pasyente', titleEn: 'Calling the patient\'s sister', psych: true,
+  setting: 'A ward resident phones the sister of a newly admitted patient to get the history from the family and set up a family meeting. Listen for when and why the medicine stopped, what changed, the risk questions and what the family should bring.',
+  speakers: ['Dr. Santos (resident)', 'Lorna (sister)'],
+  lines: [
+    [1, 'Hello? Sino po sila?', 'Hello? Who is this?'],
+    [0, 'Magandang hapon po. Si Dr. Santos po ito, ang resident na may hawak kay Boyet sa ward.', 'Good afternoon. This is Dr. Santos, the resident in charge of Boyet on the ward.'],
+    [0, 'May ilang tanong lang po ako para mas maintindihan namin ang nangyari bago siya dinala rito. May oras po ba kayo ngayon?', 'I just have a few questions so we can better understand what happened before he was brought here. Do you have time now?'],
+    [1, 'Opo, Dok. Kumusta na po ba siya? Hindi po ako nakatulog kagabi kakaisip.', 'Yes, Doc. How is he? I couldn\'t sleep last night from worrying.'],
+    [0, 'Mas kalmado na po siya ngayon, at kumain na siya kaninang tanghali. Kailan po ba siya huling uminom ng gamot niya?', 'He\'s calmer now, and he ate at lunch today. When did he last take his medicine?'],
+    [1, 'Mga dalawang buwan na po, Dok. Sabi niya, magaling na raw siya at hindi na niya kailangan.', 'About two months ago, Doc. He said he was well and didn\'t need it anymore.'],
+    [1, 'Tapos noong nakaraang linggo, halos hindi na siya natutulog. Sinasabi niyang pinili raw siya para iligtas ang mundo.', 'Then last week he hardly slept at all. He kept saying he had been chosen to save the world.'],
+    [0, 'Salamat po at sinabi ninyo iyan. May nasaktan po ba siya, o may sinabi ba siyang gusto niyang saktan ang sarili niya?', 'Thank you for telling me. Did he hurt anyone, or did he say he wanted to hurt himself?'],
+    [1, 'Wala naman po. Pero minsan, sinisigawan niya si Nanay kapag pinipigilan siyang lumabas nang gabi.', 'No. But sometimes he shouts at Nanay when she stops him from going out at night.'],
+    [0, 'Naiintindihan ko po. Puwede po ba kayong pumunta sa Huwebes, alas-dos, para sa family meeting?', 'I understand. Can you come on Thursday at two for a family meeting?'],
+    [0, 'Pakidala po ang mga natitirang gamot niya at ang mga lumang reseta, para makita namin kung ano ang naging epektibo.', 'Please bring his leftover medicines and old prescriptions, so we can see what has worked.'],
+    [1, 'Sige po, Dok. Isasama ko na rin po si Nanay. Salamat po talaga.', 'Okay, Doc. I\'ll bring Nanay along too. Thank you so much.']
+  ],
+  q: [['Gaano katagal nang hindi umiinom ng gamot si Boyet?', ['mga dalawang buwan', 'mga dalawang linggo', 'mga dalawang taon'], 0, 'Mga dalawang buwan na po.'],
+      ['Why did he stop his medicine?', ['He said he was already well and did not need it', 'Side effects', 'He ran out of money'], 0, 'Feeling well and stopping is a common route to relapse: note it as limited insight and plan education.'],
+      ['Which detail points to grandiosity?', ['"pinili raw siya para iligtas ang mundo"', '"halos hindi na natutulog"', '"sinisigawan si Nanay"'], 0, 'A grandiose belief; with little sleep, think of mania or a psychotic relapse.'],
+      ['Why does Dr. Santos ask whether he hurt anyone or wanted to hurt himself?', ['To assess risk to others and to himself', 'To report him to the police', 'Out of curiosity'], 0, 'Every collateral history includes violence and self-harm questions.'],
+      ['Ano ang ipinakiusap ng doktor na dalhin?', ['ang natitirang gamot at mga lumang reseta', 'damit at pagkain', 'pambayad sa ospital'], 0, 'para makita kung ano ang naging epektibo.'],
+      ['"Kakaisip" tells you Lorna could not sleep because she…', ['kept thinking and worrying', 'was sick', 'was working late'], 0, 'ka- + repeated root (kakaisip) = from doing something over and over.']],
+  dictation: [5, 10]
+},
+{
+  id: 'triage-opd', level: 'B1', kind: 'OPD triage', title: 'Sa Triage ng OPD', titleEn: 'At the OPD triage desk', psych: true,
+  setting: 'A triage nurse in the psychiatry OPD sees a 19-year-old and her mother. Listen for the complaint, the routine questions, one answer that changes the plan, and what the nurse does next.',
+  speakers: ['Triage nurse', 'Nanay', 'Ella'],
+  lines: [
+    [0, 'Magandang umaga po. Ano po ang ipapakonsulta natin ngayon?', 'Good morning. What brings you in for a consult today?'],
+    [1, 'Itong anak ko po, si Ella. Dalawang linggo na siyang halos hindi kumakain at laging umiiyak.', 'It\'s my daughter, Ella. For two weeks she has hardly eaten and cries all the time.'],
+    [0, 'Sige po. Ella, ilang taon ka na?', 'All right. Ella, how old are you?'],
+    [2, 'Labinsiyam po.', 'Nineteen.'],
+    [0, 'Kukunin ko muna ang BP mo at ang timbang mo, ha.', 'I\'ll take your blood pressure and weight first, okay?'],
+    [0, 'May iniinom ka bang gamot ngayon, o may allergy ka ba sa gamot?', 'Are you taking any medicine now, or are you allergic to any medicine?'],
+    [2, 'Wala po.', 'No.'],
+    [0, 'Itinatanong ko ito sa lahat ng pasyente. Nitong mga nakaraang araw, may naisip ka bang saktan ang sarili mo?', 'I ask every patient this. In the past few days, have you thought of hurting yourself?'],
+    [2, '(tumingin sa sahig) ...Minsan po, gusto ko na lang matulog at hindi na magising.', '(looks at the floor) ...Sometimes I just want to sleep and never wake up.'],
+    [0, 'Salamat at sinabi mo sa akin. Tama ang ginawa mo.', 'Thank you for telling me. You did the right thing.'],
+    [0, 'Nanay, uunahin po namin si Ella. Dito muna po kayo sa tabi ng nurse station habang tinatawag ko si Doktora.', 'Nanay, we will see Ella first. Please stay here by the nurse station while I call the doctor.'],
+    [1, 'Diyos ko... Opo, opo. Hindi ko po alam na ganoon na pala ang nararamdaman niya.', 'Oh my God... Yes, yes. I didn\'t know that was how she was feeling.']
+  ],
+  q: [['Gaano katagal nang halos hindi kumakain si Ella?', ['dalawang linggo', 'dalawang araw', 'dalawang buwan'], 0, 'Dalawang linggo na.'],
+      ['Ilang taon na si Ella?', ['labinsiyam', 'labimpito', 'siyam'], 0, 'Labinsiyam = 19.'],
+      ['Why does the nurse say "Itinatanong ko ito sa lahat ng pasyente"?', ['To make a sensitive question routine so Ella does not feel singled out', 'Because she suspects Ella', 'To fill in a form quickly'], 0, 'Normalizing makes an honest answer easier.'],
+      ['What does Ella\'s answer show?', ['A wish to be dead, which needs a full suicide assessment now', 'She is only sleepy', 'Nothing serious'], 0, 'Passive death wishes still call for questions on plan, intent, means and past attempts.'],
+      ['Ano ang ginawa ng nurse pagkatapos?', ['inuna si Ella at tinawag ang doktor', 'pinauwi sila', 'binigyan sila ng numero at pinaghintay'], 0, 'uunahin po namin si Ella.'],
+      ['"Diyos ko" here expresses…', ['shock and distress', 'anger at Ella', 'thanks'], 0, 'An exclamation of alarm; the next line shows she had not known.']],
+  dictation: [1, 10]
+},
+{
+  id: 'pulong-barangay', level: 'C1', kind: 'Community meeting', title: 'Asembleya sa Barangay', titleEn: 'Barangay assembly',
+  setting: 'At the monthly barangay assembly, the barangay captain announces a community mental health program, a resident raises a worry and the rural health unit nurse answers. Listen for the schedule, the objection and how it is answered.',
+  speakers: ['Kapitana Rosales', 'Mang Tony (resident)', 'Nurse Gina (RHU)'],
+  lines: [
+    [0, 'Magandang gabi po sa ating lahat. Salamat sa pagdalo sa ating buwanang asembleya.', 'Good evening, everyone. Thank you for coming to our monthly assembly.'],
+    [0, 'Iisa lang po ang pangunahing paksa natin ngayong gabi: ang bagong programa para sa kalusugang pangkaisipan dito sa barangay.', 'We have only one main topic tonight: the new mental health program here in the barangay.'],
+    [0, 'Simula sa susunod na buwan, may libreng konsulta tuwing ikalawang Martes ng buwan sa ating health center, kasama ang isang doktor mula sa ospital ng probinsya.', 'Starting next month, there will be free consultations every second Tuesday of the month at our health center, with a doctor from the provincial hospital.'],
+    [0, 'Bukod diyan, sinanay na ang ating mga barangay health worker para bumisita sa mga pamilyang humihingi ng tulong.', 'Besides that, our barangay health workers have been trained to visit families who ask for help.'],
+    [1, 'Kapitana, may tanong lang po. Hindi po ba mapapahiya ang pamilya kapag nakita ng kapitbahay na binibisita sila ng BHW?', 'Captain, just a question. Won\'t the family be embarrassed when the neighbors see the health worker visiting them?'],
+    [0, 'Magandang tanong iyan, Mang Tony. Si Nurse Gina na po ang sasagot.', 'That\'s a good question, Mang Tony. Nurse Gina will answer.'],
+    [2, 'Salamat po. Ang pagbisita po ng BHW ay katulad lang ng pagbisita sa mga buntis o sa may altapresyon. Walang nakasulat sa labas kung ano ang dahilan.', 'Thank you. A health worker\'s visit is just like the visits to pregnant women or people with high blood pressure. Nothing outside says what the reason is.'],
+    [2, 'At kumpidensyal po ang lahat ng mapag-uusapan, ayon sa batas.', 'And everything discussed is confidential, by law.'],
+    [1, 'E, paano po kung ayaw talaga ng pasyente?', 'Well, what if the patient really doesn\'t want it?'],
+    [2, 'Hindi po namin pipilitin ang taong may kakayahang magdesisyon. Pero kung may panganib sa buhay niya o sa iba, tutulong po kami agad at kakausapin ang pamilya.', 'We won\'t force a person who is able to decide. But if there is danger to their life or to others, we will help right away and talk to the family.'],
+    [0, 'O, siya. Ipapaskil bukas sa labas ng barangay hall ang listahan ng mga BHW at ang kanilang mga numero.', 'All right, then. The list of health workers and their numbers will be posted outside the barangay hall tomorrow.']
+  ],
+  q: [['Kailan ang libreng konsulta?', ['tuwing ikalawang Martes ng buwan', 'tuwing Lunes', 'isang beses sa isang taon'], 0, 'tuwing ikalawang Martes ng buwan.'],
+      ['Who will hold the consultations?', ['A doctor from the provincial hospital', 'The barangay captain', 'A priest'], 0, 'kasama ang isang doktor mula sa ospital ng probinsya.'],
+      ['What is Mang Tony worried about?', ['That families will be shamed when neighbors see the visits', 'The cost', 'The distance to the health center'], 0, 'mapapahiya ang pamilya: the hiya theme again.'],
+      ['How does Nurse Gina answer that worry?', ['She compares the visits to routine visits for pregnancy and high blood pressure, and says nothing shows the reason', 'She says the visits will be at night', 'She says neighbors will not notice'], 0, 'Folding mental health into ordinary home visits lowers stigma.'],
+      ['Ayon kay Nurse Gina, kailan sila kikilos kahit ayaw ng pasyente?', ['kung may panganib sa buhay niya o sa iba', 'kapag hiniling ng kapitbahay', 'palagi'], 0, 'Respect for capacity, with a safety exception.'],
+      ['"O, siya" at the end signals that the captain is…', ['wrapping up and moving on', 'angry', 'asking a question'], 0, 'O, siya = all right then; used to close a topic.']],
+  dictation: [3, 9]
 }
 ];

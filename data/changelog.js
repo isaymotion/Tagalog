@@ -4,6 +4,14 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.6.0', date: '2026-11-16', title: 'Listening handouts and three more recordings',
+    items: [
+      { type: 'feature', text: 'Print any listening exercise: a notes box, the questions and two dictation lines, then the transcript and the answer key on their own pages. Use the Print handout button on each recording, or Print a listening handout on the Listening page. Play the audio from the app while the class works on paper.' },
+      { type: 'content', text: 'Three new recordings: a resident phoning a patient\'s sister for the family history (B2), an OPD triage where one answer changes the plan (B1), and a barangay assembly on a new community mental health program (C1).' },
+      { type: 'update', text: 'Reading and listening handouts now print the answer options in a mixed order, so the right answer is not always A. Each sheet still prints the same way every time.' }
+    ]
+  },
+  {
     version: '3.5.0', date: '2026-11-16', title: 'Listening exercises and harder readings',
     items: [
       { type: 'feature', text: 'New Listening section (in More, under Learn, and on the Practice page) with six recordings from real life: a clinic voicemail, a bus terminal announcement, a typhoon bulletin on the radio, a nurse shift endorsement in Taglish, a family deciding how to bring Tatay for a check-up, and a radio interview with a psychiatrist. Levels B1 to C1.' },

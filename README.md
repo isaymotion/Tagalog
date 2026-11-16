@@ -6,7 +6,7 @@
 
 **App created by Isabella Navarro, MD. Latest version November 2026. isaymotion@gmail.com**
 
-Version **3.5.0** (2026-11-16): listening exercises and five harder readings. 3.4.0: print handouts for readings and dialogues. 3.3.0: admission MSE cases for Carlo, Arnel and Mika. 3.2.0: Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
+Version **3.6.0** (2026-11-16): listening handouts and three more recordings. 3.5.0: listening exercises and five harder readings. 3.4.0: print handouts for readings and dialogues. 3.3.0: admission MSE cases for Carlo, Arnel and Mika. 3.2.0: Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
 
 ## What's inside
 
@@ -35,9 +35,16 @@ Version **3.5.0** (2026-11-16): listening exercises and five harder readings. 3.
 | **Grammar handouts** | Printable references with a Print handout button on the pages they come from. Panlapi: affix cheat sheet, sound-change rules, word list with the affix marked, worksheet and answer key. Verbs: conjugation tables for all, clinical or one verb, example sentences per aspect, an aspect-at-a-glance page, worksheet and key. Lessons: any lesson with its quiz and an answer key. Hide English where it applies, A4/Letter/A5, PDF or print. |
 | **Lessons** | 24 grammar and culture lessons with quizzes: markers, focus, aspect, particles, po/opo, numbers/time/money, Taglish, hiya, utang na loob, folk beliefs, idioms of distress, and when your Tagalog is not enough (interviewing alone vs a nurse interpreting, family as informants not interpreters, running an interpreted interview, which rating-scale version goes in the chart). |
 | **Reading** | 17 graded passages (A1–C1) with glossaries and comprehension questions (the B2–C1 ones ask for inference, tone and stance). A Listen first button hides the text so you answer by ear. Print handout per passage: passage, glossary, questions, answer key; English under each paragraph, on its own page, or left out. |
-| **Listening** | Six audio-first recordings (B1–C1): clinic voicemail, terminal announcement, radio typhoon bulletin, nurse shift endorsement, family conversation, radio interview. Play all, replay a line, slow down; questions, transcript with optional English, and dictation. Data in `js/data/listening.js`, view `js/listen.js` (`#/listen`, `#/listen/<id>`). |
+| **Listening** | Nine audio-first recordings (B1–C1): clinic voicemail, terminal announcement, radio typhoon bulletin, nurse shift endorsement, family conversation, radio interview, a resident's phone call to a patient's sister, OPD triage, barangay assembly. Print handout per recording (`#/listen/handout?id=`): notes box, questions, dictation, transcript, key. Play all, replay a line, slow down; questions, transcript with optional English, and dictation. Data in `js/data/listening.js`, view `js/listen.js` (`#/listen`, `#/listen/<id>`). |
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. Print handout per dialogue (clinical ones included): script and a role-play worksheet with your lines blank under the English cue, plus an answer key. |
 | **You** | Placement test, streaks, XP, progress stats, backup export/import, settings, What's New, About. |
+
+## Version 3.6.0: listening handouts and three more recordings
+
+- **Feature**: topic `listening` in `js/grammar-handout.js` (`#/listen/handout?id=<id>`, settings `ghandout.listening`): notes box (6 ruled lines), questions, dictation (two ruled lines per `dictation` line; one unbreakable block in the PDF), transcript on its own page (`english` show/hide), answer key + dictation answers. The sheet tells the class to play the audio from the Listening page. Route `/listen/handout` sits before `/listen/<id>` in `app.js`.
+- **Update**: `mixQ(qs, seed)` prints reading and listening options in a fixed shuffled order per item (seeded by the item id), so keys are not all A; the key is built from the same order.
+- **Content**: `tawag-pamilya` (B2, clinical), `triage-opd` (B1, clinical), `pulong-barangay` (C1) appended to `js/data/listening.js`. Tagalog drafted by Claude, pending review.
+- **Files changed:** `js/data/listening.js`, `js/grammar-handout.js`, `js/listen.js`, `js/app.js`, `js/core.js`, `css/style.css`, `sw.js`, `data/app-meta.js`, `data/changelog.js`, `README.md`.
 
 ## Version 3.5.0: listening exercises and harder readings
 

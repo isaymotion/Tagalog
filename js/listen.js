@@ -13,7 +13,7 @@
   const isTl = (q) => !/^(Which|What|Why|How|When|Where|Who|Clinically)\b|^"/.test(q);
 
   V.listening = (el) => {
-    el.innerHTML = '<h1>Listening</h1><p class="muted">Recordings to understand by ear: voicemails, announcements, the radio, a nurse handover, a family conversation. The text stays hidden until you ask for it. Listen, answer, check the transcript, then write down two lines you hear. Passages under <a href="#/reading">Reading</a> also have a Listen first mode.</p><div class="grid">' +
+    el.innerHTML = '<h1>Listening</h1><p class="muted">Recordings to understand by ear: voicemails, announcements, the radio, phone calls, OPD triage, a nurse handover, family and barangay meetings. The text stays hidden until you ask for it. Listen, answer, check the transcript, then write down two lines you hear. Passages under <a href="#/reading">Reading</a> also have a Listen first mode.</p><div class="row" style="margin-bottom:12px"><a class="btn sm" href="#/listen/handout">' + icons.book + ' Print a listening handout</a></div><div class="grid">' +
       items().map((x) => '<a class="tile" href="#/listen/' + x.id + '"><div class="row">' + lvPill(x.level) + '<span class="pill">' + esc(x.kind) + '</span>' + (x.psych ? '<span class="pill warn">clinical</span>' : '') + (done()[x.id] != null ? '<span class="pill good">' + done()[x.id] + '%</span>' : '') + '</div><h3 class="tl" style="margin-top:6px">' + esc(x.title) + '</h3><p>' + esc(x.titleEn) + '</p></a>').join('') + '</div>';
   };
 
@@ -50,6 +50,7 @@
     el.innerHTML = crumb([['Listening', '#/listen'], [x.title]]) +
       '<div class="row">' + lvPill(x.level) + '<span class="pill">' + esc(x.kind) + '</span>' + (x.psych ? '<span class="pill warn">clinical</span>' : '') + '</div>' +
       '<h1 class="tl" style="margin-top:6px">' + esc(x.title) + '</h1><p class="muted">' + esc(x.titleEn) + '</p>' +
+      '<div class="row" style="margin:-6px 0 10px"><a class="btn sm" href="#/listen/handout?id=' + x.id + '">' + icons.book + ' Print handout</a></div>' +
       '<div class="card stack"><p style="margin:0">' + esc(x.setting) + '</p><p class="muted small" style="margin:0">' + (x.speakers.length > 1 ? 'Speakers: ' + x.speakers.map(esc).join(', ') + '. ' : '') + x.lines.length + ' lines.</p></div>' +
       '<h2 style="margin-top:16px">1. Listen</h2>' +
       '<div class="card stack lplayer"><div class="row"><button class="btn primary" id="lplay">' + icons.sound + ' Play all</button><button class="btn" id="lstop">Stop</button>' +

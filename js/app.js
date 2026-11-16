@@ -50,6 +50,7 @@
     [/^\/lessons\/handout$/, V.ghandoutLesson, 'lessons'],
     [/^\/lessons\/(?<id>[\w-]+)$/, V.lesson, 'lessons'],
     [/^\/listen$/, V.listening, 'listen'],
+    [/^\/listen\/handout$/, V.ghandoutListening, 'listen'],
     [/^\/listen\/(?<id>[\w-]+)$/, V.listenItem, 'listen'],
     [/^\/reading$/, V.reading, 'reading'],
     [/^\/reading\/handout$/, V.ghandoutReading, 'reading'],

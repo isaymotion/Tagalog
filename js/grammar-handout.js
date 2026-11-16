@@ -1,9 +1,10 @@
 /* Grammar handout generator. Topics: panlapi (affixes), verbs (conjugation tables, sentences, worksheet), lesson (any lesson),
-   reading (any passage) and dialogue (any dialogue, including the clinical ones from the case simulations).
+   reading (any passage), dialogue (any dialogue, including the clinical ones from the case simulations) and listening
+   (any listening exercise: notes, questions, dictation, transcript and key; the audio itself is played in the app).
    Same pattern as the psychiatry handout: one content model from the options, rendered as an on-screen
    preview (also used for printing) and as a PDF through pdfmake (App.pdfKit, shared with handout.js).
    Data: AFFIX_* in js/data/affixes.js; VERBS and VERB_SENTENCES (verbs.js, verb-sentences.js); LESSONS (lessons.js);
-   READING (reading.js); DIALOGUES (dialogues.js) + PSYCH_CASES through App.caseDialogue. */
+   READING (reading.js); DIALOGUES (dialogues.js) + PSYCH_CASES through App.caseDialogue; LISTENING (listening.js). */
 (function () {
   const { esc } = App;
   const V = (App.views = App.views || {});
@@ -19,9 +20,10 @@
     verbs: { topic: 'verbs', set: 'all', verb: 'all', english: 'show', paper: 'A4', size: 'normal', table: true, sentences: true, cheat: true, worksheet: true, key: true, title: 'Tagalog Verbs: Focus and Aspect', preparedFor: '' },
     lesson: { topic: 'lesson', lesson: '', english: 'show', paper: 'A4', size: 'normal', body: true, quiz: true, key: true, title: '', preparedFor: '' },
     reading: { topic: 'reading', reading: '', english: 'show', paper: 'A4', size: 'normal', passage: true, gloss: true, quiz: true, key: true, title: '', preparedFor: '' },
-    dialogue: { topic: 'dialogue', dialogue: '', english: 'show', register: 'f', paper: 'A4', size: 'normal', script: true, role: true, key: true, title: '', preparedFor: '' }
+    dialogue: { topic: 'dialogue', dialogue: '', english: 'show', register: 'f', paper: 'A4', size: 'normal', script: true, role: true, key: true, title: '', preparedFor: '' },
+    listening: { topic: 'listening', listening: '', english: 'show', paper: 'A4', size: 'normal', notes: true, quiz: true, dictation: true, transcript: true, key: true, title: '', preparedFor: '' }
   };
-  const SUBKEYS = ['verbs', 'lesson', 'reading', 'dialogue'];
+  const SUBKEYS = ['verbs', 'lesson', 'reading', 'dialogue', 'listening'];
   // Panlapi keeps its old flat place in settings.ghandout; the other topics live in sub-keys so they never clobber it.
   function opts(topic) {
     const g = S().settings.ghandout || {};
@@ -91,6 +93,7 @@
     if (m.topic === 'lesson') return lessonHTML(m);
     if (m.topic === 'reading') return readingHTML(m);
     if (m.topic === 'dialogue') return dialogueHTML(m);
+    if (m.topic === 'listening') return listeningHTML(m);
     const o = m.o, en = o.english === 'show';
     let h = '<header class="ho-head"><img src="icons/logo-96.png" alt=""><div><h1>' + esc(m.title) + '</h1><p>' + (m.preparedFor ? 'Prepared for ' + esc(m.preparedFor) + ' · ' : '') + esc(m.date) + ' · ' + esc(m.scope) + '</p></div></header>';
     if (m.cheat) {
@@ -171,6 +174,7 @@
     if (m.topic === 'lesson') return lessonDoc(m, logo);
     if (m.topic === 'reading') return readingDoc(m, logo);
     if (m.topic === 'dialogue') return dialogueDoc(m, logo);
+    if (m.topic === 'listening') return listeningDoc(m, logo);
     const k = kit(m, logo), { K, NAVY, MUTED, LINE, TINT, o, en, base, a5, content, heading, sub, th, layout, grid } = k, AFFIX = '#9a5b00';
     // Segmented word: affix pieces in bold brown, repeated syllable in italics.
     const segText = (seg, size) => ({ text: pieces(seg).map((x) => (x.k === 'a' ? { text: x.s, bold: true, color: AFFIX } : x.k === 'd' ? { text: x.s, italics: true, color: MUTED } : { text: x.s })), fontSize: size });
@@ -602,9 +606,20 @@
       topic: 'reading', r, o, title: o.title || r.title, preparedFor: o.preparedFor, date: today(),
       scope: (r.titleEn ? r.titleEn + ' · ' : '') + r.level + (r.psych ? ' · clinical' : ''),
       passage: o.passage ? paras : null, gloss: o.gloss && r.gloss.length ? r.gloss : null,
-      quiz: o.quiz && r.q.length ? r.q : null, key: o.key && r.q.length ? r.q : null,
+      quiz: o.quiz && r.q.length ? mixQ(r.q, r.id) : null, key: o.key && r.q.length ? mixQ(r.q, r.id) : null,
       translation: o.passage && o.english === 'end' ? paras : null
     };
+  }
+  // Printed questions: options in a fixed shuffled order per item (seeded by the item id), so the key is not always A
+  // and the same sheet prints the same way every time. The app's own quiz shuffles separately.
+  function mixQ(qs, seed) {
+    let h = 2166136261; for (const ch of String(seed)) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+    const rnd = () => ((h = Math.imul(h ^ (h >>> 15), 2246822507) ^ Math.imul(h ^ (h >>> 13), 3266489909)) >>> 0) / 4294967296;
+    return qs.map((q) => {
+      const order = q[1].map((_, i) => i);
+      for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+      return [q[0], order.map((i) => q[1][i]), order.indexOf(q[2]), q[3]];
+    });
   }
   const readingCanPrint = (o) => o.passage || o.gloss || o.quiz || o.key;
   function quizHTML(qs) { return '<section class="ho-sec gh-ws"><h2>Questions</h2><ol class="gh-quiz">' + qs.map((q) => '<li><b>' + esc(q[0]) + '</b><ol type="A" class="gh-qopts">' + q[1].map((x) => '<li>' + esc(x) + '</li>').join('') + '</ol></li>').join('') + '</ol></section>'; }
@@ -714,9 +729,62 @@
     return finish(m, k, 'Tagalog dialogue handout');
   }
 
+  /* ===================== Topic: listening ===================== */
+  // The recording is played in the app (Listening page); the sheet carries what a class needs on paper:
+  // a notes box, the questions, dictation lines, then the transcript and the key on their own pages.
+  const LS = () => window.LISTENING || [];
+  const NOTE_LINES = 6;
+  function listeningBuild(o) {
+    const x = LS().find((it) => it.id === o.listening) || LS()[0] || { id: '', title: 'Listening', titleEn: '', level: '', kind: '', setting: '', speakers: [], lines: [], q: [], dictation: [] };
+    const lines = x.lines.map((l, i) => ({ n: i + 1, who: x.speakers[l[0]] || '', tl: l[1], en: l[2] }));
+    const dict = x.dictation.map((i) => lines[i]).filter(Boolean);
+    return {
+      topic: 'listening', x, o, title: o.title || x.title, preparedFor: o.preparedFor, date: today(),
+      scope: (x.titleEn ? x.titleEn + ' · ' : '') + x.kind + ' · ' + x.level + (x.psych ? ' · clinical' : ''),
+      setting: x.setting, play: 'Play the recording in Usap Tayo: Listening, then "' + x.title + '" (' + lines.length + ' lines' + (x.speakers.length > 1 ? '; ' + x.speakers.join(', ') : '') + ').',
+      notes: !!o.notes, quiz: o.quiz && x.q.length ? mixQ(x.q, x.id) : null, dictation: o.dictation && dict.length ? dict : null,
+      transcript: o.transcript ? lines : null, key: o.key && x.q.length ? mixQ(x.q, x.id) : null, dkey: o.key && o.dictation && dict.length ? dict : null
+    };
+  }
+  const listeningCanPrint = (o) => o.notes || o.quiz || o.dictation || o.transcript || o.key;
+  function listeningHTML(m) {
+    const show = m.o.english === 'show', blanks = (n) => Array.from({ length: n }, () => '<span class="gh-blank"></span>').join('');
+    let h = headHTML(m) + '<p class="ho-goal">' + esc(m.setting) + '</p><p class="ho-goal"><b>' + esc(m.play) + '</b></p>';
+    if (m.notes) h += '<section class="ho-sec"><h2>Notes while you listen</h2><div class="gh-lines">' + blanks(NOTE_LINES) + '</div></section>';
+    if (m.quiz) h += quizHTML(m.quiz);
+    if (m.dictation) h += '<section class="ho-sec gh-ws"><h2>Dictation</h2><p class="ho-goal">Write each line as you hear it.</p><ol class="gh-wsB">' + m.dictation.map((l) => '<li><b>Line ' + l.n + '</b><div class="gh-lines">' + blanks(2) + '</div></li>').join('') + '</ol></section>';
+    if (m.transcript) h += '<section class="ho-sec gh-key"><h2>Transcript</h2><div class="gh-dlg">' + m.transcript.map((l) => '<div class="gh-dl"><span class="gh-who">' + l.n + '. ' + esc(l.who) + '</span><div><span class="tl">' + esc(l.tl) + '</span>' + (show ? '<span class="gh-en">' + esc(l.en) + '</span>' : '') + '</div></div>').join('') + '</div></section>';
+    if (m.key) h += keyHTML(m.key, m.transcript ? ' ' : ' gh-key');
+    if (m.dkey) h += '<section class="ho-sec"><h2>Dictation answers</h2><ol class="gh-keyB">' + m.dkey.map((l) => '<li value="' + l.n + '"><b class="tl">' + esc(l.tl) + '</b> <small>' + esc(l.en) + '</small></li>').join('') + '</ol></section>';
+    return h + footHTML();
+  }
+  function listeningDoc(m, logo) {
+    const k = kit(m, logo), { MUTED, LINE, NAVY, base, a5, content, heading } = k, show = m.o.english === 'show';
+    const w = pageW(m.o), whoW = a5 ? 62 : 86;
+    const rule = (x2) => ({ canvas: [{ type: 'line', x1: 0, y1: 0, x2: x2 || w, y2: 0, lineWidth: 0.6, lineColor: LINE }], margin: [0, 16, 0, 0] }); // fresh node each time
+    content.push({ text: m.setting, color: MUTED, italics: true, margin: [0, 0, 0, 3] });
+    content.push({ text: m.play, bold: true, color: NAVY, fontSize: base - 0.5, margin: [0, 0, 0, 4] });
+    if (m.notes) { content.push(heading('Notes while you listen', '')); for (let i = 0; i < NOTE_LINES; i++) content.push(rule()); }
+    if (m.quiz) quizDoc(k, m.quiz, 'Questions');
+    if (m.dictation) {
+      // One unbreakable block: the heading never sits alone at the foot of a page.
+      content.push({ stack: [heading('Dictation', 'write each line as you hear it')].concat(m.dictation.map((l, i) => ({ stack: [{ text: (i + 1) + '. Line ' + l.n, bold: true }, rule(), rule()], margin: [0, 2, 0, 8] }))), unbreakable: true });
+    }
+    if (m.transcript) {
+      content.push(Object.assign(heading('Transcript', m.x.titleEn), { pageBreak: content.length > 1 ? 'before' : undefined }));
+      m.transcript.forEach((l) => content.push({ columns: [{ text: l.n + '. ' + l.who, width: whoW, bold: true, color: MUTED, fontSize: base - 1 }, { stack: [{ text: l.tl, fontSize: base + 0.5 }].concat(show ? [{ text: l.en, italics: true, color: MUTED, fontSize: base - 1, margin: [0, 1, 0, 0] }] : []), width: '*' }], columnGap: 8, margin: [0, 0, 0, 6], unbreakable: true }));
+    }
+    if (m.key) keyDoc(k, m.key, m.x.title, !m.transcript && content.length > 1);
+    if (m.dkey) {
+      content.push(heading('Dictation answers', ''));
+      m.dkey.forEach((l) => content.push({ text: [{ text: 'Line ' + l.n + '  ', color: MUTED }, { text: l.tl, bold: true }, { text: '  ' + l.en, color: MUTED, fontSize: base - 1.5 }], margin: [0, 0, 0, 4] }));
+    }
+    return finish(m, k, 'Tagalog listening handout');
+  }
+
   function build(o) {
     const t = o.topic || 'panlapi';
-    return t === 'verbs' ? verbsBuild(o) : t === 'lesson' ? lessonBuild(o) : t === 'reading' ? readingBuild(o) : t === 'dialogue' ? dialogueBuild(o) : panlapiBuild(o);
+    return t === 'verbs' ? verbsBuild(o) : t === 'lesson' ? lessonBuild(o) : t === 'reading' ? readingBuild(o) : t === 'dialogue' ? dialogueBuild(o) : t === 'listening' ? listeningBuild(o) : panlapiBuild(o);
   }
   // For tests and callers: {topic, ...} gets that topic's defaults filled in.
   const withDefaults = (o) => Object.assign({}, DEF[(o && o.topic) || 'panlapi'] || DEFAULTS, o);
@@ -725,12 +793,13 @@
 
 
   /* ---------- Page ---------- */
-  const canPrint = (o) => ({ verbs: verbsCanPrint, lesson: lessonCanPrint, reading: readingCanPrint, dialogue: dialogueCanPrint }[o.topic] || panlapiCanPrint)(o);
+  const canPrint = (o) => ({ verbs: verbsCanPrint, lesson: lessonCanPrint, reading: readingCanPrint, dialogue: dialogueCanPrint, listening: listeningCanPrint }[o.topic] || panlapiCanPrint)(o);
   const PAGE = {
     panlapi: { h1: 'Grammar handout', crumb: '<a href="#/affixes">Panlapi</a> / Handout', intro: 'Print the affix cheat sheet, the sound-change rules, the word list, and a worksheet with its answer key. Your choices are remembered on this device.', file: 'grammar-handout' },
     verbs: { h1: 'Verb handout', crumb: '<a href="#/verbs">Verbs</a> / Handout', intro: 'Print conjugation tables for the verbs you pick, example sentences for each aspect, an "aspect at a glance" page, and a worksheet with its answer key. Your choices are remembered on this device.', file: 'verb-handout' },
     lesson: { h1: 'Lesson handout', crumb: '<a href="#/lessons">Lessons</a> / Handout', intro: 'Print any lesson with its quiz and an answer key on a separate page. Your choices are remembered on this device.', file: 'lesson-handout' },
     reading: { h1: 'Reading handout', crumb: '<a href="#/reading">Reading</a> / Handout', intro: 'Print any passage with its glossary, questions and an answer key. Put the translation under each paragraph, on its own page, or leave it out. Your choices are remembered on this device.', file: 'reading-handout' },
+    listening: { h1: 'Listening handout', crumb: '<a href="#/listen">Listening</a> / Handout', intro: 'Print a listening exercise for a class or for yourself: a notes box, the questions and dictation lines, then the transcript and the answer key on their own pages. Play the recording from the Listening page. Your choices are remembered on this device.', file: 'listening-handout' },
     dialogue: { h1: 'Dialogue handout', crumb: '<a href="#/speak">Speaking</a> / Handout', intro: 'Print any dialogue as a script, and a role-play worksheet where you write your own lines from the English cue, with an answer key. Your choices are remembered on this device.', file: 'dialogue-handout' }
   };
   function page(topic, el, p, q) {
@@ -747,6 +816,9 @@
     } else if (topic === 'reading') {
       if (q.id && RD().some((r) => r.id === q.id)) o = Object.assign({}, o, { reading: q.id, title: '' });
       if (!RD().some((r) => r.id === o.reading)) o.reading = (RD()[0] || {}).id;
+    } else if (topic === 'listening') {
+      if (q.id && LS().some((x) => x.id === q.id)) o = Object.assign({}, o, { listening: q.id, title: '' });
+      if (!LS().some((x) => x.id === o.listening)) o.listening = (LS()[0] || {}).id;
     } else if (topic === 'dialogue') {
       if (q.id && DL().some((d) => d.id === q.id)) o = Object.assign({}, o, { dialogue: q.id, title: '' });
       if (!DL().some((d) => d.id === o.dialogue)) o.dialogue = (DL()[0] || {}).id;
@@ -776,6 +848,13 @@
         return '<div class="ho-grid">' + sel + trSeg + paperSize + '</div>' +
           '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('passage', 'Passage', 'the Tagalog text') + chk('gloss', 'Glossary', 'key words with meanings') + chk('quiz', 'Questions', 'lettered options, no answers') + chk('key', 'Answer key', 'answers and explanations') + '</div></div>';
       }
+      if (topic === 'listening') {
+        const grp = (lab, xs) => xs.length ? '<optgroup label="' + lab + '">' + xs.map((x) => '<option value="' + esc(x.id) + '"' + (o.listening === x.id ? ' selected' : '') + '>' + esc(x.title) + ' · ' + esc(x.kind) + ' (' + esc(x.level) + ')</option>').join('') + '</optgroup>' : '';
+        const sel = '<div><div class="eyebrow">Recording</div><select class="input" id="ghListening">' + grp('Everyday', LS().filter((x) => !x.psych)) + grp('Clinical', LS().filter((x) => x.psych)) + '</select></div>';
+        const enSeg = '<div><div class="eyebrow">English in the transcript</div>' + seg('english', [['show', 'Show'], ['hide', 'Hide']]) + '</div>';
+        return '<div class="ho-grid">' + sel + enSeg + paperSize + '</div>' +
+          '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('notes', 'Notes box', 'ruled lines for note-taking') + chk('quiz', 'Questions', 'lettered options, no answers') + chk('dictation', 'Dictation', 'lines to write from the audio') + chk('transcript', 'Transcript', 'on its own page') + chk('key', 'Answer key', 'answers, explanations and dictation lines') + '</div></div>';
+      }
       if (topic === 'dialogue') {
         const grp = (lab, ds) => '<optgroup label="' + lab + '">' + ds.map((d) => '<option value="' + esc(d.id) + '"' + (o.dialogue === d.id ? ' selected' : '') + '>' + esc(d.title) + ' (' + esc(d.level) + ')</option>').join('') + '</optgroup>';
         const all = DL(), sel = '<div><div class="eyebrow">Dialogue</div><select class="input" id="ghDialogue">' + grp('Everyday', all.filter((d) => !/^case-/.test(d.id))) + grp('Clinical', all.filter((d) => /^case-/.test(d.id))) + '</select></div>';
@@ -789,7 +868,7 @@
         '<div><div class="eyebrow">Words</div>' + seg('set', [['all', 'All words'], ['clinical', 'Clinical only']]) + '</div>' + englishSeg + paperSize + '</div>' +
         '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('cheat', 'Cheat sheet', 'affix positions and what each affix does') + chk('rules', 'Sound changes and rules') + chk('words', 'Word list', 'with the affix marked and the root') + chk('worksheet', 'Worksheet', 'find the root, choose the affix') + chk('key', 'Answer key', 'on its own page') + '</div></div>';
     };
-    const defTitle = () => (topic === 'lesson' ? (LV().find((l) => l.id === o.lesson) || {}).title || '' : topic === 'reading' ? (RD().find((r) => r.id === o.reading) || {}).title || '' : topic === 'dialogue' ? (DL().find((d) => d.id === o.dialogue) || {}).title || '' : '');
+    const defTitle = () => (topic === 'lesson' ? (LV().find((l) => l.id === o.lesson) || {}).title || '' : topic === 'reading' ? (RD().find((r) => r.id === o.reading) || {}).title || '' : topic === 'dialogue' ? (DL().find((d) => d.id === o.dialogue) || {}).title || '' : topic === 'listening' ? (LS().find((x) => x.id === o.listening) || {}).title || '' : '');
     const draw = () => {
       el.innerHTML = '<div class="breadcrumb">' + pg.crumb + '</div><h1>' + pg.h1 + '</h1><p class="muted">' + pg.intro + '</p>' +
         '<div class="card stack ho-controls">' + controls() +
@@ -818,6 +897,7 @@
       const vs = el.querySelector('#ghVerb'); if (vs) vs.onchange = () => update({ verb: vs.value });
       const ls = el.querySelector('#ghLesson'); if (ls) ls.onchange = () => update({ lesson: ls.value, title: '' }, true);
       const rs = el.querySelector('#ghReading'); if (rs) rs.onchange = () => update({ reading: rs.value, title: '' }, true);
+      const lsel = el.querySelector('#ghListening'); if (lsel) lsel.onchange = () => update({ listening: lsel.value, title: '' }, true);
       const ds = el.querySelector('#ghDialogue'); if (ds) ds.onchange = () => update({ dialogue: ds.value, title: '' }, true);
       el.querySelector('#ghTitle').oninput = (e) => update({ title: e.target.value });
       el.querySelector('#ghFor').oninput = (e) => update({ preparedFor: e.target.value });
@@ -846,4 +926,5 @@
   V.ghandoutLesson = (el, p, q) => page('lesson', el, p, q);
   V.ghandoutReading = (el, p, q) => page('reading', el, p, q);
   V.ghandoutDialogue = (el, p, q) => page('dialogue', el, p, q);
+  V.ghandoutListening = (el, p, q) => page('listening', el, p, q);
 })();

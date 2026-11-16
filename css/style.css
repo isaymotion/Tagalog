@@ -779,3 +779,4 @@ mark.vf { background: var(--warn-bg); color: var(--gold-ink); font-weight: 700; 
 .lchip:hover { border-color: var(--ink-3); }
 .lchip.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .ldict textarea { width: 100%; min-width: 0; resize: vertical; }
+.gh-lines .gh-blank { display: block; height: 1.7em; border-bottom: 1px solid var(--p-line); }
