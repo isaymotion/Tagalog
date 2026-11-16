@@ -17,7 +17,7 @@ ROUTES = ['#/', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/
   '#/psych/s/hallucinations', '#/psych/point', '#/psych/point?s=suicide', '#/psych/listen', '#/psych/listen?s=depression', '#/lessons/interpreting', '#/psych/cases', '#/psych/case/jomar', '#/psych/interp', '#/placement', '#/progress', '#/settings', '#/new',
   '#/about', '#/more', '#/psych/handout', '#/psych/handout?s=suicide', '#/psych/deesc', '#/psych/handout?deesc=1', '#/psych/s/deescalation',
   '#/psych/deesc?tab=drill', '#/psych/deesc?tab=after', '#/psych/deesc?tab=practice', '#/psych/case/agitated', '#/speak/case-agitated',
-  '#/psych/handout?deesccard=1', '#/psych/discharge', '#/psych/handout?discharge=1', '#/psych/s/discharge', '#/psych/dcases', '#/psych/dcase/ramon', '#/psych/dcase/liza', '#/psych/dcase/carlo', '#/psych/dcase/arnel', '#/psych/dcase/mika', '#/psych/mcases', '#/psych/mcase/ramon', '#/affixes', '#/affixes?t=gitlapi', '#/lessons/panlapi', '#/practice', '#/psych?tab=cases', '#/psych?tab=tools', '#/psych?tab=print', '#/affixes/handout', '#/affixes/handout?t=hulapi&set=clinical',
+  '#/psych/handout?deesccard=1', '#/psych/discharge', '#/psych/handout?discharge=1', '#/psych/s/discharge', '#/psych/dcases', '#/psych/dcase/ramon', '#/psych/dcase/liza', '#/psych/dcase/carlo', '#/psych/dcase/arnel', '#/psych/dcase/mika', '#/psych/mcases', '#/psych/mcase/ramon', '#/psych/mcase/carlo', '#/psych/mcase/arnel', '#/psych/mcase/mika', '#/affixes', '#/affixes?t=gitlapi', '#/lessons/panlapi', '#/practice', '#/psych?tab=cases', '#/psych?tab=tools', '#/psych?tab=print', '#/affixes/handout', '#/affixes/handout?t=hulapi&set=clinical',
   '#/verbs/handout', '#/verbs/handout?v=inom&set=clinical', '#/lessons/handout?id=markers']
 
 LOAD_PDFMAKE = """async () => { if (!window.pdfMake) await new Promise((r) => { const s = document.createElement('script'); s.src = 'js/vendor/pdfmake.min.js';
@@ -125,6 +125,28 @@ async def main(base, out):
             if 'Safety: Suicidal and homicidal ideation' not in t or 'Admission vs discharge' not in t: fails.append(f'{name}: mcase compare')
             if await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name}: mcase compare overflow')
             await pg.screenshot(path=f'{out}/{name}_mcase_compare.png', full_page=True)
+            # new admission cases: ask everything, pick the model answers, right evidence -> 100%
+            for cid in ['carlo', 'arnel', 'mika']:
+                await pg.evaluate(f"location.hash='#/psych/mcase/{cid}'"); await pg.wait_for_timeout(200)
+                plan = await pg.evaluate("""(id) => { const C = PSYCH_MSE_CASES.find((x) => x.id === id);
+                  const F = PSYCH_ADMIT_MSE.domains.filter((d) => C.domains[d.id]);
+                  return { cc: C.cc.opts.findIndex((o) => o[1]), doms: F.map((d) => { const cd = C.domains[d.id];
+                    return { asks: d.ask.map((_, i) => i), picks: cd.need.map((n) => d.picks.indexOf(Array.isArray(n) ? n[0] : n)),
+                      ev: cd.ev ? cd.ev.opts.findIndex((o) => o[1]) : -1 }; }) }; }""", cid)
+                await pg.click('[data-ccask]'); await pg.click(f'[data-cc="{plan["cc"]}"]'); await pg.wait_for_timeout(60)
+                for i, d in enumerate(plan['doms']):
+                    await pg.click(f'[data-go="{i + 1}"].ds-chip'); await pg.wait_for_timeout(40)
+                    for q in d['asks']: await pg.click(f'[data-ask="{q}"]')
+                    for k in d['picks']: await pg.click(f'[data-pick="{k}"]')
+                    await pg.click('#dcCheck'); await pg.wait_for_timeout(40)
+                    if d['ev'] >= 0: await pg.click(f'[data-ev="{d["ev"]}"]'); await pg.wait_for_timeout(40)
+                await pg.click('.ds-chip.sum'); await pg.wait_for_timeout(100)
+                t = await pg.inner_text('#view')
+                if '100%' not in t or 'Admission vs discharge' not in t: fails.append(f'{name}: mcase {cid} model run')
+                if await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name}: mcase {cid} overflow')
+            # stage directions are not spoken; brackets inside a sentence stay
+            sp = await pg.evaluate("[App.spoken('(tumango) ...Hindi po.'), App.spoken('Ako po... (tumigil) ...Ano po?'), App.spoken('nganga (bunga, mama), alak'), App.spoken('(tumango lang)')]")
+            if sp != ['...Hindi po.', 'Ako po... ...Ano po?', 'nganga (bunga, mama), alak', '']: fails.append(f'{name}: App.spoken {sp}')
             # real assessment flags persisting command hallucinations
             await pg.evaluate("location.hash='#/psych/discharge'"); await pg.wait_for_timeout(200)
             await pg.click('[data-go="3"].ds-chip'); await pg.click('[data-pick="8"]'); await pg.click('.ds-chip.sum'); await pg.wait_for_timeout(100)
