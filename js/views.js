@@ -59,7 +59,7 @@
     const pins = (s.pins || []).slice().reverse();
     const recent = (s.recent || []).filter((r) => !/^#\/(more|settings|progress|new|about|search)/.test(r.hash) && !App.isPinned(r.hash)).slice(0, 4);
     // One quick drill a day, rotating so the Home screen nudges different skills.
-    const quick = [['#/verbs', 'Verb trainer', '10 aspect questions'], ['#/affixes', 'Panlapi', 'Take 10 words apart'], ['#/psych/interp', 'What is the patient saying?', 'Interpret 10 lines'], ['#/psych/listen', 'Listening drill', 'Hear 10 replies, pick the meaning'], ['#/flash/psych', 'Psychiatry flashcards', 'A quick review'], ['#/psych/cases', 'Case simulation', 'One interview, with feedback']];
+    const quick = [['#/verbs', 'Verb trainer', '10 aspect questions'], ['#/affixes', 'Panlapi', 'Take 10 words apart'], ['#/psych/interp', 'What is the patient saying?', 'Interpret 10 lines'], ['#/psych/listen', 'Listening drill', 'Hear 10 replies, pick the meaning'], ['#/listen', 'Listening exercise', 'One recording, questions and dictation'], ['#/flash/psych', 'Psychiatry flashcards', 'A quick review'], ['#/psych/cases', 'Case simulation', 'One interview, with feedback']];
     const qd = quick[Math.floor(Date.now() / 864e5) % quick.length];
     el.innerHTML =
       '<section class="hero"><svg class="rays" viewBox="0 0 100 100" aria-hidden="true">' + Array.from({ length: 8 }, (_, k) => '<rect x="47" y="2" width="6" height="30" fill="#e3b53f" transform="rotate(' + k * 45 + ' 50 50)"/>').join('') + '<circle cx="50" cy="50" r="16" fill="#e3b53f"/></svg>' +
@@ -395,23 +395,29 @@
 
   /* ---------- Reading ---------- */
   V.reading = (el) => {
-    el.innerHTML = '<h1>Reading</h1><p class="muted">Read the Tagalog first. Reveal the translation only when you need it, then answer the questions. Passages marked <span class="pill warn">clinical</span> practice psychiatric content.</p><div class="grid">' +
+    el.innerHTML = '<h1>Reading</h1><p class="muted">Read the Tagalog first. Reveal the translation only when you need it, then answer the questions. For listening practice, press <b>Listen first</b> on any passage to hide the text, or open <a href="#/listen">Listening</a>. Passages marked <span class="pill warn">clinical</span> practice psychiatric content.</p><div class="grid">' +
       READING.map((r) => '<a class="tile" href="#/reading/' + r.id + '"><div class="row">' + lvPill(r.level) + (r.psych ? '<span class="pill warn">clinical</span>' : '') + (S().done.reading[r.id] != null ? '<span class="pill good">' + S().done.reading[r.id] + '%</span>' : '') + '</div><h3 class="tl" style="margin-top:6px">' + esc(r.title) + '</h3><p>' + esc(r.titleEn) + '</p></a>').join('') + '</div>';
   };
   V.passage = (el, p) => {
     const r = READING.find((x) => x.id === p.id);
     if (!r) { el.innerHTML = '<p>Passage not found.</p>'; return; }
-    let showTr = false;
+    let showTr = false, earFirst = false;
     const draw = () => {
-      el.querySelector('#pbody').innerHTML = r.tl.map((t, i) => '<p>' + esc(t) + '</p>' + (showTr ? '<p class="tr">' + esc(r.en[i]) + '</p>' : '')).join('');
+      el.querySelector('#pbody').innerHTML = earFirst
+        ? '<p class="muted" style="margin:0">Listen first: the text is hidden. Press Listen, answer the questions by ear, then press Show text to check.</p>'
+        : r.tl.map((t, i) => '<p>' + esc(t) + '</p>' + (showTr ? '<p class="tr">' + esc(r.en[i]) + '</p>' : '')).join('');
       el.querySelector('#trbtn').textContent = showTr ? 'Hide translation' : 'Show translation';
+      el.querySelector('#trbtn').hidden = earFirst;
+      el.querySelector('#earbtn').textContent = earFirst ? 'Show text' : 'Listen first';
+      el.querySelector('#earbtn').setAttribute('aria-pressed', earFirst);
     };
     el.innerHTML = crumb([['Reading', '#/reading'], [r.title]]) + '<div class="row">' + lvPill(r.level) + '</div><h1 class="tl" style="margin-top:6px">' + esc(r.title) + '</h1><p class="muted">' + esc(r.titleEn) + '</p>' +
-      '<div class="row"><button class="btn" id="readall">' + icons.sound + ' Listen</button><button class="btn" id="trbtn"></button><a class="btn" href="#/reading/handout?id=' + r.id + '">' + icons.book + ' Print handout</a></div>' +
+      '<div class="row"><button class="btn" id="readall">' + icons.sound + ' Listen</button><button class="btn" id="earbtn" title="Hide the text and answer by ear"></button><button class="btn" id="trbtn"></button><a class="btn" href="#/reading/handout?id=' + r.id + '">' + icons.book + ' Print handout</a></div>' +
       '<div class="card passage" id="pbody" style="margin-top:12px"></div>' +
       '<h2 style="margin-top:16px">Glossary</h2><div class="gloss">' + r.gloss.map(([t, e]) => '<span><b>' + esc(t) + '</b> — ' + esc(e) + '</span>').join('') + '</div>' +
       '<h2 style="margin-top:16px">Questions</h2><div id="rq"></div>';
     el.querySelector('#trbtn').onclick = () => { showTr = !showTr; draw(); };
+    el.querySelector('#earbtn').onclick = () => { earFirst = !earFirst; draw(); };
     el.querySelector('#readall').onclick = () => App.speakAll(r.tl, 350);
     draw();
     App.runQuiz(el.querySelector('#rq'), r.q.map(([q, opts, a, exp]) => ({ q, opts, a, exp, tlq: !/^(Which|What|Why|How|Clinically)\b|^"/.test(q) })), {
@@ -545,7 +551,7 @@
         .map(([b, t]) => '<div class="stat"><b>' + esc(b) + '</b><span>' + t + '</span></div>').join('') + '</div>' +
       '<h2 style="margin-top:18px">Last 12 weeks</h2><div class="card"><div style="display:grid;grid-template-columns:repeat(21,1fr);gap:3px;max-width:520px">' + cal + '</div></div>' +
       '<h2 style="margin-top:18px">Completion</h2><div class="card stack">' +
-      [['Lessons', Object.keys(s.done.lessons).length, LESSONS.length], ['Reading passages', Object.keys(s.done.reading).length, READING.length], ['Dialogues', Object.keys(s.done.dialogues).length, DIALOGUES.length + PSYCH_CASES.length], ['Psychiatry sections opened', secSeen, sec], ['Case simulations', Object.keys(s.done.cases).length, PSYCH_CASES.length]]
+      [['Lessons', Object.keys(s.done.lessons).length, LESSONS.length], ['Reading passages', Object.keys(s.done.reading).length, READING.length], ['Listening exercises', Object.keys(s.done.listening || {}).length, (window.LISTENING || []).length], ['Dialogues', Object.keys(s.done.dialogues).length, DIALOGUES.length + PSYCH_CASES.length], ['Psychiatry sections opened', secSeen, sec], ['Case simulations', Object.keys(s.done.cases).length, PSYCH_CASES.length]]
         .map(([t, a, b]) => '<div><div class="spread small"><span>' + t + '</span><span class="muted">' + a + ' / ' + b + '</span></div><div class="progress"><i style="width:' + Math.round((100 * a) / Math.max(1, b)) + '%"></i></div></div>').join('') + '</div>' +
       '<h2 style="margin-top:18px">Backup</h2><div class="card stack"><p style="margin:0">Progress is saved on this device. Export a backup file to move it to another phone or browser. The same buttons are in the footer of every page.</p>' +
       '<div class="row"><button class="btn" id="exp">Export backup</button><label class="btn" for="imp">Import backup</label><input type="file" id="imp" class="sr-only" accept="application/json,.json"></div>' +

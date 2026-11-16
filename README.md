@@ -6,7 +6,7 @@
 
 **App created by Isabella Navarro, MD. Latest version November 2026. isaymotion@gmail.com**
 
-Version **3.4.0** (2026-11-16): print handouts for readings and dialogues. 3.3.0: admission MSE cases for Carlo, Arnel and Mika. 3.2.0: Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
+Version **3.5.0** (2026-11-16): listening exercises and five harder readings. 3.4.0: print handouts for readings and dialogues. 3.3.0: admission MSE cases for Carlo, Arnel and Mika. 3.2.0: Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
 
 ## What's inside
 
@@ -34,9 +34,17 @@ Version **3.4.0** (2026-11-16): print handouts for readings and dialogues. 3.3.0
 | **Panlapi (affix trainer)** | Take words apart into root and affix: unlapi, gitlapi, hulapi, kabilaan, laguhan. 216 words (120 clinical), 9 sound-change and placement rules, 26 affix meanings, and four drills (name the type, find the root, build the word, choose the affix the sentence forces). `js/data/affixes.js`, `js/affixes.js`, route `#/affixes`. |
 | **Grammar handouts** | Printable references with a Print handout button on the pages they come from. Panlapi: affix cheat sheet, sound-change rules, word list with the affix marked, worksheet and answer key. Verbs: conjugation tables for all, clinical or one verb, example sentences per aspect, an aspect-at-a-glance page, worksheet and key. Lessons: any lesson with its quiz and an answer key. Hide English where it applies, A4/Letter/A5, PDF or print. |
 | **Lessons** | 24 grammar and culture lessons with quizzes: markers, focus, aspect, particles, po/opo, numbers/time/money, Taglish, hiya, utang na loob, folk beliefs, idioms of distress, and when your Tagalog is not enough (interviewing alone vs a nurse interpreting, family as informants not interpreters, running an interpreted interview, which rating-scale version goes in the chart). |
-| **Reading** | 12 graded passages (A1–B2) with glossaries and comprehension questions. Print handout per passage: passage, glossary, questions, answer key; English under each paragraph, on its own page, or left out. |
+| **Reading** | 17 graded passages (A1–C1) with glossaries and comprehension questions (the B2–C1 ones ask for inference, tone and stance). A Listen first button hides the text so you answer by ear. Print handout per passage: passage, glossary, questions, answer key; English under each paragraph, on its own page, or left out. |
+| **Listening** | Six audio-first recordings (B1–C1): clinic voicemail, terminal announcement, radio typhoon bulletin, nurse shift endorsement, family conversation, radio interview. Play all, replay a line, slow down; questions, transcript with optional English, and dictation. Data in `js/data/listening.js`, view `js/listen.js` (`#/listen`, `#/listen/<id>`). |
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. Print handout per dialogue (clinical ones included): script and a role-play worksheet with your lines blank under the English cue, plus an answer key. |
 | **You** | Placement test, streaks, XP, progress stats, backup export/import, settings, What's New, About. |
+
+## Version 3.5.0: listening exercises and harder readings
+
+- **Feature**: `#/listen` and `#/listen/<id>` (`js/listen.js`, data `js/data/listening.js`, `LISTENING: [{ id, level, kind, title, titleEn, setting, psych?, speakers, lines:[[speakerIdx, tl, en]], q:[[q, opts, idx, expl]], dictation:[lineIdx] }]`). Audio first: Play all, Stop, Slower/Normal, replay one line; questions by `runQuiz`; transcript with optional English; dictation graded with `App.similarity`. Best score in `state.done.listening`. In `NAV` (Learn), the Practice page, Home's daily quick practice, Progress and search (titles and settings only, not transcripts).
+- **Content**: five B2–C1 passages appended to `js/data/reading.js`: `bataan-alaala`, `balita-baha`, `memo-dalaw`, `opinyon-hiya`, `huling-biyahe`. Tagalog drafted by Claude, pending review.
+- Listen first button on every passage hides the text until you choose to show it.
+- **Files changed:** `js/data/listening.js` (new), `js/listen.js` (new), `js/data/reading.js`, `index.html`, `sw.js`, `data/app-meta.js`, `data/changelog.js`, `js/app.js`, `js/core.js`, `js/views.js`, `css/style.css`, `tools/collect-texts.js`, `README.md`.
 
 ## Version 3.4.0: reading and dialogue handouts
 

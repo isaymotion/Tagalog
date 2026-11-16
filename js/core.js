@@ -17,7 +17,7 @@
   const defaults = () => ({
     settings: { theme: 'system', textSize: '100', register: 'f', voice: '', voiceSource: 'pack', rate: 0.85, cardDir: 'tl-en', newPerDay: 20 },
     srs: {}, mistakes: [], newToday: { date: '', n: 0 },
-    done: { lessons: {}, reading: {}, cases: {}, dialogues: {}, sections: {} },
+    done: { lessons: {}, reading: {}, listening: {}, cases: {}, dialogues: {}, sections: {} },
     streak: { last: '', count: 0, best: 0, days: [] },
     stats: { reviews: 0, correct: 0, answered: 0 }, xp: 0, level: '', seenVersion: ''
   });
@@ -189,6 +189,7 @@
   const push = (type, title, sub, text, route) => IDX.push({ type, title, sub, text: norm(title + ' ' + sub + ' ' + text), route });
   (window.LESSONS || []).forEach((l) => push('Lesson', l.title, l.summary, l.body.replace(/<[^>]+>/g, ' '), '#/lessons/' + l.id));
   (window.READING || []).forEach((r) => push('Reading', r.title, r.titleEn, r.tl.join(' ') + ' ' + r.en.join(' '), '#/reading/' + r.id));
+  (window.LISTENING || []).forEach((x) => push('Listening', x.title, x.titleEn + ' · ' + x.kind, x.setting, '#/listen/' + x.id)); // the transcript is left out so a search does not give the answers away
   (window.DIALOGUES || []).forEach((d) => push('Dialogue', d.title, d.level, d.lines.map((l) => l[1] + ' ' + l[2]).join(' '), '#/speak/' + d.id));
   (window.PSYCH_SECTIONS || []).forEach((s) => {
     push('Psychiatry', s.title, s.group, s.intro, '#/psych/s/' + s.id);
@@ -196,7 +197,7 @@
   });
   (window.PSYCH_CASES || []).forEach((c) => push('Case', c.title, c.setting, '', '#/psych/case/' + c.id));
   (window.VERBS || []).forEach((v) => push('Verb', v.r, v.en, (v.ex || '') + ' ' + ((window.VERB_SENTENCES || {})[v.r] || []).map((s) => s[0] + ' ' + s[1]).join(' '), '#/verbs/' + v.r));
-  [['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Panlapi affix trainer', '#/affixes'], ['Panlapi handout (print)', '#/affixes/handout'], ['Verb handout (print)', '#/verbs/handout'], ['Lesson handout (print)', '#/lessons/handout'], ['Reading handout (print)', '#/reading/handout'], ['Dialogue handout (print)', '#/speak/handout'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp'], ['Listening drill', '#/psych/listen'], ['Point board (Ituro): patient points to the answer', '#/psych/point'], ['De-escalation checklist', '#/psych/deesc'], ['Discharge assessment', '#/psych/discharge'], ['Discharge practice cases', '#/psych/dcases'], ['Admission MSE practice', '#/psych/mcases'], ['Printable handout', '#/psych/handout'], ['Mood episode checker', '#/psych/mood'], ['Substance use screener', '#/psych/sud'], ['Withdrawal and agitation', '#/psych/withdrawal'], ['MSE interviewer sheet', '#/psych/mse-sheet'], ['Practice', '#/practice'], ['Psychiatry cases', '#/psych?tab=cases'], ['Ward tools', '#/psych?tab=tools'], ['Print', '#/psych?tab=print'], ['Lessons', '#/lessons'], ['Reading', '#/reading'], ['Speaking', '#/speak'], ['Case simulations', '#/psych/cases'], ['More', '#/more']]
+  [['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Panlapi affix trainer', '#/affixes'], ['Panlapi handout (print)', '#/affixes/handout'], ['Verb handout (print)', '#/verbs/handout'], ['Lesson handout (print)', '#/lessons/handout'], ['Reading handout (print)', '#/reading/handout'], ['Dialogue handout (print)', '#/speak/handout'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp'], ['Listening drill', '#/psych/listen'], ['Point board (Ituro): patient points to the answer', '#/psych/point'], ['De-escalation checklist', '#/psych/deesc'], ['Discharge assessment', '#/psych/discharge'], ['Discharge practice cases', '#/psych/dcases'], ['Admission MSE practice', '#/psych/mcases'], ['Printable handout', '#/psych/handout'], ['Mood episode checker', '#/psych/mood'], ['Substance use screener', '#/psych/sud'], ['Withdrawal and agitation', '#/psych/withdrawal'], ['MSE interviewer sheet', '#/psych/mse-sheet'], ['Practice', '#/practice'], ['Psychiatry cases', '#/psych?tab=cases'], ['Ward tools', '#/psych?tab=tools'], ['Print', '#/psych?tab=print'], ['Lessons', '#/lessons'], ['Reading', '#/reading'], ['Listening exercises', '#/listen'], ['Speaking', '#/speak'], ['Case simulations', '#/psych/cases'], ['More', '#/more']]
     .forEach(([t, r]) => push('Page', t, '', '', r));
   App.searchAll = (q, limit) => {
     const nq = norm(q);

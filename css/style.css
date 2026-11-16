@@ -772,3 +772,10 @@ mark.vf { background: var(--warn-bg); color: var(--gold-ink); font-weight: 700; 
 .gh-dl .gh-en { display: block; color: var(--p-muted); font-style: italic; font-size: .9em; }
 .gh-dl .gh-blank { display: block; height: 1.6em; border-bottom: 1px solid var(--p-line); }
 @media (max-width: 560px) { .gh-gloss { columns: 1; } .gh-dl { grid-template-columns: minmax(0, 1fr); gap: 0; } }
+
+/* Listening exercises (3.5.0): line replay chips */
+.lchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.lchip { min-width: 40px; min-height: 40px; border: 1px solid var(--rule); border-radius: 20px; background: var(--surface); color: inherit; font: 600 .92rem/1 var(--sans); cursor: pointer; }
+.lchip:hover { border-color: var(--ink-3); }
+.lchip.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.ldict textarea { width: 100%; min-width: 0; resize: vertical; }

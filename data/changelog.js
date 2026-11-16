@@ -4,6 +4,15 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.5.0', date: '2026-11-16', title: 'Listening exercises and harder readings',
+    items: [
+      { type: 'feature', text: 'New Listening section (in More, under Learn, and on the Practice page) with six recordings from real life: a clinic voicemail, a bus terminal announcement, a typhoon bulletin on the radio, a nurse shift endorsement in Taglish, a family deciding how to bring Tatay for a check-up, and a radio interview with a psychiatrist. Levels B1 to C1.' },
+      { type: 'feature', text: 'Each recording is audio first: play it all, replay any single line, or slow it down. Answer the questions by ear, then open the transcript (with or without English) and finish with a short dictation scored by matching words.' },
+      { type: 'content', text: 'Five longer reading passages at B2 and C1: the Death March and Mariveles, a flood news report, a ward visiting memo, an opinion piece on hiya and asking for help, and a short story about a jeepney driver\'s last trip. The questions now ask for inference, tone and the writer\'s stance, not just details.' },
+      { type: 'feature', text: 'Every reading passage has a Listen first button that hides the text so you can answer by ear, then show the text to check.' }
+    ]
+  },
+  {
     version: '3.4.0', date: '2026-11-16', title: 'Print handouts for readings and dialogues',
     items: [
       { type: 'feature', text: 'Every reading passage now has a Print handout button. The handout has the Tagalog passage, the glossary, the questions with lettered options and an answer key. Put the English under each paragraph, on its own page, or leave it out for a Tagalog-only sheet.' },
