@@ -6,7 +6,7 @@
 
 **App created by Isabella Navarro, MD. Latest version November 2026. isaymotion@gmail.com**
 
-Version **3.6.2** (2026-11-16): app-wide pronunciation fixes for abbreviations. 3.6.1: listening audio respelled for abbreviations. 3.6.0: listening handouts and three more recordings. 3.5.0: listening exercises and five harder readings. 3.4.0: print handouts for readings and dialogues. 3.3.0: admission MSE cases for Carlo, Arnel and Mika. 3.2.0: Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
+Version **3.6.3** (2026-11-16): unknown capitals spelled by default. 3.6.2: app-wide pronunciation fixes for abbreviations. 3.6.1: listening audio respelled for abbreviations. 3.6.0: listening handouts and three more recordings. 3.5.0: listening exercises and five harder readings. 3.4.0: print handouts for readings and dialogues. 3.3.0: admission MSE cases for Carlo, Arnel and Mika. 3.2.0: Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
 
 ## What's inside
 
@@ -39,9 +39,14 @@ Version **3.6.2** (2026-11-16): app-wide pronunciation fixes for abbreviations. 
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. Print handout per dialogue (clinical ones included): script and a role-play worksheet with your lines blank under the English cue, plus an answer key. |
 | **You** | Placement test, streaks, XP, progress stats, backup export/import, settings, What's New, About. |
 
+## Version 3.6.3: capitals spelled by default
+
+- **Update**: `js/pronounce.js` no longer needs an acronym list. An all-caps word is spelled with Filipino letter names unless it is in `WORDS` (said as a word, e.g. PAGASA, COVID, CIWA → siwa, OK → okey), a lowercase Tagalog headword in `DICT_RAW`, or part of a heading (capital words opening the text or a sentence and ending in `:` or a dash: PARA SA:, PAKSA:, SAN ISIDRO —). `collect-texts.js` writes `tools/caps.json` (word → spoken form; committed by the audio job) and prints it; dev-tools `data_check.js` prints it as INFO. No existing clip changed.
+- **Files changed:** `js/pronounce.js`, `tools/collect-texts.js`, `tools/caps.json` (new), `.github/workflows/audio-pack.yml`, `sw.js`, `data/app-meta.js`, `data/changelog.js`, `README.md`.
+
 ## Version 3.6.2: app-wide pronunciation rule
 
-- **Correction**: `js/pronounce.js` defines `window.PRONOUNCE(text)`, applied by `App.spoken` (`js/core.js`) before playing or keying a clip and by `tools/collect-texts.js` when recording, so clip names match. Doc → Dok, Dr./Dra. → Doktor/Doktora, acronyms in its `ACRONYMS` list spelled with Filipino letter names (NCMH → en-si-em-eyts), other all-caps words lowercased (headings), 1553 and 911 digit by digit, `y medya` → `i medya`, sentence-initial `I-verb` → `i-verb`. Lines in `tools/extra-texts/msetrainer.txt` are recorded without it (MSE Trainer keys clips from its own text). Add new acronyms to `ACRONYMS`, or they are lowercased. Screen text is unchanged.
+- **Correction**: `js/pronounce.js` defines `window.PRONOUNCE(text)`, applied by `App.spoken` (`js/core.js`) before playing or keying a clip and by `tools/collect-texts.js` when recording, so clip names match. Doc → Dok, Dr./Dra. → Doktor/Doktora, acronyms in its `ACRONYMS` list spelled with Filipino letter names (NCMH → en-si-em-eyts), other all-caps words lowercased (headings), 1553 and 911 digit by digit, `y medya` → `i medya`, sentence-initial `I-verb` → `i-verb`. Lines in `tools/extra-texts/msetrainer.txt` are recorded without it (MSE Trainer keys clips from its own text). (3.6.3: unknown capitals are spelled by default.) Screen text is unchanged.
 - **Files changed:** `js/pronounce.js` (new), `js/core.js`, `tools/collect-texts.js`, `index.html`, `sw.js`, `data/app-meta.js`, `data/changelog.js`, `README.md`.
 
 ## Version 3.6.1: spoken versions for listening lines

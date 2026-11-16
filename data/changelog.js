@@ -4,6 +4,12 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.6.3', date: '2026-11-16', title: 'New abbreviations are read correctly by default',
+    items: [
+      { type: 'update', text: 'Any new abbreviation in capitals (for example DSM or ADHD) is now spelled out letter by letter automatically, the way a Filipino speaker says it. Capital words are read as words only in headings such as PARA SA: or PAKSA:, when they are Tagalog dictionary words, or for the few abbreviations said as words (PAGASA, COVID, CIWA, OK). Nothing you hear today changes.' }
+    ]
+  },
+  {
     version: '3.6.2', date: '2026-11-16', title: 'Clearer audio across the whole app',
     items: [
       { type: 'correction', text: 'The voice now says abbreviations the way a Filipino speaker would, everywhere in the app: Doc as "Dok", Dr. and Dra. as Doktor and Doktora, NCMH, OPD, ER, CR, TV, OT, ATM and other acronyms letter by letter, the 1553 and 911 hotlines digit by digit, "y medya" as "i medya", and I-summarize or I-check at the start of a sentence with an "ee" sound. All-caps headings such as PARA SA are read as words. About 60 clips were re-recorded. The text on screen is unchanged.' }

@@ -14,12 +14,13 @@ const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'),
  'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js', 'js/pronounce.js'].forEach(load);
 
 const out = new Map();
+const caps = new Map(); // every all-caps word in spoken text → how the voice will say it (written to tools/caps.json)
 const addText = (t, raw) => {
   if (!t || typeof t !== 'string') return;
   // Same rule as App.spoken in js/core.js: drop stage directions ("(tumango) ..."), then respell for the voice
   // (js/pronounce.js). raw = lines another app keys itself (MSE Trainer): stage directions only, no respelling.
   t = t.replace(/^\s*\([^)]*\)\s*/, '').replace(/(\.\.\.|…)\s*\([^)]*\)/g, '$1').replace(/\([^)]*\)\s*(?=\.\.\.|…)/g, '');
-  if (!raw) t = ctx.PRONOUNCE(t);
+  if (!raw) { ctx.PRONOUNCE_CAPS(t).forEach(([w, say]) => caps.set(w, say)); t = ctx.PRONOUNCE(t); }
   t = t.replace(/\s+/g, ' ').trim();
   if (!t || !/[a-zA-ZñÑ]/.test(t)) return;
   const key = ctx.AudioKey(t);
@@ -88,3 +89,6 @@ if (fs.existsSync(extra)) fs.readdirSync(extra).filter((f) => f.endsWith('.txt')
 const list = [...out.entries()].map(([key, text]) => ({ key, text })).sort((a, b) => a.key.localeCompare(b.key));
 fs.writeFileSync(path.join(__dirname, 'texts.json'), JSON.stringify(list, null, 0));
 console.log('Collected', list.length, 'texts');
+const capsList = Object.fromEntries([...caps.entries()].sort((a, b) => a[0].localeCompare(b[0])));
+fs.writeFileSync(path.join(__dirname, 'caps.json'), JSON.stringify(capsList, null, 1) + '\n');
+console.log('All-caps words (word → spoken):', Object.entries(capsList).map(([w, s]) => w + ' → ' + s).join(', '));

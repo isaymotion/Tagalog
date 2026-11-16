@@ -9,8 +9,32 @@
   // Letter names as Filipinos say them in acronyms.
   const L = { A: 'ey', B: 'bi', C: 'si', D: 'di', E: 'i', F: 'ef', G: 'dyi', H: 'eyts', I: 'ay', J: 'dyey', K: 'key', L: 'el', M: 'em', N: 'en', O: 'o', P: 'pi', Q: 'kyu', R: 'ar', S: 'es', T: 'ti', U: 'yu', V: 'bi', W: 'dabol-yu', X: 'eks', Y: 'way', Z: 'zi' };
   const spell = (w) => w.split('').map((c) => L[c] || c).join('-');
-  // Acronyms read letter by letter. Anything else in capitals (PARA SA, PAKSA, SAN ISIDRO in headings) is a Tagalog word: lowercased.
-  const ACRONYMS = new Set(['NCMH', 'PRN', 'BP', 'BHW', 'OPD', 'ER', 'CR', 'OT', 'TV', 'ATM', 'PGH', 'OFW', 'US', 'IV', 'LRT', 'MRT', 'BPO', 'ECG', 'OB', 'CT', 'DT', 'MDRRMO', 'NDRRMC', 'RHU', 'ICU', 'EEG', 'MRI', 'HIV', 'PWD', 'ID', 'OK', 'DSWD', 'DOH', 'PNP', 'NBI', 'SSS', 'TB']);
+  // All-caps words. The default is to spell them out, because a new one is almost always an acronym (DSM, CIWA, ADHD),
+  // so nothing needs adding here when content gains one. A capital word is read as a WORD instead when it is:
+  //   - in WORDS (acronyms Filipinos say as words, and English words written in capitals);
+  //   - a Tagalog dictionary word (DICT_RAW headwords written in lower case; acronym entries such as NCMH stay acronyms);
+  //   - part of an all-caps heading: one or more capital words that open the text or a sentence and end in ":" or a
+  //     dash (PARA SA:, PAKSA:, SAN ISIDRO —).
+  // tests/data_check.js (dev-tools) prints every all-caps word in the spoken texts with the way it will be read.
+  const WORDS = new Set(['OK', 'PAGASA', 'COVID', 'NAIA', 'ASEAN', 'UNICEF', 'NASA', 'CIWA', 'NEDA', 'TESDA', 'SONA', 'AIDS', 'LASIK', 'SIM', 'PIN', 'WIFI']);
+  const SAY_AS = { OK: 'okey', CIWA: 'siwa', WIFI: 'wayfay', SIM: 'sim', PIN: 'pin', AIDS: 'eyds' };
+  // Headwords written all in capitals (NCMH, CR) are acronym entries and are left out, so they stay acronyms.
+  let dict = null; // lower-case Tagalog headwords, built on first use (DICT_RAW is loaded before this runs)
+  const inDict = (w) => {
+    if (!dict) { dict = new Set(); (window.DICT_RAW || []).join('\n').split('\n').forEach((l) => { const h = l.split('|')[0].trim(); if (h && !h.startsWith('#') && h !== h.toUpperCase()) dict.add(h.toLowerCase()); }); }
+    return dict.has(w.toLowerCase());
+  };
+  const CAPS = /\b[A-Z]{2,}\b/g;
+  const capsWord = (w, i, t) => {
+    if (WORDS.has(w)) return SAY_AS[w] || w.toLowerCase();
+    // The run of capital words this one belongs to (PARA SA, SAN ISIDRO) counts as a heading only when it opens the
+    // text or a sentence and ends in ":" or a dash. "DSM, ADHD" or "ng DT: ..." mid-sentence are spelled.
+    const before = t.slice(0, i).replace(/(?:\b[A-Z]{2,}[ \t]+)+$/, ''), after = t.slice(i + w.length).replace(/^(?:[ \t]+[A-Z]{2,}\b)+/, '');
+    const heading = (before === '' || /[.!?]\s+$/.test(before)) && /^\s*(:|—|–|-\s)/.test(after);
+    return heading || inDict(w) ? w.toLowerCase() : spell(w);
+  };
+  // How a capital word in t will be said (for the data check's report).
+  window.PRONOUNCE_CAPS = (t) => [...String(t || '').matchAll(CAPS)].map((m) => [m[0], capsWord(m[0], m.index, m.input)]);
   const NUMBERS = { '1553': 'wan, payb, payb, tri', '911': 'nayn, wan, wan' };
   window.PRONOUNCE = (t) => String(t || '')
     .replace(/\bDra\.\s*/g, 'Doktora ').replace(/\bDr\.\s*/g, 'Doktor ').replace(/\bDoc\b/g, 'Dok')
@@ -18,5 +42,5 @@
     .replace(/\by medya\b/g, 'i medya')
     // "I-summarize", "I-check" at the start of a sentence: lowercase so the voice says "ee", not the English letter I.
     .replace(/(^|[.!?…"“]\s*)I-(?=[a-z])/g, (m, pre) => pre.replace(/[.!?…]\s*$/, ', ') + 'i-')
-    .replace(/\b[A-Z]{2,}\b/g, (w) => (w === 'OK' ? 'okey' : ACRONYMS.has(w) ? spell(w) : w.toLowerCase()));
+    .replace(CAPS, capsWord);
 })();
