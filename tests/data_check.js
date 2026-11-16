@@ -85,6 +85,10 @@ C.VERBS.forEach((v) => { const f = C.App.verbForms(v); if (!Object.keys(f).lengt
 ['kinakain:kain', 'binubulungan:bulong', 'nalulungkot:lungkot', 'iniinom:inom'].forEach((t) => { const [w, r] = t.split(':'); if (!C.App.findRoots(w).includes(r)) bad('stemmer ' + w + ' -> ' + r); });
 
 // Audio pack: every speakable text should have a clip (after the GitHub job has run).
+// 3.6.3: how the voice says every all-caps word (tools/caps.json, written by collect-texts.js). Unknown capitals are
+// spelled letter by letter by default; read the list when content adds one, in case it should be said as a word.
+{ const cp = path.join(repo, 'tools', 'caps.json');
+  if (fs.existsSync(cp)) { const c = JSON.parse(fs.readFileSync(cp, 'utf8')); console.log('INFO all-caps words, as spoken:', Object.entries(c).map(([w, s]) => w + '→' + s).join(' ')); } }
 const texts = path.join(repo, 'tools', 'texts.json'), man = path.join(repo, 'audio', 'manifest.json');
 if (fs.existsSync(texts) && fs.existsSync(man)) {
   const want = JSON.parse(fs.readFileSync(texts)), have = new Set(JSON.parse(fs.readFileSync(man)).keys);

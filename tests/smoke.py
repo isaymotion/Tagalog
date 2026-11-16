@@ -174,8 +174,8 @@ async def main(base, out):
             sp = await pg.evaluate("[App.spoken('(tumango) ...Hindi po.'), App.spoken('Ako po... (tumigil) ...Ano po?'), App.spoken('nganga (bunga, mama), alak'), App.spoken('(tumango lang)')]")
             if sp != ['...Hindi po.', 'Ako po... ...Ano po?', 'nganga (bunga, mama), alak', '']: fails.append(f'{name}: App.spoken {sp}')
             # 3.6.2: app-wide respelling for the voice (js/pronounce.js)
-            pr = await pg.evaluate("[App.spoken('Salamat po, Doc.'), App.spoken('Ako po si Dr. Navarro.'), App.spoken('Ah, kaya pala. I-inform ko si Doc.'), App.spoken('Tumawag sa NCMH sa 1553.'), App.spoken('PARA SA: Lahat'), App.spoken('alas-dos y medya')]")
-            if pr != ['Salamat po, Dok.', 'Ako po si Doktor Navarro.', 'Ah, kaya pala, i-inform ko si Dok.', 'Tumawag sa en-si-em-eyts sa wan, payb, payb, tri.', 'para sa: Lahat', 'alas-dos i medya']: fails.append(f'{name}: pronounce {pr}')
+            pr = await pg.evaluate("[App.spoken('Salamat po, Doc.'), App.spoken('Ako po si Dr. Navarro.'), App.spoken('Ah, kaya pala. I-inform ko si Doc.'), App.spoken('Tumawag sa NCMH sa 1553.'), App.spoken('PARA SA: Lahat'), App.spoken('alas-dos y medya'), App.spoken('Ayon sa DSM, ADHD ito.'), App.spoken('Ward 3. PAKSA: Bago'), App.spoken('ng DT: matindi')]")
+            if pr != ['Salamat po, Dok.', 'Ako po si Doktor Navarro.', 'Ah, kaya pala, i-inform ko si Dok.', 'Tumawag sa en-si-em-eyts sa wan, payb, payb, tri.', 'para sa: Lahat', 'alas-dos i medya', 'Ayon sa di-es-em, ey-di-eyts-di ito.', 'Ward 3. paksa: Bago', 'ng di-ti: matindi']: fails.append(f'{name}: pronounce {pr}')
             # real assessment flags persisting command hallucinations
             await pg.evaluate("location.hash='#/psych/discharge'"); await pg.wait_for_timeout(200)
             await pg.click('[data-go="3"].ds-chip'); await pg.click('[data-pick="8"]'); await pg.click('.ds-chip.sum'); await pg.wait_for_timeout(100)
