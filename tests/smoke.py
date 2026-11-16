@@ -19,7 +19,7 @@ ROUTES = ['#/', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/
   '#/psych/deesc?tab=drill', '#/psych/deesc?tab=after', '#/psych/deesc?tab=practice', '#/psych/case/agitated', '#/speak/case-agitated',
   '#/psych/handout?deesccard=1', '#/psych/discharge', '#/psych/handout?discharge=1', '#/psych/s/discharge', '#/psych/dcases', '#/psych/dcase/ramon', '#/psych/dcase/liza', '#/psych/dcase/carlo', '#/psych/dcase/arnel', '#/psych/dcase/mika', '#/psych/mcases', '#/psych/mcase/ramon', '#/psych/mcase/carlo', '#/psych/mcase/arnel', '#/psych/mcase/mika', '#/affixes', '#/affixes?t=gitlapi', '#/lessons/panlapi', '#/practice', '#/psych?tab=cases', '#/psych?tab=tools', '#/psych?tab=print', '#/affixes/handout', '#/affixes/handout?t=hulapi&set=clinical',
   '#/verbs/handout', '#/verbs/handout?v=inom&set=clinical', '#/lessons/handout?id=markers',
-  '#/reading/handout?id=sulat-nanay', '#/speak/handout?id=meet', '#/speak/handout?id=case-jomar']
+  '#/reading/handout?id=sulat-nanay', '#/listen', '#/listen/voicemail-klinika', '#/listen/endorsement', '#/listen/radyo-panayam', '#/reading/opinyon-hiya', '#/reading/huling-biyahe', '#/speak/handout?id=meet', '#/speak/handout?id=case-jomar']
 
 LOAD_PDFMAKE = """async () => { if (!window.pdfMake) await new Promise((r) => { const s = document.createElement('script'); s.src = 'js/vendor/pdfmake.min.js';
   s.onload = () => { const t = document.createElement('script'); t.src = 'js/vendor/vfs_fonts.js'; t.onload = r; document.head.appendChild(t); }; document.head.appendChild(s); }); }"""
@@ -41,6 +41,25 @@ async def main(base, out):
                 if 'went wrong' in text or 'not found' in text.lower(): fails.append(f'{name} {r}: {text}')
                 if await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name} {r}: horizontal overflow')
             await pg.screenshot(path=f'{out}/{name}_last.png')
+            # listening exercise (3.5.0): quiz to the score, transcript, dictation, line chips, Listen first
+            await pg.evaluate("location.hash='#/listen/usapan-pamilya'"); await pg.wait_for_timeout(200)
+            nq = await pg.evaluate("LISTENING.find(x => x.id === 'usapan-pamilya').q.length")
+            if await pg.locator('.lchip').count() != await pg.evaluate("LISTENING.find(x => x.id === 'usapan-pamilya').lines.length"): fails.append(f'{name}: listening line chips')
+            if await pg.locator('#ltx').is_visible(): fails.append(f'{name}: listening transcript visible before asked')
+            for _ in range(nq):
+                await pg.click('#lq .opt >> nth=0'); await pg.wait_for_timeout(40); await pg.click('#lq [data-act=next]'); await pg.wait_for_timeout(40)
+            if 'Try again' not in await pg.inner_text('#lq'): fails.append(f'{name}: listening quiz did not finish')
+            if await pg.evaluate("App.state.done.listening['usapan-pamilya']") is None: fails.append(f'{name}: listening score not saved')
+            await pg.click('#txbtn'); await pg.click('#enbtn'); await pg.wait_for_timeout(60)
+            if await pg.locator('#ltx .line').count() != 10 or await pg.locator('#ltx .e').count() != 10: fails.append(f'{name}: listening transcript')
+            d0 = await pg.evaluate("(() => { const x = LISTENING.find(x => x.id === 'usapan-pamilya'); return x.lines[x.dictation[0]][1]; })()")
+            await pg.fill('.ldict >> nth=0 >> textarea', d0.lower().replace(',', '')); await pg.click('[data-dcheck] >> nth=0'); await pg.wait_for_timeout(60)
+            if '100% of words match' not in await pg.inner_text('.ldict >> nth=0'): fails.append(f'{name}: dictation scoring')
+            await pg.evaluate("location.hash='#/reading/opinyon-hiya'"); await pg.wait_for_timeout(150)
+            await pg.click('#earbtn'); await pg.wait_for_timeout(60)
+            if 'hiya' in (await pg.inner_text('#pbody')).lower() or await pg.locator('#trbtn').is_visible(): fails.append(f'{name}: listen first did not hide text')
+            await pg.click('#earbtn'); await pg.wait_for_timeout(60)
+            if 'Sikolohiyang Pilipino' not in await pg.inner_text('#pbody'): fails.append(f'{name}: listen first did not restore text')
             # case simulation to the end
             await pg.evaluate("location.hash='#/psych/case/jomar'"); await pg.wait_for_timeout(150)
             for _ in range(6): await pg.click('.opt >> nth=0'); await pg.wait_for_timeout(60)

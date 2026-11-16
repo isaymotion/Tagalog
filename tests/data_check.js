@@ -21,6 +21,17 @@ if (C.PSYCH_ANSWERS) {
   lists.forEach(([name, items]) => { const seen = new Set(); items.forEach((it, i) => { if (!Array.isArray(it) || !it[0] || !it[1]) bad('psych-answers ' + name + ' item ' + i); else if (seen.has(it[0])) bad('psych-answers duplicate in ' + name + ': ' + it[0]); seen.add(it[0]); if (it[2] && it[2].split(/\s+/).length > 16) bad('psych-answers note too long ' + name + ' ' + i); }); });
   Object.keys(C.PSYCH_ANSWERS.sections).forEach((id) => { if (!sec(id)) bad('psych-answers unknown section ' + id); });
 } else bad('PSYCH_ANSWERS missing');
+// Listening exercises (3.5.0): speakers, lines, quiz indexes, dictation lines, unique ids.
+{ const L = C.LISTENING || []; if (!L.length) bad('LISTENING missing'); const ids = new Set(), rids = new Set((C.READING || []).map((r) => r.id));
+  L.forEach((x) => {
+    if (ids.has(x.id)) bad('listening duplicate id ' + x.id); ids.add(x.id);
+    ['id', 'level', 'kind', 'title', 'titleEn', 'setting'].forEach((k) => { if (!x[k]) bad('listening ' + x.id + ' missing ' + k); });
+    if (!x.lines.length || x.lines.some((l) => !(l[0] >= 0 && l[0] < x.speakers.length) || !l[1] || !l[2])) bad('listening lines ' + x.id);
+    if (!x.q.length || x.q.some((q) => !(q[2] >= 0 && q[2] < q[1].length) || !q[3])) bad('listening quiz ' + x.id);
+    if (!x.dictation.length || x.dictation.some((i) => !x.lines[i])) bad('listening dictation ' + x.id);
+  });
+}
+C.READING.forEach((r) => { if (r.gloss.some((g) => !g[0] || !g[1]) || r.q.some((q) => !q[3] && q[3] !== '')) bad('reading gloss/q ' + r.id); });
 C.LESSONS.forEach((l) => l.quiz.forEach((q) => { if (q[2] >= q[1].length) bad('lesson quiz index ' + l.id); }));
 C.READING.forEach((r) => { if (r.tl.length !== r.en.length) bad('reading paragraphs ' + r.id); r.q.forEach((q) => { if (q[2] >= q[1].length) bad('reading quiz ' + r.id); }); });
 C.PSYCH_CASES.forEach((c) => c.steps.forEach((s, i) => { if (!s.choices.some((x) => x.score === 2)) bad('case without best choice ' + c.id + ' step ' + i); }));
@@ -93,7 +104,7 @@ if (C.AFFIX_ITEMS) {
   C.AFFIX_FOCUS_DRILL.forEach((f) => { if (!f.q.includes('____') || f.ok === f.no || !f.why) bad('affix focus ' + f.q); });
   C.AFFIX_LIST.forEach((a) => { if (!types.has(a.t)) bad('affix list type ' + a.a); });
 }
-const counts = { version: C.APP_META.version, answers: C.PSYCH_ANSWERS ? C.PSYCH_ANSWERS.common.reduce((a, g) => a + g.items.length, 0) + Object.values(C.PSYCH_ANSWERS.sections).reduce((a, l) => a + l.length, 0) : 0, dict: C.App.DICT.length, sections: C.PSYCH_SECTIONS.length, phrases: C.PSYCH_SECTIONS.reduce((a, s) => a + s.phrases.length, 0), cases: C.PSYCH_CASES.length, lessons: C.LESSONS.length, reading: C.READING.length, dialogues: C.DIALOGUES.length, verbs: C.VERBS.length, dcases: (C.PSYCH_DISCHARGE_CASES || []).length, mcases: (C.PSYCH_MSE_CASES || []).length, affixes: (C.AFFIX_ITEMS || []).length };
+const counts = { version: C.APP_META.version, answers: C.PSYCH_ANSWERS ? C.PSYCH_ANSWERS.common.reduce((a, g) => a + g.items.length, 0) + Object.values(C.PSYCH_ANSWERS.sections).reduce((a, l) => a + l.length, 0) : 0, dict: C.App.DICT.length, sections: C.PSYCH_SECTIONS.length, phrases: C.PSYCH_SECTIONS.reduce((a, s) => a + s.phrases.length, 0), cases: C.PSYCH_CASES.length, lessons: C.LESSONS.length, reading: C.READING.length, listening: (C.LISTENING || []).length, dialogues: C.DIALOGUES.length, verbs: C.VERBS.length, dcases: (C.PSYCH_DISCHARGE_CASES || []).length, mcases: (C.PSYCH_MSE_CASES || []).length, affixes: (C.AFFIX_ITEMS || []).length };
 console.log(JSON.stringify(counts));
 console.log(fails ? fails + ' FAILURES' : 'DATA OK');
 process.exit(fails ? 1 : 0);
