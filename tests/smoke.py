@@ -18,7 +18,8 @@ ROUTES = ['#/', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/
   '#/about', '#/more', '#/psych/handout', '#/psych/handout?s=suicide', '#/psych/deesc', '#/psych/handout?deesc=1', '#/psych/s/deescalation',
   '#/psych/deesc?tab=drill', '#/psych/deesc?tab=after', '#/psych/deesc?tab=practice', '#/psych/case/agitated', '#/speak/case-agitated',
   '#/psych/handout?deesccard=1', '#/psych/discharge', '#/psych/handout?discharge=1', '#/psych/s/discharge', '#/psych/dcases', '#/psych/dcase/ramon', '#/psych/dcase/liza', '#/psych/dcase/carlo', '#/psych/dcase/arnel', '#/psych/dcase/mika', '#/psych/mcases', '#/psych/mcase/ramon', '#/psych/mcase/carlo', '#/psych/mcase/arnel', '#/psych/mcase/mika', '#/affixes', '#/affixes?t=gitlapi', '#/lessons/panlapi', '#/practice', '#/psych?tab=cases', '#/psych?tab=tools', '#/psych?tab=print', '#/affixes/handout', '#/affixes/handout?t=hulapi&set=clinical',
-  '#/verbs/handout', '#/verbs/handout?v=inom&set=clinical', '#/lessons/handout?id=markers']
+  '#/verbs/handout', '#/verbs/handout?v=inom&set=clinical', '#/lessons/handout?id=markers',
+  '#/reading/handout?id=sulat-nanay', '#/speak/handout?id=meet', '#/speak/handout?id=case-jomar']
 
 LOAD_PDFMAKE = """async () => { if (!window.pdfMake) await new Promise((r) => { const s = document.createElement('script'); s.src = 'js/vendor/pdfmake.min.js';
   s.onload = () => { const t = document.createElement('script'); t.src = 'js/vendor/vfs_fonts.js'; t.onload = r; document.head.appendChild(t); }; document.head.appendChild(s); }); }"""
@@ -162,7 +163,7 @@ async def main(base, out):
                         fn = f'{out}/{k}_{eng}.pdf'; open(fn, 'wb').write(base64.b64decode(b64))
                         if os.path.getsize(fn) < 3000: fails.append(f'pdf {k}/{eng} too small')
                 # Grammar handout: A4 with English, A5 Tagalog-only clinical hulapi; worksheet pairs must be spread apart.
-                for name, o in [('grammar_a4', {}), ('grammar_a5', {'paper': 'A5', 'size': 'small', 'english': 'hide', 'type': 'hulapi', 'set': 'clinical'}), ('verbs_a4', {'topic': 'verbs'}), ('lesson_a4', {'topic': 'lesson', 'lesson': 'focus'})]:
+                for name, o in [('grammar_a4', {}), ('grammar_a5', {'paper': 'A5', 'size': 'small', 'english': 'hide', 'type': 'hulapi', 'set': 'clinical'}), ('verbs_a4', {'topic': 'verbs'}), ('lesson_a4', {'topic': 'lesson', 'lesson': 'focus'}), ('reading_a4', {'topic': 'reading', 'reading': 'sulat-nanay', 'english': 'end'}), ('reading_a5', {'topic': 'reading', 'reading': 'palengke', 'paper': 'A5', 'english': 'hide'}), ('dialogue_a4', {'topic': 'dialogue', 'dialogue': 'case-jomar'}), ('dialogue_a5', {'topic': 'dialogue', 'dialogue': 'meet', 'paper': 'A5', 'register': 'c', 'english': 'end'})]:
                     b64 = await pg.evaluate("async (o) => await new Promise((r) => pdfMake.createPdf(App.grammarHandoutDoc(o)).getBase64(r))", o)
                     fn = f'{out}/{name}_show.pdf'; open(fn, 'wb').write(base64.b64decode(b64))
                     if os.path.getsize(fn) < 3000: fails.append(f'pdf {name} too small')
@@ -171,7 +172,12 @@ async def main(base, out):
                 if any(len(set(a.split('|'))) < 3 for a in ws): fails.append('grammar worksheet: an item has fewer than 3 options')
                 vb = await pg.evaluate("App.grammarHandoutBuild({topic:'verbs'}).worksheet.B.map((i) => i.a)")
                 if len(vb) < 8 or any(len(a) != 3 or len(set(x.lower() for x in a)) < 3 for a in vb): fails.append('verbs worksheet B: an item lacks 3 distinct options')
-                presets = presets + ['grammar_a4', 'grammar_a5', 'verbs_a4', 'lesson_a4']
+                # Reading and dialogue handouts (3.4.0): translation page, role-play blanks = learner lines, Taglish wording.
+                rd = await pg.evaluate("(() => { const m = App.grammarHandoutBuild({topic:'reading', reading:'sulat-nanay', english:'end'}); return [m.passage.length, (m.translation || []).length, m.key.length, m.gloss.length]; })()")
+                if rd[0] < 1 or rd[1] != rd[0] or rd[2] < 1 or rd[3] < 1: fails.append(f'reading handout model wrong: {rd}')
+                dl = await pg.evaluate("(() => { const f = App.grammarHandoutBuild({topic:'dialogue', dialogue:'meet'}), c = App.grammarHandoutBuild({topic:'dialogue', dialogue:'meet', register:'c'}), d = DIALOGUES.find((x) => x.id === 'meet'); return [f.key.length, d.lines.filter((l) => l[0] === d.you).length, f.script[4].tl === d.lines[4][1], c.script[4].tl === d.lines[4][3], App.grammarHandoutBuild({topic:'dialogue', dialogue:'case-jomar'}).script.length]; })()")
+                if dl[0] != dl[1] or not dl[2] or not dl[3] or dl[4] < 4: fails.append(f'dialogue handout model wrong: {dl}')
+                presets = presets + ['grammar_a4', 'grammar_a5', 'verbs_a4', 'lesson_a4', 'reading_a4', 'reading_a5', 'dialogue_a4', 'dialogue_a5']
                 if shutil.which('pdfinfo'):
                     for k in presets:
                         pages = subprocess.run(['pdfinfo', f'{out}/{k}_show.pdf'], capture_output=True, text=True).stdout.split('Pages:')[1].split()[0]
