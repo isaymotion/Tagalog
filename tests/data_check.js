@@ -29,6 +29,8 @@ if (C.PSYCH_ANSWERS) {
     if (!x.lines.length || x.lines.some((l) => !(l[0] >= 0 && l[0] < x.speakers.length) || !l[1] || !l[2])) bad('listening lines ' + x.id);
     if (!x.q.length || x.q.some((q) => !(q[2] >= 0 && q[2] < q[1].length) || !q[3])) bad('listening quiz ' + x.id);
     if (!x.dictation.length || x.dictation.some((i) => !x.lines[i])) bad('listening dictation ' + x.id);
+    // 3.6.0: the voice mangles acronyms and abbreviations (PRN, BP, Dr., Doc, Bed 7); such lines need a respelled 4th item.
+    x.lines.forEach((l, i) => { const t = l[1].replace(/\([^)]*\)/g, ''); if (!l[3] && (/\b[A-Z]{2,}\b|\bDra?\.|\bDoc\b|\b(Bed|Gate)\s*\d/.test(t))) bad('listening ' + x.id + ' line ' + (i + 1) + ' needs a spoken version (4th item): ' + t); if (l[3] && /\b[A-Z]{2,}\b|\bDoc\b|\bDra?\./.test(l[3])) bad('listening ' + x.id + ' line ' + (i + 1) + ' spoken version still has an abbreviation'); });
   });
 }
 C.READING.forEach((r) => { if (r.gloss.some((g) => !g[0] || !g[1]) || r.q.some((q) => !q[3] && q[3] !== '')) bad('reading gloss/q ' + r.id); });

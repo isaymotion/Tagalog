@@ -19,7 +19,7 @@ ROUTES = ['#/', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/
   '#/psych/deesc?tab=drill', '#/psych/deesc?tab=after', '#/psych/deesc?tab=practice', '#/psych/case/agitated', '#/speak/case-agitated',
   '#/psych/handout?deesccard=1', '#/psych/discharge', '#/psych/handout?discharge=1', '#/psych/s/discharge', '#/psych/dcases', '#/psych/dcase/ramon', '#/psych/dcase/liza', '#/psych/dcase/carlo', '#/psych/dcase/arnel', '#/psych/dcase/mika', '#/psych/mcases', '#/psych/mcase/ramon', '#/psych/mcase/carlo', '#/psych/mcase/arnel', '#/psych/mcase/mika', '#/affixes', '#/affixes?t=gitlapi', '#/lessons/panlapi', '#/practice', '#/psych?tab=cases', '#/psych?tab=tools', '#/psych?tab=print', '#/affixes/handout', '#/affixes/handout?t=hulapi&set=clinical',
   '#/verbs/handout', '#/verbs/handout?v=inom&set=clinical', '#/lessons/handout?id=markers',
-  '#/reading/handout?id=sulat-nanay', '#/listen', '#/listen/voicemail-klinika', '#/listen/endorsement', '#/listen/radyo-panayam', '#/reading/opinyon-hiya', '#/reading/huling-biyahe', '#/speak/handout?id=meet', '#/speak/handout?id=case-jomar']
+  '#/reading/handout?id=sulat-nanay', '#/listen', '#/listen/voicemail-klinika', '#/listen/endorsement', '#/listen/radyo-panayam', '#/listen/triage-opd', '#/listen/handout', '#/listen/handout?id=tawag-pamilya', '#/reading/opinyon-hiya', '#/reading/huling-biyahe', '#/speak/handout?id=meet', '#/speak/handout?id=case-jomar']
 
 LOAD_PDFMAKE = """async () => { if (!window.pdfMake) await new Promise((r) => { const s = document.createElement('script'); s.src = 'js/vendor/pdfmake.min.js';
   s.onload = () => { const t = document.createElement('script'); t.src = 'js/vendor/vfs_fonts.js'; t.onload = r; document.head.appendChild(t); }; document.head.appendChild(s); }); }"""
@@ -55,6 +55,12 @@ async def main(base, out):
             d0 = await pg.evaluate("(() => { const x = LISTENING.find(x => x.id === 'usapan-pamilya'); return x.lines[x.dictation[0]][1]; })()")
             await pg.fill('.ldict >> nth=0 >> textarea', d0.lower().replace(',', '')); await pg.click('[data-dcheck] >> nth=0'); await pg.wait_for_timeout(60)
             if '100% of words match' not in await pg.inner_text('.ldict >> nth=0'): fails.append(f'{name}: dictation scoring')
+            # 3.6.0: the player speaks the respelled 4th item (PRN -> pi-ar-en), the screen keeps PRN
+            await pg.evaluate("location.hash='#/listen/endorsement'"); await pg.wait_for_timeout(200)
+            await pg.evaluate("window._said = []; App._sa = App._sa || App.speakAsync; App.speakAsync = (t, o) => { window._said.push(t); return Promise.resolve(); }; 0")
+            await pg.click('.lchip >> nth=2'); await pg.wait_for_timeout(80)
+            said = await pg.evaluate("(() => { const r = window._said.slice(); App.speakAsync = App._sa; return r; })()")
+            if not said or 'pi-ar-en' not in said[0] or 'PRN' in said[0]: fails.append(f'{name}: listening spoken version not used: {said}')
             await pg.evaluate("location.hash='#/reading/opinyon-hiya'"); await pg.wait_for_timeout(150)
             await pg.click('#earbtn'); await pg.wait_for_timeout(60)
             if 'hiya' in (await pg.inner_text('#pbody')).lower() or await pg.locator('#trbtn').is_visible(): fails.append(f'{name}: listen first did not hide text')
@@ -182,7 +188,7 @@ async def main(base, out):
                         fn = f'{out}/{k}_{eng}.pdf'; open(fn, 'wb').write(base64.b64decode(b64))
                         if os.path.getsize(fn) < 3000: fails.append(f'pdf {k}/{eng} too small')
                 # Grammar handout: A4 with English, A5 Tagalog-only clinical hulapi; worksheet pairs must be spread apart.
-                for name, o in [('grammar_a4', {}), ('grammar_a5', {'paper': 'A5', 'size': 'small', 'english': 'hide', 'type': 'hulapi', 'set': 'clinical'}), ('verbs_a4', {'topic': 'verbs'}), ('lesson_a4', {'topic': 'lesson', 'lesson': 'focus'}), ('reading_a4', {'topic': 'reading', 'reading': 'sulat-nanay', 'english': 'end'}), ('reading_a5', {'topic': 'reading', 'reading': 'palengke', 'paper': 'A5', 'english': 'hide'}), ('dialogue_a4', {'topic': 'dialogue', 'dialogue': 'case-jomar'}), ('dialogue_a5', {'topic': 'dialogue', 'dialogue': 'meet', 'paper': 'A5', 'register': 'c', 'english': 'end'})]:
+                for name, o in [('grammar_a4', {}), ('grammar_a5', {'paper': 'A5', 'size': 'small', 'english': 'hide', 'type': 'hulapi', 'set': 'clinical'}), ('verbs_a4', {'topic': 'verbs'}), ('lesson_a4', {'topic': 'lesson', 'lesson': 'focus'}), ('reading_a4', {'topic': 'reading', 'reading': 'sulat-nanay', 'english': 'end'}), ('reading_a5', {'topic': 'reading', 'reading': 'palengke', 'paper': 'A5', 'english': 'hide'}), ('dialogue_a4', {'topic': 'dialogue', 'dialogue': 'case-jomar'}), ('dialogue_a5', {'topic': 'dialogue', 'dialogue': 'meet', 'paper': 'A5', 'register': 'c', 'english': 'end'}), ('listening_a4', {'topic': 'listening', 'listening': 'endorsement'}), ('listening_a5', {'topic': 'listening', 'listening': 'pulong-barangay', 'paper': 'A5', 'english': 'hide'})]:
                     b64 = await pg.evaluate("async (o) => await new Promise((r) => pdfMake.createPdf(App.grammarHandoutDoc(o)).getBase64(r))", o)
                     fn = f'{out}/{name}_show.pdf'; open(fn, 'wb').write(base64.b64decode(b64))
                     if os.path.getsize(fn) < 3000: fails.append(f'pdf {name} too small')
@@ -196,7 +202,11 @@ async def main(base, out):
                 if rd[0] < 1 or rd[1] != rd[0] or rd[2] < 1 or rd[3] < 1: fails.append(f'reading handout model wrong: {rd}')
                 dl = await pg.evaluate("(() => { const f = App.grammarHandoutBuild({topic:'dialogue', dialogue:'meet'}), c = App.grammarHandoutBuild({topic:'dialogue', dialogue:'meet', register:'c'}), d = DIALOGUES.find((x) => x.id === 'meet'); return [f.key.length, d.lines.filter((l) => l[0] === d.you).length, f.script[4].tl === d.lines[4][1], c.script[4].tl === d.lines[4][3], App.grammarHandoutBuild({topic:'dialogue', dialogue:'case-jomar'}).script.length]; })()")
                 if dl[0] != dl[1] or not dl[2] or not dl[3] or dl[4] < 4: fails.append(f'dialogue handout model wrong: {dl}')
-                presets = presets + ['grammar_a4', 'grammar_a5', 'verbs_a4', 'lesson_a4', 'reading_a4', 'reading_a5', 'dialogue_a4', 'dialogue_a5']
+                ls = await pg.evaluate("(() => { const m = App.grammarHandoutBuild({topic:'listening', listening:'triage-opd'}), x = LISTENING.find((i) => i.id === 'triage-opd'); return [m.transcript.length === x.lines.length, m.dictation.length === x.dictation.length, m.key.length === x.q.length, m.dkey.length, /Usap Tayo: Listening/.test(m.play), App.grammarHandoutBuild({topic:'listening', listening:'triage-opd', key:false}).dkey === null]; })()")
+                if not all(ls): fails.append(f'listening handout model wrong: {ls}')
+                mx = await pg.evaluate("(() => { const out = []; LISTENING.concat(READING).forEach((x) => { const t = x.lines ? 'listening' : 'reading'; const m = App.grammarHandoutBuild({topic: t, [t]: x.id}); m.key.forEach((q, i) => out.push([q[1][q[2]] === x.q[i][1][x.q[i][2]], q[2]])); }); return [out.every((r) => r[0]), new Set(out.map((r) => r[1])).size]; })()")
+                if not mx[0] or mx[1] < 3: fails.append(f'printed option shuffle wrong: {mx}')
+                presets = presets + ['grammar_a4', 'grammar_a5', 'verbs_a4', 'lesson_a4', 'reading_a4', 'reading_a5', 'dialogue_a4', 'dialogue_a5', 'listening_a4', 'listening_a5']
                 if shutil.which('pdfinfo'):
                     for k in presets:
                         pages = subprocess.run(['pdfinfo', f'{out}/{k}_show.pdf'], capture_output=True, text=True).stdout.split('Pages:')[1].split()[0]
