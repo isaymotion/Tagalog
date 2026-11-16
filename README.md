@@ -6,7 +6,7 @@
 
 **App created by Isabella Navarro, MD. Latest version November 2026. isaymotion@gmail.com**
 
-Version **3.2.0** (2026-11-14): Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
+Version **3.3.0** (2026-11-16): admission MSE cases for Carlo, Arnel and Mika. 3.2.0: Resident / Nurse switch and six nurse phrase sections. 3.1.2: phone menu scrolls again. 3.1.1: point-board replies for all 38 sections, lesson example box fix. 3.1.0: point board (Ituro), listening drill, interpreter lesson, PHQ-9/MDQ source notes, language pack (`js/lang.js`).
 
 ## What's inside
 
@@ -25,7 +25,7 @@ Version **3.2.0** (2026-11-14): Resident / Nurse switch and six nurse phrase sec
 | **De-escalation checklist** | Based on Mariveles Mental Wellness and General Hospital form MMH-NUR-04-112-01. Tabs for the bedside checklist, a rapid audio drill, an "if it fails" guide (restraint, monitoring, debrief), and a practice case. A6 pocket card in the handout generator. Interactive 12-step checklist with Tagalog phrases for each step, behaviors observed, outcome, escalation path (NAOD → NOD, notify POD), and a copyable chart note. Printable blank version in the handout generator. |
 | **Discharge assessment** | Guided walk through each field of the hospital Discharge Summary form (MMH-MED-04-04-02): what to assess, Tagalog questions with audio, tap-to-document wording, and a copyable summary with safety flags. Printable question guide. |
 | **Discharge practice** | Simulated discharge interviews: ask the form's questions, hear the patient answer in Tagalog, document each field, check it against a model answer, and compare the full discharge MSE at the end. |
-| **Admission MSE practice** | Simulated admission interviews in the order of the Readmission Form MSE (MMH-MED-04-26-01/02): chief complaint in the informant's words, each MSE domain checked against a model, evidence questions, and an admission vs discharge comparison. |
+| **Admission MSE practice** | Simulated admission interviews in the order of the Readmission Form MSE (MMH-MED-04-26-01/02): chief complaint in the informant's words, each MSE domain checked against a model, evidence questions, and an admission vs discharge comparison. Four patients: Ramon (readmission), Carlo, Arnel and Mika. |
 | **Interpretation drill** | 28 patient and family statements with meaning and clinical significance. |
 | **Dictionary** | About 1,650 entries, English → Filipino and Filipino → English, with root-word search (`kinakain` finds `kain`, `binubulungan` finds `bulong`). |
 | **Universal search** | One search bar (press `/`) across words, phrases, lessons, readings, dialogues, cases, and verbs. |
@@ -37,6 +37,13 @@ Version **3.2.0** (2026-11-14): Resident / Nurse switch and six nurse phrase sec
 | **Reading** | 12 graded passages (A1–B2) with glossaries and comprehension questions. |
 | **Speaking** | Dialogues in Listen, Shadow, and Role-play modes, with text-to-speech, speech recognition, and record-and-compare. |
 | **You** | Placement test, streaks, XP, progress stats, backup export/import, settings, What's New, About. |
+
+## Version 3.3.0: three more admission MSE cases
+
+- **Content**: `js/data/psych-mse-cases.js` adds `carlo`, `arnel` and `mika` (`form: 'initial'`), matching the "Admission MSE" line in each discharge case's chart. Teaching points: register (Carlo drops po from overfamiliarity, Ramon from irritation, Arnel keeps po while suspicious), pressured vs rapid speech (Carlo vs Arnel), clang associations in Tagalog (kita / kita mo, pera / pero / puro), hypervigilance vs responding to internal stimuli (Arnel), thought blocking and command hallucinations with a plan (Mika), and a psychomotor baseline before antipsychotics (Mika, akathisia at discharge). Draft for review.
+- These are first admissions; they use the Readmission Form MSE order until the initial admission form is added. The list page says so (`js/mse-practice.js`).
+- **Fix**: `App.spoken()` in `js/core.js` drops stage directions before playing or keying audio: a `(...)` at the start of a line or next to an ellipsis. Brackets inside a sentence (`nganga (bunga, mama, buyo)`) are kept. `tools/collect-texts.js` uses the same rule, so about 17 existing case lines get new clips without the direction.
+- **Files changed:** `sw.js`, `data/app-meta.js`, `data/changelog.js`, `js/core.js`, `js/data/psych-mse-cases.js`, `js/mse-practice.js`, `tools/collect-texts.js`, `tools/texts.json`, `README.md`.
 
 ## Version 3.2.0: Resident / Nurse switch and nurse phrase sections
 

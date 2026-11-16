@@ -333,7 +333,11 @@
   App.loadAudioPack = () => fetch('audio/manifest.json', { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : null)).then((m) => {
     if (m && Array.isArray(m.keys) && m.keys.length) { App.pack.keys = new Set(m.keys); App.pack.info = m; }
   }).catch(() => {}).finally(() => { App.pack.ready = true; });
-  App.hasClip = (text) => state.settings.voiceSource !== 'device' && App.pack.keys.has(AudioKey(text));
+  // Stage directions are not spoken: a "(...)" at the start of a line or next to an ellipsis, as in
+  // "(tumango) ...Hindi po." Parentheses inside a sentence ("nganga (bunga, mama, buyo)") stay.
+  // tools/collect-texts.js applies the same rule, so audio keys match.
+  App.spoken = (t) => String(t || '').replace(/^\s*\([^)]*\)\s*/, '').replace(/(\.\.\.|…)\s*\([^)]*\)/g, '$1').replace(/\([^)]*\)\s*(?=\.\.\.|…)/g, '').replace(/\s+/g, ' ').trim();
+  App.hasClip = (text) => state.settings.voiceSource !== 'device' && App.pack.keys.has(AudioKey(App.spoken(text)));
   let current = null; // { audio } or { utter }
   const haltCurrent = () => {
     if (current && current.audio) { try { current.audio.pause(); } catch (e) {} }
@@ -346,6 +350,8 @@
   App.speakAsync = (text, opts) => new Promise((resolve) => {
     opts = opts || {};
     haltCurrent();
+    text = App.spoken(text);
+    if (!text) return resolve();
     const rate = opts.rate || state.settings.rate || 0.85;
     let finished = false;
     const done = () => { if (!finished) { finished = true; resolve(); } };

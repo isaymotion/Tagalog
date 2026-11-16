@@ -21,7 +21,7 @@
       '<h1>Admission MSE practice</h1><p class="muted">Interview a simulated patient on admission, in the order of the MSE section of the hospital\'s Readmission Form (' + esc(PSYCH_ADMIT_MSE.form) + '). Ask in Tagalog, document each domain, name the line that supports a key finding, then compare your MSE with a model. Each patient also has a discharge case, so you can see what changed.</p>' +
       '<div class="grid">' + PSYCH_MSE_CASES.map((c) => '<a class="tile" href="#/psych/mcase/' + c.id + '"><span class="eyebrow">' + esc(c.dx || '') + ' · ' + esc(c.level) + '</span><h3>' + esc(c.title) + '</h3><p>' + esc(c.setting) + '</p>' +
         (done[c.id] != null ? '<div class="meta"><span class="pill ' + pillCls(done[c.id]) + '">Best ' + done[c.id] + '%</span></div>' : '') + '</a>').join('') + '</div>' +
-      '<p class="small muted" style="margin-top:14px">Patients are fictional. More admission cases will follow the hospital\'s initial admission form. For quick drills on single findings, including Filipino culture-or-pathology look-alikes, use the <a href="https://isaymotion.github.io/MSEtrainer/#/practice?lang=tl" target="_blank" rel="noopener">MSE Trainer</a>.</p>';
+      '<p class="small muted" style="margin-top:14px">Patients are fictional. Carlo, Arnel and Mika are first admissions; their cases use the Readmission Form\'s MSE order until the hospital\'s initial admission form is added. For quick drills on single findings, including Filipino culture-or-pathology look-alikes, use the <a href="https://isaymotion.github.io/MSEtrainer/#/practice?lang=tl" target="_blank" rel="noopener">MSE Trainer</a>.</p>';
   };
 
   V.mseCase = (el, params) => {

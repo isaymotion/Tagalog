@@ -16,7 +16,8 @@ const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'),
 const out = new Map();
 const add = (t) => {
   if (!t || typeof t !== 'string') return;
-  t = t.trim();
+  // Same rule as App.spoken in js/core.js: drop stage directions ("(tumango) ...").
+  t = t.replace(/^\s*\([^)]*\)\s*/, '').replace(/(\.\.\.|…)\s*\([^)]*\)/g, '$1').replace(/\([^)]*\)\s*(?=\.\.\.|…)/g, '').replace(/\s+/g, ' ').trim();
   if (!t || !/[a-zA-ZñÑ]/.test(t)) return;
   const key = ctx.AudioKey(t);
   if (!out.has(key)) out.set(key, t);

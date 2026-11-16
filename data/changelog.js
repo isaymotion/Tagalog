@@ -4,6 +4,14 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.3.0', date: '2026-11-16', title: 'Three more admission MSE cases',
+    items: [
+      { type: 'content', text: 'Admission MSE practice has three new patients, each seen on the day of admission: Carlo (mania: pressured speech, flight of ideas with clanging in Tagalog, grandiose delusions), Arnel (shabu-induced psychosis: hypervigilance, visual hallucinations, a threat to a neighbor) and Mika (first-episode schizophrenia: thought blocking, command hallucinations, found on a rooftop ledge). Each links to the same patient\'s discharge case for the admission vs discharge comparison.' },
+      { type: 'update', text: 'The three are first admissions. Until the hospital\'s initial admission form is added, they use the MSE order of the Readmission Form. Tagalog lines are a draft for review; audio follows on the next audio-pack run.' },
+      { type: 'correction', text: 'The voice no longer reads stage directions aloud. In lines like "(tumango) ...Hindi po", the part in brackets is now skipped when the line is played.' }
+    ]
+  },
+  {
     version: '3.2.0', date: '2026-11-14', title: 'Resident / Nurse switch and nurse phrase sections',
     items: [
       { type: 'feature', text: 'Psychiatry → Interview now has a Resident / Nurse switch. The Nurse view shows six nurse sections first, then the resident sections most used on the ward (de-escalation, suicide, violence, medicines, admission, older patients). Prev / next on a section page follow the list you see. The switch is the same setting the substance use and withdrawal tools already use for their nurse scripts.' },
