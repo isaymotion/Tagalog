@@ -4,6 +4,12 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.9.1', date: '2026-11-17', title: 'Stress pairs: wrong audio removed',
+    items: [
+      { type: 'correction', text: 'The recorded voice said several last-syllable words (labi, buhay, sunog, paso, basa) with the stress on the first syllable. Sentences with a last-syllable stress no longer have a speaker button, and the By ear set of the stress drill is switched off until those clips are right. The capitals (bu-HAY) are correct and unchanged.' }
+    ]
+  },
+  {
     version: '3.9.0', date: '2026-11-17', title: 'Daily mix, three new drills, stress pairs, Spanish and English words',
     items: [
       { type: 'feature', text: 'Daily mix on Home and Practice: ten mixed questions in about five minutes. Two words (your mistakes and due cards first), then one question each from markers, register, roots, word families, false friends, focus, stress and find the mistake. Home shows when you have done it today.' },
