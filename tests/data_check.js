@@ -127,6 +127,45 @@ if (C.DRILL_CLOZE) {
     (it.alt || []).forEach((alt) => { if (key(alt) !== key(it.t)) bad('build alt uses other tiles: ' + it.en); if (alt.join(' ').toLowerCase() === it.t.join(' ').toLowerCase()) bad('build alt same as model: ' + it.en); });
   });
 }
+// 3.8.0: typed drills and word sets.
+{
+  const lessonIds = new Set(C.LESSONS.map((l) => l.id));
+  ['enclitics', 'time-words', 'intensifiers', 'focus-an-i', 'nominalising', 'recent-past'].forEach((id) => { if (!lessonIds.has(id)) bad('lesson missing ' + id); });
+  const seenD = new Set();
+  (C.DRILL_DICTATION || []).forEach((it) => {
+    if (!it.tl || !it.en || !/^(num|time|dose)$/.test(it.set)) bad('dictation fields: ' + it.tl);
+    if (/\d/.test(it.tl)) bad('dictation line has digits (write numbers as words): ' + it.tl);
+    if (it.n && !/^[\d:]+$/.test(it.n)) bad('dictation figure: ' + it.tl);
+    if (seenD.has(it.tl)) bad('dictation dup: ' + it.tl); seenD.add(it.tl);
+  });
+  if ((C.DRILL_DICTATION || []).length < 30) bad('DRILL_DICTATION missing or short');
+  const seenT = new Set();
+  (C.DRILL_TRANSLATE || []).forEach((it) => {
+    if (!it.en || !Array.isArray(it.tl) || !it.tl.length || !/^(e|w)$/.test(it.set)) bad('translate fields: ' + it.en);
+    if (new Set(it.tl).size !== it.tl.length) bad('translate repeated answer: ' + it.en);
+    if (seenT.has(it.en)) bad('translate dup: ' + it.en); seenT.add(it.en);
+  });
+  if ((C.DRILL_TRANSLATE || []).length < 30) bad('DRILL_TRANSLATE missing or short');
+  const roots = new Set();
+  (C.WORD_FAMILIES || []).forEach((f) => {
+    if (!f.r || !f.en || !Array.isArray(f.forms) || f.forms.length < 5) bad('word family needs 5+ forms (the drill takes 3 wrong options from the family): ' + f.r);
+    if (roots.has(f.r)) bad('word family dup ' + f.r); roots.add(f.r);
+    const tl = f.forms.map((x) => x[0]), en = f.forms.map((x) => x[1]);
+    if (new Set(tl).size !== tl.length || new Set(en).size !== en.length || f.forms.some((x) => !x[0] || !x[1])) bad('word family forms ' + f.r);
+    (f.rel || []).forEach((x) => { if (!x[0] || !x[1]) bad('word family rel ' + f.r); });
+  });
+  (C.WORD_LADDERS || []).forEach((l) => { if (!l.id || !l.en || l.steps.length < 3 || new Set(l.steps.map((x) => x[0])).size !== l.steps.length || l.steps.some((x) => !x[0] || !x[1])) bad('ladder ' + l.id); });
+  const firstDaily = new Set();
+  (C.WORD_SYNONYMS || []).forEach((x) => {
+    if (!x.en || !(x.deep || []).length || !(x.daily || []).length || !(x.mix || []).length) bad('synonym set ' + x.en);
+    if (firstDaily.has(x.daily[0])) bad('synonym set: first everyday word repeated (the drill uses it as the answer): ' + x.daily[0]); firstDaily.add(x.daily[0]);
+    if (x.deep.some((d) => x.daily.includes(d))) bad('synonym deep = daily ' + x.en);
+  });
+  if (!(C.WORD_FAMILIES || []).length || !(C.WORD_LADDERS || []).length || (C.WORD_SYNONYMS || []).length < 4) bad('word sets missing');
+  // Stigma rule: these words stay out of the new sets.
+  const text = JSON.stringify([C.WORD_FAMILIES, C.WORD_LADDERS, C.WORD_SYNONYMS, C.DRILL_TRANSLATE, C.DRILL_DICTATION]).toLowerCase();
+  ['baliw', 'adik', 'sira ulo', 'loko'].forEach((w) => { if (new RegExp('\\b' + w + '\\b').test(text)) bad('stigmatizing word in word sets: ' + w); });
+}
 // Dictionary ids are saved in users' flashcard progress: every id in the snapshot must still be the same word.
 // After adding words (at the END of js/data/dict-themes.js), refresh with: node tests/data_check.js <repo> --write-dict-ids
 {
@@ -140,7 +179,7 @@ if (C.DRILL_CLOZE) {
     if (C.App.DICT_LEGACY !== 1658) bad('legacy dictionary size changed: ' + C.App.DICT_LEGACY);
   } else console.log('WARN no tests/dict-ids.json snapshot');
 }
-const counts = { version: C.APP_META.version, answers: C.PSYCH_ANSWERS ? C.PSYCH_ANSWERS.common.reduce((a, g) => a + g.items.length, 0) + Object.values(C.PSYCH_ANSWERS.sections).reduce((a, l) => a + l.length, 0) : 0, dict: C.App.DICT.length, sections: C.PSYCH_SECTIONS.length, phrases: C.PSYCH_SECTIONS.reduce((a, s) => a + s.phrases.length, 0), cases: C.PSYCH_CASES.length, lessons: C.LESSONS.length, reading: C.READING.length, listening: (C.LISTENING || []).length, dialogues: C.DIALOGUES.length, verbs: C.VERBS.length, dcases: (C.PSYCH_DISCHARGE_CASES || []).length, mcases: (C.PSYCH_MSE_CASES || []).length, affixes: (C.AFFIX_ITEMS || []).length, drillGaps: (C.DRILL_CLOZE || []).length, drillBuild: (C.DRILL_BUILD || []).length };
+const counts = { version: C.APP_META.version, answers: C.PSYCH_ANSWERS ? C.PSYCH_ANSWERS.common.reduce((a, g) => a + g.items.length, 0) + Object.values(C.PSYCH_ANSWERS.sections).reduce((a, l) => a + l.length, 0) : 0, dict: C.App.DICT.length, sections: C.PSYCH_SECTIONS.length, phrases: C.PSYCH_SECTIONS.reduce((a, s) => a + s.phrases.length, 0), cases: C.PSYCH_CASES.length, lessons: C.LESSONS.length, reading: C.READING.length, listening: (C.LISTENING || []).length, dialogues: C.DIALOGUES.length, verbs: C.VERBS.length, dcases: (C.PSYCH_DISCHARGE_CASES || []).length, mcases: (C.PSYCH_MSE_CASES || []).length, affixes: (C.AFFIX_ITEMS || []).length, drillGaps: (C.DRILL_CLOZE || []).length, drillBuild: (C.DRILL_BUILD || []).length, dictation: (C.DRILL_DICTATION || []).length, translate: (C.DRILL_TRANSLATE || []).length, families: (C.WORD_FAMILIES || []).length, ladders: (C.WORD_LADDERS || []).length, synonyms: (C.WORD_SYNONYMS || []).length };
 console.log(JSON.stringify(counts));
 console.log(fails ? fails + ' FAILURES' : 'DATA OK');
 process.exit(fails ? 1 : 0);

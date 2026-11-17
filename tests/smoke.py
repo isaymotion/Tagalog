@@ -13,7 +13,7 @@ import re
 import argparse, asyncio, base64, os, shutil, subprocess
 from playwright.async_api import async_playwright
 
-ROUTES = ['#/', '#/drills', '#/drills/markers', '#/drills/build', '#/drills/switch', '#/lessons/demonstratives', '#/lessons/connectors', '#/lessons/ability', '#/lessons/causative', '#/lessons/requests', '#/lessons/hedging', '#/lessons/handout?id=hedging', '#/dict?cat=routine', '#/dict?cat=civic', '#/practice', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/d10', '#/flash', '#/flash/psych', '#/verbs', '#/verbs/kain',
+ROUTES = ['#/', '#/words', '#/words?tab=lad', '#/words?tab=syn', '#/words?r=tulog', '#/drills/roots', '#/drills/families', '#/drills/dictation', '#/drills/translate', '#/lessons/enclitics', '#/lessons/time-words', '#/lessons/intensifiers', '#/lessons/focus-an-i', '#/lessons/nominalising', '#/lessons/recent-past', '#/lessons/handout?id=focus-an-i', '#/drills', '#/drills/markers', '#/drills/build', '#/drills/switch', '#/lessons/demonstratives', '#/lessons/connectors', '#/lessons/ability', '#/lessons/causative', '#/lessons/requests', '#/lessons/hedging', '#/lessons/handout?id=hedging', '#/dict?cat=routine', '#/dict?cat=civic', '#/practice', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/d10', '#/flash', '#/flash/psych', '#/verbs', '#/verbs/kain',
   '#/lessons', '#/lessons/markers', '#/reading', '#/reading/sulat-nanay', '#/speak', '#/speak/meet', '#/speak/case-jomar', '#/psych',
   '#/psych/s/hallucinations', '#/psych/point', '#/psych/point?s=suicide', '#/psych/listen', '#/psych/listen?s=depression', '#/lessons/interpreting', '#/psych/cases', '#/psych/case/jomar', '#/psych/interp', '#/placement', '#/progress', '#/settings', '#/new',
   '#/about', '#/more', '#/psych/handout', '#/psych/handout?s=suicide', '#/psych/deesc', '#/psych/handout?deesc=1', '#/psych/s/deescalation',
@@ -90,6 +90,65 @@ async def main(base, out):
                 await pg.click('#dbox [data-act=next]'); await pg.wait_for_timeout(30)
             if await pg.evaluate("(App.state.done.drills || {})['build:all']") != 100: fails.append(f'{name}: build drill score not 100')
             if await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name}: drills overflow')
+            # 3.8.0 drills: roots and the three word-family sets to the score; generators well formed
+            for did, sel in [('roots', 'all'), ('roots', 'clin'), ('families', 'fam'), ('families', 'syn'), ('families', 'lad')]:
+                await pg.evaluate(f"location.hash='#/drills/{did}'"); await pg.wait_for_timeout(150)
+                await pg.select_option('#dset', sel); await pg.click('#dgo'); await pg.wait_for_timeout(60)
+                for _ in range(10):
+                    await pg.click('#dbox .opt >> nth=0'); await pg.wait_for_timeout(30); await pg.click('#dbox [data-act=next]'); await pg.wait_for_timeout(30)
+                if 'Try again' not in await pg.inner_text('#dbox'): fails.append(f'{name}: drill {did}:{sel} did not finish')
+                if await pg.evaluate(f"(App.state.done.drills || {{}})['{did}:{sel}']") is None: fails.append(f'{name}: drill {did}:{sel} score not saved')
+            bad = await pg.evaluate("""(() => { const out = [];
+              ['all','v','clin'].forEach((s) => { const qs = App.drillQs.roots(s, 60); if (qs.length < 10) out.push('roots pool ' + s + ' ' + qs.length); qs.forEach((q) => { if (q.opts.length !== 4 || new Set(q.opts.map(App.flat)).size !== 4 || App.flat(q.opts[0]) !== App.flat(App.dictById[q.cardId].root)) out.push('root ' + q.q); }); });
+              App.drillQs.families('fam', 200).forEach((q) => { if (q.opts.length !== 4 || new Set(q.opts).size !== 4) out.push('fam ' + q.q); });
+              App.drillQs.families('syn', 99).forEach((q) => { if (q.opts.length !== 4 || new Set(q.opts).size !== 4) out.push('syn ' + q.q); });
+              App.drillQs.families('lad', 60).forEach((q) => { if (q.opts.length !== 2 || q.opts[0] === q.opts[1]) out.push('lad ' + q.sub); });
+              DRILL_TRANSLATE.forEach((it) => it.tl.forEach((a) => { if (App.drillTypedScore(it.tl, a.toLowerCase().replace(/[?.,]/g, '')) !== 100) out.push('tr ' + a); }));
+              DRILL_TRANSLATE.forEach((it) => { if (App.drillTypedScore(it.tl, 'hindi ko alam kung ano ito') >= 80) out.push('tr loose ' + it.en); });
+              DRILL_DICTATION.forEach((it) => { if (App.drillTypedScore([it.tl], it.tl.toLowerCase().replace(/[.,]/g, '')) !== 100) out.push('di ' + it.tl); });
+              return out; })()""")
+            if bad: fails.append(f'{name}: 3.8.0 drill generators: {bad[:4]}')
+            # typed drills: type the model answer for every item (100%), then one wrong answer is marked wrong and a figure is accepted
+            for did, sel, src in [('dictation', 'time', "DRILL_DICTATION.filter((x) => x.set === 'time').map((x) => x.tl)"), ('translate', 'w', "DRILL_TRANSLATE.filter((x) => x.set === 'w').map((x) => x.tl[0])")]:
+                await pg.evaluate("window.__said = []; App.speak = (t) => { window.__said.push(t); }; 0")
+                await pg.evaluate(f"location.hash='#/drills/{did}'"); await pg.wait_for_timeout(150)
+                await pg.select_option('#dset', sel); await pg.click('#dgo'); await pg.wait_for_timeout(260)
+                models = await pg.evaluate(src)
+                for k in range(10):
+                    if did == 'dictation':
+                        said = await pg.evaluate("window.__said[window.__said.length - 1]")
+                        if said not in models: fails.append(f'{name}: dictation did not play a line: {said}'); break
+                        ans = said
+                    else:
+                        en = await pg.inner_text('#dbox .card > div >> nth=1')
+                        ans = await pg.evaluate("(en) => DRILL_TRANSLATE.find((x) => x.en === en).tl[0]", en)
+                    if await pg.locator('#dbox [data-fb] .feedback').count(): fails.append(f'{name}: {did} feedback before answer')
+                    await pg.fill('#dbox [data-in]', ans.lower().replace('?', '').replace('.', '').replace(',', '')); await pg.press('#dbox [data-in]', 'Enter'); await pg.wait_for_timeout(40)
+                    if await pg.locator('#dbox .feedback.ok').count() != 1: fails.append(f'{name}: {did} model answer marked wrong: {ans}')
+                    await pg.click('#dbox [data-act=next]'); await pg.wait_for_timeout(240 if did == 'dictation' else 40)
+                if 'Try again' not in await pg.inner_text('#dbox'): fails.append(f'{name}: drill {did} did not finish')
+                if await pg.evaluate(f"(App.state.done.drills || {{}})['{did}:{sel}']") != 100: fails.append(f'{name}: drill {did} score not 100')
+                await pg.click('#dbox [data-act=retry]'); await pg.wait_for_timeout(260)
+                await pg.fill('#dbox [data-in]', 'hindi ko alam'); await pg.click('#dbox [data-act=check]'); await pg.wait_for_timeout(40)
+                if await pg.locator('#dbox .feedback.no').count() != 1: fails.append(f'{name}: {did} wrong answer not marked wrong')
+                if await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name}: {did} overflow')
+            await pg.evaluate("location.hash='#/drills/dictation'"); await pg.wait_for_timeout(150)
+            await pg.select_option('#dset', 'num'); await pg.click('#dgo'); await pg.wait_for_timeout(260)
+            fig = await pg.evaluate("DRILL_DICTATION.find((x) => x.tl === window.__said[window.__said.length - 1]).n")
+            await pg.fill('#dbox [data-in]', fig); await pg.click('#dbox [data-act=check]'); await pg.wait_for_timeout(40)
+            if await pg.locator('#dbox .feedback.ok').count() != 1: fails.append(f'{name}: dictation figure {fig} not accepted')
+            # word families page: tabs, deep link to one family, dictionary entry links to its family, search finds a family
+            await pg.evaluate("location.hash='#/words?r=takot'"); await pg.wait_for_timeout(200)
+            wf = await pg.evaluate("[document.querySelectorAll('.wfam').length, !!document.querySelector('#wf-takot'), document.querySelector('.ptabs a.on').textContent]")
+            if wf[0] != await pg.evaluate("WORD_FAMILIES.length") or not wf[1] or wf[2] != 'Families': fails.append(f'{name}: word families page {wf}')
+            await pg.evaluate("location.hash='#/words?tab=syn'"); await pg.wait_for_timeout(150)
+            if await pg.locator('.wsyn').count() != await pg.evaluate("WORD_SYNONYMS.length") or await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name}: synonyms tab')
+            await pg.evaluate("location.hash='#/words?tab=lad'"); await pg.wait_for_timeout(150)
+            if await pg.locator('.wlad').count() != await pg.evaluate("WORD_LADDERS.reduce((a, l) => a + l.steps.length, 0)"): fails.append(f'{name}: ladders tab')
+            await pg.evaluate("location.hash='#/dict/' + App.DICT.find((e) => e.tl === 'matulog').id"); await pg.wait_for_timeout(150)
+            if 'Word family: tulog' not in await pg.inner_text('#view'): fails.append(f'{name}: dictionary entry has no family link')
+            if not await pg.evaluate("App.searchAll('patulugin').some((r) => r.route === '#/words?r=tulog')"): fails.append(f'{name}: search does not find a word family')
+            if await pg.evaluate("(App.DICT.find((e) => e.tl === 'pamasahe') || {}).id") != 'd1849': fails.append(f'{name}: first 3.8.0 word is not d1849')
             # dictionary ids: an old word keeps its id, new words are numbered after the legacy set
             ids = await pg.evaluate("[App.DICT_LEGACY, App.DICT.filter((e) => +e.id.slice(1) >= App.DICT_LEGACY).length, (App.DICT.find((e) => e.tl === 'magsipilyo') || {}).id]")
             if ids[0] != 1658 or ids[1] < 190 or ids[2] != 'd1658': fails.append(f'{name}: dictionary ids {ids}')
