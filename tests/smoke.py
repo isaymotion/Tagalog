@@ -9,10 +9,11 @@ case simulation, flashcards, back/forward, search, theme toggle, de-escalation c
 discharge assessment, discharge practice cases, admission MSE practice, and builds a PDF for every handout preset. Prints PASS/FAIL.
 Google Fonts load errors are expected in sandboxes without internet and are ignored.
 """
+import re
 import argparse, asyncio, base64, os, shutil, subprocess
 from playwright.async_api import async_playwright
 
-ROUTES = ['#/', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/d10', '#/flash', '#/flash/psych', '#/verbs', '#/verbs/kain',
+ROUTES = ['#/', '#/drills', '#/drills/markers', '#/drills/build', '#/drills/switch', '#/lessons/demonstratives', '#/lessons/connectors', '#/lessons/ability', '#/lessons/causative', '#/lessons/requests', '#/lessons/hedging', '#/lessons/handout?id=hedging', '#/dict?cat=routine', '#/dict?cat=civic', '#/practice', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/d10', '#/flash', '#/flash/psych', '#/verbs', '#/verbs/kain',
   '#/lessons', '#/lessons/markers', '#/reading', '#/reading/sulat-nanay', '#/speak', '#/speak/meet', '#/speak/case-jomar', '#/psych',
   '#/psych/s/hallucinations', '#/psych/point', '#/psych/point?s=suicide', '#/psych/listen', '#/psych/listen?s=depression', '#/lessons/interpreting', '#/psych/cases', '#/psych/case/jomar', '#/psych/interp', '#/placement', '#/progress', '#/settings', '#/new',
   '#/about', '#/more', '#/psych/handout', '#/psych/handout?s=suicide', '#/psych/deesc', '#/psych/handout?deesc=1', '#/psych/s/deescalation',
@@ -66,6 +67,32 @@ async def main(base, out):
             if 'hiya' in (await pg.inner_text('#pbody')).lower() or await pg.locator('#trbtn').is_visible(): fails.append(f'{name}: listen first did not hide text')
             await pg.click('#earbtn'); await pg.wait_for_timeout(60)
             if 'Sikolohiyang Pilipino' not in await pg.inner_text('#pbody'): fails.append(f'{name}: listen first did not restore text')
+            # language drills (3.7.0): markers and register drills to the score; word-order drill with the model order (100%) and an accepted alternative
+            for did, sel in [('markers', 'all'), ('switch', 'c-f')]:
+                await pg.evaluate(f"location.hash='#/drills/{did}'"); await pg.wait_for_timeout(150)
+                await pg.select_option('#dset', sel); await pg.click('#dgo'); await pg.wait_for_timeout(60)
+                for _ in range(10):
+                    await pg.click('#dbox .opt >> nth=0'); await pg.wait_for_timeout(30); await pg.click('#dbox [data-act=next]'); await pg.wait_for_timeout(30)
+                if 'Try again' not in await pg.inner_text('#dbox'): fails.append(f'{name}: drill {did} did not finish')
+                if await pg.evaluate(f"(App.state.done.drills || {{}})['{did}:{sel}']") is None: fails.append(f'{name}: drill {did} score not saved')
+            bad = await pg.evaluate("(() => { const out = []; ['f-c','c-f'].forEach((d) => App.drillQs.switch(d, 40).forEach((q) => { if (q.opts.length !== 4 || new Set(q.opts).size !== 4 || q.opts[0] === q.q) out.push(q.q); })); App.drillQs.markers('d', 20).forEach((q) => { if (q.a < 0 || q.opts.length !== 3) out.push(q.q); }); DRILL_BUILD.forEach((it) => { if (!App.drillBuildOk(it, it.t) || (it.alt || []).some((a) => !App.drillBuildOk(it, a)) || App.drillBuildOk(it, it.t.slice().reverse())) out.push(it.en); }); return out; })()")
+            if bad: fails.append(f'{name}: drill generators: {bad[:3]}')
+            await pg.evaluate("location.hash='#/drills/build'"); await pg.wait_for_timeout(150)
+            await pg.click('#dgo'); await pg.wait_for_timeout(60)
+            for _ in range(10):
+                en = await pg.inner_text('#dbox .card > div >> nth=1')
+                order = await pg.evaluate("(en) => DRILL_BUILD.find((x) => x.en === en).t", en)
+                if await pg.locator('#dbox [data-act=check]').is_enabled(): fails.append(f'{name}: build check enabled before all tiles placed')
+                for w in order:
+                    await pg.locator('#dbox [data-bank] .wtile', has_text=re.compile('^' + re.escape(w) + '$', re.I)).first.click(); await pg.wait_for_timeout(15)
+                await pg.click('#dbox [data-act=check]'); await pg.wait_for_timeout(30)
+                if await pg.locator('#dbox .feedback.ok').count() != 1: fails.append(f'{name}: build model order marked wrong: {en}')
+                await pg.click('#dbox [data-act=next]'); await pg.wait_for_timeout(30)
+            if await pg.evaluate("(App.state.done.drills || {})['build:all']") != 100: fails.append(f'{name}: build drill score not 100')
+            if await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name}: drills overflow')
+            # dictionary ids: an old word keeps its id, new words are numbered after the legacy set
+            ids = await pg.evaluate("[App.DICT_LEGACY, App.DICT.filter((e) => +e.id.slice(1) >= App.DICT_LEGACY).length, (App.DICT.find((e) => e.tl === 'magsipilyo') || {}).id]")
+            if ids[0] != 1658 or ids[1] < 190 or ids[2] != 'd1658': fails.append(f'{name}: dictionary ids {ids}')
             # case simulation to the end
             await pg.evaluate("location.hash='#/psych/case/jomar'"); await pg.wait_for_timeout(150)
             for _ in range(6): await pg.click('.opt >> nth=0'); await pg.wait_for_timeout(60)

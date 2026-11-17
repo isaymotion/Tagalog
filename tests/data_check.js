@@ -110,7 +110,37 @@ if (C.AFFIX_ITEMS) {
   C.AFFIX_FOCUS_DRILL.forEach((f) => { if (!f.q.includes('____') || f.ok === f.no || !f.why) bad('affix focus ' + f.q); });
   C.AFFIX_LIST.forEach((a) => { if (!types.has(a.t)) bad('affix list type ' + a.a); });
 }
-const counts = { version: C.APP_META.version, answers: C.PSYCH_ANSWERS ? C.PSYCH_ANSWERS.common.reduce((a, g) => a + g.items.length, 0) + Object.values(C.PSYCH_ANSWERS.sections).reduce((a, l) => a + l.length, 0) : 0, dict: C.App.DICT.length, sections: C.PSYCH_SECTIONS.length, phrases: C.PSYCH_SECTIONS.reduce((a, s) => a + s.phrases.length, 0), cases: C.PSYCH_CASES.length, lessons: C.LESSONS.length, reading: C.READING.length, listening: (C.LISTENING || []).length, dialogues: C.DIALOGUES.length, verbs: C.VERBS.length, dcases: (C.PSYCH_DISCHARGE_CASES || []).length, mcases: (C.PSYCH_MSE_CASES || []).length, affixes: (C.AFFIX_ITEMS || []).length };
+// Language drills (3.7.0): gap answers are in their option set, lessons exist, word-order alternatives use the same tiles.
+if (C.DRILL_CLOZE) {
+  const lessonIds = new Set(C.LESSONS.map((l) => l.id)), seenQ = new Set();
+  Object.entries(C.DRILL_CLOZE_SETS).forEach(([k, st]) => { if (!lessonIds.has(st.lesson)) bad('cloze set lesson ' + k); });
+  C.DRILL_CLOZE.forEach((it) => {
+    const st = C.DRILL_CLOZE_SETS[it.set];
+    if (!st || !st.opts.includes(it.a)) bad('cloze answer not in set: ' + it.q);
+    if ((it.q.match(/____/g) || []).length !== 1 || !it.en || !it.why) bad('cloze fields: ' + it.q);
+    if (seenQ.has(it.q + it.a)) bad('cloze dup: ' + it.q); seenQ.add(it.q + it.a);
+  });
+  const key = (t) => t.map((w) => w.toLowerCase()).sort().join('|');
+  C.DRILL_BUILD.forEach((it) => {
+    if (!it.en || !it.why || !it.end || it.t.length < 3) bad('build fields: ' + it.en);
+    if (new Set(it.t.map((w) => w.toLowerCase())).size !== it.t.length) bad('build repeated tile: ' + it.en);
+    (it.alt || []).forEach((alt) => { if (key(alt) !== key(it.t)) bad('build alt uses other tiles: ' + it.en); if (alt.join(' ').toLowerCase() === it.t.join(' ').toLowerCase()) bad('build alt same as model: ' + it.en); });
+  });
+}
+// Dictionary ids are saved in users' flashcard progress: every id in the snapshot must still be the same word.
+// After adding words (at the END of js/data/dict-themes.js), refresh with: node tests/data_check.js <repo> --write-dict-ids
+{
+  const snapFile = path.join(__dirname, 'dict-ids.json');
+  const now = Object.fromEntries(C.App.DICT.map((e) => [e.id, e.tl]));
+  if (process.argv.includes('--write-dict-ids')) { fs.writeFileSync(snapFile, JSON.stringify(now, Object.keys(now).sort((a, b) => +a.slice(1) - +b.slice(1)), 0) + '\n'); console.log('wrote', snapFile); }
+  else if (fs.existsSync(snapFile)) {
+    const snap = JSON.parse(fs.readFileSync(snapFile, 'utf8'));
+    const moved = Object.keys(snap).filter((id) => now[id] !== snap[id]);
+    if (moved.length) bad('dictionary ids moved (' + moved.length + '), e.g. ' + moved[0] + ' was "' + snap[moved[0]] + '" now "' + now[moved[0]] + '"');
+    if (C.App.DICT_LEGACY !== 1658) bad('legacy dictionary size changed: ' + C.App.DICT_LEGACY);
+  } else console.log('WARN no tests/dict-ids.json snapshot');
+}
+const counts = { version: C.APP_META.version, answers: C.PSYCH_ANSWERS ? C.PSYCH_ANSWERS.common.reduce((a, g) => a + g.items.length, 0) + Object.values(C.PSYCH_ANSWERS.sections).reduce((a, l) => a + l.length, 0) : 0, dict: C.App.DICT.length, sections: C.PSYCH_SECTIONS.length, phrases: C.PSYCH_SECTIONS.reduce((a, s) => a + s.phrases.length, 0), cases: C.PSYCH_CASES.length, lessons: C.LESSONS.length, reading: C.READING.length, listening: (C.LISTENING || []).length, dialogues: C.DIALOGUES.length, verbs: C.VERBS.length, dcases: (C.PSYCH_DISCHARGE_CASES || []).length, mcases: (C.PSYCH_MSE_CASES || []).length, affixes: (C.AFFIX_ITEMS || []).length, drillGaps: (C.DRILL_CLOZE || []).length, drillBuild: (C.DRILL_BUILD || []).length };
 console.log(JSON.stringify(counts));
 console.log(fails ? fails + ' FAILURES' : 'DATA OK');
 process.exit(fails ? 1 : 0);
