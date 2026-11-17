@@ -72,7 +72,7 @@ add('Magandang umaga po. Kumusta po kayo?'); // settings voice test
 // find-the-mistake item, both example sentences of each stress pair, false friends (not the English-spelled ones) and look-alikes.
 (ctx.DRILL_FOCUS || []).forEach((it) => { const e = it.end || '.'; add(it.a + ' ' + it.ar + e); [it.o].concat(it.oAlt || []).forEach((v) => add(v + ' ' + it.or + e)); });
 (ctx.DRILL_ERRORS || []).forEach((it) => add(it.fix));
-(ctx.WORD_STRESS || []).forEach((x) => { add(x.a.ex[0]); add(x.b.ex[0]); });
+(ctx.WORD_STRESS || []).forEach((x) => { add(ctx.WORD_STRESS_SAY(x, false)); add(ctx.WORD_STRESS_SAY(x, true)); }); // the last-syllable sentence is respelled for the voice
 (ctx.WORD_FALSE_FRIENDS || []).forEach((x) => { if (!x.mix) add(x.tl); });
 (ctx.WORD_COGNATES || []).forEach((x) => add(x[0]));
 

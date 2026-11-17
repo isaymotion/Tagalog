@@ -31,10 +31,10 @@
       [['Deep', x.deep, true], ['Everyday', x.daily, true], ['Taglish', x.mix, false]].map(([lab, ws, say]) => '<dt>' + lab + '</dt><dd>' + (ws || []).map((w) => '<span class="tl">' + esc(w) + '</span>' + (say ? ' ' + App.sayBtn(w) : '')).join(', ') + '</dd>').join('') +
       '</dl>' + (x.note ? '<p class="muted small" style="margin:6px 0 0">' + esc(x.note) + '</p>' : '') + '</section>').join('');
 
-  const side = (x, m, last) => '<div class="afe"><div class="spread"><span><b class="tl wstress">' + esc(App.stressLabel(x, last)) + '</b> <span class="muted">' + esc(m.en) + '</span></span>' + (last ? '' : App.sayBtn(m.ex[0])) + '</div>' +
+  const side = (x, m, last) => '<div class="afe"><div class="spread"><span><b class="tl wstress">' + esc(App.stressLabel(x, last)) + '</b> <span class="muted">' + esc(m.en) + '</span></span>' + App.sayBtn(WORD_STRESS_SAY(x, last)) + '</div>' +
     '<div class="tl">' + esc(m.ex[0]) + '</div><div class="muted small">' + esc(m.ex[1]) + (m.mark !== x.w ? ' · In a dictionary: ' + esc(m.mark) : '') + '</div></div>';
   const str = () => '<p class="muted">Tagalog is written without accents, so one spelling can be two different words. Only the stress tells them apart. Capital letters show the stressed syllable. ' + STRESS.length + ' pairs.</p>' +
-    '<div class="notice info" style="margin-bottom:12px">Only the first-syllable sentences have a speaker button. The recorded voice often says the last-syllable words with the stress on the first syllable, so those are silent for now: learn them from the capitals and from the people around you.</div>' +
+    '<div class="notice info" style="margin-bottom:12px">The recorded voice needs help with a stress on the last syllable. Those sentences were re-recorded in version 3.9.2 and are still being checked by ear, so if a recording and the capitals disagree, trust the capitals.</div>' +
     STRESS.map((x) => '<section class="card wfam"><h2 class="tl" style="margin:0">' + esc(x.w) + '</h2>' + side(x, x.a, false) + side(x, x.b, true) + (x.note ? '<p class="muted small" style="margin:8px 0 0">' + esc(x.note) + '</p>' : '') + '</section>').join('');
 
   const look = () => '<p class="muted">Thousands of Tagalog words came from Spanish, and many newer ones from English. Most kept their meaning, so you already know them once you see through the spelling. Some changed their meaning: learn those first.</p>' +

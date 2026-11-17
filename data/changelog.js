@@ -4,6 +4,12 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.9.2', date: '2026-11-17', title: 'Stress pairs: last-syllable sentences re-recorded',
+    items: [
+      { type: 'correction', text: 'On the Stress pairs tab, the sentences with a last-syllable stress (bu-HAY, la-BI, su-NOG) have a speaker button again, re-recorded with a spelling the voice stresses on the last syllable. They are still being checked by ear; the By ear set of the stress drill stays off until that is done.' }
+    ]
+  },
+  {
     version: '3.9.1', date: '2026-11-17', title: 'Stress pairs: wrong audio removed',
     items: [
       { type: 'correction', text: 'The recorded voice said several last-syllable words (labi, buhay, sunog, paso, basa) with the stress on the first syllable. Sentences with a last-syllable stress no longer have a speaker button, and the By ear set of the stress drill is switched off until those clips are right. The capitals (bu-HAY) are correct and unchanged.' }
