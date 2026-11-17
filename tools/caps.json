@@ -1,5 +1,6 @@
 {
  "ATM": "ey-ti-em",
+ "BHW": "bi-eyts-dabol-yu",
  "BP": "bi-pi",
  "BPO": "bi-pi-o",
  "CR": "si-ar",
@@ -7,6 +8,7 @@
  "DT": "di-ti",
  "ECG": "i-si-dyi",
  "ER": "i-ar",
+ "ID": "ay-di",
  "ISIDRO": "isidro",
  "IV": "ay-bi",
  "LRT": "el-ar-ti",
@@ -20,8 +22,10 @@
  "PAKSA": "paksa",
  "PARA": "para",
  "PGH": "pi-dyi-eyts",
+ "PWD": "pi-dabol-yu-di",
  "SA": "sa",
  "SAN": "san",
+ "SSS": "es-es-es",
  "TV": "ti-bi",
  "US": "yu-es"
 }
