@@ -1,0 +1,28 @@
+# 3.9.1 voice test: does the voice move the stress for an accent or a respelling? Safe to delete after the test.
+buhay
+buháy
+buhaay
+bu-háy
+labi
+labí
+labii
+sunog
+sunóg
+sunoog
+paso
+pasó
+pasô
+pasoo
+basa
+basá
+basâ
+basaa
+bukas
+bukás
+bukaas
+Buháy pa ang lolo niya.
+Sunóg ang sinaing.
+Basâ ng pawis ang damit niya.
+Iniuwi sa probinsya ang labí ng lolo niya.
+Nabasag ang pasô ng halaman.
+Bukás ang pinto ng kuwarto.
