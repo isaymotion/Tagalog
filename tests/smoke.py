@@ -150,10 +150,9 @@ async def main(base, out):
             if not await pg.evaluate("App.searchAll('patulugin').some((r) => r.route === '#/words?r=tulog')"): fails.append(f'{name}: search does not find a word family')
             # 3.9.0: focus, stress and the new family sets to the score; generators well formed
             await pg.evaluate("window.__said = []; App.speak = (t) => { window.__said.push(t); }; 0")
-            for did, sel in [('focus', 'ao'), ('focus', 'oa'), ('stress', 'ctx'), ('stress', 'ear'), ('stress', 'mean'), ('families', 'ff'), ('families', 'cog')]:
+            for did, sel in [('focus', 'ao'), ('focus', 'oa'), ('stress', 'ctx'), ('stress', 'mean'), ('families', 'ff'), ('families', 'cog')]:
                 await pg.evaluate(f"location.hash='#/drills/{did}'"); await pg.wait_for_timeout(150)
                 await pg.select_option('#dset', sel); await pg.click('#dgo'); await pg.wait_for_timeout(60)
-                if sel == 'ear' and (await pg.locator('#dbox [data-qtext]').is_visible() or not await pg.locator('#dbox [data-act=play]').count()): fails.append(f'{name}: stress by ear shows the sentence')
                 for _ in range(10):
                     await pg.click('#dbox .opt >> nth=0'); await pg.wait_for_timeout(30); await pg.click('#dbox [data-act=next]'); await pg.wait_for_timeout(30)
                 if 'Try again' not in await pg.inner_text('#dbox'): fails.append(f'{name}: drill {did}:{sel} did not finish')
@@ -166,6 +165,7 @@ async def main(base, out):
                 [it.o + ' ' + it.ar + e, it.a + ' ' + it.or + e, it.ox + ' ' + it.or + e, it.a + ' ' + it.ar + e].forEach((w) => { if (App.drillTypedScore(ans, w) === 100) out.push('focus typed accepts ' + w); }); });
               ['ctx','ear','mean'].forEach((s) => App.drillQs.stress(s, 99).forEach((q) => { if (q.opts.length !== 2 || q.opts[0] === q.opts[1] || !/[A-Z]/.test(q.opts[q.a])) out.push('stress ' + s + ' ' + q.q); }));
               if (App.drillQs.stress('ctx', 99).length !== 2 * WORD_STRESS.length) out.push('stress pool');
+              App.drillQs.stress('ctx', 99).concat(App.drillQs.stress('mean', 99), App.drillQs.stress('ear', 99)).forEach((q) => { if (q.a === 1 && (q.say || q.sayAfter || q.hideQ)) out.push('stress: last-syllable sentence has audio ' + q.q); if (q.a === 0 && !q.sayAfter) out.push('stress: first-syllable sentence lost its audio ' + q.q); });
               if (App.stressLabel(WORD_STRESS[0], false) !== 'BU-kas' || App.stressLabel(WORD_STRESS[0], true) !== 'bu-KAS') out.push('stress label');
               App.drillQs.families('ff', 99).forEach((q) => { if (q.opts.length !== 4 || new Set(q.opts).size !== 4) out.push('ff ' + q.q); });
               App.drillQs.families('cog', 200).forEach((q) => { if (q.opts.length !== 4 || new Set(q.opts).size !== 4) out.push('cog ' + q.q); });
@@ -212,7 +212,7 @@ async def main(base, out):
             if 'Done today' not in await pg.inner_text('#view'): fails.append(f'{name}: Home does not show the daily mix as done')
             # new Word families tabs and search
             await pg.evaluate("location.hash='#/words?tab=str'"); await pg.wait_for_timeout(150)
-            if await pg.locator('.wfam').count() != await pg.evaluate("WORD_STRESS.length") or 'bu-KAS' not in await pg.inner_text('#view') or await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name}: stress pairs tab')
+            if await pg.locator('.wfam').count() != await pg.evaluate("WORD_STRESS.length") or await pg.locator('.wfam .say').count() != await pg.evaluate("WORD_STRESS.length") or 'bu-KAS' not in await pg.inner_text('#view') or await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name}: stress pairs tab')
             await pg.evaluate("location.hash='#/words?tab=look'"); await pg.wait_for_timeout(150)
             if await pg.locator('.wsyn').count() != await pg.evaluate("WORD_FALSE_FRIENDS.length") or await pg.locator('.wcog > div').count() != await pg.evaluate("WORD_COGNATES.length") or await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name}: Spanish and English tab')
             if not await pg.evaluate("App.searchAll('delikado').some((r) => r.route === '#/words?tab=look') && App.searchAll('daily mix').some((r) => r.route === '#/daily')"): fails.append(f'{name}: search does not find a false friend or the daily mix')
