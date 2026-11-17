@@ -17,7 +17,7 @@
   const defaults = () => ({
     settings: { theme: 'system', textSize: '100', register: 'f', voice: '', voiceSource: 'pack', rate: 0.85, cardDir: 'tl-en', newPerDay: 20 },
     srs: {}, mistakes: [], newToday: { date: '', n: 0 },
-    done: { lessons: {}, reading: {}, listening: {}, cases: {}, dialogues: {}, sections: {} },
+    done: { lessons: {}, reading: {}, listening: {}, cases: {}, dialogues: {}, sections: {}, drills: {} },
     streak: { last: '', count: 0, best: 0, days: [] },
     stats: { reviews: 0, correct: 0, answered: 0 }, xp: 0, level: '', seenVersion: ''
   });
@@ -72,7 +72,7 @@
   App.POS = POS;
   const seen = new Map();
   const DICT = [];
-  (window.DICT_RAW || []).join('\n').split('\n').forEach((line) => {
+  const readDict = (raw) => (raw || []).join('\n').split('\n').forEach((line) => {
     line = line.trim();
     if (!line || line.startsWith('#')) return;
     const [tl, en, pos, cat, root, note] = line.split('|').map((s) => (s || '').trim());
@@ -82,8 +82,16 @@
     seen.set(k, 1);
     DICT.push({ id: 'd' + DICT.length, tl, en, pos: pos || '', cat: cat || 'other', root: root || '', note: note || '', ftl: flat(tl), nen: norm(en) });
   });
+  // Flashcard progress is saved under these ids, so they must never move. The first four dictionary files
+  // (DICT_RAW) keep the ids they have always had: their position in the A to Z list of those files alone.
+  // Words added since 3.7.0 live in DICT_RAW2 (js/data/dict-themes.js) and are numbered after them in file
+  // order: append only. The list is sorted A to Z again for display once every id is fixed.
+  readDict(window.DICT_RAW);
   DICT.sort((a, b) => a.ftl.localeCompare(b.ftl));
   DICT.forEach((e, i) => (e.id = 'd' + i));
+  App.DICT_LEGACY = DICT.length;
+  readDict(window.DICT_RAW2);
+  DICT.sort((a, b) => a.ftl.localeCompare(b.ftl));
   App.DICT = DICT;
   App.dictById = Object.fromEntries(DICT.map((e) => [e.id, e]));
 
@@ -103,6 +111,7 @@
     food: 'Food & drink', home: 'Home', money: 'Money & shopping', work: 'Work', places: 'Places', nature: 'Nature & weather',
     clothing: 'Clothing', school: 'School', tech: 'Phones & internet', travel: 'Getting around', adjectives: 'Describing words', modals: 'Want, need, can', verbs: 'Common verbs',
     emotions: 'Emotions & values', beliefs: 'Faith & folk beliefs', health: 'Health & illness', mind: 'Mind & perception',
+    routine: 'Daily routine & sleep', civic: 'Barangay, papers & the law',
     risk: 'Risk & safety (clinical)', substance: 'Alcohol & substances', stigma: 'Stigmatizing words (recognize, avoid)', clinical: 'Clinical terms'
   };
 
@@ -197,7 +206,7 @@
   });
   (window.PSYCH_CASES || []).forEach((c) => push('Case', c.title, c.setting, '', '#/psych/case/' + c.id));
   (window.VERBS || []).forEach((v) => push('Verb', v.r, v.en, (v.ex || '') + ' ' + ((window.VERB_SENTENCES || {})[v.r] || []).map((s) => s[0] + ' ' + s[1]).join(' '), '#/verbs/' + v.r));
-  [['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Panlapi affix trainer', '#/affixes'], ['Panlapi handout (print)', '#/affixes/handout'], ['Verb handout (print)', '#/verbs/handout'], ['Lesson handout (print)', '#/lessons/handout'], ['Reading handout (print)', '#/reading/handout'], ['Dialogue handout (print)', '#/speak/handout'], ['Listening handout (print)', '#/listen/handout'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp'], ['Listening drill', '#/psych/listen'], ['Point board (Ituro): patient points to the answer', '#/psych/point'], ['De-escalation checklist', '#/psych/deesc'], ['Discharge assessment', '#/psych/discharge'], ['Discharge practice cases', '#/psych/dcases'], ['Admission MSE practice', '#/psych/mcases'], ['Printable handout', '#/psych/handout'], ['Mood episode checker', '#/psych/mood'], ['Substance use screener', '#/psych/sud'], ['Withdrawal and agitation', '#/psych/withdrawal'], ['MSE interviewer sheet', '#/psych/mse-sheet'], ['Practice', '#/practice'], ['Psychiatry cases', '#/psych?tab=cases'], ['Ward tools', '#/psych?tab=tools'], ['Print', '#/psych?tab=print'], ['Lessons', '#/lessons'], ['Reading', '#/reading'], ['Listening exercises', '#/listen'], ['Speaking', '#/speak'], ['Case simulations', '#/psych/cases'], ['More', '#/more']]
+  [['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Panlapi affix trainer', '#/affixes'], ['Grammar drills', '#/drills'], ['Choose the marker drill (ang, ng, sa)', '#/drills/markers'], ['Build the sentence drill (word order)', '#/drills/build'], ['Formal or everyday drill (register)', '#/drills/switch'], ['Panlapi handout (print)', '#/affixes/handout'], ['Verb handout (print)', '#/verbs/handout'], ['Lesson handout (print)', '#/lessons/handout'], ['Reading handout (print)', '#/reading/handout'], ['Dialogue handout (print)', '#/speak/handout'], ['Listening handout (print)', '#/listen/handout'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp'], ['Listening drill', '#/psych/listen'], ['Point board (Ituro): patient points to the answer', '#/psych/point'], ['De-escalation checklist', '#/psych/deesc'], ['Discharge assessment', '#/psych/discharge'], ['Discharge practice cases', '#/psych/dcases'], ['Admission MSE practice', '#/psych/mcases'], ['Printable handout', '#/psych/handout'], ['Mood episode checker', '#/psych/mood'], ['Substance use screener', '#/psych/sud'], ['Withdrawal and agitation', '#/psych/withdrawal'], ['MSE interviewer sheet', '#/psych/mse-sheet'], ['Practice', '#/practice'], ['Psychiatry cases', '#/psych?tab=cases'], ['Ward tools', '#/psych?tab=tools'], ['Print', '#/psych?tab=print'], ['Lessons', '#/lessons'], ['Reading', '#/reading'], ['Listening exercises', '#/listen'], ['Speaking', '#/speak'], ['Case simulations', '#/psych/cases'], ['More', '#/more']]
     .forEach(([t, r]) => push('Page', t, '', '', r));
   App.searchAll = (q, limit) => {
     const nq = norm(q);

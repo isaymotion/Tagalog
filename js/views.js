@@ -38,7 +38,7 @@
         el.querySelectorAll('.opt').forEach((x) => { x.disabled = true; if (+x.dataset.k === q.a) x.classList.add('right'); });
         if (!ok) b.classList.add('wrong');
         if (q.hideQ) { const qt = el.querySelector('[data-qtext]'); if (qt) qt.hidden = false; }
-        el.querySelector('[data-fb]').innerHTML = '<div class="feedback ' + (ok ? 'ok' : 'no') + '">' + '<b>' + (ok ? LANG.quiz.right : LANG.quiz.wrong) + '</b> ' + esc(q.exp || '') + '</div>' +
+        el.querySelector('[data-fb]').innerHTML = '<div class="feedback ' + (ok ? 'ok' : 'no') + '">' + '<b>' + (ok ? LANG.quiz.right : LANG.quiz.wrong) + '</b> ' + esc(q.exp || '') + (q.sayAfter ? ' ' + App.sayBtn(q.sayAfter) : '') + '</div>' +
           '<div class="row" style="margin-top:10px"><button class="btn primary" data-act="next">' + (i + 1 < qs.length ? 'Next' : 'See score') + '</button></div>';
         el.querySelector('[data-act=next]').onclick = () => { i++; draw(); };
         el.querySelector('[data-act=next]').focus();
@@ -59,7 +59,7 @@
     const pins = (s.pins || []).slice().reverse();
     const recent = (s.recent || []).filter((r) => !/^#\/(more|settings|progress|new|about|search)/.test(r.hash) && !App.isPinned(r.hash)).slice(0, 4);
     // One quick drill a day, rotating so the Home screen nudges different skills.
-    const quick = [['#/verbs', 'Verb trainer', '10 aspect questions'], ['#/affixes', 'Panlapi', 'Take 10 words apart'], ['#/psych/interp', 'What is the patient saying?', 'Interpret 10 lines'], ['#/psych/listen', 'Listening drill', 'Hear 10 replies, pick the meaning'], ['#/listen', 'Listening exercise', 'One recording, questions and dictation'], ['#/flash/psych', 'Psychiatry flashcards', 'A quick review'], ['#/psych/cases', 'Case simulation', 'One interview, with feedback']];
+    const quick = [['#/verbs', 'Verb trainer', '10 aspect questions'], ['#/affixes', 'Panlapi', 'Take 10 words apart'], ['#/drills/build', 'Build the sentence', 'Put 10 sentences in order'], ['#/drills/markers', 'Choose the marker', 'Ang, ng or sa: 10 gaps'], ['#/psych/interp', 'What is the patient saying?', 'Interpret 10 lines'], ['#/psych/listen', 'Listening drill', 'Hear 10 replies, pick the meaning'], ['#/listen', 'Listening exercise', 'One recording, questions and dictation'], ['#/flash/psych', 'Psychiatry flashcards', 'A quick review'], ['#/psych/cases', 'Case simulation', 'One interview, with feedback']];
     const qd = quick[Math.floor(Date.now() / 864e5) % quick.length];
     el.innerHTML =
       '<section class="hero"><svg class="rays" viewBox="0 0 100 100" aria-hidden="true">' + Array.from({ length: 8 }, (_, k) => '<rect x="47" y="2" width="6" height="30" fill="#e3b53f" transform="rotate(' + k * 45 + ' 50 50)"/>').join('') + '<circle cx="50" cy="50" r="16" fill="#e3b53f"/></svg>' +
@@ -551,7 +551,7 @@
         .map(([b, t]) => '<div class="stat"><b>' + esc(b) + '</b><span>' + t + '</span></div>').join('') + '</div>' +
       '<h2 style="margin-top:18px">Last 12 weeks</h2><div class="card"><div style="display:grid;grid-template-columns:repeat(21,1fr);gap:3px;max-width:520px">' + cal + '</div></div>' +
       '<h2 style="margin-top:18px">Completion</h2><div class="card stack">' +
-      [['Lessons', Object.keys(s.done.lessons).length, LESSONS.length], ['Reading passages', Object.keys(s.done.reading).length, READING.length], ['Listening exercises', Object.keys(s.done.listening || {}).length, (window.LISTENING || []).length], ['Dialogues', Object.keys(s.done.dialogues).length, DIALOGUES.length + PSYCH_CASES.length], ['Psychiatry sections opened', secSeen, sec], ['Case simulations', Object.keys(s.done.cases).length, PSYCH_CASES.length]]
+      [['Lessons', Object.keys(s.done.lessons).length, LESSONS.length], ['Reading passages', Object.keys(s.done.reading).length, READING.length], ['Listening exercises', Object.keys(s.done.listening || {}).length, (window.LISTENING || []).length], ['Grammar drills tried', new Set(Object.keys(s.done.drills || {}).map((k) => k.split(':')[0])).size, (App.DRILLS || []).length], ['Dialogues', Object.keys(s.done.dialogues).length, DIALOGUES.length + PSYCH_CASES.length], ['Psychiatry sections opened', secSeen, sec], ['Case simulations', Object.keys(s.done.cases).length, PSYCH_CASES.length]]
         .map(([t, a, b]) => '<div><div class="spread small"><span>' + t + '</span><span class="muted">' + a + ' / ' + b + '</span></div><div class="progress"><i style="width:' + Math.round((100 * a) / Math.max(1, b)) + '%"></i></div></div>').join('') + '</div>' +
       '<h2 style="margin-top:18px">Backup</h2><div class="card stack"><p style="margin:0">Progress is saved on this device. Export a backup file to move it to another phone or browser. The same buttons are in the footer of every page.</p>' +
       '<div class="row"><button class="btn" id="exp">Export backup</button><label class="btn" for="imp">Import backup</label><input type="file" id="imp" class="sr-only" accept="application/json,.json"></div>' +

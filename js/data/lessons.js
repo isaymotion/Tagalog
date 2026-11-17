@@ -576,5 +576,233 @@ window.LESSONS = [
     ['The point board is best used for', ['risk assessment instead of an interpreter', 'fast answers about frequency, duration, severity and common replies', 'documenting the patient\'s identity'], 1, 'It bridges a fast answer; it never replaces an interpreter for risk or consent, and it saves nothing.'],
     ['A PHQ-9 score for the chart should come from', ['the paraphrased items in the Mood episode checker', 'the published PHQ-9 in its official Filipino translation', 'your own translation on the spot'], 1, 'Paraphrased items are training wording; cut-offs apply only to the published instrument.']
   ]
+},
+/* ---- 3.7.0: six grammar lessons. Drafted by Claude, pending Dr. Navarro's review. ---- */
+{
+  id: 'demonstratives', level: 'A1', unit: 'Foundations', title: 'Ito, iyan, iyon: this, that, here, there',
+  summary: 'Pointing words change with distance and with the marker they replace.',
+  body: `
+<p>Tagalog has three distances, not two: near me, near you, and far from both of us. Each one has an <b>ang</b> form, a <b>ng</b> form and a <b>sa</b> form, just like the markers.</p>
+<table><tr><th></th><th>Near me</th><th>Near you</th><th>Far from both</th></tr>
+<tr><td>ang form (this, that)</td><td><b>ito</b></td><td><b>iyan</b></td><td><b>iyon</b></td></tr>
+<tr><td>ng form (of this, some of this)</td><td>nito</td><td>niyan</td><td>noon, niyon</td></tr>
+<tr><td>sa form (here, there)</td><td><b>dito</b></td><td><b>diyan</b></td><td><b>doon</b></td></tr>
+<tr><td>is here, is there</td><td>nandito</td><td>nandiyan</td><td>nandoon</td></tr>
+<tr><td>like this, like that</td><td>ganito</td><td>ganiyan</td><td>ganoon</td></tr></table>
+<div class="ex"><b>Ano ito?</b><span>What is this?</span></div>
+<div class="ex"><b>Masakit ba iyan?</b><span>Does that hurt? (the spot you are touching)</span></div>
+<div class="ex"><b>Sino iyon?</b><span>Who is that over there?</span></div>
+<div class="ex"><b>Dito po kayo umupo.</b><span>Please sit here.</span></div>
+<div class="ex"><b>Nandiyan ba ang nanay mo?</b><span>Is your mother there with you?</span></div>
+<div class="ex"><b>Doon po ang botika.</b><span>The pharmacy is over there.</span></div>
+<h3>With a noun</h3>
+<p>The pointing word joins its noun with the linker <b>na</b> or <b>-ng</b>, before or after it.</p>
+<div class="ex"><b>Ang gamot na ito ay para sa tulog.</b><span>This medicine is for sleep.</span></div>
+<div class="ex"><b>Kailan nagsimula ang problemang iyan?</b><span>When did that problem start?</span></div>
+<h3>Nasa and nasaan: where something is</h3>
+<div class="ex"><b>Nasaan ang reseta?</b><span>Where is the prescription?</span></div>
+<div class="ex"><b>Nasa ward ang pasyente.</b><span>The patient is in the ward.</span></div>
+<div class="ex"><b>Nasa akin ang susi.</b><span>I have the key. (The key is with me.)</span></div>
+<h3>Like this, like that</h3>
+<div class="ex"><b>Ganito po ang pag-inom ng gamot.</b><span>This is how to take the medicine.</span></div>
+<div class="ex"><b>Ganoon ba ang nararamdaman mo?</b><span>Is that how you feel?</span></div>
+<h3>In fast speech</h3>
+<ul>
+<li>The first vowel drops: <i>'to</i>, <i>'yan</i>, <i>'yon</i>, <i>n'on</i>, <i>ganyan</i>, <i>gan'on</i>.</li>
+<li>After a vowel, formal writing turns <b>d</b> into <b>r</b>: <i>dito → rito</i>, <i>doon → roon</i>. Everyday speech keeps the <b>d</b>.</li>
+</ul>
+<div class="note">Clinical tip: pointing words tell you where and when an experience is happening. <b>Naririnig mo ba iyon ngayon?</b> (Do you hear that now?) and <b>Nandito ba sila ngayon?</b> (Are they here now?) check for hallucinations in the room without leading the patient.</div>`,
+  quiz: [
+    ['"Please sit here."', ['Diyan po kayo umupo.', 'Dito po kayo umupo.', 'Doon po kayo umupo.'], 1, 'Dito = here, near the speaker.'],
+    ['You point at the arm the patient is holding. Which word?', ['ito', 'iyan', 'iyon'], 1, 'Iyan = that, near the listener.'],
+    ['"Nasaan ang gamot?" asks', ['what the medicine is', 'where the medicine is', 'whose medicine it is'], 1, 'Nasaan = where is.'],
+    ['"Is that how you feel?"', ['Ganoon ba ang nararamdaman mo?', 'Doon ba ang nararamdaman mo?', 'Noon ba ang nararamdaman mo?'], 0, 'Ganoon = like that.']
+  ]
+},
+{
+  id: 'connectors', level: 'A2', unit: 'Natural speech', title: 'Connecting ideas: kasi, kaya, pero, kung, kapag',
+  summary: 'The small words that turn short sentences into a story with causes and a timeline.',
+  body: `
+<table><tr><th>Word</th><th>Meaning</th></tr>
+<tr><td><b>at</b>, <b>o</b></td><td>and, or</td></tr>
+<tr><td><b>pero</b> (formal: ngunit, subalit)</td><td>but</td></tr>
+<tr><td><b>kasi</b>, <b>dahil</b></td><td>because</td></tr>
+<tr><td><b>kaya</b></td><td>so, that is why</td></tr>
+<tr><td><b>kung</b></td><td>if; whether</td></tr>
+<tr><td><b>kapag</b>, <b>pag</b></td><td>when, whenever</td></tr>
+<tr><td><b>noong</b></td><td>when (once, in the past)</td></tr>
+<tr><td><b>habang</b></td><td>while</td></tr>
+<tr><td><b>bago</b>, <b>pagkatapos</b></td><td>before, after</td></tr>
+<tr><td><b>hanggang</b></td><td>until</td></tr>
+<tr><td><b>kahit</b></td><td>even though, even if</td></tr>
+<tr><td><b>para</b></td><td>so that, in order to</td></tr></table>
+<h3>Cause and result</h3>
+<p><b>Kasi</b> and <b>dahil</b> introduce the cause. <b>Kaya</b> introduces the result.</p>
+<div class="ex"><b>Hindi ako nakatulog kasi maingay.</b><span>I could not sleep because it was noisy.</span></div>
+<div class="ex"><b>Maingay kagabi, kaya hindi ako nakatulog.</b><span>It was noisy last night, so I could not sleep.</span></div>
+<div class="ex"><b>Gusto kong kumain pero wala akong gana.</b><span>I want to eat but I have no appetite.</span></div>
+<div class="ex"><b>Kahit pagod siya, hindi siya makatulog.</b><span>Even though he is tired, he cannot sleep.</span></div>
+<h3>If and when</h3>
+<p><b>Kung</b> is for something uncertain. <b>Kapag</b> is for something expected or repeated. <b>Noong</b> is for one time in the past.</p>
+<div class="ex"><b>Kung may tanong kayo, sabihin lang po ninyo.</b><span>If you have a question, just say so.</span></div>
+<div class="ex"><b>Kapag umiinom siya, nagagalit siya.</b><span>When he drinks, he gets angry.</span></div>
+<div class="ex"><b>Noong bata ako, masayahin ako.</b><span>When I was a child, I was cheerful.</span></div>
+<h3>Order in time</h3>
+<div class="ex"><b>Inumin po ninyo ang gamot bago matulog.</b><span>Take the medicine before going to sleep.</span></div>
+<div class="ex"><b>Bumalik po kayo pagkatapos ng dalawang linggo.</b><span>Please come back after two weeks.</span></div>
+<div class="ex"><b>Naririnig ko sila habang naliligo ako.</b><span>I hear them while I am bathing.</span></div>
+<div class="ex"><b>Hindi siya kumain hanggang gabi.</b><span>He did not eat until night.</span></div>
+<div class="note">Clinical tip: use these to build the timeline. <b>Ano ang nangyari bago iyon?</b> (What happened before that?) <b>At pagkatapos?</b> (And after?) An answer that opens with <b>Kasi...</b> means an explanation is coming: wait for it.</div>`,
+  quiz: [
+    ['"____ umiinom siya, nagagalit siya." (whenever he drinks)', ['Noong', 'Kapag', 'Kaya'], 1, 'Kapag = when, whenever: something repeated or expected.'],
+    ['"Kaya" introduces', ['the cause', 'the result', 'a condition'], 1, 'Kasi and dahil give the cause; kaya gives the result.'],
+    ['"Noong bata ako" means', ['If I were a child', 'Because I was a child', 'When I was a child'], 2, 'Noong = when, for one time in the past.'],
+    ['"even though"', ['habang', 'hanggang', 'kahit'], 2, 'Kahit = even though, even if.']
+  ]
+},
+{
+  id: 'ability', level: 'B1', unit: 'Verbs', title: 'Maka- and ma-: able to, happened to, by accident',
+  summary: 'One prefix says "can". The same prefix says "did not mean to". The difference matters on the ward.',
+  body: `
+<p><b>Maka-</b> (actor focus) and <b>ma-</b> (object focus) replace the ordinary affix when the action is something a person <b>is able to do</b>, <b>manages to do</b>, or <b>does without meaning to</b>.</p>
+<table><tr><th></th><th>Base</th><th>Completed</th><th>Ongoing</th><th>Future</th></tr>
+<tr><td>maka- (tulog)</td><td>makatulog</td><td>nakatulog</td><td>nakakatulog</td><td>makakatulog</td></tr>
+<tr><td>ma- (kita)</td><td>makita</td><td>nakita</td><td>nakikita</td><td>makikita</td></tr></table>
+<h3>Able to</h3>
+<div class="ex"><b>Hindi ako makatulog.</b><span>I cannot sleep.</span></div>
+<div class="ex"><b>Nakatulog ka ba kagabi?</b><span>Were you able to sleep last night?</span></div>
+<div class="ex"><b>Nakakakain ka ba nang maayos?</b><span>Are you able to eat properly?</span></div>
+<div class="ex"><b>Hindi na siya makapagtrabaho.</b><span>He can no longer work.</span></div>
+<p>Verbs that normally take <b>mag-</b> use <b>makapag-</b>: <i>magtrabaho → makapagtrabaho</i>, <i>mag-isip → makapag-isip</i>.</p>
+<h3>Not on purpose</h3>
+<p>Compare the ordinary form (a plain or deliberate act) with the ma- or maka- form (it happened, or it was not meant).</p>
+<div class="ex"><b>Binasag ko ang baso.</b><span>I broke the glass. (on purpose)</span></div>
+<div class="ex"><b>Nabasag ko ang baso.</b><span>I broke the glass. (by accident)</span></div>
+<div class="ex"><b>Sinaktan niya ang kapatid niya.</b><span>He hurt his sibling. (on purpose)</span></div>
+<div class="ex"><b>Nasaktan niya ang kapatid niya.</b><span>He ended up hurting his sibling.</span></div>
+<div class="ex"><b>Uminom siya ng maraming gamot.</b><span>He took a lot of medicine.</span></div>
+<div class="ex"><b>Nakainom siya ng maraming gamot.</b><span>He ended up taking a lot of medicine.</span></div>
+<h3>Things that come to you</h3>
+<p>Seeing, hearing, remembering and feeling are not chosen, so these verbs are almost always in the ma- form: <i>nakikita, naririnig, naaalala, nakalimutan, naiisip, nararamdaman</i>.</p>
+<div class="ex"><b>May naririnig ka bang hindi naririnig ng iba?</b><span>Do you hear things other people do not hear?</span></div>
+<div class="ex"><b>Nakalimutan kong inumin ang gamot.</b><span>I forgot to take the medicine.</span></div>
+<div class="note">Clinical tip: the verb form hints at intent but never settles it. Families often choose the softer ma- form out of hiya. When you hear <b>nakainom</b>, <b>nasaktan</b> or <b>nahulog</b>, ask directly: <b>Sinadya mo ba?</b> (Did you do it on purpose?) The reply <b>Hindi ko sinasadya</b> means "I did not mean to." Chart the patient's own words.</div>`,
+  quiz: [
+    ['"I cannot sleep."', ['Hindi ako natulog.', 'Hindi ako makatulog.', 'Hindi ako matutulog.'], 1, 'Makatulog = able to sleep. Natulog = slept; matutulog = will sleep.'],
+    ['Which sentence says it was done on purpose?', ['Nabasag ko ang baso.', 'Binasag ko ang baso.'], 1, 'The -in- form is a deliberate act; na- is accidental.'],
+    ['A relative says "Nakainom siya ng maraming gamot." What should you do?', ['Record it as an accident', 'Record it as intentional', 'Ask about intent directly'], 2, 'The form only hints. Ask: Sinadya mo ba?'],
+    ['"Did you do it on purpose?"', ['Sinadya mo ba?', 'Nakaya mo ba?', 'Nasabi mo ba?'], 0, 'Sadya = intention; sinadya = did on purpose.']
+  ]
+},
+{
+  id: 'causative', level: 'B1', unit: 'Verbs', title: 'Magpa- and pa-: having something done',
+  summary: 'Who did it, and who had it done? Pa- adds a second person to the action.',
+  body: `
+<p><b>Pa-</b> means "cause" or "let". With it, one person arranges the action and another carries it out.</p>
+<h3>Magpa-: get something done for yourself</h3>
+<table><tr><th>Base</th><th>Completed</th><th>Ongoing</th><th>Future</th></tr>
+<tr><td>magpatingin</td><td>nagpatingin</td><td>nagpapatingin</td><td>magpapatingin</td></tr></table>
+<div class="ex"><b>Nagpatingin ako sa doktor.</b><span>I saw a doctor. (I had a doctor check me.)</span></div>
+<div class="ex"><b>Nagpagamot siya sa albularyo.</b><span>He sought treatment from a folk healer.</span></div>
+<div class="ex"><b>Nagpabili ako ng gamot sa anak ko.</b><span>I had my child buy the medicine.</span></div>
+<div class="ex"><b>Magpapakuha po kayo ng dugo bukas.</b><span>You will have your blood drawn tomorrow.</span></div>
+<h3>Pa- with -in: the person made to act is the topic</h3>
+<div class="ex"><b>Pinainom ko siya ng gamot.</b><span>I gave him the medicine to take.</span></div>
+<div class="ex"><b>Pinakain mo na ba ang bata?</b><span>Have you fed the child?</span></div>
+<div class="ex"><b>Patulugin muna natin siya.</b><span>Let us let him sleep first.</span></div>
+<div class="ex"><b>Pinauwi na siya ng doktor.</b><span>The doctor has sent him home.</span></div>
+<h3>Ipa-: the thing or person acted on is the topic</h3>
+<div class="ex"><b>Ipakita mo sa akin ang reseta.</b><span>Show me the prescription.</span></div>
+<div class="ex"><b>Ipaalam po ninyo sa nars.</b><span>Please let the nurse know.</span></div>
+<div class="ex"><b>Ipatingin ninyo siya sa doktor.</b><span>Have a doctor see him.</span></div>
+<h3>Pa- alone: a quick request</h3>
+<div class="ex"><b>Patingin po.</b><span>Let me see, please.</span></div>
+<div class="ex"><b>Patulong naman.</b><span>Help me, please.</span></div>
+<div class="ex"><b>Pabili po ng tubig.</b><span>I would like to buy water, please.</span></div>
+<div class="note">Clinical tip: listen for who took the action. <b>Uminom siya ng gamot</b> means he took it himself. <b>Pinainom siya ng gamot</b> means someone gave it to him. That difference is the adherence history. <b>Nagpatingin</b> also tells you the patient or family chose to seek care, and from whom.</div>`,
+  quiz: [
+    ['"Nagpatingin ako sa doktor" means', ['I examined the doctor.', 'I had a doctor check me.', 'The doctor looked for me.'], 1, 'Magpa- = have something done for yourself.'],
+    ['In "Pinainom siya ng gamot", who swallowed the medicine?', ['The speaker', 'Siya, after someone gave it', 'Nobody yet'], 1, 'Pa- -in: siya was made to drink it by someone else.'],
+    ['"Have you fed the child?"', ['Kumain ka na ba?', 'Pinakain mo na ba ang bata?', 'Kumakain ba ang bata?'], 1, 'Pakainin = to feed (cause to eat); completed: pinakain.'],
+    ['"Patingin po."', ['Let me see, please.', 'Look at me.', 'I am being watched.'], 0, 'Pa- plus a root is a short, polite request.']
+  ]
+},
+{
+  id: 'requests', level: 'A2', unit: 'Everyday life', title: 'Asking and telling: paki-, nga, huwag',
+  summary: 'Commands, polite requests and the softeners that keep an instruction from sounding like an order.',
+  body: `
+<h3>Commands use the base form</h3>
+<p>Use the base (infinitive) form of the verb with <b>ka</b> or <b>kayo</b> for actor-focus verbs, and <b>mo</b> or <b>ninyo</b> for object-focus verbs.</p>
+<div class="ex"><b>Umupo ka.</b><span>Sit down.</span></div>
+<div class="ex"><b>Umupo po kayo.</b><span>Please sit down. (respectful)</span></div>
+<div class="ex"><b>Inumin mo ito.</b><span>Drink this.</span></div>
+<div class="ex"><b>Huminga po kayo nang malalim.</b><span>Please breathe deeply.</span></div>
+<h3>Huwag: do not</h3>
+<p><b>Huwag</b> is followed by the pronoun with a linker, then the base form.</p>
+<div class="ex"><b>Huwag kang tumayo.</b><span>Do not stand up.</span></div>
+<div class="ex"><b>Huwag po kayong mag-alala.</b><span>Please do not worry.</span></div>
+<div class="ex"><b>Huwag mong inumin iyan.</b><span>Do not drink that.</span></div>
+<h3>Paki-: please do this</h3>
+<p><b>Paki-</b> plus a root is a polite request. The person asked is <b>mo</b> or <b>ninyo</b> and is often left out.</p>
+<div class="ex"><b>Pakiulit po.</b><span>Please repeat that.</span></div>
+<div class="ex"><b>Pakibagalan po ninyo.</b><span>Please say it more slowly.</span></div>
+<div class="ex"><b>Pakisara po ang pinto.</b><span>Please close the door.</span></div>
+<div class="ex"><b>Pakihintay po sandali.</b><span>Please wait a moment.</span></div>
+<div class="ex"><b>Pakisulat po ang pangalan ninyo.</b><span>Please write your name.</span></div>
+<h3>Maki-: may I share or join</h3>
+<div class="ex"><b>Makikiraan po.</b><span>Excuse me, may I pass?</span></div>
+<div class="ex"><b>Makikigamit po ng banyo.</b><span>May I use the bathroom?</span></div>
+<h3>Softeners</h3>
+<ul>
+<li><b>nga</b>: a light "please, go on". <i>Tingnan mo nga ito.</i></li>
+<li><b>muna</b>: first, for now. <i>Sandali muna.</i></li>
+<li><b>puwede ba</b>, formal <b>maaari ba</b>: could you, may I.</li>
+<li><b>tayo</b> in place of <b>ka</b>: "let us" in place of "you".</li>
+</ul>
+<div class="ex"><b>Puwede po bang humiga kayo?</b><span>Could you lie down, please?</span></div>
+<div class="ex"><b>Maaari po bang malaman ang edad ninyo?</b><span>May I know your age?</span></div>
+<div class="ex"><b>Umupo muna tayo.</b><span>Let us sit down first.</span></div>
+<div class="ex"><b>Dahan-dahan lang po.</b><span>Slowly, take it easy.</span></div>
+<div class="note">Clinical tip: with an agitated patient, keep instructions short, calm and positive, and prefer <b>tayo</b>. <b>Umupo muna tayo</b> invites; <b>Umupo ka</b> orders. Say what to do, not only what to stop.</div>`,
+  quiz: [
+    ['The polite way to say "Please repeat that."', ['Ulitin mo.', 'Pakiulit po.', 'Inulit po.'], 1, 'Paki- plus the root, with po.'],
+    ['"Please do not worry." (respectful)', ['Hindi po kayo nag-aalala.', 'Wala po kayong alala.', 'Huwag po kayong mag-alala.'], 2, 'Huwag + pronoun with linker + base form.'],
+    ['"Makikiraan po" is said when you', ['pass in front of or between people', 'ask someone to wait', 'ask for the bill'], 0, 'Maki- + daan: asking to share the way.'],
+    ['Why does "Umupo muna tayo" sound softer than "Umupo ka"?', ['It is in the past', 'Tayo includes the speaker: let us', 'It is more formal Filipino'], 1, 'Tayo = we, including you. It turns an order into an invitation.']
+  ]
+},
+{
+  id: 'hedging', level: 'B1', unit: 'Natural speech', title: 'Daw, yata, baka, siguro, parang: how sure is the speaker?',
+  summary: 'Small words that mark hearsay, doubt, guesses and wishes. They tell you whose claim it is and how firmly it is held.',
+  body: `
+<table><tr><th>Word</th><th>What it adds</th></tr>
+<tr><td><b>daw</b>, <b>raw</b></td><td>Someone else said this; the speaker is passing it on. <i>Raw</i> after a vowel sound.</td></tr>
+<tr><td><b>yata</b></td><td>I think so, but I am not sure.</td></tr>
+<tr><td><b>baka</b></td><td>It might happen or be true, often with worry.</td></tr>
+<tr><td><b>siguro</b></td><td>Probably, maybe. It does <u>not</u> mean "sure".</td></tr>
+<tr><td><b>parang</b></td><td>It seems, as if.</td></tr>
+<tr><td><b>pala</b></td><td>So it turns out: the speaker has just realized it.</td></tr>
+<tr><td><b>sana</b></td><td>I hope; with a completed verb, I wish it had been so.</td></tr>
+<tr><td><b>talaga</b>, <b>sigurado</b></td><td>Really; sure, certain.</td></tr></table>
+<h3>Hearsay</h3>
+<div class="ex"><b>May lason daw ang pagkain.</b><span>He says the food is poisoned.</span></div>
+<div class="ex"><b>Hindi raw siya natutulog.</b><span>They say he does not sleep.</span></div>
+<h3>Doubt and guessing</h3>
+<div class="ex"><b>Tatlong araw na yata.</b><span>Three days now, I think.</span></div>
+<div class="ex"><b>Baka bumalik ang mga boses.</b><span>The voices might come back.</span></div>
+<div class="ex"><b>Siguro pagod lang ako.</b><span>Maybe I am just tired.</span></div>
+<div class="ex"><b>Parang may sumusunod sa akin.</b><span>It is as if someone is following me.</span></div>
+<h3>Realizing and hoping</h3>
+<div class="ex"><b>May sakit pala siya.</b><span>So he is ill, it turns out.</span></div>
+<div class="ex"><b>Sana gumaling na siya.</b><span>I hope he gets well soon.</span></div>
+<div class="ex"><b>Sana hindi ko na lang sinabi.</b><span>I wish I had not said it.</span></div>
+<div class="ex"><b>Sigurado ka ba?</b><span>Are you sure?</span></div>
+<div class="note">Clinical tip: these words carry the level of conviction. <b>May sumusunod sa akin</b> is stated as fact; <b>Parang may sumusunod sa akin</b> leaves room for doubt. When a relative says <b>Sinusundan daw siya</b>, the relative is reporting the patient's claim, not agreeing with it: chart it as reported. To test conviction, ask <b>Sigurado ka ba, o parang ganoon lang?</b> (Are you sure, or does it only seem that way?)</div>`,
+  quiz: [
+    ['"Hindi raw siya kumakain." Who is the source?', ['The speaker saw it', 'Someone else said it', 'Nobody knows'], 1, 'Raw and daw mark reported speech.'],
+    ['"Siguro" means', ['surely, certainly', 'probably, maybe', 'never'], 1, 'Siguro = maybe. Sigurado = sure.'],
+    ['Which shows less conviction?', ['May sumusunod sa akin.', 'Parang may sumusunod sa akin.'], 1, 'Parang = as if, it seems.'],
+    ['"I hope he gets well."', ['Baka gumaling siya.', 'Gumaling daw siya.', 'Sana gumaling na siya.'], 2, 'Sana = I hope.']
+  ]
 }
 ];

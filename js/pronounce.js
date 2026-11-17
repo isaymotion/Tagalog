@@ -21,7 +21,7 @@
   // Headwords written all in capitals (NCMH, CR) are acronym entries and are left out, so they stay acronyms.
   let dict = null; // lower-case Tagalog headwords, built on first use (DICT_RAW is loaded before this runs)
   const inDict = (w) => {
-    if (!dict) { dict = new Set(); (window.DICT_RAW || []).join('\n').split('\n').forEach((l) => { const h = l.split('|')[0].trim(); if (h && !h.startsWith('#') && h !== h.toUpperCase()) dict.add(h.toLowerCase()); }); }
+    if (!dict) { dict = new Set(); (window.DICT_RAW || []).concat(window.DICT_RAW2 || []).join('\n').split('\n').forEach((l) => { const h = l.split('|')[0].trim(); if (h && !h.startsWith('#') && h !== h.toUpperCase()) dict.add(h.toLowerCase()); }); }
     return dict.has(w.toLowerCase());
   };
   const CAPS = /\b[A-Z]{2,}\b/g;

@@ -4,6 +4,16 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.7.0', date: '2026-11-17', title: 'Six grammar lessons, three new drills, 191 new words',
+    items: [
+      { type: 'feature', text: 'New Drills page (Practice, or More → Grammar drills) with three drills of ten items each. Choose the marker: ang, ng or sa; si, ni or kay; ito, iyan or iyon. Build the sentence: tap word tiles into order to learn where na, po, ba, ko and the other short words go. Formal or everyday: match each interview line to the same line in the other register.' },
+      { type: 'content', text: 'Six new lessons with quizzes: Ito, iyan, iyon (this, that, here, there); Connecting ideas (kasi, kaya, pero, kung, kapag); Maka- and ma- (able to, happened to, by accident); Magpa- and pa- (having something done); Asking and telling (paki-, nga, huwag); and Daw, yata, baka, siguro, parang (how sure is the speaker). There are now 30 lessons.' },
+      { type: 'content', text: '191 new dictionary words in themed sets: daily routine and self-care, sleep, livelihood, barangay and benefits, courts and police, faith, phones and social media, weather and disasters, plus more colors, people, clothing, school and money words. Two new dictionary topics: Daily routine & sleep, and Barangay, papers & the law.' },
+      { type: 'update', text: 'Dictionary flashcards now keep their place when new words are added. Before this version, adding words could move saved flashcard progress to a different word.' },
+      { type: 'content', text: 'All new Tagalog is a draft awaiting review by Dr. Navarro. Audio for the new words and sentences is recorded automatically shortly after release.' }
+    ]
+  },
+  {
     version: '3.6.3', date: '2026-11-16', title: 'New abbreviations are read correctly by default',
     items: [
       { type: 'update', text: 'Any new abbreviation in capitals (for example DSM or ADHD) is now spelled out letter by letter automatically, the way a Filipino speaker says it. Capital words are read as words only in headings such as PARA SA: or PAKSA:, when they are Tagalog dictionary words, or for the few abbreviations said as words (PAGASA, COVID, CIWA, OK). Nothing you hear today changes.' }
