@@ -50,6 +50,10 @@
     [/^\/drills$/, V.drills, 'drills'],
     [/^\/drills\/(?<id>[\w-]+)$/, V.drill, 'drills'],
 
+    [/^\/pictures$/, V.pictures, 'pictures'],
+    [/^\/pictures\/bodymap$/, V.pictureBodymap, 'pictures'],
+    [/^\/pictures\/(?<id>[\w-]+)$/, V.pictures, 'pictures'],
+    [/^\/signs$/, V.signs, 'signs'],
     [/^\/lessons$/, V.lessons, 'lessons'],
     [/^\/lessons\/handout$/, V.ghandoutLesson, 'lessons'],
     [/^\/lessons\/(?<id>[\w-]+)$/, V.lesson, 'lessons'],
@@ -86,7 +90,7 @@
     [/^\/new$/, V.whatsnew, 'new'],
     [/^\/about$/, V.about, 'about']
   ];
-  const TITLES = { home: '', practice: 'Practice', dict: 'Dictionary', flash: 'Flashcards', verbs: 'Verbs', affixes: 'Panlapi', drills: 'Drills', daily: 'Daily mix', words: 'Word families', lessons: 'Lessons', reading: 'Reading', listen: 'Listening', speak: 'Speaking', psych: 'Psychiatry', placement: 'Placement', progress: 'Progress', settings: 'Settings', new: "What's New", about: 'About' };
+  const TITLES = { home: '', practice: 'Practice', dict: 'Dictionary', flash: 'Flashcards', verbs: 'Verbs', affixes: 'Panlapi', drills: 'Drills', daily: 'Daily mix', words: 'Word families', pictures: 'Picture words', signs: 'Signs and buttons', lessons: 'Lessons', reading: 'Reading', listen: 'Listening', speak: 'Speaking', psych: 'Psychiatry', placement: 'Placement', progress: 'Progress', settings: 'Settings', new: "What's New", about: 'About' };
 
   /* ---------- Navigation: one grouped list for the desktop rail, the phone drawer (More) and the #/more page ----------
      [key, href, label, icon]. Group labels are shell strings (data/strings.js); item labels are the app's own. */
@@ -98,7 +102,7 @@
     ['p-ho', '#/psych/handout', 'Printable handout', icons.read]];
   const NAV = [
     ['', [['home', '#/', 'Home', icons.home], ['practice', '#/practice', 'Practice', icons.target]]],
-    ['nav.learn', [['lessons', '#/lessons', 'Lessons', icons.lesson], ['reading', '#/reading', 'Reading', icons.read], ['listen', '#/listen', 'Listening', icons.ear], ['speak', '#/speak', 'Speaking', icons.speak], ['dict', '#/dict', 'Dictionary', icons.book], ['words', '#/words', 'Word families', icons.affix]]],
+    ['nav.learn', [['lessons', '#/lessons', 'Lessons', icons.lesson], ['reading', '#/reading', 'Reading', icons.read], ['listen', '#/listen', 'Listening', icons.ear], ['speak', '#/speak', 'Speaking', icons.speak], ['dict', '#/dict', 'Dictionary', icons.book], ['words', '#/words', 'Word families', icons.affix], ['pictures', '#/pictures', t('nav.pictures'), icons.picture], ['signs', '#/signs', t('nav.signs'), icons.sign]]],
     ['nav.drill', [['flash', '#/flash', 'Flashcards', icons.cards], ['verbs', '#/verbs', 'Verb trainer', icons.verb], ['affixes', '#/affixes', 'Panlapi', icons.affix], ['drills', '#/drills', 'Grammar drills', icons.spark], ['placement', '#/placement', 'Placement test', icons.target]]],
     ['nav.interview', [['psych', '#/psych', 'Psychiatry Tagalog', icons.brain]].concat(PSY_PRACTICE)],
     ['nav.tools', PSY_TOOLS],
@@ -187,7 +191,7 @@
   /* ---------- Practice and More pages ---------- */
   const BLURB = {
     dict: App.DICT.length + ' entries, both directions, root-word search', flash: 'Spaced repetition across every deck',
-    verbs: 'Aspect and focus drills, 78 verbs', affixes: 'Unlapi, gitlapi, hulapi: take words apart', drills: 'Markers, word order, focus, mistakes, stress, dictation', words: 'Families, mild to strong, stress pairs, Spanish and English words', lessons: 'Grammar and culture', reading: 'Graded passages, A1 to C1', listen: 'Voicemails, announcements, radio, ward talk', speak: 'Dialogues with listening and recording',
+    verbs: 'Aspect and focus drills, 78 verbs', affixes: 'Unlapi, gitlapi, hulapi: take words apart', drills: 'Markers, word order, focus, mistakes, stress, dictation', words: 'Families, mild to strong, stress pairs, Spanish and English words', lessons: 'Grammar and culture', pictures: 'Tap a picture to hear the word, then find it, label it and point to it', signs: 'Hospital, jeepney and street signs, and the buttons on machines', reading: 'Graded passages, A1 to C1', listen: 'Voicemails, announcements, radio, ward talk', speak: 'Dialogues with listening and recording',
     practice: 'Every drill on one page', psych: (window.PSYCH_SECTIONS || []).length + ' interview sections and the ward tools',
     placement: '25 questions to find your level, A1 to C1', progress: 'Streak, stats, backup', settings: 'Register, voice, theme', new: 'What changed in each version', about: 'Credits and disclaimers'
   };
@@ -215,6 +219,10 @@
       T('#/reading', 'Read', 'Reading', 'Graded passages with questions.') +
       T('#/listen', 'Listen', 'Listening', 'Real-life recordings, questions and dictation.') +
       T('#/speak', 'Speak', 'Speaking', 'Dialogues with listening and recording.') + '</div>' +
+      '<h2 style="margin-top:18px">Pictures</h2><div class="grid">' +
+      T('#/pictures', 'Tap and learn · 10 questions', 'Picture words', (window.PICTURE_SETS || []).length + ' pictures: learn, identify, label, listen and point.') +
+      T('#/pictures/bodymap', 'Ward tool', 'Body map', 'The patient taps where it hurts. Nothing is saved.') +
+      T('#/signs', 'Read · 10 questions', 'Signs and buttons', 'Signs as they are printed, and machine panels.') + '</div>' +
       '<h2 style="margin-top:18px">Clinical</h2><div class="grid">' +
       T('#/psych/cases', 'Simulate', 'Case simulations', PSYCH_CASES.length + ' interviews with feedback.') +
       T('#/psych/interp', 'Listen', 'What is the patient saying?', 'Interpret patient and family lines.') +
@@ -235,7 +243,7 @@
   };
   routes.push([/^\/more$/, V.more, 'more']);
   routes.push([/^\/practice$/, V.practice, 'practice']);
-  const MORE_KEYS = ['dict', 'words', 'drills', 'lessons', 'reading', 'listen', 'speak', 'placement', 'progress', 'settings', 'new', 'about', 'more'];
+  const MORE_KEYS = ['dict', 'words', 'pictures', 'signs', 'drills', 'lessons', 'reading', 'listen', 'speak', 'placement', 'progress', 'settings', 'new', 'about', 'more'];
 
   /* ---------- Header height -> --top (the search drops to a second row on phones) ---------- */
   function setTopVar() { const h = $('.topbar'); if (h) root.style.setProperty('--top', h.offsetHeight + 'px'); }

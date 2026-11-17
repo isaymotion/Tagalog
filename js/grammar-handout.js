@@ -487,11 +487,17 @@
   const lessonCanPrint = (o) => o.body || o.quiz || o.key;
   function lessonHTML(m) {
     let h = headHTML(m);
-    if (m.body) h += '<section class="ho-sec"><div class="lesson-body">' + m.body.replace(/<table>/g, '<div class="ho-tw"><table>').replace(/<\/table>/g, '</table></div>') + '</div></section>';
+    if (m.body) h += '<section class="ho-sec"><div class="lesson-body">' + picHtml(m.body).replace(/<table>/g, '<div class="ho-tw"><table>').replace(/<\/table>/g, '</table></div>') + '</div></section>';
     if (m.quiz) h += '<section class="ho-sec gh-ws"><h2>Check yourself</h2><ol class="gh-quiz">' + m.quiz.map((q) => '<li><b>' + esc(q[0]) + '</b><ol type="A" class="gh-qopts">' + q[1].map((x) => '<li>' + esc(x) + '</li>').join('') + '</ol></li>').join('') + '</ol></section>';
     if (m.key) h += '<section class="ho-sec gh-key"><h2>Answer key</h2><ol class="gh-keyB gh-keyQ">' + m.key.map((q) => '<li><b>' + letter(q[2]) + '. ' + esc(q[1][q[2]]) + '</b> <small>' + esc(q[3]) + '</small></li>').join('') + '</ol></section>';
     return h + footHTML();
   }
+
+  /* 3.10.0: a lesson picture (<div class="pic-embed" data-pic="<set id>"></div>) cannot be drawn in the handout: it prints
+     as one line naming the picture, then the picture's words as a comma list. Unknown set id = nothing. */
+  const picSet = (id) => { const P = App.pictures; const s = P && typeof P.get === 'function' ? P.get(id) : (window.PICTURE_SETS || []).find((x) => x && x.id === id); return s && Array.isArray(s.parts) ? s : null; };
+  const picText = (id) => { const s = picSet(id); if (!s) return null; return { line: 'Picture: ' + (s.title || s.id) + ' (open the app to see it)', words: s.parts.filter((p) => p && p.w).map((p) => p.w).join(', ') }; };
+  const picHtml = (body) => body.replace(/<div class="pic-embed" data-pic="([^"]*)"><\/div>/g, (m, id) => { const t = picText(id); return t ? '<p class="gh-pic"><i>' + esc(t.line) + '</i><br>' + esc(t.words) + '</p>' : ''; });
 
   /* Lesson body HTML to pdfmake nodes. Supports the tags lessons use (p, h3, b/strong, i/em, u, ul/ol/li, table, dl/dt/dd,
      div.ex, div.note, span, a, br); an unknown tag keeps its text. Inline formatting becomes pdfmake text runs. */
@@ -529,6 +535,7 @@
         else if (t === 'TABLE') out.push(table(n));
         else if (t === 'DIV' && n.classList.contains('ex')) out.push(ex(n));
         else if (t === 'DIV' && n.classList.contains('note')) out.push(note(n));
+        else if (t === 'DIV' && n.classList.contains('pic-embed')) { const pt = picText(n.getAttribute('data-pic') || ''); if (pt) out.push({ stack: [{ text: pt.line, italics: true, color: NAVY }, { text: pt.words, fontSize: base - 0.5, margin: [0, 1, 0, 0] }], margin: [0, 2, 0, 6] }); }
         else out.push(...blocks(n, tight));
       });
       flush();

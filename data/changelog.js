@@ -4,6 +4,18 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.10.0', date: '2026-11-18', title: 'Picture words, body map, signs and buttons, picture lessons',
+    items: [
+      { type: 'feature', text: 'Picture words (Practice, Pictures): 38 picture sets with 509 everyday and ward words. 23 are labelled drawings (the body front and back, face, arm and hand, leg and foot, inside the body, a house, living room, kitchen, bathroom, bedroom, a street, a station, a hospital floor plan, where things are, a dog and a bird, a car, a bicycle, computer and phone, a meal tray, clothes, a landscape, a family tree) and 15 are picture cards (animals, food, vehicles, things on the ward, weather, feelings, the daily routine and more). Four ways to practise each set: Learn by tapping, Identify, Label it (choose or type) and Listen and point, with 380 sentences.' },
+      { type: 'feature', text: 'Print sheet for every picture set: a numbered picture with blank lines to label, and an answer key.' },
+      { type: 'feature', text: 'Body map (Practice, Pictures): the patient taps where it hurts and the word shows large in Tagalog and English. Eight questions to ask and ten pain words, with sound, and a one-page handout with a plain 0 to 10 line. Nothing is saved.' },
+      { type: 'feature', text: 'Signs and buttons: 118 Philippine signs in seven groups (in the hospital, getting around, on the street, doors and buildings, in a shop, in the CR, on the medicine label) with a quiz both ways, and ten machine panels (electric fan, rice cooker, aircon remote, TV remote, twin-tub washing machine, water dispenser, ATM, elevator, queue number machine, hospital bed and nurse call). On a panel you hear a request in Tagalog and press the right button.' },
+      { type: 'content', text: 'Ten picture lessons in a new unit: Nasaan (where things are), Masakit ang … (body words and pain), describing with ang and may, counting things, what someone is wearing, giving directions, how signs talk, machine words, naka- for how things are, and explaining with a diagram. 46 lessons in all.' },
+      { type: 'content', text: 'Dictionary: 170 new words from the pictures (2,134 in all).' },
+      { type: 'update', text: 'All of the new Tagalog is a draft for Dr. Navarro to check. The drawings are shared with the Japanese sister app, so a few show Japanese things (a bathtub, chopsticks, a rice bowl); they are labelled the way a Filipino would name them.' }
+    ]
+  },
+  {
     version: '3.9.4', date: '2026-11-17', title: 'Stress pairs: last-syllable recordings fixed, By ear is back',
     items: [
       { type: 'correction', text: 'The last-syllable sentences on the Stress pairs tab (tu-LOG, bu-KAS, ga-LIT, ba-SA and the rest) are re-recorded with the stress in the right place, checked by ear by Dr. Navarro, and have their speaker buttons back. The By ear set of the stress drill is back too.' },

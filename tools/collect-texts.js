@@ -11,6 +11,7 @@ vm.createContext(ctx);
 const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
 ['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/dict-themes.js', 'js/data/drills.js', 'js/data/word-sets.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js',
  'js/data/reading.js', 'js/data/listening.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js', 'js/data/psych-sud.js', 'js/data/psych-withdrawal.js', 'js/data/psych-mood.js', 'js/data/psych-shea.js', 'js/data/psych-phrases-nurse.js', 'js/data/psych-answers.js', 'js/data/psych-answers-nurse.js', 'js/data/affixes.js',
+ 'js/data/picture-sets-body.js', 'js/data/picture-sets-home.js', 'js/data/picture-sets-town.js', 'js/data/picture-sets-animals.js', 'js/data/picture-sets-machines.js', 'js/data/picture-sets-food.js', 'js/data/picture-sets-clothes.js', 'js/data/picture-sets-nature.js', 'js/data/picture-sets-daily.js', 'js/data/picture-bodymap.js', 'js/data/signs.js', 'js/data/signs-panels.js', 'js/data/lessons-pictures.js',
  'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js', 'js/pronounce.js'].forEach(load);
 
 const out = new Map();
@@ -75,6 +76,14 @@ add('Magandang umaga po. Kumusta po kayo?'); // settings voice test
 (ctx.WORD_STRESS || []).forEach((x) => { add(ctx.WORD_STRESS_SAY(x, false)); add(ctx.WORD_STRESS_SAY(x, true)); }); // the last-syllable sentence is respelled for the voice
 (ctx.WORD_FALSE_FRIENDS || []).forEach((x) => { if (!x.mix) add(x.tl); });
 (ctx.WORD_COGNATES || []).forEach((x) => add(x[0]));
+
+// 3.10.0: picture words (each part's word and every listen-and-point sentence), signs (not the English-only ones), the Tagalog
+// request of each panel task (control labels are printed English and are not recorded) and the body map lines.
+// Written as arrow functions, never forEach(add) with extra arguments (see the note on add above).
+(Array.isArray(ctx.PICTURE_SETS) ? ctx.PICTURE_SETS : []).forEach((s) => { (s.parts || []).forEach((p) => p && add(p.w)); (s.say || []).forEach((x) => x && add(x.tl)); });
+((ctx.SIGNS || {}).signs || []).forEach((x) => { if (x && x.lang !== 'en') add(x.tl); });
+(Array.isArray(ctx.SIGN_PANELS) ? ctx.SIGN_PANELS : []).forEach((p) => (p.tasks || []).forEach((t) => t && add(t.q)));
+if (ctx.PICTURE_BODYMAP) { const B = ctx.PICTURE_BODYMAP; (B.ask || []).forEach((x) => x && add(x.tl)); (B.words || []).forEach((x) => x && add(x.tl)); if (B.scale) add(B.scale.tl); }
 
 // Substance use screener: lines are templates ({s} substance, {w} withdrawal symptoms, {u} unit) filled at run time
 // for the chosen substance, so record every line as it is spoken for every substance, not only the nganga example.

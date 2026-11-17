@@ -2,7 +2,7 @@
    All isaymotion apps share one origin (isaymotion.github.io), so this worker only ever deletes caches that
    start with its own PREFIX. 'usaptayo-audio' holds the recorded clips and is kept across versions. */
 const PREFIX = 'usaptayo-';
-const VERSION = PREFIX + '3.9.4';
+const VERSION = PREFIX + '3.10.0';
 const KEEP = ['usaptayo-audio'];
 const FILES = [
   './', 'index.html', 'manifest.webmanifest', 'css/style.css',
@@ -11,6 +11,7 @@ const FILES = [
   'js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/dict-themes.js', 'js/data/drills.js', 'js/drills.js', 'js/data/word-sets.js', 'js/words.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/affixes.js', 'js/affixes.js', 'js/grammar-handout.js',
   'js/data/lessons.js', 'js/data/reading.js', 'js/data/listening.js', 'js/listen.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-shea.js',
   'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/discharge.js', 'js/discharge-practice.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/mse-practice.js', 'js/data/psych-mse-sheet.js', 'js/mse-sheet.js', 'js/data/psych-sud.js', 'js/sud.js', 'js/data/psych-mood.js', 'js/mood.js', 'js/data/psych-withdrawal.js', 'js/withdrawal.js', 'js/data/psych-phrases-nurse.js', 'js/data/psych-answers.js', 'js/data/psych-answers-nurse.js', 'js/point-listen.js', 'handouts/Tagalog_MSE_Interviewer_Guide.pdf', 'js/data/meta.js', 'js/handout.js', 'js/audio-key.js', 'js/pronounce.js',
+  'js/data/picture-sets-body.js', 'js/data/picture-sets-home.js', 'js/data/picture-sets-town.js', 'js/data/picture-sets-animals.js', 'js/data/picture-sets-machines.js', 'js/data/picture-sets-food.js', 'js/data/picture-sets-clothes.js', 'js/data/picture-sets-nature.js', 'js/data/picture-sets-daily.js', 'js/data/picture-bodymap.js', 'js/data/signs.js', 'js/data/signs-panels.js', 'js/data/lessons-pictures.js', 'pictures/art-body.js', 'pictures/art-home.js', 'pictures/art-town.js', 'pictures/art-animals.js', 'pictures/art-machines.js', 'pictures/art-food.js', 'pictures/art-clothes.js', 'pictures/art-nature.js', 'pictures/art-daily.js', 'js/pictures.js', 'js/picture-print.js', 'js/signs.js',
   'js/vendor/pdfmake.min.js', 'js/vendor/vfs_fonts.js',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/logo-96.png', 'icons/favicon-32.png', 'icons/favicon-64.png', 'icons/apple-touch-icon.png'
 ];

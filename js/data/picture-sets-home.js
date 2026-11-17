@@ -1,0 +1,192 @@
+/* Picture words, group 'home' (Usap Tayo 3.10.0): tap-to-learn pictures for #/pictures (js/pictures.js).
+   DRAFT FOR REVIEW by Dr. Navarro (native speaker). All Tagalog here is a draft.
+   Shape (PLAN-3.10 A1): window.PICTURE_SETS = (window.PICTURE_SETS || []).concat([ { id, group, title, lv: 'A1'|'A2',
+     kind: 'diagram'|'cards', art (diagram only, pictures/art-home.js), intro: one English sentence,
+     parts: [ { id, w: the word as said (lower case, 1 to 3 words), en, lv: 'A1'|'A2'|'B1', alt: [other accepted answers],
+                diagram: x, y (kept from the Japanese art, never moved); cards: pic = ONE emoji, Emoji 12.0 or older } ],
+     say: [ { tl: a sentence whose answer is exactly ONE part, en, p: part id } ] } ]);   6 to 10 sentences
+   Sets: house-outside d A1; living-room d A1; kitchen d A2; bathroom d A2; bedroom d A1; appliances c A2.
+   Set ids and part ids are permanent after release: append only. */
+window.PICTURE_SETS = (window.PICTURE_SETS || []).concat([
+  { id: 'house-outside', group: 'home', title: 'Outside a house', lv: 'A1', kind: 'diagram', art: 'house-outside',
+    intro: 'The words for the outside of a house, its yard and the road in front of it.',
+    parts: [
+      { id: 'yane', w: 'bubong', en: 'roof', lv: 'A1', x: 200, y: 104 },
+      { id: 'mado', w: 'bintana', en: 'window', lv: 'A1', x: 153, y: 170 },
+      { id: 'beranda', w: 'balkonahe', en: 'balcony', lv: 'A2', x: 246, y: 196, alt: ['balcony', 'beranda'] },
+      { id: 'doa', w: 'pinto', en: 'door', lv: 'A1', x: 242, y: 230, alt: ['pintuan'] },
+      { id: 'kabe', w: 'dingding', en: 'wall', lv: 'A2', x: 200, y: 240, alt: ['pader'] },
+      { id: 'mon', w: 'gate', en: 'gate', lv: 'A1', x: 336, y: 240, alt: ['tarangkahan'] },
+      { id: 'posuto', w: 'mailbox', en: 'mailbox', lv: 'B1', x: 394, y: 212, alt: ['hulugan ng sulat'] },
+      { id: 'ki', w: 'puno', en: 'tree', lv: 'A1', x: 46, y: 164 },
+      { id: 'hana', w: 'bulaklak', en: 'flower', lv: 'A1', x: 86, y: 228 },
+      { id: 'niwa', w: 'bakuran', en: 'yard, garden', lv: 'A2', x: 66, y: 276, alt: ['hardin', 'halamanan'] },
+      { id: 'kuruma', w: 'kotse', en: 'car', lv: 'A1', x: 347, y: 302, alt: ['sasakyan'] },
+      { id: 'michi', w: 'kalsada', en: 'road, street', lv: 'A1', x: 110, y: 312, alt: ['daan'] }
+    ],
+    say: [
+      { tl: 'May pusa sa bubong.', en: 'There is a cat on the roof.', p: 'yane' },
+      { tl: 'Buksan mo ang bintana para pumasok ang hangin.', en: 'Open the window so the air comes in.', p: 'mado' },
+      { tl: 'Doc, nakita raw po siyang nakatayo sa balkonahe nang madaling-araw.', en: 'Doc, they say he was seen standing on the balcony before dawn.', p: 'beranda' },
+      { tl: 'Ilang linggo na raw pong laging nakasara ang pinto nila at ayaw niyang lumabas.', en: 'They say their door has been kept shut for weeks and he does not want to go out.', p: 'doa' },
+      { tl: 'Ayon sa kapatid niya, ikinakandado nila ang gate tuwing gabi.', en: 'According to his sibling, they lock the gate every night.', p: 'mon' },
+      { tl: 'May sulat po galing sa ospital sa mailbox.', en: 'There is a letter from the hospital in the mailbox.', p: 'posuto' },
+      { tl: 'Naglalaro ang mga bata sa bakuran.', en: 'The children are playing in the yard.', p: 'niwa' },
+      { tl: 'Dinidiligan ni Nanay ang mga bulaklak araw-araw.', en: 'Mother waters the flowers every day.', p: 'hana' },
+      { tl: 'Malamig sa ilalim ng malaking puno.', en: 'It is cool under the big tree.', p: 'ki' },
+      { tl: 'Ihahatid po siya ng tatay niya sa ospital sakay ng kotse.', en: 'His father will bring him to the hospital by car.', p: 'kuruma' }
+    ] },
+
+  { id: 'living-room', group: 'home', title: 'The living room', lv: 'A1', kind: 'diagram', art: 'living-room',
+    intro: 'The furniture and things in a living room, from the light on the ceiling to the glass on the table.',
+    parts: [
+      { id: 'denki', w: 'ilaw', en: 'light', lv: 'A1', x: 216, y: 33 },
+      { id: 'eakon', w: 'aircon', en: 'air conditioner', lv: 'A1', x: 290, y: 31, alt: ['air conditioner'] },
+      { id: 'mado', w: 'bintana', en: 'window', lv: 'A1', x: 112, y: 102 },
+      { id: 'kaaten', w: 'kurtina', en: 'curtain', lv: 'A1', x: 82, y: 132 },
+      { id: 'tokei', w: 'orasan', en: 'clock', lv: 'A1', x: 206, y: 115, alt: ['relo'] },
+      { id: 'e', w: 'larawan', en: 'picture, painting', lv: 'A2', x: 281, y: 94, alt: ['litrato', 'painting', 'kuwadro'] },
+      { id: 'doa', w: 'pinto', en: 'door', lv: 'A1', x: 366, y: 190, alt: ['pintuan'] },
+      { id: 'terebi', w: 'TV', en: 'television', lv: 'A1', x: 290, y: 162, alt: ['telebisyon'] },
+      { id: 'hondana', w: 'estante', en: 'bookshelf', lv: 'A2', x: 36, y: 168, alt: ['istante', 'bookshelf', 'lalagyan ng libro'] },
+      { id: 'sofaa', w: 'sopa', en: 'sofa', lv: 'A1', x: 135, y: 186, alt: ['sofa'] },
+      { id: 'teeburu', w: 'mesa', en: 'table', lv: 'A1', x: 150, y: 294, alt: ['lamesa'] },
+      { id: 'koppu', w: 'baso', en: 'glass', lv: 'A1', x: 136, y: 266 },
+      { id: 'shinbun', w: 'diyaryo', en: 'newspaper', lv: 'A2', x: 224, y: 278, alt: ['dyaryo', 'pahayagan'] },
+      { id: 'isu', w: 'upuan', en: 'chair', lv: 'A1', x: 338, y: 274, alt: ['silya'] }
+    ],
+    say: [
+      { tl: 'Madilim na po. Bubuksan ko na ang ilaw.', en: 'It is dark now. I will turn on the light.', p: 'denki' },
+      { tl: 'Naiinitan po ba kayo? Bubuksan ko ang aircon.', en: 'Are you feeling hot? I will turn on the air conditioner.', p: 'eakon' },
+      { tl: 'Masyado po bang maliwanag? Isasara ko ang kurtina.', en: 'Is it too bright? I will close the curtain.', p: 'kaaten' },
+      { tl: 'Tingnan po ninyo ang orasan. Anong oras na po?', en: 'Please look at the clock. What time is it?', p: 'tokei' },
+      { tl: 'Maupo po muna kayo sa sopa at magpahinga.', en: 'Please sit on the sofa for a while and rest.', p: 'sofaa' },
+      { tl: 'Heto po ang tubig sa baso, inumin na po ninyo ang gamot.', en: 'Here is water in the glass; please take your medicine now.', p: 'koppu' },
+      { tl: 'Buong araw lang daw po siyang nanonood ng TV at ayaw nang lumabas.', en: 'They say he just watches TV all day and no longer wants to go out.', p: 'terebi' },
+      { tl: 'Nagbabasa ng diyaryo si Tatay tuwing umaga.', en: 'Father reads the newspaper every morning.', p: 'shinbun' },
+      { tl: 'Nakasabit sa dingding ang larawan ng pamilya nila.', en: 'Their family picture is hanging on the wall.', p: 'e' },
+      { tl: 'Pakisara po ang pinto, malamig.', en: 'Please close the door, it is cold.', p: 'doa' }
+    ] },
+
+  { id: 'kitchen', group: 'home', title: 'The kitchen', lv: 'A2', kind: 'diagram', art: 'kitchen',
+    intro: 'The things in a kitchen and what you do with them.',
+    parts: [
+      { id: 'reizouko', w: 'ref', en: 'refrigerator', lv: 'A1', x: 44, y: 186, alt: ['refrigerator', 'pridyider'] },
+      { id: 'mado', w: 'bintana', en: 'window', lv: 'A1', x: 114, y: 50 },
+      { id: 'koppu', w: 'baso', en: 'glass', lv: 'A1', x: 324, y: 52 },
+      { id: 'nagashi', w: 'lababo', en: 'kitchen sink', lv: 'A1', x: 116, y: 173 },
+      { id: 'houchou', w: 'kutsilyo', en: 'kitchen knife', lv: 'A1', x: 194, y: 176 },
+      { id: 'nabe', w: 'kaldero', en: 'pot, saucepan', lv: 'A2', x: 268, y: 150, alt: ['kaserola'] },
+      { id: 'furaipan', w: 'kawali', en: 'frying pan', lv: 'A2', x: 357, y: 177 },
+      { id: 'konro', w: 'kalan', en: 'stove', lv: 'A1', x: 292, y: 204, alt: ['stove'] },
+      { id: 'sara', w: 'plato', en: 'plate', lv: 'A1', x: 290, y: 46, alt: ['pinggan'] },
+      { id: 'tana', w: 'estante', en: 'shelf', lv: 'A2', x: 252, y: 66, alt: ['istante', 'shelf', 'patungan'] },
+      { id: 'renji', w: 'microwave', en: 'microwave oven', lv: 'A2', x: 375, y: 81 },
+      { id: 'suihanki', w: 'rice cooker', en: 'rice cooker', lv: 'A1', x: 381, y: 143 },
+      { id: 'gomibako', w: 'basurahan', en: 'rubbish bin', lv: 'A1', x: 130, y: 278, alt: ['lagayan ng basura'] }
+    ],
+    say: [
+      { tl: 'Ilagay mo ang gatas sa ref.', en: 'Put the milk in the refrigerator.', p: 'reizouko' },
+      { tl: 'Maghugas muna ng kamay sa lababo bago magluto.', en: 'Wash your hands at the sink before cooking.', p: 'nagashi' },
+      { tl: 'Pahingi po ng isang basong tubig.', en: 'May I have a glass of water, please?', p: 'koppu' },
+      { tl: 'Itinatago po ng pamilya ang kutsilyo kapag nasa bahay siya.', en: 'The family hides the kitchen knife when he is at home.', p: 'houchou' },
+      { tl: 'Nagluluto si Nanay ng sinigang sa kaldero.', en: 'Mother is cooking sour soup in the pot.', p: 'nabe' },
+      { tl: 'Nagprito ako ng itlog sa kawali.', en: 'I fried an egg in the frying pan.', p: 'furaipan' },
+      { tl: 'Nakakalimutan na raw po ni Lola na patayin ang kalan.', en: 'They say Grandma now forgets to turn off the stove.', p: 'konro' },
+      { tl: 'Nagsasaing kami sa rice cooker.', en: 'We cook rice in the rice cooker.', p: 'suihanki' },
+      { tl: 'Iinitin ko ang baon ko sa microwave.', en: 'I will heat up my packed lunch in the microwave.', p: 'renji' },
+      { tl: 'Itapon po ninyo ang ginamit na tissue sa basurahan.', en: 'Please throw the used tissue in the bin.', p: 'gomibako' }
+    ] },
+
+  { id: 'bathroom', group: 'home', title: 'The bathroom and toilet', lv: 'A2', kind: 'diagram', art: 'bathroom',
+    intro: 'A bathroom with a washbasin, a bath and a toilet, and the things you use to keep clean.',
+    parts: [
+      { id: 'kagami', w: 'salamin', en: 'mirror', lv: 'A1', x: 80, y: 96 },
+      { id: 'haburashi', w: 'sipilyo', en: 'toothbrush', lv: 'A1', x: 22, y: 138, alt: ['toothbrush'] },
+      { id: 'jaguchi', w: 'gripo', en: 'tap, faucet', lv: 'A1', x: 64, y: 152 },
+      { id: 'sekken', w: 'sabon', en: 'soap', lv: 'A1', x: 110, y: 168 },
+      { id: 'senmendai', w: 'lababo', en: 'washbasin', lv: 'A1', x: 44, y: 222 },
+      { id: 'taoru', w: 'tuwalya', en: 'towel', lv: 'A1', x: 132, y: 132, alt: ['twalya'] },
+      { id: 'taijuukei', w: 'timbangan', en: 'bathroom scales', lv: 'A2', x: 36, y: 298, alt: ['weighing scale'] },
+      { id: 'shawaa', w: 'shower', en: 'shower', lv: 'A1', x: 180, y: 122, alt: ['dutsa'] },
+      { id: 'mado', w: 'bintana', en: 'window', lv: 'A1', x: 276, y: 55 },
+      { id: 'shanpuu', w: 'shampoo', en: 'shampoo', lv: 'A1', x: 256, y: 144, alt: ['syampu'] },
+      { id: 'furo', w: 'bathtub', en: 'bathtub', lv: 'A2', x: 230, y: 238, alt: ['banyera', 'tub'] },
+      { id: 'toire', w: 'inidoro', en: 'toilet', lv: 'A1', x: 350, y: 222, alt: ['toilet bowl', 'toilet', 'kubeta'] },
+      { id: 'toirettopeepaa', w: 'tissue', en: 'toilet paper', lv: 'A1', x: 393, y: 236, alt: ['toilet paper', 'tisyu'] }
+    ],
+    say: [
+      { tl: 'Walang bathtub sa bahay namin, tabo at timba lang.', en: 'There is no bathtub in our house, just a dipper and a pail.', p: 'furo' },
+      { tl: 'Mag-shower po muna kayo bago mag-almusal.', en: 'Please take a shower before breakfast.', p: 'shawaa' },
+      { tl: 'Tumingin siya sa salamin at nagsuklay.', en: 'She looked in the mirror and combed her hair.', p: 'kagami' },
+      { tl: 'Heto po ang sipilyo ninyo. Magsipilyo na po tayo.', en: 'Here is your toothbrush. Let us brush our teeth now.', p: 'haburashi' },
+      { tl: 'Hugasan po ninyong mabuti ang kamay gamit ang sabon.', en: 'Please wash your hands well with soap.', p: 'sekken' },
+      { tl: 'Tumuntong po muna kayo sa timbangan, titingnan natin ang timbang ninyo.', en: 'Please step on the scales first; we will check your weight.', p: 'taijuukei' },
+      { tl: 'Kapag kailangan po ninyong gumamit ng inidoro, tawagin lang po ang nars.', en: 'When you need to use the toilet, just call the nurse.', p: 'toire' },
+      { tl: 'Ubos na po ang tissue sa CR.', en: 'The toilet paper in the CR has run out.', p: 'toirettopeepaa' },
+      { tl: 'Magpunas po kayo ng kamay sa tuwalya.', en: 'Please dry your hands on the towel.', p: 'taoru' },
+      { tl: 'Isara po ninyo ang gripo kapag hindi ginagamit.', en: 'Please turn off the tap when it is not in use.', p: 'jaguchi' }
+    ] },
+
+  { id: 'bedroom', group: 'home', title: 'The bedroom', lv: 'A1', kind: 'diagram', art: 'bedroom',
+    intro: 'The things in a bedroom: the bed and what is on it, the lamp, the desk and the window.',
+    parts: [
+      { id: 'mado', w: 'bintana', en: 'window', lv: 'A1', x: 72, y: 80 },
+      { id: 'kaaten', w: 'kurtina', en: 'curtain', lv: 'A1', x: 145, y: 100 },
+      { id: 'beddo', w: 'kama', en: 'bed', lv: 'A1', x: 150, y: 231, alt: ['higaan'] },
+      { id: 'makura', w: 'unan', en: 'pillow', lv: 'A1', x: 52, y: 190 },
+      { id: 'moufu', w: 'kumot', en: 'blanket', lv: 'A1', x: 122, y: 204 },
+      { id: 'sutando', w: 'lampshade', en: 'lamp', lv: 'A2', x: 186, y: 186, alt: ['lampara', 'lamp'] },
+      { id: 'mezamashi', w: 'alarm clock', en: 'alarm clock', lv: 'A2', x: 222, y: 193, alt: ['orasan'] },
+      { id: 'hon', w: 'libro', en: 'book', lv: 'A1', x: 280, y: 166, alt: ['aklat'] },
+      { id: 'megane', w: 'salamin', en: 'glasses', lv: 'A1', x: 348, y: 162, alt: ['salamin sa mata', 'eyeglasses'] },
+      { id: 'tsukue', w: 'mesa', en: 'desk', lv: 'A1', x: 340, y: 214, alt: ['lamesa', 'desk'] },
+      { id: 'isu', w: 'upuan', en: 'chair', lv: 'A1', x: 248, y: 168, alt: ['silya'] },
+      { id: 'doa', w: 'pinto', en: 'door', lv: 'A1', x: 392, y: 196, alt: ['pintuan'] },
+      { id: 'surippa', w: 'tsinelas', en: 'slippers', lv: 'A1', x: 167, y: 278, alt: ['slippers'] }
+    ],
+    say: [
+      { tl: 'Humiga po muna kayo sa kama.', en: 'Please lie down on the bed for a while.', p: 'beddo' },
+      { tl: 'Masyadong mataas po ang unan, sumasakit ang leeg ko.', en: 'The pillow is too high; my neck is starting to hurt.', p: 'makura' },
+      { tl: 'Giniginaw po ako. Puwede po bang humingi ng isa pang kumot?', en: 'I feel cold. May I ask for one more blanket?', p: 'moufu' },
+      { tl: 'Buksan po natin ang kurtina para pumasok ang liwanag.', en: 'Let us open the curtain so the light comes in.', p: 'kaaten' },
+      { tl: 'Pinapatay ko ang lampshade bago ako matulog.', en: 'I switch off the lamp before I go to sleep.', p: 'sutando' },
+      { tl: 'Tumutunog ang alarm clock nang alas-sais ng umaga.', en: 'The alarm clock rings at six in the morning.', p: 'mezamashi' },
+      { tl: 'Hindi ko po mabasa ang sulat kapag wala ang salamin ko.', en: 'I cannot read the writing without my glasses.', p: 'megane' },
+      { tl: 'Nagsusulat siya sa mesa tuwing gabi.', en: 'She writes at the desk every night.', p: 'tsukue' },
+      { tl: 'Pakisara po ang pinto paglabas ninyo.', en: 'Please close the door when you go out.', p: 'doa' },
+      { tl: 'Malamig po ang sahig, magsuot po kayo ng tsinelas.', en: 'The floor is cold; please put on your slippers.', p: 'surippa' }
+    ] },
+
+  { id: 'appliances', group: 'home', title: 'Electrical things', lv: 'A2', kind: 'cards',
+    intro: 'Machines and electrical things you use at home every day.',
+    parts: [
+      { id: 'tv', w: 'TV', en: 'television', lv: 'A1', pic: '📺', alt: ['telebisyon'] },
+      { id: 'radyo', w: 'radyo', en: 'radio', lv: 'A1', pic: '📻', alt: ['radio'] },
+      { id: 'computer', w: 'computer', en: 'computer, laptop', lv: 'A1', pic: '💻', alt: ['laptop', 'kompyuter'] },
+      { id: 'printer', w: 'printer', en: 'printer', lv: 'A2', pic: '🖨️' },
+      { id: 'cellphone', w: 'cellphone', en: 'mobile phone', lv: 'A1', pic: '📱', alt: ['cp', 'selpon'] },
+      { id: 'telepono', w: 'telepono', en: 'telephone, landline', lv: 'A2', pic: '☎️', alt: ['landline'] },
+      { id: 'camera', w: 'camera', en: 'camera', lv: 'A1', pic: '📷', alt: ['kamera'] },
+      { id: 'headphones', w: 'headphones', en: 'headphones', lv: 'A2', pic: '🎧', alt: ['headset'] },
+      { id: 'alarm-clock', w: 'alarm clock', en: 'alarm clock', lv: 'A2', pic: '⏰' },
+      { id: 'relo', w: 'relo', en: 'wristwatch', lv: 'A1', pic: '⌚', alt: ['wristwatch'] },
+      { id: 'bumbilya', w: 'bumbilya', en: 'light bulb', lv: 'A2', pic: '💡', alt: ['bombilya', 'ilaw'] },
+      { id: 'flashlight', w: 'flashlight', en: 'torch, flashlight', lv: 'A2', pic: '🔦', alt: ['lente'] },
+      { id: 'baterya', w: 'baterya', en: 'battery', lv: 'A2', pic: '🔋', alt: ['battery'] },
+      { id: 'plug', w: 'plug', en: 'plug', lv: 'A2', pic: '🔌' },
+      { id: 'video-game', w: 'video game', en: 'video game', lv: 'B1', pic: '🎮', alt: ['games', 'laro'] }
+    ],
+    say: [
+      { tl: 'Mas makakatulog po kayo kung hindi kayo titingin sa cellphone bago matulog.', en: 'You will sleep better if you do not look at your phone before bed.', p: 'cellphone' },
+      { tl: 'Tumunog na po ang alarm clock pero hindi pa rin ako makabangon.', en: 'The alarm clock has rung, but I still cannot get up.', p: 'alarm-clock' },
+      { tl: 'Naglalaro raw po siya ng video game hanggang madaling-araw kaya kulang siya sa tulog.', en: 'They say he plays video games until dawn, so he lacks sleep.', p: 'video-game' },
+      { tl: 'Nakikinig po siya ng musika sa headphones kapag gusto niyang kumalma.', en: 'He listens to music on headphones when he wants to calm down.', p: 'headphones' },
+      { tl: 'Brownout! Nasaan ang flashlight?', en: 'Power cut! Where is the flashlight?', p: 'flashlight' },
+      { tl: 'Pundido na ang bumbilya kaya madilim sa kuwarto.', en: 'The light bulb has blown, so the room is dark.', p: 'bumbilya' },
+      { tl: 'Ubos na ang baterya ng remote, bili tayo ng bago.', en: 'The remote battery is dead; let us buy a new one.', p: 'baterya' },
+      { tl: 'Paki-print po ito sa printer.', en: 'Please print this on the printer.', p: 'printer' },
+      { tl: 'Nakikinig si Lolo ng balita sa radyo tuwing umaga.', en: 'Grandpa listens to the news on the radio every morning.', p: 'radyo' },
+      { tl: 'Pakihugot po ang plug bago linisin ang electric fan.', en: 'Please pull out the plug before cleaning the electric fan.', p: 'plug' }
+    ] }
+]);

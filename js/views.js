@@ -380,6 +380,12 @@
         return '<a class="tile" href="#/lessons/' + l.id + '"><div class="row">' + lvPill(l.level) + (sc != null ? '<span class="pill good">' + icons.check.replace('<svg', '<svg width="12" height="12"') + ' ' + sc + '%</span>' : '') + '</div><h3 style="margin-top:6px">' + esc(l.title) + '</h3><p>' + esc(l.summary) + '</p></a>';
       }).join('') + '</div>').join('');
   };
+  // 3.10.0: a picture in a lesson body (<div class="pic-embed" data-pic="<set id>"></div>) is mounted by the pictures module
+  // (js/pictures.js, App.pictures.embed). An unknown set id or a missing module leaves the div empty.
+  App.mountPics = (root) => {
+    if (!root || !App.pictures || typeof App.pictures.embed !== 'function') return;
+    root.querySelectorAll('.pic-embed[data-pic]').forEach((d) => { try { App.pictures.embed(d, d.dataset.pic); } catch (e) { d.innerHTML = ''; } });
+  };
   V.lesson = (el, p) => {
     const l = LESSONS.find((x) => x.id === p.id);
     if (!l) { el.innerHTML = '<p>Lesson not found.</p>'; return; }
@@ -391,6 +397,7 @@
       '<div class="spread" style="margin-top:16px">' + (prev ? '<a class="btn" href="#/lessons/' + prev.id + '">← ' + esc(prev.title) + '</a>' : '<span></span>') + (next ? '<a class="btn" href="#/lessons/' + next.id + '">' + esc(next.title) + ' →</a>' : '') + '</div>';
     // speak buttons for examples
     el.querySelectorAll('.lesson-body .ex').forEach((ex) => { const b = ex.querySelector('b'); if (b) { const wrap = document.createElement('div'); wrap.innerHTML = App.sayBtn(b.textContent); ex.classList.add('has-say'); ex.appendChild(wrap.firstChild); } });
+    App.mountPics(el.querySelector('.lesson-body'));
     App.runQuiz(el.querySelector('#lq'), l.quiz.map(([q, opts, a, exp]) => ({ q, opts, a, exp })), {
       onDone: (r, n) => { const pct = Math.round((100 * r) / n); S().done.lessons[l.id] = Math.max(pct, S().done.lessons[l.id] || 0); App.activity(10); }
     });
@@ -556,6 +563,7 @@
       '<h2 style="margin-top:18px">Last 12 weeks</h2><div class="card"><div style="display:grid;grid-template-columns:repeat(21,1fr);gap:3px;max-width:520px">' + cal + '</div></div>' +
       '<h2 style="margin-top:18px">Completion</h2><div class="card stack">' +
       [['Lessons', Object.keys(s.done.lessons).length, LESSONS.length], ['Reading passages', Object.keys(s.done.reading).length, READING.length], ['Listening exercises', Object.keys(s.done.listening || {}).length, (window.LISTENING || []).length], ['Grammar drills tried', new Set(Object.keys(s.done.drills || {}).map((k) => k.split(':')[0])).size, (App.DRILLS || []).length], ['Dialogues', Object.keys(s.done.dialogues).length, DIALOGUES.length + PSYCH_CASES.length], ['Psychiatry sections opened', secSeen, sec], ['Case simulations', Object.keys(s.done.cases).length, PSYCH_CASES.length]]
+        .concat(App.progressExtra ? App.progressExtra(s) : [])
         .map(([t, a, b]) => '<div><div class="spread small"><span>' + t + '</span><span class="muted">' + a + ' / ' + b + '</span></div><div class="progress"><i style="width:' + Math.round((100 * a) / Math.max(1, b)) + '%"></i></div></div>').join('') + '</div>' +
       '<h2 style="margin-top:18px">Backup</h2><div class="card stack"><p style="margin:0">Progress is saved on this device. Export a backup file to move it to another phone or browser. The same buttons are in the footer of every page.</p>' +
       '<div class="row"><button class="btn" id="exp">Export backup</button><label class="btn" for="imp">Import backup</label><input type="file" id="imp" class="sr-only" accept="application/json,.json"></div>' +

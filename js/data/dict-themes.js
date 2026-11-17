@@ -329,4 +329,175 @@ kararating|has just arrived|v|time|dating|Everyday form: kakarating
 napakasakit|very painful|adj|health|sakit
 namatayan|bereaved; lost someone to death|v|family|patay
 magpatiwakal|to take one's own life (formal word)|v|risk|tiwakal|News and formal word; in interviews say magpakamatay
+# ---- 3.10.0 ----
+sisiw|chick|n|nature||
+bibe|duck|n|nature||
+kuneho|rabbit|n|nature||
+tupa|sheep|n|nature||
+elepante|elephant|n|nature||
+leon|lion|n|nature||
+tigre|tiger|n|nature||
+giraffe|giraffe|n|nature||English word used as is
+panda|panda|n|nature||
+unggoy|monkey|n|nature||
+gorilya|gorilla|n|nature||
+oso|bear|n|nature||
+zebra|zebra|n|nature||
+hippo|hippopotamus|n|nature||Short for hippopotamus
+buwaya|crocodile|n|nature||
+koala|koala|n|nature||
+kangaroo|kangaroo|n|nature||
+agila|eagle|n|nature||
+kuwago|owl|n|nature||
+paruparo|butterfly|n|nature||
+bubuyog|bee|n|nature||
+lumba-lumba|dolphin|n|nature||
+pating|shark|n|nature||
+pugita|octopus|n|nature||
+pagong|turtle; tortoise|n|nature||
+balahibo|fur; feathers; body hair|n|body||
+buntot|tail|n|body||
+tuka|beak|n|body||
+pakpak|wing|n|body||
+hintuturo|index finger|n|body||
+gitnang daliri|middle finger|phr|body||Literally the middle finger
+palasingsingan|ring finger|n|body||
+hinliliit|little finger|n|body||
+hinlalaki ng paa|big toe|phr|body||
+daliri ng paa|toe|phr|body||
+hinliliit ng paa|little toe|phr|body||
+bituka|intestines; bowels|n|body||
+gulugod|spine; backbone|n|body||
+bulsa|pocket|n|clothing||
+butones|button (on clothes)|n|clothing||
+brown|brown|adj|colors||English word used as is
+orange|orange (colour)|adj|colors||English word used as is
+violet|purple; violet|adj|colors||English word used as is
+payong|umbrella|n|clothing||
+cap|cap|n|clothing||English word used as is
+kurbata|necktie|n|clothing||
+nagulat|surprised; startled|adj|emotions|gulat|
+panatag|at ease; calm; relieved|adj|emotions||
+naiinip|bored; impatient|adj|emotions|inip|
+maghugas|to wash (hands, dishes)|v|routine|hugas|
+mamili|to shop; to go shopping|v|routine|bili|
+computer|computer|n|tech||English word used as is
+orasan|clock|n|time|oras|
+ruler|ruler|n|school||English word used as is
+paper clip|paper clip|n|school||English word used as is
+folder|folder; file|n|school||English word used as is
+diyaryo|newspaper|n|home||
+kapatid na lalaki|brother (male sibling)|phr|family|kapatid|Kapatid alone does not say brother or sister
+kapatid na babae|sister (female sibling)|phr|family|kapatid|The youngest child is the bunso
+pinya|pineapple|n|food||
+pakwan|watermelon|n|food||
+dalandan|orange (fruit)|n|food||
+ubas|grapes|n|food||
+mansanas|apple|n|food||
+karot|carrot|n|food||
+pechay|pechay (a leafy vegetable like bok choy)|n|food||
+tray|tray|n|home||English word used as is
+mangkok ng kanin|rice bowl|phr|home||
+mangkok ng sabaw|soup bowl|phr|home||
+chopsticks|chopsticks|n|home||English word used as is
+tasa|teacup; cup|n|home||
+tsarera|teapot|n|home||
+balkonahe|balcony|n|home||
+gate|gate|n|home||English word used as is
+mailbox|mailbox|n|home||English word used as is
+kalsada|road; street|n|places||
+larawan|picture; painting|n|home||
+TV|television|n|home||Said ti-bi; telebisyon is formal
+estante|bookshelf; shelf|n|home||
+sopa|sofa|n|home||
+microwave|microwave oven|n|home||English word used as is
+rice cooker|rice cooker|n|home||English words used as is
+basurahan|rubbish bin|n|home||
+gripo|tap; faucet|n|home||
+timbangan|weighing scale|n|home|timbang|
+shower|shower|n|home||English word used as is
+bathtub|bathtub|n|home||English word used as is
+inidoro|toilet|n|home||
+tissue|toilet paper; tissue|n|home||English word used as is
+lampshade|lamp; lampshade|n|home||People call a table lamp a lampshade
+alarm clock|alarm clock|n|home||English words used as is
+printer|printer|n|tech||English word used as is
+camera|camera|n|tech||English word used as is
+headphones|headphones|n|tech||English word used as is
+bumbilya|light bulb|n|home||
+flashlight|torch; flashlight|n|home||English word used as is
+baterya|battery|n|tech||
+plug|plug|n|tech||English word used as is
+video game|video game|n|tech||English words used as is
+gulong|tyre; wheel|n|travel||
+manibela|steering wheel|n|travel||
+side mirror|side mirror|n|travel||English words used as is
+wiper|windscreen wiper|n|travel||English word used as is
+compartment|trunk (of a car)|n|travel||English word used as is; also trunk
+bumper|bumper|n|travel||English word used as is
+busina|horn (of a car); bicycle bell|n|travel||
+basket|basket|n|travel||English word used as is
+preno|brake lever; brake|n|travel||
+pedal|pedal|n|travel||English word used as is
+kadena|chain|n|travel||
+kandado|lock; padlock|n|travel||
+rack|rear rack|n|travel||English word used as is
+stand|kickstand|n|travel||English word used as is
+screen|screen|n|tech||English word used as is
+keyboard|keyboard|n|tech||English word used as is
+power button|power button|n|tech||English words used as is
+mouse|computer mouse|n|tech||English word used as is
+button|button (on a device)|n|tech||English word used as is
+kable|cable|n|tech||
+earphones|earphones|n|tech||English word used as is
+tren|train|n|travel||
+motorsiklo|motorbike|n|travel||
+bisikleta|bicycle|n|travel||
+trak|truck|n|travel||
+taxi|taxi|n|travel||English word used as is
+van|van|n|travel||English word used as is
+thermometer|thermometer|n|health||English word used as is
+iniksyon|injection|n|health||
+plaster|sticking plaster|n|health||Many people say band-aid
+stethoscope|stethoscope|n|health||English word used as is
+wheelchair|wheelchair|n|health||English word used as is
+face mask|face mask|n|health||English words used as is
+tulay|bridge|n|places||
+buhawi|tornado; whirlwind|n|nature||
+bahaghari|rainbow|n|nature||
+temperatura|temperature|n|nature||
+gumamela|hibiscus|n|nature||
+mirasol|sunflower|n|nature||
+dahon|leaf|n|nature||
+halaman|plant|n|nature||
+intersection|crossroads; intersection|n|places||English word used as is
+stoplight|traffic light|n|places||English word used as is
+tawiran|pedestrian crossing|n|places||
+bangketa|sidewalk; pavement|n|places||
+post office|post office|n|places||English words used as is
+turnstile|turnstile; ticket gate|n|travel||English word used as is
+staff ng istasyon|station staff|phr|travel||
+labasan|exit|n|places||
+platform|platform|n|travel||English word used as is
+riles|railway track|n|travel||
+pinto ng tren|train door|phr|travel||
+hotel|hotel|n|places||English word used as is
+kainan|restaurant; eatery|n|places||
+pasukan|entrance|n|places||
+information|information desk; reception|n|places||English word used as is
+hintayan|waiting area|n|places||
+consultation room|consultation room; doctor's room|n|health||English words used as is
+cashier|cashier; payment counter|n|places||English word used as is
+nurse station|nurses' station|n|health||English words used as is
+hardin|garden|n|places||
+sa ibabaw|on; on top of|phr|grammar||
+sa ilalim|under; underneath|phr|grammar||
+sa loob|in; inside|phr|grammar||
+sa harap|in front of|phr|grammar||
+sa likod|behind|phr|grammar||
+sa tabi|next to; beside|phr|grammar||
+sa kaliwa|on the left; left of|phr|grammar||
+sa kanan|on the right; right of|phr|grammar||
+sa pagitan|between|phr|grammar||
+sa labas|outside|phr|grammar||
 `);
