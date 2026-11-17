@@ -4,6 +4,13 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.9.4', date: '2026-11-17', title: 'Stress pairs: last-syllable recordings fixed, By ear is back',
+    items: [
+      { type: 'correction', text: 'The last-syllable sentences on the Stress pairs tab (tu-LOG, bu-KAS, ga-LIT, ba-SA and the rest) are re-recorded with the stress in the right place, checked by ear by Dr. Navarro, and have their speaker buttons back. The By ear set of the stress drill is back too.' },
+      { type: 'correction', text: 'The pair suka (vinegar, vomit) is removed from the stress pairs: both words are stressed on the first syllable and differ only by the catch in the throat at the end of vinegar. There are now 27 pairs.' }
+    ]
+  },
+  {
     version: '3.9.3', date: '2026-11-17', title: 'Stress pairs: faulty recordings removed',
     items: [
       { type: 'correction', text: 'The re-recorded last-syllable sentences of version 3.9.2 swallowed the stressed vowel (Tulog pa ang pasyente came out as "Tulg"). They are removed. On the Stress pairs tab only the first-syllable sentences have a speaker button until a recording has been approved by ear.' }

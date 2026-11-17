@@ -54,9 +54,9 @@
     { id: 'errors', title: 'Find the mistake', eyebrow: 'Grammar · 10 sentences', blurb: 'One word is wrong in each sentence. Tap it.',
       intro: 'Each sentence has one mistake a learner often makes: a wrong marker or pronoun, a small word out of place, a missing linker, or a verb in the wrong form. Tap the word that is wrong, then read the corrected sentence.',
       opts: [['all', 'All sets'], ['m', 'Markers and pronouns'], ['o', 'Small words and linkers'], ['v', 'Verb forms']], lessons: ['markers', 'pronouns', 'enclitics', 'linkers', 'aspect', 'negation'] },
-    { id: 'stress', title: 'Same spelling, different stress', eyebrow: 'Stress · 10 questions', blurb: 'Bukas is tomorrow or open. Gutom is hunger or hungry. The stress decides.',
-      intro: 'Tagalog is written without accents, so one spelling can be two words. The stress tells them apart: BU-kas is tomorrow, bu-KAS is open. Capital letters here show the stressed syllable. From the sentence: read it and say where the stress falls. From the meaning: go from the English to the stress. The recorded voice cannot be trusted with a stress on the last syllable, so those sentences have no speaker button.',
-      opts: [['ctx', 'From the sentence'], ['mean', 'From the meaning']], lessons: ['pronounce'], more: ['#/words?tab=str', 'See all stress pairs'] }
+    { id: 'stress', title: 'Same spelling, different stress', eyebrow: 'Listening · 10 questions', blurb: 'Bukas is tomorrow or open. Gutom is hunger or hungry. The stress decides.',
+      intro: 'Tagalog is written without accents, so one spelling can be two words. The stress tells them apart: BU-kas is tomorrow, bu-KAS is open. Capital letters here show the stressed syllable. From the sentence: read it and say where the stress falls. By ear: hear the sentence first. From the meaning: go from the English to the stress.',
+      opts: [['ctx', 'From the sentence'], ['ear', 'By ear'], ['mean', 'From the meaning']], lessons: ['pronounce'], more: ['#/words?tab=str', 'See all stress pairs'] }
   ];
   App.DRILLS = DRILLS;
   const byId = (id) => DRILLS.find((d) => d.id === id);
@@ -291,20 +291,20 @@
   /* ---------- Same spelling, different stress (3.9.0) ---------- */
   const stressed = (x, last) => (last ? x.syl[0] + '-' + x.syl[1].toUpperCase() : x.syl[0].toUpperCase() + '-' + x.syl[1]);
   App.stressLabel = stressed;
-  // 3.9.1: the recorded voice puts the stress on the first syllable of most of these words whatever the sentence, so only
-  // first-syllable sentences are played, and the By ear set is off until the last-syllable clips are right (STRESS_EAR).
-  const STRESS_EAR = false;
+  // What is played is WORD_STRESS_SAY (js/data/word-sets.js): the last-syllable sentence is respelled for the voice.
+  // STRESS_EAR = false switches the By ear set off and silences last-syllable sentences (used in 3.9.1 to 3.9.3).
+  const STRESS_EAR = true;
   function stressQs(set, n) {
     if (set === 'ear' && !STRESS_EAR) set = 'ctx';
     const pool = [];
     STRESS.forEach((x) => { pool.push({ x, last: false }); pool.push({ x, last: true }); });
     return pick(pool, Math.min(n, pool.length)).map(({ x, last }) => {
-      const m = last ? x.b : x.a, A = stressed(x, false), B = stressed(x, true);
+      const m = last ? x.b : x.a, A = stressed(x, false), B = stressed(x, true), sp = last && !STRESS_EAR ? null : WORD_STRESS_SAY(x, last);
       const tail = ' ' + A + ' = ' + x.a.en + ', ' + B + ' = ' + x.b.en + '.' + (x.note ? ' ' + x.note : '');
-      if (set === 'mean') return { q: x.w + ': ' + m.en, sub: 'Where is the stress?', opts: [A, B], a: last ? 1 : 0, tlo: true, sayAfter: last && !STRESS_EAR ? null : m.ex[0], exp: m.ex[0] + ' ' + m.ex[1] + tail };
+      if (set === 'mean') return { q: x.w + ': ' + m.en, sub: 'Where is the stress?', opts: [A, B], a: last ? 1 : 0, tlo: true, sayAfter: sp, exp: m.ex[0] + ' ' + m.ex[1] + tail };
       const opts = [A + ' · ' + x.a.en, B + ' · ' + x.b.en];
-      return { q: m.ex[0], sub: 'Which ' + x.w + ' is this?', tlq: true, hideQ: set === 'ear' ? 'Listen, then choose which ' + x.w + ' you heard.' : undefined, say: set === 'ear' ? m.ex[0] : null,
-        opts, a: last ? 1 : 0, sayAfter: set === 'ear' || (last && !STRESS_EAR) ? null : m.ex[0], exp: m.ex[1] + tail };
+      return { q: m.ex[0], sub: 'Which ' + x.w + ' is this?', tlq: true, hideQ: set === 'ear' ? 'Listen, then choose which ' + x.w + ' you heard.' : undefined, say: set === 'ear' ? sp : null,
+        opts, a: last ? 1 : 0, sayAfter: set === 'ear' ? null : sp, exp: m.ex[1] + tail };
     });
   }
 

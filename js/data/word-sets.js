@@ -101,7 +101,6 @@ window.WORD_STRESS = [
   { w: 'galit', syl: ['ga', 'lit'], a: { en: 'anger', mark: 'galit', ex: ['Hindi niya mapigil ang galit niya.', 'He cannot hold back his anger.'] }, b: { en: 'angry', mark: 'galít', ex: ['Galit pa rin siya sa kapatid niya.', 'She is still angry at her sibling.'] } },
   { w: 'buhay', syl: ['bu', 'hay'], a: { en: 'life', mark: 'buhay', ex: ['Mahirap ang buhay sa lungsod.', 'Life in the city is hard.'] }, b: { en: 'alive', mark: 'buháy', ex: ['Buhay pa ang lolo niya.', 'His grandfather is still alive.'] } },
   { w: 'sunog', syl: ['su', 'nog'], a: { en: 'a fire', mark: 'sunog', ex: ['May sunog sa kabilang barangay.', 'There is a fire in the next barangay.'] }, b: { en: 'burnt', mark: 'sunóg', ex: ['Sunog ang sinaing.', 'The rice is burnt.'] } },
-  { w: 'suka', syl: ['su', 'ka'], a: { en: 'vinegar', mark: 'sukà', ex: ['Lagyan mo ng suka ang adobo.', 'Put vinegar in the adobo.'] }, b: { en: 'vomit', mark: 'suká', ex: ['May suka sa sahig ng kuwarto.', 'There is vomit on the floor of the room.'] } },
   { w: 'labi', syl: ['la', 'bi'], a: { en: 'lips', mark: 'labì', ex: ['Tuyo ang labi ng pasyente.', 'The patient\'s lips are dry.'] }, b: { en: 'remains (of the dead)', mark: 'labí', ex: ['Iniuwi sa probinsya ang labi ng lolo niya.', 'His grandfather\'s remains were brought home to the province.'] } },
   { w: 'paso', syl: ['pa', 'so'], a: { en: 'a burn', mark: 'pasò', ex: ['May paso siya sa braso.', 'He has a burn on his arm.'] }, b: { en: 'flowerpot', mark: 'pasô', ex: ['Nabasag ang paso ng halaman.', 'The plant\'s pot broke.'] } },
   { w: 'basa', syl: ['ba', 'sa'], a: { en: 'read', mark: 'basa', ex: ['Basa nang basa ng libro ang bata.', 'The child keeps on reading books.'] }, b: { en: 'wet', mark: 'basâ', ex: ['Basa ng pawis ang damit niya.', 'His clothes are wet with sweat.'] } },
@@ -119,19 +118,25 @@ window.WORD_STRESS = [
   { w: 'pala', syl: ['pa', 'la'], a: { en: 'shovel', mark: 'pala', ex: ['Kumuha siya ng pala para maghukay.', 'He got a shovel to dig.'] }, b: { en: 'so it turns out', mark: 'palá', ex: ['Ikaw pala ang bagong doktor.', 'So you are the new doctor.'] } },
   { w: 'sikat', syl: ['si', 'kat'], a: { en: 'rising or shining of the sun', mark: 'sikat', ex: ['Maaga ang sikat ng araw ngayon.', 'The sun rose early today.'] }, b: { en: 'famous', mark: 'sikát', ex: ['Sikat na artista ang kapitbahay nila.', 'Their neighbor is a famous actor.'] } },
   { w: 'tubo', syl: ['tu', 'bo'], a: { en: 'pipe, tube', mark: 'tubo', ex: ['May tagas ang tubo ng tubig.', 'The water pipe has a leak.'] }, b: { en: 'sugarcane', mark: 'tubó', ex: ['Nagtatanim sila ng tubo sa Tarlac.', 'They grow sugarcane in Tarlac.'] } },
-  { w: 'hamon', syl: ['ha', 'mon'], a: { en: 'challenge', mark: 'hamon', ex: ['Malaking hamon ang pag-aaral ng medisina.', 'Studying medicine is a big challenge.'] }, b: { en: 'ham', mark: 'hamón', ex: ['May hamon at keso tuwing Pasko.', 'There is ham and cheese every Christmas.'] } },
+  { w: 'hamon', syl: ['ha', 'mon'], a: { en: 'challenge', mark: 'hamon', ex: ['Malaking hamon ang pag-aaral ng medisina.', 'Studying medicine is a big challenge.'] }, b: { en: 'ham', mark: 'hamón', ex: ['May hamon at keso tuwing Pasko.', 'There is ham and cheese every Christmas.'], say: 'May ha-mon at keso tuwing Pas-ko.' } },
   { w: 'balat', syl: ['ba', 'lat'], a: { en: 'birthmark', mark: 'balat', ex: ['May balat siya sa likod mula pagkabata.', 'She has had a birthmark on her back since childhood.'] }, b: { en: 'skin', mark: 'balát', ex: ['Namumula ang balat niya.', 'His skin is turning red.'] } }
 ];
 
-/* What the recorded voice is given for a stress sentence: the sentence itself, or the side's own `say`.
-   The voice (fil-PH-BlessicaNeural) stresses the first syllable of these words whatever the sentence. Spellings tried
-   and rejected by ear by Dr. Navarro on 2026-11-17: an accent mark (buháy, and bu-háy inside a sentence) makes the voice
-   DROP the vowel ("Tulg pa ang pasyente"); a doubled vowel (bukaas) moves the stress but drags the vowel.
-   So a last-syllable sentence is only played when its side carries a `say` she has approved by ear (js/words.js).
-   Used by js/words.js and tools/collect-texts.js, so the clip keys always match. */
+/* What the recorded voice is given for a stress sentence (3.9.4). The voice (fil-PH-BlessicaNeural) stresses the first
+   syllable of these words whatever the sentence. For the last-syllable meaning the word is respelled with a plain hyphen
+   (Tu-log pa ang pasyente.), and with an apostrophe as well when it ends in a catch in the throat (Ba-sa' ng pawis...).
+   Dr. Navarro approved these by ear from test recordings on 2026-11-17. Rejected: an accent mark (the voice DROPS an
+   accented vowel inside a sentence: "Tulg pa ang pasyente"), a doubled vowel (bukaas drags), splitting the word in two.
+   A side may carry its own `say` to override the rule. Never put an accented letter in text for this voice.
+   Used by js/words.js, js/drills.js and tools/collect-texts.js, so the clip keys always match. */
 window.WORD_STRESS_SAY = function (x, last) {
   var m = last ? x.b : x.a;
-  return m.say || m.ex[0];
+  if (m.say) return m.say;
+  if (!last) return m.ex[0];
+  var k = x.syl[0].length, catchEnd = /[âêîôû]$/.test(m.mark);
+  return m.ex[0].replace(new RegExp('(^|[^A-Za-z])(' + x.w + ')(?![A-Za-z])', 'i'), function (all, pre, w) {
+    return pre + w.slice(0, k) + '-' + w.slice(k) + (catchEnd ? "'" : '');
+  });
 };
 
 window.WORD_FALSE_FRIENDS = [
