@@ -1,0 +1,18 @@
+# Voice test lines: id|voice|text. Recorded by .github/workflows/voice-test.yml into tools/voice-test/out/<id>.mp3.
+# Not part of the app or the audio pack. Round 2 (2026-11-17): last-syllable stress without accent marks.
+tulog-1|fil-PH-BlessicaNeural|Tu-log pa ang pasyente.
+tulog-2|fil-PH-BlessicaNeural|Tu log pa ang pasyente.
+tulog-3|fil-PH-BlessicaNeural|Tuloog pa ang pasyente.
+tulog-4|fil-PH-AngeloNeural|Tulog pa ang pasyente.
+bukas-1|fil-PH-BlessicaNeural|Bu-kas ang pinto ng kuwarto.
+bukas-2|fil-PH-BlessicaNeural|Bu kas ang pinto ng kuwarto.
+bukas-3|fil-PH-BlessicaNeural|Bukaas ang pinto ng kuwarto.
+bukas-4|fil-PH-AngeloNeural|Bukas ang pinto ng kuwarto.
+basa-1|fil-PH-BlessicaNeural|Ba-sa ng pawis ang damit niya.
+basa-2|fil-PH-BlessicaNeural|Ba sa ng pawis ang damit niya.
+basa-3|fil-PH-BlessicaNeural|Basaa ng pawis ang damit niya.
+basa-4|fil-PH-AngeloNeural|Basa ng pawis ang damit niya.
+galit-1|fil-PH-BlessicaNeural|Ga-lit pa rin siya sa kapatid niya.
+galit-2|fil-PH-BlessicaNeural|Ga lit pa rin siya sa kapatid niya.
+galit-3|fil-PH-BlessicaNeural|Galiit pa rin siya sa kapatid niya.
+galit-4|fil-PH-AngeloNeural|Galit pa rin siya sa kapatid niya.

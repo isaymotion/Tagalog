@@ -123,20 +123,15 @@ window.WORD_STRESS = [
   { w: 'balat', syl: ['ba', 'lat'], a: { en: 'birthmark', mark: 'balat', ex: ['May balat siya sa likod mula pagkabata.', 'She has had a birthmark on her back since childhood.'] }, b: { en: 'skin', mark: 'balát', ex: ['Namumula ang balat niya.', 'His skin is turning red.'] } }
 ];
 
-/* 3.9.2: what the recorded voice is given for a stress sentence. The voice stresses the first syllable of these words
-   whatever the sentence, so for the last-syllable meaning the word is respelled with a hyphen and its accent
-   (bu-háy, ba-sâ): Dr. Navarro heard that spelling as correct in a listening test on 2026-11-17 (a doubled vowel,
-   buhaay, moved the stress but dragged the vowel). A side may carry its own `say` to override this.
-   Used by js/words.js, js/drills.js and tools/collect-texts.js, so the clip keys always match. */
+/* What the recorded voice is given for a stress sentence: the sentence itself, or the side's own `say`.
+   The voice (fil-PH-BlessicaNeural) stresses the first syllable of these words whatever the sentence. Spellings tried
+   and rejected by ear by Dr. Navarro on 2026-11-17: an accent mark (buháy, and bu-háy inside a sentence) makes the voice
+   DROP the vowel ("Tulg pa ang pasyente"); a doubled vowel (bukaas) moves the stress but drags the vowel.
+   So a last-syllable sentence is only played when its side carries a `say` she has approved by ear (js/words.js).
+   Used by js/words.js and tools/collect-texts.js, so the clip keys always match. */
 window.WORD_STRESS_SAY = function (x, last) {
   var m = last ? x.b : x.a;
-  if (m.say) return m.say;
-  if (!last) return m.ex[0];
-  var k = x.syl[0].length;
-  return m.ex[0].replace(new RegExp('(^|[^A-Za-z])(' + x.w + ')(?![A-Za-z])', 'i'), function (all, pre, w) {
-    var mark = m.mark.slice(0, k) + '-' + m.mark.slice(k);
-    return pre + (w.charAt(0) !== w.charAt(0).toLowerCase() ? mark.charAt(0).toUpperCase() + mark.slice(1) : mark.charAt(0).toLowerCase() + mark.slice(1));
-  });
+  return m.say || m.ex[0];
 };
 
 window.WORD_FALSE_FRIENDS = [

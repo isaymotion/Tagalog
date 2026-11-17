@@ -1,0 +1,49 @@
+# Records the lines in tools/voice-test/lines.txt (id|voice|text) to tools/voice-test/out/<id>.mp3 so spellings and
+# voices can be compared by ear before anything goes into the app. Not part of the app or the audio pack.
+name: Voice test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['tools/voice-test/lines.txt', '.github/workflows/voice-test.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with: { python-version: '3.12' }
+      - run: pip install --upgrade edge-tts
+      - name: Record
+        run: |
+          python - <<'PY'
+          import asyncio, os, edge_tts
+          os.makedirs('tools/voice-test/out', exist_ok=True)
+          async def main():
+              for line in open('tools/voice-test/lines.txt', encoding='utf8'):
+                  line = line.strip()
+                  if not line or line.startswith('#'): continue
+                  i, voice, text = line.split('|', 2)
+                  for attempt in range(3):
+                      try:
+                          await asyncio.wait_for(edge_tts.Communicate(text, voice, rate='-5%').save(f'tools/voice-test/out/{i}.mp3'), timeout=45)
+                          break
+                      except Exception as e:
+                          print('retry', i, e)
+          asyncio.run(main())
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/voice-test/out
+          if git diff --cached --quiet; then echo "Nothing new"; exit 0; fi
+          git commit -m "Voice test clips"
+          git pull --rebase origin main
+          git push
