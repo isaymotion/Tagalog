@@ -13,7 +13,7 @@ import re
 import argparse, asyncio, base64, os, shutil, subprocess
 from playwright.async_api import async_playwright
 
-ROUTES = ['#/', '#/words', '#/words?tab=lad', '#/words?tab=syn', '#/words?r=tulog', '#/drills/roots', '#/drills/families', '#/drills/dictation', '#/drills/translate', '#/lessons/enclitics', '#/lessons/time-words', '#/lessons/intensifiers', '#/lessons/focus-an-i', '#/lessons/nominalising', '#/lessons/recent-past', '#/lessons/handout?id=focus-an-i', '#/drills', '#/drills/markers', '#/drills/build', '#/drills/switch', '#/lessons/demonstratives', '#/lessons/connectors', '#/lessons/ability', '#/lessons/causative', '#/lessons/requests', '#/lessons/hedging', '#/lessons/handout?id=hedging', '#/dict?cat=routine', '#/dict?cat=civic', '#/practice', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/d10', '#/flash', '#/flash/psych', '#/verbs', '#/verbs/kain',
+ROUTES = ['#/', '#/daily', '#/drills/focus', '#/drills/errors', '#/drills/stress', '#/words?tab=str', '#/words?tab=look', '#/words', '#/words?tab=lad', '#/words?tab=syn', '#/words?r=tulog', '#/drills/roots', '#/drills/families', '#/drills/dictation', '#/drills/translate', '#/lessons/enclitics', '#/lessons/time-words', '#/lessons/intensifiers', '#/lessons/focus-an-i', '#/lessons/nominalising', '#/lessons/recent-past', '#/lessons/handout?id=focus-an-i', '#/drills', '#/drills/markers', '#/drills/build', '#/drills/switch', '#/lessons/demonstratives', '#/lessons/connectors', '#/lessons/ability', '#/lessons/causative', '#/lessons/requests', '#/lessons/hedging', '#/lessons/handout?id=hedging', '#/dict?cat=routine', '#/dict?cat=civic', '#/practice', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/d10', '#/flash', '#/flash/psych', '#/verbs', '#/verbs/kain',
   '#/lessons', '#/lessons/markers', '#/reading', '#/reading/sulat-nanay', '#/speak', '#/speak/meet', '#/speak/case-jomar', '#/psych',
   '#/psych/s/hallucinations', '#/psych/point', '#/psych/point?s=suicide', '#/psych/listen', '#/psych/listen?s=depression', '#/lessons/interpreting', '#/psych/cases', '#/psych/case/jomar', '#/psych/interp', '#/placement', '#/progress', '#/settings', '#/new',
   '#/about', '#/more', '#/psych/handout', '#/psych/handout?s=suicide', '#/psych/deesc', '#/psych/handout?deesc=1', '#/psych/s/deescalation',
@@ -148,6 +148,86 @@ async def main(base, out):
             await pg.evaluate("location.hash='#/dict/' + App.DICT.find((e) => e.tl === 'matulog').id"); await pg.wait_for_timeout(150)
             if 'Word family: tulog' not in await pg.inner_text('#view'): fails.append(f'{name}: dictionary entry has no family link')
             if not await pg.evaluate("App.searchAll('patulugin').some((r) => r.route === '#/words?r=tulog')"): fails.append(f'{name}: search does not find a word family')
+            # 3.9.0: focus, stress and the new family sets to the score; generators well formed
+            await pg.evaluate("window.__said = []; App.speak = (t) => { window.__said.push(t); }; 0")
+            for did, sel in [('focus', 'ao'), ('focus', 'oa'), ('stress', 'ctx'), ('stress', 'ear'), ('stress', 'mean'), ('families', 'ff'), ('families', 'cog')]:
+                await pg.evaluate(f"location.hash='#/drills/{did}'"); await pg.wait_for_timeout(150)
+                await pg.select_option('#dset', sel); await pg.click('#dgo'); await pg.wait_for_timeout(60)
+                if sel == 'ear' and (await pg.locator('#dbox [data-qtext]').is_visible() or not await pg.locator('#dbox [data-act=play]').count()): fails.append(f'{name}: stress by ear shows the sentence')
+                for _ in range(10):
+                    await pg.click('#dbox .opt >> nth=0'); await pg.wait_for_timeout(30); await pg.click('#dbox [data-act=next]'); await pg.wait_for_timeout(30)
+                if 'Try again' not in await pg.inner_text('#dbox'): fails.append(f'{name}: drill {did}:{sel} did not finish')
+                if await pg.evaluate(f"(App.state.done.drills || {{}})['{did}:{sel}']") is None: fails.append(f'{name}: drill {did}:{sel} score not saved')
+                if await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name}: {did}:{sel} overflow')
+            bad = await pg.evaluate("""(() => { const out = [];
+              ['ao','oa'].forEach((s) => App.drillQs.focus(s, 99).forEach((q) => { if (q.opts.length !== 4 || new Set(q.opts).size !== 4 || q.opts.includes(q.q)) out.push('focus ' + s + ' ' + q.q); }));
+              DRILL_FOCUS.forEach((it) => { const ans = App.drillFocusAnswers(it), e = it.end || '.';
+                ans.forEach((a) => { if (App.drillTypedScore(ans, a.toLowerCase().replace(/[?.]/g, '')) !== 100) out.push('focus typed ' + a); });
+                [it.o + ' ' + it.ar + e, it.a + ' ' + it.or + e, it.ox + ' ' + it.or + e, it.a + ' ' + it.ar + e].forEach((w) => { if (App.drillTypedScore(ans, w) === 100) out.push('focus typed accepts ' + w); }); });
+              ['ctx','ear','mean'].forEach((s) => App.drillQs.stress(s, 99).forEach((q) => { if (q.opts.length !== 2 || q.opts[0] === q.opts[1] || !/[A-Z]/.test(q.opts[q.a])) out.push('stress ' + s + ' ' + q.q); }));
+              if (App.drillQs.stress('ctx', 99).length !== 2 * WORD_STRESS.length) out.push('stress pool');
+              if (App.stressLabel(WORD_STRESS[0], false) !== 'BU-kas' || App.stressLabel(WORD_STRESS[0], true) !== 'bu-KAS') out.push('stress label');
+              App.drillQs.families('ff', 99).forEach((q) => { if (q.opts.length !== 4 || new Set(q.opts).size !== 4) out.push('ff ' + q.q); });
+              App.drillQs.families('cog', 200).forEach((q) => { if (q.opts.length !== 4 || new Set(q.opts).size !== 4) out.push('cog ' + q.q); });
+              App.drillQs.errors(99).forEach((q) => { if (q.opts.length !== 2 || q.opts[0] === q.opts[1]) out.push('err ' + q.opts[0]); });
+              for (let k = 0; k < 20; k++) { const qs = App.drillQs.daily(); if (qs.length !== 10) out.push('daily length ' + qs.length); qs.forEach((q) => { if (q.opts.length < 2 || new Set(q.opts).size !== q.opts.length || !q.sub || q.a >= q.opts.length) out.push('daily q ' + q.q); }); }
+              return out; })()""")
+            if bad: fails.append(f'{name}: 3.9.0 drill generators: {bad[:4]}')
+            # typed focus set: the object-focus sentence scores, the unchanged actor-focus sentence does not
+            await pg.evaluate("location.hash='#/drills/focus'"); await pg.wait_for_timeout(150)
+            await pg.select_option('#dset', 'type'); await pg.click('#dgo'); await pg.wait_for_timeout(60)
+            for k in range(10):
+                src = await pg.inner_text('#dbox .card > div >> nth=1')
+                ans = await pg.evaluate("(src) => { const it = DRILL_FOCUS.find((x) => x.a + ' ' + x.ar + (x.end || '.') === src); return it && App.drillFocusAnswers(it)[0]; }", src)
+                if not ans: fails.append(f'{name}: focus typed prompt not found: {src}'); break
+                await pg.fill('#dbox [data-in]', (src if k == 9 else ans).lower().replace('?', '').replace('.', '')); await pg.press('#dbox [data-in]', 'Enter'); await pg.wait_for_timeout(40)
+                if await pg.locator('#dbox .feedback.' + ('no' if k == 9 else 'ok')).count() != 1: fails.append(f'{name}: focus typed item {k} graded wrongly: {ans}')
+                await pg.click('#dbox [data-act=next]'); await pg.wait_for_timeout(40)
+            if await pg.evaluate("(App.state.done.drills || {})['focus:type']") != 90: fails.append(f'{name}: focus typed score not 90')
+            # find the mistake: tap the wrong word in nine sentences and a right word in the tenth
+            await pg.evaluate("location.hash='#/drills/errors'"); await pg.wait_for_timeout(150)
+            await pg.select_option('#dset', 'all'); await pg.click('#dgo'); await pg.wait_for_timeout(60)
+            for k in range(10):
+                bad_s = ' '.join(await pg.locator('#dbox .wtile').all_inner_texts())
+                it = await pg.evaluate("(b) => { const it = DRILL_ERRORS.find((x) => x.bad === b); return it && { i: it.i, n: it.bad.split(' ').length, fix: it.fix }; }", bad_s)
+                if not it: fails.append(f'{name}: errors item not found: {bad_s}'); break
+                tap = it['i'][-1] if k < 9 else next(j for j in range(it['n']) if j not in it['i'])
+                await pg.click(f'#dbox .wtile >> nth={tap}'); await pg.wait_for_timeout(40)
+                fb = pg.locator('#dbox .feedback.' + ('ok' if k < 9 else 'no'))
+                if await fb.count() != 1 or it['fix'] not in await pg.inner_text('#dbox [data-fb]'): fails.append(f'{name}: errors item {k} graded wrongly: {bad_s}')
+                if await pg.locator('#dbox .wtile.bad').count() != len(it['i']): fails.append(f'{name}: errors item does not mark the wrong word: {bad_s}')
+                await pg.click('#dbox [data-act=next]'); await pg.wait_for_timeout(40)
+            if await pg.evaluate("(App.state.done.drills || {})['errors:all']") != 90: fails.append(f'{name}: errors score not 90')
+            if await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name}: errors overflow')
+            # daily mix: Home tile, ten questions, saved under today's date, Home then says done
+            await pg.evaluate("location.hash='#/'"); await pg.wait_for_timeout(150)
+            if 'Ten mixed questions' not in await pg.inner_text('#view'): fails.append(f'{name}: Home has no daily mix tile')
+            await pg.evaluate("location.hash='#/daily'"); await pg.wait_for_timeout(150)
+            await pg.click('#dgo'); await pg.wait_for_timeout(60)
+            for _ in range(10):
+                if 'of 10' not in (await pg.inner_text('#dbox .eyebrow >> nth=0')).lower(): fails.append(f'{name}: daily mix is not 10 questions'); break
+                await pg.click('#dbox .opt >> nth=0'); await pg.wait_for_timeout(30); await pg.click('#dbox [data-act=next]'); await pg.wait_for_timeout(30)
+            if 'Try again' not in await pg.inner_text('#dbox') or await pg.evaluate("App.dailyToday()") is None: fails.append(f'{name}: daily mix not saved')
+            await pg.evaluate("location.hash='#/'"); await pg.wait_for_timeout(150)
+            if 'Done today' not in await pg.inner_text('#view'): fails.append(f'{name}: Home does not show the daily mix as done')
+            # new Word families tabs and search
+            await pg.evaluate("location.hash='#/words?tab=str'"); await pg.wait_for_timeout(150)
+            if await pg.locator('.wfam').count() != await pg.evaluate("WORD_STRESS.length") or 'bu-KAS' not in await pg.inner_text('#view') or await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name}: stress pairs tab')
+            await pg.evaluate("location.hash='#/words?tab=look'"); await pg.wait_for_timeout(150)
+            if await pg.locator('.wsyn').count() != await pg.evaluate("WORD_FALSE_FRIENDS.length") or await pg.locator('.wcog > div').count() != await pg.evaluate("WORD_COGNATES.length") or await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name}: Spanish and English tab')
+            if not await pg.evaluate("App.searchAll('delikado').some((r) => r.route === '#/words?tab=look') && App.searchAll('daily mix').some((r) => r.route === '#/daily')"): fails.append(f'{name}: search does not find a false friend or the daily mix')
+            # placement: 25 questions; all right gives C1; C1 needs B2
+            pl = await pg.evaluate("[PLACEMENT.length, PLACEMENT.filter((q) => q[0] === 'C1').length]")
+            if pl != [25, 5]: fails.append(f'{name}: placement bands {pl}')
+            await pg.evaluate("location.hash='#/placement'"); await pg.wait_for_timeout(150)
+            for k in range(25):
+                await pg.click(f"#pq .opt >> nth={await pg.evaluate(f'PLACEMENT[{k}][3]')}"); await pg.wait_for_timeout(15)
+            if await pg.evaluate("App.state.level") != 'C1' or 'C1' not in await pg.inner_text('#pq h2'): fails.append(f'{name}: placement does not reach C1')
+            await pg.evaluate("location.hash='#/'"); await pg.wait_for_timeout(80); await pg.evaluate("location.hash='#/placement'"); await pg.wait_for_timeout(150)
+            for k in range(25):
+                lv, a = await pg.evaluate(f'[PLACEMENT[{k}][0], PLACEMENT[{k}][3]]')
+                await pg.click(f"#pq .opt >> nth={3 if lv == 'B2' else a}"); await pg.wait_for_timeout(15)
+            if await pg.evaluate("App.state.level") != 'B1': fails.append(f'{name}: placement gives C1 without B2')
             if await pg.evaluate("(App.DICT.find((e) => e.tl === 'pamasahe') || {}).id") != 'd1849': fails.append(f'{name}: first 3.8.0 word is not d1849')
             # dictionary ids: an old word keeps its id, new words are numbered after the legacy set
             ids = await pg.evaluate("[App.DICT_LEGACY, App.DICT.filter((e) => +e.id.slice(1) >= App.DICT_LEGACY).length, (App.DICT.find((e) => e.tl === 'magsipilyo') || {}).id]")

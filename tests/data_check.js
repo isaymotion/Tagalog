@@ -166,6 +166,58 @@ if (C.DRILL_CLOZE) {
   const text = JSON.stringify([C.WORD_FAMILIES, C.WORD_LADDERS, C.WORD_SYNONYMS, C.DRILL_TRANSLATE, C.DRILL_DICTATION]).toLowerCase();
   ['baliw', 'adik', 'sira ulo', 'loko'].forEach((w) => { if (new RegExp('\\b' + w + '\\b').test(text)) bad('stigmatizing word in word sets: ' + w); });
 }
+// 3.9.0: focus pairs, find-the-mistake items, stress pairs, false friends, look-alikes, C1 placement band.
+{
+  const seenF = new Set();
+  (C.DRILL_FOCUS || []).forEach((it) => {
+    if (['a', 'ar', 'o', 'or', 'ax', 'ox', 'enA', 'enO', 'why'].some((k) => !it[k])) bad('focus fields: ' + it.a);
+    if (new Set([it.a, it.o, it.ax, it.ox]).size !== 4 || it.ar === it.or || it.enA === it.enO) bad('focus pieces not distinct: ' + it.a + ' ' + it.ar);
+    if (!/(^| )(ang|si|ako|ka|siya|kami|tayo|kayo|sila)( |$)/.test(it.ar) || !/(^| )(ang|si) /.test(it.or)) bad('focus markers: ' + it.a + ' ' + it.ar);
+    if (seenF.has(it.a + it.ar)) bad('focus dup: ' + it.a); seenF.add(it.a + it.ar);
+  });
+  if ((C.DRILL_FOCUS || []).length < 20) bad('DRILL_FOCUS missing or short');
+  const seenE = new Set();
+  (C.DRILL_ERRORS || []).forEach((it) => {
+    const n = (it.bad || '').split(' ').length;
+    if (!it.bad || !it.fix || !it.en || !it.why || !/^(m|o|v)$/.test(it.set) || it.bad === it.fix) bad('errors fields: ' + it.bad);
+    if (!Array.isArray(it.i) || !it.i.length || it.i.length >= n || it.i.some((k) => k < 0 || k >= n)) bad('errors word positions: ' + it.bad);
+    if (seenE.has(it.bad)) bad('errors dup: ' + it.bad); seenE.add(it.bad);
+  });
+  if ((C.DRILL_ERRORS || []).length < 30 || ['m', 'o', 'v'].some((st) => (C.DRILL_ERRORS || []).filter((x) => x.set === st).length < 10)) bad('DRILL_ERRORS missing or a set has fewer than 10');
+  const flat = (w) => w.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const seenS = new Set();
+  (C.WORD_STRESS || []).forEach((x) => {
+    if (!x.w || !Array.isArray(x.syl) || x.syl.join('') !== x.w) bad('stress syllables: ' + x.w);
+    [x.a, x.b].forEach((m) => {
+      if (!m || !m.en || !m.mark || !m.ex || !m.ex[0] || !m.ex[1]) { bad('stress fields: ' + x.w); return; }
+      if (flat(m.mark) !== x.w) bad('stress mark is another word: ' + x.w + ' ' + m.mark);
+      if (!new RegExp('(^|[^a-z])' + x.w + '([^a-z]|$)', 'i').test(m.ex[0])) bad('stress sentence lacks the word: ' + x.w);
+      if (/[áéíóúàèìòùâêîôû]/i.test(m.ex[0])) bad('stress sentence has accents (write it the everyday way): ' + m.ex[0]);
+    });
+    if (x.a && x.b && (x.a.en === x.b.en || x.a.mark === x.b.mark || x.a.ex[0] === x.b.ex[0])) bad('stress pair not distinct: ' + x.w);
+    if (seenS.has(x.w)) bad('stress dup: ' + x.w); seenS.add(x.w);
+  });
+  if ((C.WORD_STRESS || []).length < 20) bad('WORD_STRESS missing or short');
+  const seenFF = new Set();
+  (C.WORD_FALSE_FRIENDS || []).forEach((x) => {
+    if (!x.tl || !/^(es|en)$/.test(x.from) || !x.src || !x.srcEn || !x.en || x.en === x.srcEn) bad('false friend fields: ' + x.tl);
+    if (seenFF.has(x.tl)) bad('false friend dup: ' + x.tl); seenFF.add(x.tl);
+  });
+  if ((C.WORD_FALSE_FRIENDS || []).length < 20) bad('WORD_FALSE_FRIENDS missing or short');
+  const groups = new Set((C.WORD_COGNATE_GROUPS || []).map((g) => g[0])), seenC = new Set(), per = {};
+  (C.WORD_COGNATES || []).forEach((c) => {
+    if (c.length !== 5 || c.some((v) => !v) || !/^(es|en)$/.test(c[1]) || !groups.has(c[4]) || /[\s-]/.test(c[0])) bad('look-alike fields: ' + c[0]);
+    if (seenC.has(c[0]) || seenFF.has(c[0])) bad('look-alike dup or also a false friend: ' + c[0]); seenC.add(c[0]);
+    (per[c[4]] = per[c[4]] || new Set()).add(c[3]);
+  });
+  Object.entries(per).forEach(([g, set]) => { if (set.size < 4) bad('look-alike group needs 4+ different meanings (the drill takes 3 wrong options from the group): ' + g); });
+  (C.WORD_SPELLING || []).forEach((r) => { if (r.length !== 2 || !r[0] || !r[1]) bad('spelling rule ' + r[0]); });
+  const text = JSON.stringify([C.DRILL_FOCUS, C.DRILL_ERRORS, C.WORD_STRESS, C.WORD_FALSE_FRIENDS, C.WORD_COGNATES]).toLowerCase();
+  ['baliw', 'adik', 'sira ulo', 'loko'].forEach((w) => { if (new RegExp('\\b' + w + '\\b').test(text)) bad('stigmatizing word in 3.9.0 sets: ' + w); });
+  const lessonIds = new Set(C.LESSONS.map((l) => l.id));
+  const pl = {}; C.PLACEMENT.forEach((q) => { pl[q[0]] = (pl[q[0]] || 0) + 1; if (q[3] >= q[2].length) bad('placement answer index: ' + q[1]); });
+  if (['A1', 'A2', 'B1', 'B2', 'C1'].some((lv) => pl[lv] !== 5) || C.PLACEMENT.length !== 25) bad('placement needs 5 questions in each of A1 to C1');
+}
 // Dictionary ids are saved in users' flashcard progress: every id in the snapshot must still be the same word.
 // After adding words (at the END of js/data/dict-themes.js), refresh with: node tests/data_check.js <repo> --write-dict-ids
 {
@@ -179,7 +231,7 @@ if (C.DRILL_CLOZE) {
     if (C.App.DICT_LEGACY !== 1658) bad('legacy dictionary size changed: ' + C.App.DICT_LEGACY);
   } else console.log('WARN no tests/dict-ids.json snapshot');
 }
-const counts = { version: C.APP_META.version, answers: C.PSYCH_ANSWERS ? C.PSYCH_ANSWERS.common.reduce((a, g) => a + g.items.length, 0) + Object.values(C.PSYCH_ANSWERS.sections).reduce((a, l) => a + l.length, 0) : 0, dict: C.App.DICT.length, sections: C.PSYCH_SECTIONS.length, phrases: C.PSYCH_SECTIONS.reduce((a, s) => a + s.phrases.length, 0), cases: C.PSYCH_CASES.length, lessons: C.LESSONS.length, reading: C.READING.length, listening: (C.LISTENING || []).length, dialogues: C.DIALOGUES.length, verbs: C.VERBS.length, dcases: (C.PSYCH_DISCHARGE_CASES || []).length, mcases: (C.PSYCH_MSE_CASES || []).length, affixes: (C.AFFIX_ITEMS || []).length, drillGaps: (C.DRILL_CLOZE || []).length, drillBuild: (C.DRILL_BUILD || []).length, dictation: (C.DRILL_DICTATION || []).length, translate: (C.DRILL_TRANSLATE || []).length, families: (C.WORD_FAMILIES || []).length, ladders: (C.WORD_LADDERS || []).length, synonyms: (C.WORD_SYNONYMS || []).length };
+const counts = { version: C.APP_META.version, answers: C.PSYCH_ANSWERS ? C.PSYCH_ANSWERS.common.reduce((a, g) => a + g.items.length, 0) + Object.values(C.PSYCH_ANSWERS.sections).reduce((a, l) => a + l.length, 0) : 0, dict: C.App.DICT.length, sections: C.PSYCH_SECTIONS.length, phrases: C.PSYCH_SECTIONS.reduce((a, s) => a + s.phrases.length, 0), cases: C.PSYCH_CASES.length, lessons: C.LESSONS.length, reading: C.READING.length, listening: (C.LISTENING || []).length, dialogues: C.DIALOGUES.length, verbs: C.VERBS.length, dcases: (C.PSYCH_DISCHARGE_CASES || []).length, mcases: (C.PSYCH_MSE_CASES || []).length, affixes: (C.AFFIX_ITEMS || []).length, drillGaps: (C.DRILL_CLOZE || []).length, drillBuild: (C.DRILL_BUILD || []).length, dictation: (C.DRILL_DICTATION || []).length, translate: (C.DRILL_TRANSLATE || []).length, families: (C.WORD_FAMILIES || []).length, ladders: (C.WORD_LADDERS || []).length, synonyms: (C.WORD_SYNONYMS || []).length, focus: (C.DRILL_FOCUS || []).length, errors: (C.DRILL_ERRORS || []).length, stress: (C.WORD_STRESS || []).length, falseFriends: (C.WORD_FALSE_FRIENDS || []).length, lookalikes: (C.WORD_COGNATES || []).length, placement: C.PLACEMENT.length };
 console.log(JSON.stringify(counts));
 console.log(fails ? fails + ' FAILURES' : 'DATA OK');
 process.exit(fails ? 1 : 0);
