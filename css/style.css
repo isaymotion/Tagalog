@@ -801,3 +801,11 @@ mark.vf { background: var(--warn-bg); color: var(--gold-ink); font-weight: 700; 
 .wsyn dt { color: var(--muted); font-size: .85rem; font-weight: 600; }
 .wsyn dd { margin: 0; min-width: 0; }
 .wsyn .say { width: 28px; height: 28px; vertical-align: middle; }
+
+/* 3.9.0: find-the-mistake tiles, stress labels, look-alike grid */
+.wtile.bad { border-color: var(--bad); background: var(--bad-bg); text-decoration: line-through; }
+.wtile.miss { border-style: dashed; border-color: var(--ink-3); }
+.wstress { letter-spacing: .02em; }
+.wcog { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px 14px; }
+.wcog > div { min-width: 0; overflow-wrap: anywhere; }
+.wcog .say { width: 28px; height: 28px; vertical-align: middle; }

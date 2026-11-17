@@ -4,6 +4,17 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.9.0', date: '2026-11-17', title: 'Daily mix, three new drills, stress pairs, Spanish and English words',
+    items: [
+      { type: 'feature', text: 'Daily mix on Home and Practice: ten mixed questions in about five minutes. Two words (your mistakes and due cards first), then one question each from markers, register, roots, word families, false friends, focus, stress and find the mistake. Home shows when you have done it today.' },
+      { type: 'feature', text: 'Three new drills. Switch the focus: read a sentence and choose, or type, the same sentence with the other topic (Uminom ang pasyente ng gamot, Ininom ng pasyente ang gamot). Find the mistake: tap the one wrong word in a sentence, then read the correction. Same spelling, different stress: bukas is tomorrow or open, gutom is hunger or hungry; work it out from the sentence, by ear, or from the meaning.' },
+      { type: 'feature', text: 'Two new tabs on the Word families page. Stress pairs: 28 spellings that are two words, each with a sentence for both meanings. Spanish and English: 46 false friends (siguro is maybe, not sure; delikado is dangerous; bisyo, multo, nerbiyos and other words that matter in an interview), 12 spelling rules, and 111 look-alikes that kept their meaning.' },
+      { type: 'feature', text: 'Two new sets in the Word families drill: False friends and Borrowed words.' },
+      { type: 'update', text: 'The placement test now goes up to C1: five new questions, 25 in all. A level you already have stays until you take the test again.' },
+      { type: 'content', text: 'All new Tagalog is a draft awaiting review by Dr. Navarro. Audio for the new sentences is recorded automatically shortly after release.' }
+    ]
+  },
+  {
     version: '3.8.0', date: '2026-11-17', title: 'Six more lessons, four new drills, word families',
     items: [
       { type: 'feature', text: 'Four new drills on the Drills page. Find the root: strip the affixes from a dictionary word. Word families: choose the right word from one root, match a deep Filipino word to the everyday one, or pick the stronger of two words. Numbers, times and doses: hear an age, a clock time or a dose and type it. Say it in Tagalog: read an English line and type the Tagalog, with several accepted answers.' },

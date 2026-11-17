@@ -179,3 +179,86 @@ window.DRILL_TRANSLATE = [
   { en: 'Have you thought of hurting yourself?', tl: ['Naisip mo na bang saktan ang sarili mo?', 'Naisip na po ba ninyong saktan ang sarili ninyo?', 'Naiisip mo bang saktan ang sarili mo?', 'Naiisip po ba ninyong saktan ang sarili ninyo?'], set: 'w', why: 'Ask it plainly. Asking does not put the idea in the patient\'s head.' },
   { en: 'I will call the doctor.', tl: ['Tatawagin ko ang doktor.', 'Tatawagin ko po ang doktor.', 'Tatawagan ko ang doktor.', 'Tatawagan ko po ang doktor.'], set: 'w' }
 ];
+
+/* 3.9.0: two more drills.
+   DRILL_FOCUS: the same event told two ways. { a, ar, o, or, ax, ox, enA, enO, why, end?, oAlt? }.
+     a + ar = the actor-focus sentence (verb, then the rest); o + or = the object-focus sentence.
+     ax, ox = the same verbs in another aspect (used as wrong options). oAlt = other accepted object-focus verbs (typed set).
+     The drill builds its wrong options by mixing the pieces: the new verb with the old markers, the old verb with the new markers.
+   DRILL_ERRORS: one mistake in each sentence. { bad, i: [word positions that count as the mistake, from 0], fix, en, why, set }.
+     set: 'm' markers and pronouns · 'o' small words and linkers · 'v' verb forms. Words are split on spaces.
+     Only mistakes no careful speaker would make: no item may be merely informal.
+   Drafted by Claude, pending Dr. Navarro's review. */
+window.DRILL_FOCUS = [
+  { a: 'Uminom', ar: 'ang pasyente ng gamot', o: 'Ininom', or: 'ng pasyente ang gamot', ax: 'Iinom', ox: 'Iinumin', enA: 'The patient took some medicine.', enO: 'The patient took the medicine.', why: 'Uminom becomes ininom. The doer moves from ang to ng, and the thing taken becomes the ang word.' },
+  { a: 'Kumain', ar: 'ako ng mangga', o: 'Kinain', or: 'ko ang mangga', ax: 'Kakain', ox: 'Kakainin', enA: 'I ate a mango.', enO: 'I ate the mango.', why: 'Ako becomes ko, because the doer is no longer the topic. Kinain ako would mean that something ate me.' },
+  { a: 'Bumili', ar: 'si Nanay ng bigas', o: 'Binili', or: 'ni Nanay ang bigas', ax: 'Bibili', ox: 'Bibilhin', enA: 'Mother bought rice.', enO: 'Mother bought the rice.', why: 'For a name, si becomes ni.' },
+  { a: 'Nagluto', ar: 'ang lola ng lugaw', o: 'Niluto', or: 'ng lola ang lugaw', ax: 'Magluluto', ox: 'Lulutuin', enA: 'Grandmother cooked porridge.', enO: 'Grandmother cooked the porridge.', why: 'A mag- verb often pairs with an -in verb: nagluto, niluto.' },
+  { a: 'Sumulat', ar: 'siya ng liham', o: 'Sinulat', or: 'niya ang liham', ax: 'Susulat', ox: 'Susulatin', oAlt: ['Isinulat'], enA: 'She wrote a letter.', enO: 'She wrote the letter.', why: 'Siya becomes niya. Isinulat is also heard.' },
+  { a: 'Nagbabasa', ar: 'ang bata ng libro', o: 'Binabasa', or: 'ng bata ang libro', ax: 'Nagbasa', ox: 'Binasa', enA: 'The child is reading a book.', enO: 'The child is reading the book.', why: 'Keep the aspect: both verbs are ongoing (the first syllable of the root is repeated).' },
+  { a: 'Iinom', ar: 'ka ba ng tubig', o: 'Iinumin', or: 'mo ba ang tubig', ax: 'Uminom', ox: 'Ininom', end: '?', enA: 'Will you drink some water?', enO: 'Will you drink the water?', why: 'Ka becomes mo. Both verbs are still to happen.' },
+  { a: 'Kumuha', ar: 'ang nars ng dugo', o: 'Kinuha', or: 'ng nars ang dugo', ax: 'Kukuha', ox: 'Kukunin', enA: 'The nurse drew blood.', enO: 'The nurse drew the blood.', why: 'Kumuha becomes kinuha. The nurse moves to ng.' },
+  { a: 'Nagdala', ar: 'si Carlo ng pagkain', o: 'Dinala', or: 'ni Carlo ang pagkain', ax: 'Magdadala', ox: 'Dadalhin', enA: 'Carlo brought food.', enO: 'Carlo brought the food.', why: 'Nagdala becomes dinala, and si Carlo becomes ni Carlo.' },
+  { a: 'Naghugas', ar: 'ako ng pinggan', o: 'Hinugasan', or: 'ko ang pinggan', ax: 'Maghuhugas', ox: 'Huhugasan', enA: 'I washed dishes.', enO: 'I washed the plate.', why: 'Some verbs take -an, not -in, when the thing acted on is the topic: hugasan, buksan, bayaran.' },
+  { a: 'Nagbukas', ar: 'siya ng bintana', o: 'Binuksan', or: 'niya ang bintana', ax: 'Magbubukas', ox: 'Bubuksan', enA: 'He opened a window.', enO: 'He opened the window.', why: 'Buksan is an -an verb, and the root loses a vowel: bukas, buksan.' },
+  { a: 'Tumawag', ar: 'ang doktor ng nars', o: 'Tinawag', or: 'ng doktor ang nars', ax: 'Tatawag', ox: 'Tatawagin', enA: 'The doctor called a nurse.', enO: 'The doctor called the nurse.', why: 'Watch the markers when both are people. Tinawag ang doktor ng nars would mean that the nurse called the doctor.' },
+  { a: 'Naghahanap', ar: 'kami ng doktor', o: 'Hinahanap', or: 'namin ang doktor', ax: 'Naghanap', ox: 'Hinanap', enA: 'We are looking for a doctor.', enO: 'We are looking for the doctor.', why: 'Kami becomes namin.' },
+  { a: 'Magbabayad', ar: 'sila ng utang', o: 'Babayaran', or: 'nila ang utang', ax: 'Nagbayad', ox: 'Binayaran', enA: 'They will pay a debt.', enO: 'They will pay the debt.', why: 'Sila becomes nila. Bayaran is an -an verb.' },
+  { a: 'Nagtapon', ar: 'ang lalaki ng gamot', o: 'Itinapon', or: 'ng lalaki ang gamot', ax: 'Magtatapon', ox: 'Itatapon', enA: 'The man threw away some medicine.', enO: 'The man threw away the medicine.', why: 'Verbs that move a thing away from the doer take i-: itapon, ibigay, ilagay.' },
+  { a: 'Nagbigay', ar: 'ang doktor ng reseta', o: 'Ibinigay', or: 'ng doktor ang reseta', ax: 'Magbibigay', ox: 'Ibibigay', enA: 'The doctor gave a prescription.', enO: 'The doctor gave the prescription.', why: 'Ibigay is an i- verb.' },
+  { a: 'Naglagay', ar: 'siya ng asin', o: 'Inilagay', or: 'niya ang asin', ax: 'Maglalagay', ox: 'Ilalagay', enA: 'She put in some salt.', enO: 'She put in the salt.', why: 'Ilagay is an i- verb. Siya becomes niya.' },
+  { a: 'Nakakita', ar: 'ako ng ahas', o: 'Nakita', or: 'ko ang ahas', ax: 'Makakakita', ox: 'Makikita', enA: 'I saw a snake.', enO: 'I saw the snake.', why: 'Maka- verbs pair with ma- verbs: nakakita, nakita.' },
+  { a: 'Nakarinig', ar: 'siya ng boses', o: 'Narinig', or: 'niya ang boses', ax: 'Makakarinig', ox: 'Maririnig', enA: 'He heard a voice.', enO: 'He heard the voice.', why: 'Nakarinig becomes narinig. Siya becomes niya.' },
+  { a: 'Nagtago', ar: 'ang pasyente ng gamot', o: 'Itinago', or: 'ng pasyente ang gamot', ax: 'Magtatago', ox: 'Itatago', enA: 'The patient hid some medicine.', enO: 'The patient hid the medicine.', why: 'Itago is an i- verb.' },
+  { a: 'Humihingi', ar: 'ang pasyente ng tubig', o: 'Hinihingi', or: 'ng pasyente ang tubig', ax: 'Humingi', ox: 'Hiningi', enA: 'The patient is asking for water.', enO: 'The patient is asking for the water.', why: 'Both verbs are ongoing: humihingi, hinihingi.' },
+  { a: 'Nagsusuot', ar: 'ang bata ng tsinelas', o: 'Isinusuot', or: 'ng bata ang tsinelas', ax: 'Nagsuot', ox: 'Isinuot', enA: 'The child is putting on slippers.', enO: 'The child is putting on the slippers.', why: 'Isuot is an i- verb. Both verbs are ongoing.' },
+  { a: 'Maglilinis', ar: 'kami ng kuwarto', o: 'Lilinisin', or: 'namin ang kuwarto', ax: 'Naglinis', ox: 'Nilinis', enA: 'We will clean a room.', enO: 'We will clean the room.', why: 'Kami becomes namin. Both verbs are still to happen.' },
+  { a: 'Nagbasag', ar: 'siya ng baso', o: 'Binasag', or: 'niya ang baso', ax: 'Magbabasag', ox: 'Babasagin', enA: 'He broke a glass.', enO: 'He broke the glass.', why: 'Nagbasag becomes binasag. Siya becomes niya.' }
+];
+
+window.DRILL_ERRORS = [
+  // markers and pronouns
+  { bad: 'Natutulog ng pasyente.', i: [1], fix: 'Natutulog ang pasyente.', en: 'The patient is sleeping.', set: 'm', why: 'The one the sentence is about takes ang.' },
+  { bad: 'Ibinigay ko ang reseta ang nars.', i: [4], fix: 'Ibinigay ko ang reseta sa nars.', en: 'I gave the prescription to the nurse.', set: 'm', why: 'The person something is given to takes sa. A sentence has one ang word.' },
+  { bad: 'Kapatid si Ana si Ben.', i: [1], fix: 'Kapatid ni Ana si Ben.', en: 'Ben is Ana\'s brother.', set: 'm', why: 'A named owner takes ni.' },
+  { bad: 'Ininom ang pasyente ang gamot.', i: [1], fix: 'Ininom ng pasyente ang gamot.', en: 'The patient took the medicine.', set: 'm', why: 'With ininom the doer takes ng.' },
+  { bad: 'Nakatira kami ng Mariveles.', i: [2], fix: 'Nakatira kami sa Mariveles.', en: 'We live in Mariveles.', set: 'm', why: 'A place takes sa.' },
+  { bad: 'Tumawag ni Mang Tonyo kanina.', i: [1], fix: 'Tumawag si Mang Tonyo kanina.', en: 'Mang Tonyo called earlier.', set: 'm', why: 'Tumawag is actor focus, so the caller takes si.' },
+  { bad: 'Ibigay mo ito si Aling Rosa.', i: [3], fix: 'Ibigay mo ito kay Aling Rosa.', en: 'Give this to Aling Rosa.', set: 'm', why: 'A named person something goes to takes kay.' },
+  { bad: 'Kumain ko ng mangga.', i: [1], fix: 'Kumain ako ng mangga.', en: 'I ate a mango.', set: 'm', why: 'Kumain is actor focus: the doer is ako, not ko.' },
+  { bad: 'Binili ako ang gamot.', i: [1], fix: 'Binili ko ang gamot.', en: 'I bought the medicine.', set: 'm', why: 'Binili is object focus: the doer is ko. Binili ako would mean that someone bought me.' },
+  { bad: 'Gusto ako ng kape.', i: [1], fix: 'Gusto ko ng kape.', en: 'I want coffee.', set: 'm', why: 'With gusto, ayaw and kailangan, the person takes the ng form: ko, mo, niya.' },
+  { bad: 'Mahal ko ikaw.', i: [1, 2], fix: 'Mahal kita.', en: 'I love you.', set: 'm', why: 'Ko and ka never stand together. I to you is one word: kita.' },
+  { bad: 'Sino ng kasama mo sa bahay?', i: [1], fix: 'Sino ang kasama mo sa bahay?', en: 'Who lives with you at home?', set: 'm', why: 'After sino comes ang.' },
+  { bad: 'Takot siya ng karayom.', i: [2], fix: 'Takot siya sa karayom.', en: 'He is afraid of needles.', set: 'm', why: 'Takot sa, galit sa, hiya sa: the feeling points at its target with sa.' },
+  { bad: 'May ang lagnat ang bata.', i: [1], fix: 'May lagnat ang bata.', en: 'The child has a fever.', set: 'm', why: 'May is followed straight by the thing. It never takes ang.' },
+  { bad: 'Ang Maria ay nars.', i: [0], fix: 'Si Maria ay nars.', en: 'Maria is a nurse.', set: 'm', why: 'A person\'s name takes si, not ang.' },
+  { bad: 'Mga si Ana at Ben ay magkapatid.', i: [0, 1], fix: 'Sina Ana at Ben ay magkapatid.', en: 'Ana and Ben are siblings.', set: 'm', why: 'Two or more named people take sina.' },
+  // small words and linkers
+  { bad: 'Kumain na ka ba?', i: [1, 2], fix: 'Kumain ka na ba?', en: 'Have you eaten already?', set: 'o', why: 'The one-syllable pronouns ka, ko and mo come before na, pa and ba.' },
+  { bad: 'Hindi ko siya pa nakikita.', i: [2, 3], fix: 'Hindi ko pa siya nakikita.', en: 'I have not seen him yet.', set: 'o', why: 'Pa comes before a two-syllable pronoun like siya.' },
+  { bad: 'Kilala ba mo siya?', i: [1, 2], fix: 'Kilala mo ba siya?', en: 'Do you know him?', set: 'o', why: 'Mo comes before ba.' },
+  { bad: 'Maganda na bahay ito.', i: [0, 1], fix: 'Magandang bahay ito.', en: 'This is a beautiful house.', set: 'o', why: 'After a vowel the linker is -ng, joined to the word: magandang.' },
+  { bad: 'Masarap ng pagkain ito.', i: [1], fix: 'Masarap na pagkain ito.', en: 'This is delicious food.', set: 'o', why: 'After a consonant the linker is na. Ng is a marker, not a linker.' },
+  { bad: 'May dalawa anak siya.', i: [1], fix: 'May dalawang anak siya.', en: 'She has two children.', set: 'o', why: 'A number takes the linker before its noun: dalawang anak.' },
+  { bad: 'Ilan taon ka na?', i: [0], fix: 'Ilang taon ka na?', en: 'How old are you?', set: 'o', why: 'Ilan takes the linker before its noun: ilang taon.' },
+  { bad: 'Mayroon lagnat ang bata.', i: [0], fix: 'Mayroong lagnat ang bata.', en: 'The child has a fever.', set: 'o', why: 'Mayroon takes the linker -ng. May does not.' },
+  { bad: 'Hindi akong pera.', i: [0], fix: 'Wala akong pera.', en: 'I have no money.', set: 'o', why: 'Not having is wala. Hindi says that something is not so.' },
+  { bad: 'Wala ako pagod.', i: [0], fix: 'Hindi ako pagod.', en: 'I am not tired.', set: 'o', why: 'Hindi negates a description or an action. Wala means there is none.' },
+  { bad: 'Hindi kang umalis.', i: [0], fix: 'Huwag kang umalis.', en: 'Do not leave.', set: 'o', why: 'A command not to do something starts with huwag.' },
+  { bad: 'Kumusta ikaw?', i: [1], fix: 'Kumusta ka?', en: 'How are you?', set: 'o', why: 'After the first word the short form ka is used. Ikaw stands at the start or alone.' },
+  { bad: 'Ka ba ang doktor?', i: [0], fix: 'Ikaw ba ang doktor?', en: 'Are you the doctor?', set: 'o', why: 'Ka can never start a sentence. Use ikaw.' },
+  { bad: 'Sino ang pangalan niya?', i: [0], fix: 'Ano ang pangalan niya?', en: 'What is his name?', set: 'o', why: 'A name is asked with ano. Sino asks who a person is.' },
+  { bad: 'Kailan oras na?', i: [0], fix: 'Anong oras na?', en: 'What time is it?', set: 'o', why: 'Clock time is asked with anong oras. Kailan asks for a day or date.' },
+  // verb forms
+  { bad: 'Kumain ako bukas.', i: [0], fix: 'Kakain ako bukas.', en: 'I will eat tomorrow.', set: 'v', why: 'Bukas is still to come: repeat the first syllable of the root and drop -um-.' },
+  { bad: 'Kakain ako kahapon.', i: [0], fix: 'Kumain ako kahapon.', en: 'I ate yesterday.', set: 'v', why: 'Kahapon is finished: use the completed form.' },
+  { bad: 'Umiinom siya ng gamot bukas ng umaga.', i: [0], fix: 'Iinom siya ng gamot bukas ng umaga.', en: 'He will take medicine tomorrow morning.', set: 'v', why: 'Umiinom is happening now. For tomorrow use iinom.' },
+  { bad: 'Kailangan mong umiinom ng gamot.', i: [2], fix: 'Kailangan mong uminom ng gamot.', en: 'You need to take medicine.', set: 'v', why: 'After kailangan, gusto and puwede the verb stays in its basic form.' },
+  { bad: 'Nagluto ng nanay ang hapunan.', i: [0], fix: 'Niluto ng nanay ang hapunan.', en: 'Mother cooked the dinner.', set: 'v', why: 'The doer has ng and the food has ang, so the verb must be object focus: niluto.' },
+  { bad: 'Binili si Ana ng bigas.', i: [0], fix: 'Bumili si Ana ng bigas.', en: 'Ana bought rice.', set: 'v', why: 'The doer has si and the thing has ng, so the verb must be actor focus: bumili.' },
+  { bad: 'Kumakainin ko ang tinapay.', i: [0], fix: 'Kinakain ko ang tinapay.', en: 'I am eating the bread.', set: 'v', why: 'A verb takes -um- or -in, never both.' },
+  { bad: 'Maglalaro ang mga bata kanina.', i: [0], fix: 'Naglaro ang mga bata kanina.', en: 'The children played earlier.', set: 'v', why: 'Kanina is past. Mag- becomes nag- for what has happened.' },
+  { bad: 'Nakatulog ako mamayang gabi.', i: [0], fix: 'Matutulog ako mamayang gabi.', en: 'I will sleep tonight.', set: 'v', why: 'Mamayang gabi is still to come: matutulog.' },
+  { bad: 'Hindi ako makakatulog kagabi.', i: [2], fix: 'Hindi ako nakatulog kagabi.', en: 'I could not sleep last night.', set: 'v', why: 'Kagabi is past: maka- becomes naka-.' }
+];

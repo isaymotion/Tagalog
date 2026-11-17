@@ -8,6 +8,12 @@
    dictation Numbers, times and doses: DRILL_DICTATION, audio first, typed answer
    translate Say it in Tagalog: DRILL_TRANSLATE, typed answer compared with every accepted answer
    Typed answers are scored with App.similarity; 80% of the words or more counts as right.
+   3.9.0:
+   focus   Switch the focus: DRILL_FOCUS, the same event in actor focus and object focus (choose, or type)
+   stress  Same spelling, different stress: WORD_STRESS (from the sentence, by ear, from the meaning)
+   errors  Find the mistake: DRILL_ERRORS, tap the wrong word
+   families also has the sets ff (false friends, WORD_FALSE_FRIENDS) and cog (borrowed words, WORD_COGNATES)
+   #/daily  Daily mix: ten questions drawn from every multiple-choice drill; state.done.daily['YYYY-MM-DD'] = best %
    Best scores in state.done.drills['<id>:<set>']. To add a drill: a row in DRILLS, a run function in RUN. */
 (function () {
   const { esc, shuffle, pick } = App;
@@ -15,6 +21,8 @@
   const CLOZE = window.DRILL_CLOZE || [], SETS = window.DRILL_CLOZE_SETS || {}, BUILD = window.DRILL_BUILD || [];
   const DICTATION = window.DRILL_DICTATION || [], TRANS = window.DRILL_TRANSLATE || [];
   const FAMS = window.WORD_FAMILIES || [], LADS = window.WORD_LADDERS || [], SYNS = window.WORD_SYNONYMS || [];
+  const FOCUS = window.DRILL_FOCUS || [], ERRORS = window.DRILL_ERRORS || [];
+  const STRESS = window.WORD_STRESS || [], FALSE = window.WORD_FALSE_FRIENDS || [], COGS = window.WORD_COGNATES || [];
   const SECTIONS = () => window.PSYCH_SECTIONS || [];
   const N = 10;
 
@@ -32,14 +40,23 @@
       intro: 'Most Tagalog words are a root plus affixes. If you can see the root, you can look the word up and guess its meaning. Each question shows a word from the dictionary; choose its root.',
       opts: [['all', 'All words'], ['v', 'Verbs'], ['clin', 'Health and mind words']], lessons: ['panlapi', 'nominalising', 'focus-an-i'] },
     { id: 'families', title: 'Word families', eyebrow: 'Vocabulary · 10 questions', blurb: 'One root, many words: matulog, nakatulog, patulugin. Also deep and everyday words.',
-      intro: 'Three sets. Pick the right form: choose the word from one root that fits the meaning. Deep word to everyday word: match a formal Filipino word to what most people say. Which is stronger: choose the stronger of two words for the same feeling.',
-      opts: [['fam', 'Pick the right form'], ['syn', 'Deep word to everyday word'], ['lad', 'Which is stronger?']], lessons: ['intensifiers', 'register', 'ability', 'causative'], more: ['#/words', 'See all word families'] },
+      intro: 'Five sets. Pick the right form: choose the word from one root that fits the meaning. Deep word to everyday word: match a formal Filipino word to what most people say. Which is stronger: choose the stronger of two words for the same feeling. False friends: words from Spanish or English that changed their meaning. Borrowed words: recognise a Spanish or English word in its Filipino spelling.',
+      opts: [['fam', 'Pick the right form'], ['syn', 'Deep word to everyday word'], ['lad', 'Which is stronger?'], ['ff', 'False friends'], ['cog', 'Borrowed words']], lessons: ['intensifiers', 'register', 'ability', 'causative'], more: ['#/words', 'See all word families'] },
     { id: 'dictation', title: 'Numbers, times and doses', eyebrow: 'Listening · 10 lines', blurb: 'Hear an age, a clock time or a dose and type it.',
       intro: 'You hear a short line with a number, a clock time or a dose. Type what you hear in Tagalog. Capital letters, accents and punctuation do not count. For numbers and times you may type the figure instead (23, 3:30).',
       opts: [['all', 'All sets'], ['num', 'Numbers'], ['time', 'Clock times'], ['dose', 'Doses']], lessons: ['numbers', 'time-words'] },
     { id: 'translate', title: 'Say it in Tagalog', eyebrow: 'Writing · 10 sentences', blurb: 'Read the English, type the Tagalog. Several answers are accepted.',
       intro: 'Type the Tagalog for each English line. Your answer is compared word by word with the accepted answers, with or without po. Tagalog has many right ways to say a thing, so read the model answer even when you are marked wrong.',
-      opts: [['all', 'All sets'], ['e', 'Everyday'], ['w', 'On the ward']], lessons: ['enclitics', 'questions', 'politeness'] }
+      opts: [['all', 'All sets'], ['e', 'Everyday'], ['w', 'On the ward']], lessons: ['enclitics', 'questions', 'politeness'] },
+    { id: 'focus', title: 'Switch the focus', eyebrow: 'Grammar · 10 sentences', blurb: 'Uminom ang pasyente ng gamot. Now make the medicine the topic.',
+      intro: 'The same event can be told with the doer as the topic (actor focus) or with the thing acted on as the topic (object focus). When the focus changes, the verb changes its affix and ang and ng trade places. Choose the sentence that says the same thing in the other focus, or type it yourself.',
+      opts: [['ao', 'Actor focus → object focus'], ['oa', 'Object focus → actor focus'], ['type', 'Type the object focus']], lessons: ['focus', 'markers', 'pronouns', 'focus-an-i'] },
+    { id: 'errors', title: 'Find the mistake', eyebrow: 'Grammar · 10 sentences', blurb: 'One word is wrong in each sentence. Tap it.',
+      intro: 'Each sentence has one mistake a learner often makes: a wrong marker or pronoun, a small word out of place, a missing linker, or a verb in the wrong form. Tap the word that is wrong, then read the corrected sentence.',
+      opts: [['all', 'All sets'], ['m', 'Markers and pronouns'], ['o', 'Small words and linkers'], ['v', 'Verb forms']], lessons: ['markers', 'pronouns', 'enclitics', 'linkers', 'aspect', 'negation'] },
+    { id: 'stress', title: 'Same spelling, different stress', eyebrow: 'Listening · 10 questions', blurb: 'Bukas is tomorrow or open. Gutom is hunger or hungry. The stress decides.',
+      intro: 'Tagalog is written without accents, so one spelling can be two words. The stress tells them apart: BU-kas is tomorrow, bu-KAS is open. Capital letters here show the stressed syllable. From the sentence: read it and say where the stress falls. By ear: hear the sentence first. From the meaning: go from the English to the stress.',
+      opts: [['ctx', 'From the sentence'], ['ear', 'By ear'], ['mean', 'From the meaning']], lessons: ['pronounce'], more: ['#/words?tab=str', 'See all stress pairs'] }
   ];
   App.DRILLS = DRILLS;
   const byId = (id) => DRILLS.find((d) => d.id === id);
@@ -151,7 +168,22 @@
   }
 
   /* ---------- Word families, deep and everyday words, intensity ladders (3.8.0) ---------- */
+  const LANGS = { es: 'Spanish', en: 'English' };
   function famQs(set, n) {
+    if (set === 'ff') {
+      return pick(FALSE, Math.min(n, FALSE.length)).map((x) => {
+        const wrong = shuffle(FALSE.filter((y) => y !== x && y.en !== x.en && y.en !== x.srcEn).map((y) => y.en)).slice(0, 2);
+        return { q: x.tl, sub: 'From ' + LANGS[x.from] + ' ' + x.src + '. What does it mean in Tagalog?', tlq: true, say: x.mix ? null : x.tl, opts: [x.en, x.srcEn].concat(wrong), a: 0,
+          exp: x.tl + ' = ' + x.en + '. In ' + LANGS[x.from] + ', ' + x.src + ' is ' + x.srcEn + '.' + (x.note ? ' ' + x.note : '') };
+      });
+    }
+    if (set === 'cog') {
+      return pick(COGS, Math.min(n, COGS.length)).map((x) => {
+        const same = shuffle(COGS.filter((y) => y !== x && y[4] === x[4] && y[3] !== x[3]).map((y) => y[3]));
+        const wrong = [...new Set(same)].slice(0, 3);
+        return { q: x[0], sub: 'A borrowed word. What is it?', tlq: true, say: x[0], opts: [x[3]].concat(wrong), a: 0, exp: x[0] + ' = ' + x[3] + ', from ' + LANGS[x[1]] + ' ' + x[2] + '.' };
+      });
+    }
     if (set === 'syn') {
       return pick(SYNS, Math.min(n, SYNS.length)).map((x) => {
         const wrong = shuffle(SYNS.filter((y) => y !== x && !x.daily.includes(y.daily[0])).map((y) => y.daily[0])).slice(0, 3);
@@ -199,7 +231,7 @@
       box.innerHTML = '<div class="card stack"><div class="spread"><span class="eyebrow">' + (audio ? 'Line ' : 'Sentence ') + (i + 1) + ' of ' + items.length + '</span></div>' +
         (audio
           ? '<div class="listen-q"><button class="btn primary" data-act="play" aria-label="Play">' + App.icons.sound + ' Play</button><button class="btn" data-act="slow">Slower</button></div>'
-          : '<div style="font-size:1.12rem;font-weight:600">' + esc(it.prompt) + '</div>') +
+          : '<div' + (it.tlPrompt ? ' class="tl"' : '') + ' style="font-size:1.12rem;font-weight:600">' + esc(it.prompt) + '</div>' + (it.sub ? '<div class="muted">' + esc(it.sub) + '</div>' : '')) +
         '<div class="row"><input class="input tl" data-in autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="flex:1;min-width:0" placeholder="' + (audio ? 'Type what you hear' : 'Type the Tagalog') + '" aria-label="' + (audio ? 'Type what you hear' : 'Type the Tagalog') + '">' +
         '<button class="btn primary" data-act="check">Check</button></div><div data-fb></div></div>';
       const inp = box.querySelector('[data-in]'), chk = box.querySelector('[data-act=check]');
@@ -210,12 +242,13 @@
       } else inp.focus();
       const check = () => {
         if (chk.disabled || !inp.value.trim()) return;
-        const s = App.drillTypedScore(it.answers, inp.value), ok = s >= 80 || figureOk(it.n, inp.value);
+        // exact: every word must match one accepted answer (one wrong marker is the whole point of the focus drill)
+        const s = App.drillTypedScore(it.answers, inp.value), ok = it.exact ? s === 100 : s >= 80 || figureOk(it.n, inp.value);
         if (ok) right++;
         App.recordAnswer(ok);
         chk.disabled = true; inp.disabled = true;
         const others = it.answers.slice(1, 4);
-        box.querySelector('[data-fb]').innerHTML = '<div class="feedback ' + (ok ? 'ok' : 'no') + '"><b>' + (ok ? LANG.quiz.right : LANG.quiz.wrong) + '</b> ' + (s >= 80 || !ok ? s + '% of words match.' : '') +
+        box.querySelector('[data-fb]').innerHTML = '<div class="feedback ' + (ok ? 'ok' : 'no') + '"><b>' + (ok ? LANG.quiz.right : LANG.quiz.wrong) + '</b> ' + (it.exact ? '' : s >= 80 || !ok ? s + '% of words match.' : '') +
           '<div style="margin-top:6px"><span class="tl">' + esc(it.answers[0]) + '</span> ' + App.sayBtn(it.answers[0]) + '</div>' +
           (it.en ? '<div class="muted small">' + esc(it.en) + (it.n ? ' (' + esc(it.n) + ')' : '') + '</div>' : '') +
           (others.length ? '<div class="muted small" style="margin-top:4px">Also accepted: <span class="tl">' + others.map(esc).join(' · ') + '</span></div>' : '') +
@@ -231,7 +264,118 @@
     draw();
   }
 
+  /* ---------- Switch the focus (3.9.0) ---------- */
+  const fsent = (verb, rest, it) => verb + ' ' + rest + (it.end || '.');
+  // Object-focus sentences accepted when typed: the model, other verbs (oAlt), and "ang X ng Y" for "ng Y ang X".
+  const focusAnswers = (it) => {
+    const rests = [it.or], m = /^(ng|ni) (.+?) (ang .+)$/.exec(it.or);
+    if (m) rests.push(m[3] + ' ' + m[1] + ' ' + m[2]);
+    const out = [];
+    [it.o].concat(it.oAlt || []).forEach((v) => rests.forEach((r) => out.push(fsent(v, r, it))));
+    return out;
+  };
+  App.drillFocusAnswers = focusAnswers;
+  function focusQs(set, n) {
+    return pick(FOCUS, Math.min(n, FOCUS.length)).map((it) => {
+      const toO = set !== 'oa';
+      const from = toO ? fsent(it.a, it.ar, it) : fsent(it.o, it.or, it);
+      const right = toO ? fsent(it.o, it.or, it) : fsent(it.a, it.ar, it);
+      // The classic slips: new verb with the old markers, old verb with the new markers, right pattern in the wrong aspect.
+      const wrong = toO ? [fsent(it.o, it.ar, it), fsent(it.a, it.or, it), fsent(it.ox, it.or, it)] : [fsent(it.a, it.or, it), fsent(it.o, it.ar, it), fsent(it.ax, it.ar, it)];
+      return { q: from, sub: (toO ? it.enA : it.enO) + ' · ' + (toO ? 'Make the thing acted on the topic.' : 'Make the doer the topic.'), tlq: true, tlo: true, say: from,
+        opts: [right].concat(wrong), a: 0, sayAfter: right, exp: right + ' ' + (toO ? it.enO : it.enA) + ' ' + it.why };
+    });
+  }
+  const focusTyped = () => FOCUS.map((it) => ({ prompt: fsent(it.a, it.ar, it), tlPrompt: true, sub: it.enA + ' · Type it in object focus: ' + it.enO, answers: focusAnswers(it), exact: true, why: it.why }));
+
+  /* ---------- Same spelling, different stress (3.9.0) ---------- */
+  const stressed = (x, last) => (last ? x.syl[0] + '-' + x.syl[1].toUpperCase() : x.syl[0].toUpperCase() + '-' + x.syl[1]);
+  App.stressLabel = stressed;
+  function stressQs(set, n) {
+    const pool = [];
+    STRESS.forEach((x) => { pool.push({ x, last: false }); pool.push({ x, last: true }); });
+    return pick(pool, Math.min(n, pool.length)).map(({ x, last }) => {
+      const m = last ? x.b : x.a, A = stressed(x, false), B = stressed(x, true);
+      const tail = ' ' + A + ' = ' + x.a.en + ', ' + B + ' = ' + x.b.en + '.' + (x.note ? ' ' + x.note : '');
+      if (set === 'mean') return { q: x.w + ': ' + m.en, sub: 'Where is the stress?', opts: [A, B], a: last ? 1 : 0, tlo: true, sayAfter: m.ex[0], exp: m.ex[0] + ' ' + m.ex[1] + tail };
+      const opts = [A + ' · ' + x.a.en, B + ' · ' + x.b.en];
+      return { q: m.ex[0], sub: 'Which ' + x.w + ' is this?', tlq: true, hideQ: set === 'ear' ? 'Listen, then choose which ' + x.w + ' you heard.' : undefined, say: set === 'ear' ? m.ex[0] : null,
+        opts, a: last ? 1 : 0, sayAfter: set === 'ear' ? null : m.ex[0], exp: m.ex[1] + tail };
+    });
+  }
+
+  /* ---------- Find the mistake (3.9.0) ---------- */
+  function runErrors(box, set, key) {
+    const all = ERRORS.filter((it) => set === 'all' || it.set === set);
+    let items = pick(all, Math.min(N, all.length)), i = 0, right = 0;
+    const draw = () => {
+      if (i >= items.length) {
+        const pct = Math.round((100 * right) / items.length);
+        box.innerHTML = '<div class="card stack"><h3>' + (pct >= 80 ? LANG.quiz.great : pct >= 50 ? LANG.quiz.ok : LANG.quiz.keepGoing) + ' ' + right + ' / ' + items.length + '</h3>' +
+          '<div class="progress"><i style="width:' + pct + '%"></i></div><div class="row"><button class="btn primary" data-act="retry">Try again</button><a class="btn" href="#/drills">All drills</a></div></div>';
+        box.querySelector('[data-act=retry]').onclick = () => { items = pick(all, Math.min(N, all.length)); i = 0; right = 0; draw(); };
+        saveBest(key, right, items.length);
+        return;
+      }
+      const it = items[i], words = it.bad.split(' ');
+      box.innerHTML = '<div class="card stack"><div class="spread"><span class="eyebrow">Sentence ' + (i + 1) + ' of ' + items.length + '</span></div>' +
+        '<div class="muted">' + esc(it.en) + ' · Tap the word that is wrong.</div>' +
+        '<div class="wline" data-line>' + words.map((w, k) => '<button class="wtile tl" data-k="' + k + '">' + esc(w) + '</button>').join('') + '</div><div data-fb></div></div>';
+      box.querySelectorAll('.wtile').forEach((b) => (b.onclick = () => {
+        const k = +b.dataset.k, ok = it.i.includes(k);
+        if (ok) right++;
+        App.recordAnswer(ok);
+        box.querySelectorAll('.wtile').forEach((x) => { x.disabled = true; if (it.i.includes(+x.dataset.k)) x.classList.add('bad'); });
+        if (!ok) b.classList.add('miss');
+        box.querySelector('[data-fb]').innerHTML = '<div class="feedback ' + (ok ? 'ok' : 'no') + '"><b>' + (ok ? LANG.quiz.right : LANG.quiz.wrong) + '</b> <span class="tl">' + esc(it.fix) + '</span> ' + App.sayBtn(it.fix) + '<div style="margin-top:4px">' + esc(it.why) + '</div></div>' +
+          '<div class="row" style="margin-top:10px"><button class="btn primary" data-act="next">' + (i + 1 < items.length ? 'Next' : 'See score') + '</button></div>';
+        const nx = box.querySelector('[data-act=next]');
+        nx.onclick = () => { i++; draw(); };
+        nx.focus();
+      }));
+    };
+    draw();
+  }
+  // The same items as a two-way choice, for the daily mix.
+  const errorQs = (n) => pick(ERRORS, Math.min(n, ERRORS.length)).map((it) => ({ q: 'Which sentence is right?', sub: it.en, tlo: true, opts: [it.fix, it.bad], a: 0, sayAfter: it.fix, exp: it.fix + ' ' + it.why }));
+
+  /* ---------- Daily mix (3.9.0) ---------- */
+  // Dictionary words: the learner's mistakes and due cards first, then any word. Wrong answers come from the same category.
+  function vocabQs(n) {
+    const s = App.state, now = Date.now();
+    const mine = (s.mistakes || []).concat(Object.keys(s.srs || {}).filter((id) => (s.srs[id].due || 0) <= now)).filter((id) => /^d\d+$/.test(id)).map((id) => App.dictById[id]).filter(Boolean);
+    const src = [...new Set(shuffle(mine).slice(0, n).concat(pick(App.DICT.filter((e) => e.cat !== 'stigma'), n)))].slice(0, n);
+    return src.map((e) => {
+      const wrong = [...new Set(shuffle(App.DICT.filter((x) => x.cat === e.cat && x.en !== e.en)).map((x) => x.en))].slice(0, 3);
+      return { q: e.tl, sub: 'What does it mean?', tlq: true, say: e.tl, opts: [e.en].concat(wrong), a: 0, cardId: e.id, exp: e.tl + ' = ' + e.en + '.' };
+    });
+  }
+  const dayKey = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  App.dailyToday = () => (App.state.done.daily || {})[dayKey()];
+  const DAILY_PARTS = [['Vocabulary', () => vocabQs(2)], ['Markers', () => clozeQs('all', 1)], ['Register', () => switchQs('f-c', 1)], ['Roots', () => rootQs('all', 1)], ['Word families', () => famQs('fam', 1)],
+    ['False friends', () => famQs('ff', 1)], ['Focus', () => focusQs(Math.random() < 0.5 ? 'ao' : 'oa', 1)], ['Stress', () => stressQs('ctx', 1)], ['Find the mistake', () => errorQs(1)]];
+  const dailyQs = () => shuffle([].concat(...DAILY_PARTS.map(([tag, f]) => f().map((q) => Object.assign(q, { sub: tag + ' · ' + (q.sub || '') })))));
+  V.daily = (el) => {
+    const done = App.dailyToday(), days = Object.keys(App.state.done.daily || {}).length;
+    el.innerHTML = '<h1>Daily mix</h1><p class="muted">Ten mixed questions, about five minutes: two words (your mistakes and due cards first), then one question from each drill. A new set every time you start.</p>' +
+      '<div class="card stack"><div class="row"><button class="btn primary" id="dgo">' + (done != null ? 'Go again' : 'Start') + '</button><span class="pill' + (done != null ? ' good' : '') + '">' + (done != null ? 'Done today · best ' + done + '%' : 'Not done today') + '</span>' + (days ? '<span class="muted small">' + days + (days === 1 ? ' day' : ' days') + ' so far</span>' : '') + '</div><div id="dbox"></div></div>' +
+      '<div class="row" style="margin-top:14px"><a class="btn" href="#/drills">All drills</a><a class="btn" href="#/flash/due">Flashcards due</a></div>';
+    const box = el.querySelector('#dbox');
+    el.querySelector('#dgo').onclick = () => {
+      const inner = document.createElement('div'); inner.style.marginTop = '12px'; box.innerHTML = ''; box.appendChild(inner);
+      App.runQuiz(inner, dailyQs(), { after: '<a class="btn" href="#/">Home</a>', onDone: (r, n) => {
+        const s = App.state, d = (s.done.daily = s.done.daily || {}), k = dayKey();
+        d[k] = Math.max(d[k] || 0, Math.round((100 * r) / n));
+        Object.keys(d).sort().slice(0, -90).forEach((old) => delete d[old]); // keep three months
+        App.activity(15); App.save();
+      } });
+    };
+  };
+
   const RUN = {
+    focus: (box, set) => (set === 'type' ? runTyped(box, focusTyped(), 'focus:type', false) : App.runQuiz(box, focusQs(set, N), { onDone: (r, n) => saveBest('focus:' + set, r, n), after: '<a class="btn" href="#/drills">All drills</a>' })),
+    stress: (box, set) => App.runQuiz(box, stressQs(set, N), { onDone: (r, n) => saveBest('stress:' + set, r, n), after: '<a class="btn" href="#/drills">All drills</a>' }),
+    errors: (box, set) => runErrors(box, set, 'errors:' + set),
     roots: (box, set) => App.runQuiz(box, rootQs(set, N), { onDone: (r, n) => saveBest('roots:' + set, r, n), after: '<a class="btn" href="#/drills">All drills</a>' }),
     families: (box, set) => App.runQuiz(box, famQs(set, N), { onDone: (r, n) => saveBest('families:' + set, r, n), after: '<a class="btn" href="#/drills">All drills</a>' }),
     dictation: (box, set) => runTyped(box, dictItems(set), 'dictation:' + set, true),
@@ -240,12 +384,12 @@
     markers: (box, set) => App.runQuiz(box, clozeQs(set, N), { onDone: (r, n) => saveBest('markers:' + set, r, n), after: '<a class="btn" href="#/drills">All drills</a>' }),
     build: (box) => runBuild(box, 'build:all')
   };
-  App.drillQs = { switch: switchQs, markers: clozeQs, roots: rootQs, families: famQs, rootWords }; // for tests
+  App.drillQs = { switch: switchQs, markers: clozeQs, roots: rootQs, families: famQs, rootWords, focus: focusQs, stress: stressQs, errors: errorQs, vocab: vocabQs, daily: dailyQs }; // for tests
 
   V.drills = (el) => {
     el.innerHTML = '<h1>Drills</h1><p class="muted">Short grammar, vocabulary, listening and writing drills, ten items each. They go with the lessons; the verb trainer and Panlapi have their own pages.</p><div class="grid">' +
       DRILLS.map((d) => { const b = bestOf(d.id); return '<a class="tile" href="#/drills/' + d.id + '"><span class="eyebrow">' + esc(d.eyebrow) + '</span><h3>' + esc(d.title) + '</h3><p>' + esc(d.blurb) + '</p><div class="meta row"><span class="pill' + (b != null ? ' good' : '') + '">' + (b != null ? 'Best ' + b + '%' : 'Not tried yet') + '</span></div></a>'; }).join('') +
-      '</div><div class="row" style="margin-top:14px"><a class="btn" href="#/verbs">Verb trainer</a><a class="btn" href="#/affixes">Panlapi</a><a class="btn" href="#/words">Word families</a><a class="btn" href="#/practice">All practice</a></div>';
+      '</div><div class="row" style="margin-top:14px"><a class="btn primary" href="#/daily">Daily mix</a><a class="btn" href="#/verbs">Verb trainer</a><a class="btn" href="#/affixes">Panlapi</a><a class="btn" href="#/words">Word families</a><a class="btn" href="#/practice">All practice</a></div>';
   };
 
   V.drill = (el, p) => {

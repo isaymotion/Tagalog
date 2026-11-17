@@ -1,4 +1,5 @@
-/* Placement test: [level, question, options, correctIndex].
+/* Placement test: [level, question, options, correctIndex]. Five questions each, A1 to C1 (C1 added in 3.9.0).
+   C1 is reached only by passing B2 and getting three of the five C1 questions.
    App metadata moved to data/app-meta.js and What's New to data/changelog.js in 3.0.0. */
 window.PLACEMENT = [
   ['A1', '"Salamat po" means:', ['Good morning', 'Thank you (polite)', 'Goodbye'], 1],
@@ -20,5 +21,10 @@ window.PLACEMENT = [
   ['B2', '"Sinasaniban siya" most likely means:', ['He is being possessed', 'He is being fed', 'He is sleeping'], 0],
   ['B2', 'Contemplated, object focus of "kuha":', ['kinuha', 'kukunin', 'kumukuha'], 1],
   ['B2', '"Pabigat lang ako sa pamilya ko" signals:', ['gratitude', 'perceived burdensomeness', 'boredom'], 1],
-  ['B2', '"Ipinagluto ko siya" means:', ['I cooked him', 'I cooked for him', 'He cooked for me'], 1]
+  ['B2', '"Ipinagluto ko siya" means:', ['I cooked him', 'I cooked for him', 'He cooked for me'], 1],
+  ['C1', '"Kung nagpatingin sana siya agad, hindi sana lumala." This tells you he:', ['got checked early and recovered', 'did not get checked early, and it got worse', 'will get checked soon'], 1],
+  ['C1', '"Nakapagpatingin ka na ba?" means:', ['Have you been able to get yourself checked?', 'Have you looked at it yet?', 'Can you see now?'], 0],
+  ['C1', '"Nagdadalawang-isip siya" means:', ['He thinks fast', 'He is of two minds, hesitating', 'He has two plans'], 1],
+  ['C1', '"Ipinaubaya na niya sa Diyos ang lahat" means:', ['He blames God for everything', 'He asked God for everything', 'He has left everything to God'], 2],
+  ['C1', '"Mabigat ang loob ko sa kanya" means:', ['I do not feel at ease with him', 'I owe him a debt of gratitude', 'I miss him'], 0]
 ];

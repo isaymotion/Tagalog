@@ -68,6 +68,13 @@ add('Magandang umaga po. Kumusta po kayo?'); // settings voice test
 (ctx.WORD_FAMILIES || []).forEach((f) => { add(f.r); f.forms.forEach((x) => add(x[0])); });
 (ctx.WORD_LADDERS || []).forEach((l) => l.steps.forEach((x) => add(x[0])));
 (ctx.WORD_SYNONYMS || []).forEach((x) => x.deep.concat(x.daily).forEach(add));
+// 3.9.0: both sentences of each focus pair (and the other accepted object-focus verbs), the corrected sentence of each
+// find-the-mistake item, both example sentences of each stress pair, false friends (not the English-spelled ones) and look-alikes.
+(ctx.DRILL_FOCUS || []).forEach((it) => { const e = it.end || '.'; add(it.a + ' ' + it.ar + e); [it.o].concat(it.oAlt || []).forEach((v) => add(v + ' ' + it.or + e)); });
+(ctx.DRILL_ERRORS || []).forEach((it) => add(it.fix));
+(ctx.WORD_STRESS || []).forEach((x) => { add(x.a.ex[0]); add(x.b.ex[0]); });
+(ctx.WORD_FALSE_FRIENDS || []).forEach((x) => { if (!x.mix) add(x.tl); });
+(ctx.WORD_COGNATES || []).forEach((x) => add(x[0]));
 
 // Substance use screener: lines are templates ({s} substance, {w} withdrawal symptoms, {u} unit) filled at run time
 // for the chosen substance, so record every line as it is spoken for every substance, not only the nganga example.

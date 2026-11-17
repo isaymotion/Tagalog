@@ -59,7 +59,7 @@
     const pins = (s.pins || []).slice().reverse();
     const recent = (s.recent || []).filter((r) => !/^#\/(more|settings|progress|new|about|search)/.test(r.hash) && !App.isPinned(r.hash)).slice(0, 4);
     // One quick drill a day, rotating so the Home screen nudges different skills.
-    const quick = [['#/verbs', 'Verb trainer', '10 aspect questions'], ['#/affixes', 'Panlapi', 'Take 10 words apart'], ['#/drills/build', 'Build the sentence', 'Put 10 sentences in order'], ['#/drills/markers', 'Choose the marker', 'Ang, ng or sa: 10 gaps'], ['#/drills/dictation', 'Numbers, times and doses', 'Hear 10 lines and type them'], ['#/drills/families', 'Word families', 'One root, many words'], ['#/drills/translate', 'Say it in Tagalog', 'Type 10 sentences'], ['#/psych/interp', 'What is the patient saying?', 'Interpret 10 lines'], ['#/psych/listen', 'Listening drill', 'Hear 10 replies, pick the meaning'], ['#/listen', 'Listening exercise', 'One recording, questions and dictation'], ['#/flash/psych', 'Psychiatry flashcards', 'A quick review'], ['#/psych/cases', 'Case simulation', 'One interview, with feedback']];
+    const quick = [['#/verbs', 'Verb trainer', '10 aspect questions'], ['#/affixes', 'Panlapi', 'Take 10 words apart'], ['#/drills/build', 'Build the sentence', 'Put 10 sentences in order'], ['#/drills/markers', 'Choose the marker', 'Ang, ng or sa: 10 gaps'], ['#/drills/dictation', 'Numbers, times and doses', 'Hear 10 lines and type them'], ['#/drills/families', 'Word families', 'One root, many words'], ['#/drills/translate', 'Say it in Tagalog', 'Type 10 sentences'], ['#/drills/focus', 'Switch the focus', '10 sentences, the other topic'], ['#/drills/errors', 'Find the mistake', 'Tap the wrong word in 10 sentences'], ['#/drills/stress', 'Same spelling, different stress', 'Bukas: tomorrow or open?'], ['#/psych/interp', 'What is the patient saying?', 'Interpret 10 lines'], ['#/psych/listen', 'Listening drill', 'Hear 10 replies, pick the meaning'], ['#/listen', 'Listening exercise', 'One recording, questions and dictation'], ['#/flash/psych', 'Psychiatry flashcards', 'A quick review'], ['#/psych/cases', 'Case simulation', 'One interview, with feedback']];
     const qd = quick[Math.floor(Date.now() / 864e5) % quick.length];
     el.innerHTML =
       '<section class="hero"><svg class="rays" viewBox="0 0 100 100" aria-hidden="true">' + Array.from({ length: 8 }, (_, k) => '<rect x="47" y="2" width="6" height="30" fill="#e3b53f" transform="rotate(' + k * 45 + ' 50 50)"/>').join('') + '<circle cx="50" cy="50" r="16" fill="#e3b53f"/></svg>' +
@@ -72,9 +72,10 @@
       '<div class="stat"><b>' + s.xp + '</b><span>XP · level ' + esc(s.level || '—') + '</span></div></div>' +
       '<h2 style="margin-top:22px">Today</h2><div class="grid">' +
       (due ? tile('#/flash/due', 'Review', due + ' cards due', 'Spaced repetition keeps words fresh.') : tile('#/flash', 'Flashcards', 'Start a deck', 'Vocabulary, verbs, and psychiatry phrases.')) +
+      tile('#/daily', 'Daily mix · 5 minutes', App.dailyToday() != null ? 'Done today: ' + App.dailyToday() + '%' : 'Ten mixed questions', App.dailyToday() != null ? 'Go again for a new set.' : 'Two words, then one question from each drill.') +
       tile(qd[0], 'Quick practice', qd[1], qd[2]) +
       (nextLesson ? tile('#/lessons/' + nextLesson.id, 'Next lesson · ' + esc(nextLesson.level), esc(nextLesson.title), esc(nextLesson.summary)) : '') +
-      (!s.level ? tile('#/placement', 'New here?', 'Take the placement test', '20 questions to find your level.') : '') +
+      (!s.level ? tile('#/placement', 'New here?', 'Take the placement test', '25 questions to find your level.') : '') +
       '</div>' +
       (pins.length ? '<h2 style="margin-top:22px">Pinned</h2><div class="grid">' + pins.map((p) => tile(esc(p.hash), esc(p.sec || 'Pinned'), esc(p.title))).join('') + '</div>' : '') +
       (recent.length ? '<h2 style="margin-top:22px">Continue</h2><div class="grid">' + recent.map((r) => tile(esc(r.hash), esc(r.sec || 'Recent'), esc(r.title))).join('') + '</div>' : '') +
@@ -512,9 +513,9 @@
 
   /* ---------- Placement ---------- */
   V.placement = (el) => {
-    el.innerHTML = '<h1>Placement test</h1><p class="muted">20 questions from beginner (A1) to upper-intermediate (B2). Skip what you don\'t know; guessing only hides your real level.</p><div id="pq"></div>';
+    el.innerHTML = '<h1>Placement test</h1><p class="muted">' + PLACEMENT.length + ' questions from beginner (A1) to advanced (C1). Skip what you don\'t know; guessing only hides your real level.</p><div id="pq"></div>';
     const qs = PLACEMENT.map(([lv, q, opts, a]) => ({ lv, q, opts: opts.concat(["I don't know"]), a }));
-    let i = 0; const got = { A1: 0, A2: 0, B1: 0, B2: 0 }, tot = { A1: 0, A2: 0, B1: 0, B2: 0 };
+    let i = 0; const got = { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0 }, tot = { A1: 0, A2: 0, B1: 0, B2: 0, C1: 0 };
     qs.forEach((q) => tot[q.lv]++);
     const box = el.querySelector('#pq');
     const draw = () => {
@@ -524,8 +525,9 @@
         if (level === 'A2' && got.A2 / tot.A2 >= 0.6) level = 'B1';
         if (level === 'B1' && got.B1 / tot.B1 >= 0.6) level = 'B2';
         if (level === 'B2' && got.B2 / tot.B2 < 0.6) level = 'B1';
+        if (level === 'B2' && tot.C1 && got.C1 / tot.C1 >= 0.6) level = 'C1';
         S().level = level; App.activity(20);
-        const rec = { A1: ['#/lessons/pronounce', 'Start with Sounds and spelling, then the markers lesson.'], A2: ['#/lessons/focus', 'Go to verb focus and aspect, and drill the verb trainer.'], B1: ['#/psych', 'You\'re ready for the psychiatry track. Keep the verb trainer going.'], B2: ['#/psych/case/jomar', 'Jump into the case simulations and interpretation drills.'] }[level];
+        const rec = { A1: ['#/lessons/pronounce', 'Start with Sounds and spelling, then the markers lesson.'], A2: ['#/lessons/focus', 'Go to verb focus and aspect, and drill the verb trainer.'], B1: ['#/psych', 'You\'re ready for the psychiatry track. Keep the verb trainer going.'], B2: ['#/psych/case/jomar', 'Jump into the case simulations and interpretation drills.'], C1: ['#/listen', 'Go to the C1 recordings and readings, and type your answers in Say it in Tagalog.'] }[level];
         box.innerHTML = '<div class="card stack"><span class="eyebrow">Your level</span><h2 style="margin:0">' + level + '</h2>' +
           '<div class="tablewrap"><table><tr><th>Level</th><th>Score</th></tr>' + Object.keys(got).map((k) => '<tr><td>' + k + '</td><td>' + got[k] + ' / ' + tot[k] + '</td></tr>').join('') + '</table></div>' +
           '<p>' + rec[1] + '</p><div class="row"><a class="btn primary" href="' + rec[0] + '">Go there</a><a class="btn" href="#/">Home</a></div></div>';
