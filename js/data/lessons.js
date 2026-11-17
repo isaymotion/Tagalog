@@ -804,5 +804,207 @@ window.LESSONS = [
     ['Which shows less conviction?', ['May sumusunod sa akin.', 'Parang may sumusunod sa akin.'], 1, 'Parang = as if, it seems.'],
     ['"I hope he gets well."', ['Baka gumaling siya.', 'Gumaling daw siya.', 'Sana gumaling na siya.'], 2, 'Sana = I hope.']
   ]
+},
+{
+  id: 'enclitics', level: 'A2', unit: 'Natural speech', title: 'Where the short words go: ka, ko, na, pa, po, ba',
+  summary: 'The short pronouns and particles sit right after the first word of the sentence, and they line up in a fixed order.',
+  body: `
+<p>Tagalog has a set of short, unstressed words that cannot start a sentence. They attach to the <b>first full word</b>: the verb, <i>hindi</i>, a question word or a describing word. Getting this order right is most of what makes a sentence sound natural.</p>
+<h3>Rule 1: second position</h3>
+<div class="ex"><b>Kumain ka na ba?</b><span>Have you eaten yet?</span></div>
+<div class="ex"><b>Hindi pa po ako kumakain.</b><span>I have not eaten yet.</span></div>
+<div class="ex"><b>Bakit ka pa gising?</b><span>Why are you still awake?</span></div>
+<p>When <i>hindi</i> or a question word comes first, the short words move up to follow it, ahead of the verb.</p>
+<h3>Rule 2: the order inside the group</h3>
+<table><tr><th>Slot</th><th>Words</th></tr>
+<tr><td>1</td><td>one-syllable pronouns: <b>ka, ko, mo</b></td></tr>
+<tr><td>2</td><td><b>na</b> (already, now) or <b>pa</b> (still, yet)</td></tr>
+<tr><td>3</td><td><b>nga, din / rin, lang</b></td></tr>
+<tr><td>4</td><td><b>daw / raw</b></td></tr>
+<tr><td>5</td><td><b>po</b></td></tr>
+<tr><td>6</td><td><b>ba</b></td></tr>
+<tr><td>7</td><td>two-syllable pronouns: <b>ako, siya, kami, tayo, kayo, sila, niya, namin, ninyo, nila</b></td></tr></table>
+<div class="ex"><b>Kumain na po ba kayo?</b><span>Have you eaten yet? (respectful)</span></div>
+<div class="ex"><b>Nainom mo na ba ang gamot mo?</b><span>Have you taken your medicine?</span></div>
+<div class="ex"><b>Hindi ko pa po naiinom.</b><span>I have not taken it yet.</span></div>
+<div class="ex"><b>Masakit pa rin po ba ang ulo ninyo?</b><span>Does your head still hurt?</span></div>
+<div class="ex"><b>Ikaw lang ba ang nakakarinig niyan?</b><span>Are you the only one who hears that?</span></div>
+<h3>Rule 3: ko + ka = kita</h3>
+<p>"I ... you" is never <i>ko ka</i>. The two merge into <b>kita</b>.</p>
+<div class="ex"><b>Tutulungan kita.</b><span>I will help you.</span></div>
+<div class="ex"><b>Naiintindihan kita.</b><span>I understand you.</span></div>
+<div class="note">Clinical tip: the answer to a <b>na ba</b> question mirrors it. <b>Kumain ka na ba?</b> gets <b>Oo, kumain na ako</b> or <b>Hindi pa</b>. A bare <b>Hindi pa</b> means "not yet", so follow it up: since when? Practice this order in the Build the sentence drill.</div>`,
+  quiz: [
+    ['Which order is natural?', ['Kumain na ka ba?', 'Kumain ka na ba?', 'Ka kumain na ba?'], 1, 'One-syllable pronoun first, then na, then ba.'],
+    ['"I have not eaten yet." (respectful)', ['Hindi ako pa po kumakain.', 'Hindi pa po ako kumakain.', 'Hindi po ako pa kumakain.'], 1, 'After hindi: pa, po, then the two-syllable pronoun ako.'],
+    ['"I will help you."', ['Tutulungan ko ka.', 'Tutulungan kita.', 'Tutulungan ka ko.'], 1, 'Ko + ka becomes kita.'],
+    ['Respectful: "Have you been able to sleep?"', ['Nakatulog na po ba kayo?', 'Nakatulog kayo na ba po?', 'Nakatulog ba na po kayo?'], 0, 'Na, po, ba, then kayo.']
+  ]
+},
+{
+  id: 'time-words', level: 'A2', unit: 'Everyday life', title: 'Time words: kanina, mamaya, tuwing, simula noong',
+  summary: 'When it started, how long it has lasted and how often it happens: the words every history needs.',
+  body: `
+<table><tr><th>Word</th><th>Meaning</th></tr>
+<tr><td><b>kanina</b>, kaninang umaga</td><td>earlier today; earlier this morning</td></tr>
+<tr><td><b>mamaya</b>, mamayang gabi</td><td>later today; later tonight</td></tr>
+<tr><td><b>kagabi</b>, <b>kahapon</b>, <b>kamakalawa</b></td><td>last night; yesterday; the day before yesterday</td></tr>
+<tr><td><b>bukas</b>, <b>sa makalawa</b></td><td>tomorrow; the day after tomorrow</td></tr>
+<tr><td><b>noong</b> Lunes, noong isang linggo</td><td>last Monday; last week (past)</td></tr>
+<tr><td><b>sa</b> Lunes, sa susunod na linggo</td><td>this coming Monday; next week (future)</td></tr>
+<tr><td><b>tuwing</b> gabi; araw-araw, gabi-gabi</td><td>every night; every day, every night</td></tr>
+<tr><td><b>simula noong</b>, mula noong</td><td>since</td></tr>
+<tr><td><b>hanggang</b>, hanggang ngayon</td><td>until; until now</td></tr>
+<tr><td><b>ilang beses</b>, isang beses, dalawang beses</td><td>how many times; once; twice</td></tr>
+<tr><td><b>gaano katagal</b>, <b>gaano kadalas</b></td><td>how long; how often</td></tr>
+<tr><td>lagi, madalas, paminsan-minsan, bihira</td><td>always, often, now and then, rarely</td></tr></table>
+<h3>When did it start?</h3>
+<div class="ex"><b>Kailan po ito nagsimula?</b><span>When did this start?</span></div>
+<div class="ex"><b>Simula noong namatay ang asawa ko.</b><span>Since my spouse died.</span></div>
+<div class="ex"><b>Kaninang umaga lang po.</b><span>Only this morning.</span></div>
+<h3>How long?</h3>
+<div class="ex"><b>Gaano na po katagal?</b><span>How long has it been?</span></div>
+<div class="ex"><b>Dalawang linggo na po akong hindi makatulog.</b><span>I have not been able to sleep for two weeks now.</span></div>
+<div class="ex"><b>Hanggang ngayon, malungkot pa rin ako.</b><span>Until now, I am still sad.</span></div>
+<h3>How often?</h3>
+<div class="ex"><b>Gaano po kadalas ninyo itong naririnig?</b><span>How often do you hear it?</span></div>
+<div class="ex"><b>Tuwing gabi ko po naririnig ang mga boses.</b><span>I hear the voices every night.</span></div>
+<div class="ex"><b>Ilang beses po sa isang araw?</b><span>How many times a day?</span></div>
+<div class="ex"><b>Paminsan-minsan lang po.</b><span>Only now and then.</span></div>
+<div class="note">Clinical tip: a length of time plus <b>na</b> means "it has been": <b>Tatlong buwan na</b>. With <b>pa lang</b> it means "only so far": <b>Dalawang araw pa lang</b>. <b>Mga</b> before a number means "about": <b>mga isang taon na</b>. <b>Matagal na</b> is "for a long time" and needs a follow-up question; <b>kamakailan lang</b> is "just recently". The same day name is past with <b>noong</b> and future with <b>sa</b>.</div>`,
+  quiz: [
+    ['"Kanina" means', ['later today', 'earlier today', 'yesterday'], 1, 'Kanina = earlier today. Mamaya = later today.'],
+    ['"Tuwing gabi" means', ['tonight only', 'every night', 'last night'], 1, 'Tuwing = every, whenever.'],
+    ['"Last Monday"', ['sa Lunes', 'noong Lunes', 'tuwing Lunes'], 1, 'Noong marks the past; sa Lunes is the coming Monday.'],
+    ['"Dalawang linggo na."', ['In two weeks.', 'It has been two weeks.', 'Twice a week.'], 1, 'A length of time + na = it has been that long.']
+  ]
+},
+{
+  id: 'intensifiers', level: 'A2', unit: 'Everyday life', title: 'How much? Medyo, sobra, napaka-, and doubling',
+  summary: 'Ways to say a little, very, too and extremely. Patients grade their symptoms with these words.',
+  body: `
+<table><tr><th>Pattern</th><th>Strength</th><th>Example</th></tr>
+<tr><td><b>medyo</b> + describing word</td><td>somewhat</td><td>medyo malungkot</td></tr>
+<tr><td><b>hindi gaano</b>, <b>hindi masyado</b></td><td>not very</td><td>hindi gaanong masakit</td></tr>
+<tr><td><b>masyado</b></td><td>too, overly</td><td>masyadong maingay</td></tr>
+<tr><td><b>sobra</b>, <b>sobrang</b> + root</td><td>extremely</td><td>sobrang lungkot</td></tr>
+<tr><td><b>napaka-</b> + root</td><td>very, extremely</td><td>napakasakit</td></tr>
+<tr><td><b>ang</b> + root</td><td>how ...! so ...!</td><td>Ang sakit!</td></tr>
+<tr><td>word + <b>na</b> or <b>-ng</b> + same word</td><td>completely</td><td>pagod na pagod, galit na galit</td></tr></table>
+<h3>A little</h3>
+<div class="ex"><b>Medyo nahihilo po ako.</b><span>I am a bit dizzy.</span></div>
+<div class="ex"><b>Hindi naman po gaanong masakit.</b><span>It does not hurt that much.</span></div>
+<h3>A lot</h3>
+<div class="ex"><b>Napakasakit po ng ulo ko.</b><span>My head hurts terribly.</span></div>
+<div class="ex"><b>Ang sakit ng tiyan ko!</b><span>My stomach hurts so much!</span></div>
+<div class="ex"><b>Sobrang ingay ng mga boses.</b><span>The voices are extremely loud.</span></div>
+<div class="ex"><b>Masyadong mabilis ang isip ko.</b><span>My mind is going too fast.</span></div>
+<h3>Doubling</h3>
+<div class="ex"><b>Pagod na pagod na po ako.</b><span>I am completely exhausted.</span></div>
+<div class="ex"><b>Takot na takot siya kagabi.</b><span>He was terrified last night.</span></div>
+<div class="ex"><b>Galit na galit ang tatay niya.</b><span>His father is furious.</span></div>
+<p>After <b>napaka-</b>, <b>ang</b> + root and <b>sobrang</b> + root, the thing described takes <b>ng</b>, not <i>ang</i>: <b>Napakasakit ng ulo ko</b>.</p>
+<div class="note">Clinical tip: use these as a spoken severity scale. Ask <b>Medyo lang ba, o sobra?</b> (Only a little, or a lot?). Listen to doubling: <b>pagod na pagod na ako</b> is stronger than <b>pagod ako</b>, and <b>Pagod na pagod na ako sa buhay</b> (I am so tired of life) is a cue to ask about thoughts of death.</div>`,
+  quiz: [
+    ['Which is strongest?', ['Medyo malungkot ako.', 'Malungkot ako.', 'Napakalungkot ko.'], 2, 'Napaka- = very, extremely.'],
+    ['"Napakasakit ____ tiyan ko."', ['ang', 'ng', 'sa'], 1, 'After napaka-, the thing described takes ng.'],
+    ['"Pagod na pagod" means', ['a little tired', 'completely exhausted', 'tired again'], 1, 'Doubling with na intensifies.'],
+    ['"Masyadong maingay" means', ['too noisy', 'a bit noisy', 'not noisy'], 0, 'Masyado = too, overly.']
+  ]
+},
+{
+  id: 'focus-an-i', level: 'B1', unit: 'Verbs', title: 'Three more focuses: place, beneficiary, instrument',
+  summary: 'With -an, i- and ipang- the topic of the sentence is the place or person reached, the one who benefits, or the thing used.',
+  body: `
+<p>The focus lesson covered the doer (<b>-um-, mag-</b>) and the thing acted on (<b>-in</b>). Three more affixes put other parts of the event in the <b>ang</b> slot. One root shows them all:</p>
+<table><tr><th>Verb</th><th>The ang-phrase is</th><th>Meaning</th></tr>
+<tr><td><b>bumili</b></td><td>the buyer</td><td>to buy</td></tr>
+<tr><td><b>bilhin</b></td><td>the thing bought</td><td>to buy (it)</td></tr>
+<tr><td><b>bilhan</b></td><td>the seller, or the person bought for</td><td>to buy from; to buy for</td></tr>
+<tr><td><b>ibili</b></td><td>the person bought for</td><td>to buy for</td></tr>
+<tr><td><b>ipambili</b></td><td>the money used</td><td>to use for buying</td></tr></table>
+<h3>-an: the place or person the action reaches</h3>
+<div class="ex"><b>Binigyan ng nars ng gamot ang pasyente.</b><span>The nurse gave the patient medicine.</span></div>
+<div class="ex"><b>Pupuntahan ko po kayo mamaya.</b><span>I will come to you later.</span></div>
+<div class="ex"><b>Tinawagan namin ang pamilya.</b><span>We called the family.</span></div>
+<div class="ex"><b>Hugasan mo ang kamay mo.</b><span>Wash your hands.</span></div>
+<h3>i- and ipag-: for someone</h3>
+<div class="ex"><b>Ibili mo ako ng tubig.</b><span>Buy me some water.</span></div>
+<div class="ex"><b>Ipinagluto siya ng nanay niya.</b><span>His mother cooked for him.</span></div>
+<div class="ex"><b>Ipagdarasal ko po kayo.</b><span>I will pray for you.</span></div>
+<p>In everyday speech <b>-an</b> often does this job too: <b>Binilhan ko siya ng gamot</b> (I bought medicine for him).</p>
+<h3>ipang-, ipam-, ipan-: the thing used</h3>
+<div class="ex"><b>Ipinambili niya ng alak ang pera.</b><span>He used the money to buy liquor.</span></div>
+<div class="ex"><b>Ipambayad mo ito sa pamasahe.</b><span>Use this to pay the fare.</span></div>
+<p>The noun form is <b>pang-</b>: <b>pampatulog</b> (something for sleeping), <b>pambayad</b> (something to pay with).</p>
+<div class="note">Clinical tip: find the <b>ang</b>-phrase first, then read the affix. In <b>Binigyan ako ng gamot</b> the speaker received the medicine. In <b>Sinaktan siya ng asawa niya</b> the person hurt is <i>siya</i> and the one who did it is the spouse. Reading these the wrong way round reverses the history.</div>`,
+  quiz: [
+    ['"Binigyan ng nars ng gamot ang pasyente." Who received something?', ['The nurse', 'The patient', 'Nobody'], 1, 'With -an the ang-phrase (ang pasyente) is the one the action reaches.'],
+    ['"Buy me some water."', ['Bumili ako ng tubig.', 'Ibili mo ako ng tubig.', 'Binili ko ang tubig.'], 1, 'Ibili: the ang-form ako is the one it is bought for.'],
+    ['"Ipinambili niya ng alak ang pera." The money was', ['what he bought', 'what he used to buy', 'who he bought for'], 1, 'Ipang- puts the thing used in the ang slot.'],
+    ['"Tinawagan namin ang pamilya."', ['The family called us.', 'We called the family.', 'We are the family.'], 1, 'Namin is the doer; ang pamilya is the one reached.']
+  ]
+},
+{
+  id: 'nominalising', level: 'B1', unit: 'Verbs', title: 'Making nouns: pag-, ka- -an, pagka-',
+  summary: 'Turn a verb or a describing word into a noun: sleeping, sadness, the death of. These are the nouns you ask about.',
+  body: `
+<table><tr><th>Pattern</th><th>Makes</th><th>Examples</th></tr>
+<tr><td><b>pag-</b> + root</td><td>the act (from -um- and ma- verbs)</td><td>pagtulog, pagkain, pag-inom, pag-iyak</td></tr>
+<tr><td><b>pag-</b> + doubled first syllable + root</td><td>the act (from mag- verbs)</td><td>pagluluto, pagtatrabaho, pag-aaral, pagsusugal</td></tr>
+<tr><td><b>ka-</b> root <b>-an</b></td><td>a quality or state</td><td>kalungkutan, kalusugan, kahirapan, katahimikan</td></tr>
+<tr><td><b>pagka-</b> + root</td><td>the event or state of</td><td>pagkamatay, pagkawala, pagkabalisa</td></tr>
+<tr><td>root + <b>-an</b></td><td>the place for it</td><td>tulugan, kainan, hintayan</td></tr></table>
+<h3>pag-: the act of doing</h3>
+<div class="ex"><b>Kumusta po ang pagtulog ninyo?</b><span>How is your sleep?</span></div>
+<div class="ex"><b>Kumusta ang pagkain niya?</b><span>How is his eating?</span></div>
+<div class="ex"><b>Nakakatulong po ba ang pag-inom ng gamot?</b><span>Does taking the medicine help?</span></div>
+<div class="ex"><b>Ang pagsusugal ang problema niya.</b><span>Gambling is his problem.</span></div>
+<p><b>Pagkain</b> means both "eating" and "food"; the sentence tells you which.</p>
+<h3>ka- -an: a quality or state</h3>
+<div class="ex"><b>Matindi ang kalungkutan niya.</b><span>His sadness is intense.</span></div>
+<div class="ex"><b>Mahalaga ang kalusugan ng isip.</b><span>Mental health is important.</span></div>
+<h3>pagka-: the event, and "right after"</h3>
+<div class="ex"><b>Nagsimula ito pagkamatay ng anak niya.</b><span>It started after the death of his child.</span></div>
+<div class="ex"><b>Inumin po ito pagkakain.</b><span>Take this after eating.</span></div>
+<div class="ex"><b>Pagkagising ko, mabigat na ang pakiramdam ko.</b><span>As soon as I wake up, I already feel heavy.</span></div>
+<div class="note">Clinical tip: <b>Kumusta ang ...?</b> plus a pag- noun is the quickest open question: <b>pagtulog</b>, <b>pagkain</b>, <b>pag-inom ng gamot</b>, <b>pagtatrabaho</b>, <b>pag-aaral</b>. In medication instructions, <b>pagkakain</b> or <b>pagkatapos kumain</b> is after eating and <b>bago kumain</b> is before.</div>`,
+  quiz: [
+    ['The noun "sleeping, sleep" from matulog', ['pagtulog', 'katulugan', 'tulugin'], 0, 'Pag- + root.'],
+    ['The noun "cooking" from magluto', ['pagluto', 'pagluluto', 'kalutuan'], 1, 'From a mag- verb, the first syllable of the root is doubled.'],
+    ['"Kalungkutan" is', ['sad', 'sadness', 'to make sad'], 1, 'Ka- -an makes the quality or state.'],
+    ['"Inumin ito pagkakain."', ['Take this before eating.', 'Take this after eating.', 'Take this instead of eating.'], 1, 'Pagka- + verb root = right after.']
+  ]
+},
+{
+  id: 'recent-past', level: 'B1', unit: 'Verbs', title: 'Kaka-: it only just happened',
+  summary: 'The recently completed form says an action was finished a moment ago. The doer takes ko, mo, niya or ng.',
+  body: `
+<p>To say something <b>has just</b> happened, Tagalog has its own verb form, almost always followed by <b>lang</b>. The textbook form is <b>ka-</b> + the doubled first syllable of the root. In everyday speech most people simply say <b>kaka-</b> + root.</p>
+<table><tr><th>Root</th><th>Textbook</th><th>Everyday</th><th>Meaning</th></tr>
+<tr><td>kain</td><td>kakakain</td><td>kakakain</td><td>just ate</td></tr>
+<tr><td>gising</td><td>kagigising</td><td>kakagising</td><td>just woke up</td></tr>
+<tr><td>dating</td><td>kararating</td><td>kakarating</td><td>just arrived</td></tr>
+<tr><td>alis</td><td>kaaalis</td><td>kakaalis</td><td>just left</td></tr>
+<tr><td>inom</td><td>kaiinom</td><td>kakainom</td><td>just drank, just took</td></tr>
+<tr><td>tulog</td><td>katutulog</td><td>kakatulog</td><td>just fell asleep</td></tr></table>
+<h3>The doer is not in the ang form</h3>
+<p>This form has no topic. The doer takes <b>ko, mo, niya, namin, nila</b> or <b>ng</b>, and so does the thing acted on.</p>
+<div class="ex"><b>Kakakain ko lang po.</b><span>I just ate.</span></div>
+<div class="ex"><b>Kakagising lang niya.</b><span>He just woke up.</span></div>
+<div class="ex"><b>Kararating lang po ng doktor.</b><span>The doctor has just arrived.</span></div>
+<div class="ex"><b>Kakainom ko lang ng gamot.</b><span>I just took my medicine.</span></div>
+<div class="ex"><b>Kakatulog lang ng pasyente.</b><span>The patient has just fallen asleep.</span></div>
+<div class="ex"><b>Kakalabas lang niya sa ospital.</b><span>He was only just discharged from the hospital.</span></div>
+<h3>Compare</h3>
+<div class="ex"><b>Kumain na ako.</b><span>I have already eaten.</span></div>
+<div class="ex"><b>Kakakain ko lang.</b><span>I only just ate.</span></div>
+<div class="note">Clinical tip: this form dates an event to the last hours or days, which is often the whole point. <b>Kakahinto lang niya sa pag-inom ng alak</b> (he has only just stopped drinking) puts the patient inside the withdrawal window. <b>Kapapanganak lang niya</b> or <b>Kakapanganak lang niya</b> (she has just given birth) points to the postpartum period. Ask <b>Kailan po eksakto?</b> (When exactly?) to pin it down.</div>`,
+  quiz: [
+    ['"Kakakain ko lang."', ['I am about to eat.', 'I just ate.', 'I always eat.'], 1, 'Kaka- = only just done.'],
+    ['"Kakagising lang ____." (I just woke up)', ['ako', 'ko', 'akin'], 1, 'The doer takes the ko form, not ako.'],
+    ['"Kararating lang ng doktor."', ['The doctor is coming soon.', 'The doctor has just arrived.', 'The doctor has left.'], 1, 'Ka- + doubled syllable of dating; d becomes r.'],
+    ['Why does "Kakahinto lang niya sa pag-inom ng alak" matter?', ['Withdrawal may still be ahead', 'He has never drunk alcohol', 'He is drinking right now'], 0, 'He has only just stopped, so watch for withdrawal.']
+  ]
 }
 ];

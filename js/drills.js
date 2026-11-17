@@ -2,11 +2,19 @@
    switch  Formal ↔ Everyday: the f and c forms of every psychiatry phrase (no data of its own)
    markers Choose the marker: DRILL_CLOZE (ang/ng/sa, si/ni/kay, ito/iyan/iyon)
    build   Put the words in order: DRILL_BUILD (word tiles, enclitic order)
+   3.8.0:
+   roots     Find the root: every one-word dictionary entry whose root App.findRoots can recover (no data of its own)
+   families  Word families: WORD_FAMILIES (pick the form), WORD_SYNONYMS (deep word to everyday word), WORD_LADDERS (which is stronger)
+   dictation Numbers, times and doses: DRILL_DICTATION, audio first, typed answer
+   translate Say it in Tagalog: DRILL_TRANSLATE, typed answer compared with every accepted answer
+   Typed answers are scored with App.similarity; 80% of the words or more counts as right.
    Best scores in state.done.drills['<id>:<set>']. To add a drill: a row in DRILLS, a run function in RUN. */
 (function () {
   const { esc, shuffle, pick } = App;
   const V = (App.views = App.views || {});
   const CLOZE = window.DRILL_CLOZE || [], SETS = window.DRILL_CLOZE_SETS || {}, BUILD = window.DRILL_BUILD || [];
+  const DICTATION = window.DRILL_DICTATION || [], TRANS = window.DRILL_TRANSLATE || [];
+  const FAMS = window.WORD_FAMILIES || [], LADS = window.WORD_LADDERS || [], SYNS = window.WORD_SYNONYMS || [];
   const SECTIONS = () => window.PSYCH_SECTIONS || [];
   const N = 10;
 
@@ -19,7 +27,19 @@
       opts: [['all', 'All sets'], ['m', 'Ang, ng, sa'], ['n', 'Si, ni, kay'], ['d', 'Ito, iyan, iyon']], lessons: ['markers', 'names', 'demonstratives'] },
     { id: 'build', title: 'Build the sentence', eyebrow: 'Word order · 10 sentences', blurb: 'Tap the words into order. Where do na, po, ba and ko go?',
       intro: 'Tap the words in order to build the Tagalog sentence. The short words (ka, ko, mo, na, pa, po, ba, lang, raw) have a fixed place right after the first word of the sentence; this drill trains that order.',
-      opts: [], lessons: ['particles', 'pronouns', 'questions'] }
+      opts: [], lessons: ['enclitics', 'particles', 'pronouns', 'questions'] },
+    { id: 'roots', title: 'Find the root', eyebrow: 'Roots · 10 questions', blurb: 'Strip the affixes from a dictionary word and name its root.',
+      intro: 'Most Tagalog words are a root plus affixes. If you can see the root, you can look the word up and guess its meaning. Each question shows a word from the dictionary; choose its root.',
+      opts: [['all', 'All words'], ['v', 'Verbs'], ['clin', 'Health and mind words']], lessons: ['panlapi', 'nominalising', 'focus-an-i'] },
+    { id: 'families', title: 'Word families', eyebrow: 'Vocabulary · 10 questions', blurb: 'One root, many words: matulog, nakatulog, patulugin. Also deep and everyday words.',
+      intro: 'Three sets. Pick the right form: choose the word from one root that fits the meaning. Deep word to everyday word: match a formal Filipino word to what most people say. Which is stronger: choose the stronger of two words for the same feeling.',
+      opts: [['fam', 'Pick the right form'], ['syn', 'Deep word to everyday word'], ['lad', 'Which is stronger?']], lessons: ['intensifiers', 'register', 'ability', 'causative'], more: ['#/words', 'See all word families'] },
+    { id: 'dictation', title: 'Numbers, times and doses', eyebrow: 'Listening · 10 lines', blurb: 'Hear an age, a clock time or a dose and type it.',
+      intro: 'You hear a short line with a number, a clock time or a dose. Type what you hear in Tagalog. Capital letters, accents and punctuation do not count. For numbers and times you may type the figure instead (23, 3:30).',
+      opts: [['all', 'All sets'], ['num', 'Numbers'], ['time', 'Clock times'], ['dose', 'Doses']], lessons: ['numbers', 'time-words'] },
+    { id: 'translate', title: 'Say it in Tagalog', eyebrow: 'Writing · 10 sentences', blurb: 'Read the English, type the Tagalog. Several answers are accepted.',
+      intro: 'Type the Tagalog for each English line. Your answer is compared word by word with the accepted answers, with or without po. Tagalog has many right ways to say a thing, so read the model answer even when you are marked wrong.',
+      opts: [['all', 'All sets'], ['e', 'Everyday'], ['w', 'On the ward']], lessons: ['enclitics', 'questions', 'politeness'] }
   ];
   App.DRILLS = DRILLS;
   const byId = (id) => DRILLS.find((d) => d.id === id);
@@ -108,17 +128,124 @@
     draw();
   }
 
+  /* ---------- Find the root (3.8.0) ---------- */
+  const CLIN_CATS = ['health', 'mind', 'risk', 'substance', 'clinical', 'emotions'];
+  let rootPool = null;
+  const rootWords = () => rootPool || (rootPool = App.DICT.filter((e) => e.root && !/[\s-]/.test(e.tl) && !/[\s-]/.test(e.root) && App.flat(e.tl) !== App.flat(e.root) && App.findRoots(e.tl).includes(App.flat(e.root))));
+  function rootQs(set, n) {
+    const all = rootWords();
+    const src = all.filter((e) => set === 'all' || (set === 'v' ? e.pos === 'v' : CLIN_CATS.includes(e.cat)));
+    const roots = [...new Set(all.map((e) => e.root.toLowerCase()))];
+    return pick(src, Math.min(n, src.length)).map((e) => {
+      const w = e.tl.toLowerCase(), r = e.root.toLowerCase();
+      // Wrong answers: the word with too little or too much cut off, then real roots that start with the same letter.
+      // Half-stripped forms first (one affix or the doubled syllable left on), since those are the real mistakes.
+      const plausible = (x) => x.length >= 4 && x !== w && /^[^aeiou]?[aeiou]/.test(x) && !/h$/.test(x);
+      const half = [w.replace(/^(mag|nag|pag|mang|nang|pang|ma|na|pa|ka|i)/, ''), w.replace(/^(.)(um|in)/, '$1'), w.replace(/(han|hin|an|in)$/, '')];
+      const chops = [...new Set(shuffle(half.filter(plausible)).concat(shuffle([w.slice(2), w.slice(0, -2), w.slice(2, -2)].filter(plausible))))].slice(0, 2);
+      const near = shuffle(roots.filter((x) => x[0] === r[0])).concat(shuffle(roots));
+      const wrong = [...new Set(chops.concat(near))].filter((x) => App.flat(x) !== App.flat(r)).slice(0, 3);
+      return { q: e.tl, sub: e.en + ' · What is the root word?', tlq: true, tlo: true, say: e.tl, opts: [r].concat(wrong), a: 0, cardId: e.id,
+        exp: e.tl + ' (' + e.en + ') is built on the root ' + r + '.' };
+    });
+  }
+
+  /* ---------- Word families, deep and everyday words, intensity ladders (3.8.0) ---------- */
+  function famQs(set, n) {
+    if (set === 'syn') {
+      return pick(SYNS, Math.min(n, SYNS.length)).map((x) => {
+        const wrong = shuffle(SYNS.filter((y) => y !== x && !x.daily.includes(y.daily[0])).map((y) => y.daily[0])).slice(0, 3);
+        return { q: x.deep[0], sub: 'A formal or literary word. Which everyday word means the same?', tlq: true, tlo: true, say: x.deep[0], opts: [x.daily[0]].concat(wrong), a: 0,
+          exp: x.deep[0] + ' = ' + x.daily.join(', ') + ' (' + x.en + ').' + (x.note ? ' ' + x.note : '') };
+      });
+    }
+    if (set === 'lad') {
+      const out = [];
+      for (let k = 0; k < n; k++) {
+        const l = LADS[(k + Math.floor(Math.random() * LADS.length)) % LADS.length];
+        const i = Math.floor(Math.random() * (l.steps.length - 1)), j = i + 1 + Math.floor(Math.random() * (l.steps.length - 1 - i));
+        out.push({ q: 'Which is stronger?', sub: l.en, tlo: true, opts: [l.steps[j][0], l.steps[i][0]], a: 0,
+          exp: 'From mild to strong: ' + l.steps.map((s) => s[0]).join(' → ') + '. ' + l.steps[j][0] + ' = ' + l.steps[j][1] + '.' });
+      }
+      return out;
+    }
+    const pool = [];
+    FAMS.forEach((f) => f.forms.forEach((fm) => pool.push({ f, fm })));
+    return pick(pool, Math.min(n, pool.length)).map(({ f, fm }) => {
+      const wrong = shuffle(f.forms.filter((x) => x !== fm).map((x) => x[0])).slice(0, 3);
+      return { q: fm[1], sub: 'Root: ' + f.r + ' (' + f.en + '). Choose the word.', tlo: true, opts: [fm[0]].concat(wrong), a: 0, sayAfter: fm[0], exp: fm[0] + ' = ' + fm[1] + '.' };
+    });
+  }
+
+  /* ---------- Typed drills: dictation and translation (3.8.0) ---------- */
+  // Best word-by-word match of the typed line against every accepted answer, 0 to 100.
+  App.drillTypedScore = (answers, typed) => Math.max(0, ...answers.map((a) => Math.max(App.similarity(a, typed), App.similarity(App.spoken(a), typed))));
+  const figureOk = (n, typed) => { if (!n) return false; const t = String(typed).toLowerCase().replace(/\s+/g, ''); return t === n || t === n.replace(/:00$/, ''); };
+  const dictItems = (set) => DICTATION.filter((it) => set === 'all' || it.set === set).map((it) => ({ say: it.tl, answers: [it.tl], n: it.n, en: it.en }));
+  const transItems = (set) => TRANS.filter((it) => set === 'all' || it.set === set).map((it) => ({ prompt: it.en, answers: it.tl, why: it.why }));
+  function runTyped(box, all, key, audio) {
+    let items = pick(all, Math.min(N, all.length)), i = 0, right = 0;
+    const normal = App.state.settings.rate || 0.85;
+    const draw = () => {
+      if (i >= items.length) {
+        const pct = Math.round((100 * right) / items.length);
+        box.innerHTML = '<div class="card stack"><h3>' + (pct >= 80 ? LANG.quiz.great : pct >= 50 ? LANG.quiz.ok : LANG.quiz.keepGoing) + ' ' + right + ' / ' + items.length + '</h3>' +
+          '<div class="progress"><i style="width:' + pct + '%"></i></div><div class="row"><button class="btn primary" data-act="retry">Try again</button><a class="btn" href="#/drills">All drills</a></div></div>';
+        box.querySelector('[data-act=retry]').onclick = () => { items = pick(all, Math.min(N, all.length)); i = 0; right = 0; draw(); };
+        saveBest(key, right, items.length);
+        return;
+      }
+      const it = items[i];
+      box.innerHTML = '<div class="card stack"><div class="spread"><span class="eyebrow">' + (audio ? 'Line ' : 'Sentence ') + (i + 1) + ' of ' + items.length + '</span></div>' +
+        (audio
+          ? '<div class="listen-q"><button class="btn primary" data-act="play" aria-label="Play">' + App.icons.sound + ' Play</button><button class="btn" data-act="slow">Slower</button></div>'
+          : '<div style="font-size:1.12rem;font-weight:600">' + esc(it.prompt) + '</div>') +
+        '<div class="row"><input class="input tl" data-in autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="flex:1;min-width:0" placeholder="' + (audio ? 'Type what you hear' : 'Type the Tagalog') + '" aria-label="' + (audio ? 'Type what you hear' : 'Type the Tagalog') + '">' +
+        '<button class="btn primary" data-act="check">Check</button></div><div data-fb></div></div>';
+      const inp = box.querySelector('[data-in]'), chk = box.querySelector('[data-act=check]');
+      if (audio) {
+        box.querySelector('[data-act=play]').onclick = () => App.speak(it.say, { rate: normal });
+        box.querySelector('[data-act=slow]').onclick = () => App.speak(it.say, { rate: Math.max(0.6, normal - 0.25) });
+        setTimeout(() => { if (box.contains(inp)) App.speak(it.say, { rate: normal }); }, 150);
+      } else inp.focus();
+      const check = () => {
+        if (chk.disabled || !inp.value.trim()) return;
+        const s = App.drillTypedScore(it.answers, inp.value), ok = s >= 80 || figureOk(it.n, inp.value);
+        if (ok) right++;
+        App.recordAnswer(ok);
+        chk.disabled = true; inp.disabled = true;
+        const others = it.answers.slice(1, 4);
+        box.querySelector('[data-fb]').innerHTML = '<div class="feedback ' + (ok ? 'ok' : 'no') + '"><b>' + (ok ? LANG.quiz.right : LANG.quiz.wrong) + '</b> ' + (s >= 80 || !ok ? s + '% of words match.' : '') +
+          '<div style="margin-top:6px"><span class="tl">' + esc(it.answers[0]) + '</span> ' + App.sayBtn(it.answers[0]) + '</div>' +
+          (it.en ? '<div class="muted small">' + esc(it.en) + (it.n ? ' (' + esc(it.n) + ')' : '') + '</div>' : '') +
+          (others.length ? '<div class="muted small" style="margin-top:4px">Also accepted: <span class="tl">' + others.map(esc).join(' · ') + '</span></div>' : '') +
+          (it.why ? '<div style="margin-top:4px">' + esc(it.why) + '</div>' : '') + '</div>' +
+          '<div class="row" style="margin-top:10px"><button class="btn primary" data-act="next">' + (i + 1 < items.length ? 'Next' : 'See score') + '</button></div>';
+        const nx = box.querySelector('[data-act=next]');
+        nx.onclick = () => { i++; draw(); };
+        nx.focus();
+      };
+      chk.onclick = check;
+      inp.onkeydown = (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); check(); } };
+    };
+    draw();
+  }
+
   const RUN = {
+    roots: (box, set) => App.runQuiz(box, rootQs(set, N), { onDone: (r, n) => saveBest('roots:' + set, r, n), after: '<a class="btn" href="#/drills">All drills</a>' }),
+    families: (box, set) => App.runQuiz(box, famQs(set, N), { onDone: (r, n) => saveBest('families:' + set, r, n), after: '<a class="btn" href="#/drills">All drills</a>' }),
+    dictation: (box, set) => runTyped(box, dictItems(set), 'dictation:' + set, true),
+    translate: (box, set) => runTyped(box, transItems(set), 'translate:' + set, false),
     switch: (box, set) => App.runQuiz(box, switchQs(set, N), { onDone: (r, n) => saveBest('switch:' + set, r, n), after: '<a class="btn" href="#/drills">All drills</a>' }),
     markers: (box, set) => App.runQuiz(box, clozeQs(set, N), { onDone: (r, n) => saveBest('markers:' + set, r, n), after: '<a class="btn" href="#/drills">All drills</a>' }),
     build: (box) => runBuild(box, 'build:all')
   };
-  App.drillQs = { switch: switchQs, markers: clozeQs }; // for tests
+  App.drillQs = { switch: switchQs, markers: clozeQs, roots: rootQs, families: famQs, rootWords }; // for tests
 
   V.drills = (el) => {
-    el.innerHTML = '<h1>Drills</h1><p class="muted">Short grammar and word-order drills, ten items each. They go with the lessons; the verb trainer and Panlapi have their own pages.</p><div class="grid">' +
+    el.innerHTML = '<h1>Drills</h1><p class="muted">Short grammar, vocabulary, listening and writing drills, ten items each. They go with the lessons; the verb trainer and Panlapi have their own pages.</p><div class="grid">' +
       DRILLS.map((d) => { const b = bestOf(d.id); return '<a class="tile" href="#/drills/' + d.id + '"><span class="eyebrow">' + esc(d.eyebrow) + '</span><h3>' + esc(d.title) + '</h3><p>' + esc(d.blurb) + '</p><div class="meta row"><span class="pill' + (b != null ? ' good' : '') + '">' + (b != null ? 'Best ' + b + '%' : 'Not tried yet') + '</span></div></a>'; }).join('') +
-      '</div><div class="row" style="margin-top:14px"><a class="btn" href="#/verbs">Verb trainer</a><a class="btn" href="#/affixes">Panlapi</a><a class="btn" href="#/practice">All practice</a></div>';
+      '</div><div class="row" style="margin-top:14px"><a class="btn" href="#/verbs">Verb trainer</a><a class="btn" href="#/affixes">Panlapi</a><a class="btn" href="#/words">Word families</a><a class="btn" href="#/practice">All practice</a></div>';
   };
 
   V.drill = (el, p) => {
@@ -130,6 +257,7 @@
       (d.opts.length ? '<label class="small" style="max-width:100%">Set <select class="input" id="dset" style="width:auto;max-width:100%">' + d.opts.map(([v, t]) => '<option value="' + v + '">' + esc(t) + '</option>').join('') + '</select></label>' : '') +
       '<button class="btn primary" id="dgo">Start</button></div><div id="dbox"></div></div>' +
       (lessons.length ? '<p class="muted small" style="margin-top:12px">Lessons for this drill: ' + lessons.map((l) => '<a href="#/lessons/' + l.id + '">' + esc(l.title) + '</a>').join(' · ') + '</p>' : '') +
+      (d.more ? '<div class="row" style="margin-top:10px"><a class="btn" href="' + d.more[0] + '">' + esc(d.more[1]) + '</a></div>' : '') +
       (d.id === 'switch' ? '<div class="notice info" style="margin-top:12px">Practice phrasings, not validated instrument translations.</div>' : '');
     const box = el.querySelector('#dbox');
     el.querySelector('#dgo').onclick = () => {

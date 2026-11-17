@@ -791,3 +791,13 @@ mark.vf { background: var(--warn-bg); color: var(--gold-ink); font-weight: 700; 
 .wline .wtile { background: var(--chip); }
 .wtile:disabled { cursor: default; opacity: 1; }
 .feedback .say { vertical-align: middle; }
+
+/* Word families (3.8.0) */
+.wfam, .wsyn { margin-bottom: 12px; scroll-margin-top: calc(var(--top) + 64px); }
+.wlad { display: inline-flex; gap: 3px; vertical-align: middle; margin-right: 6px; }
+.wlad i { width: 7px; height: 14px; border-radius: 2px; background: var(--rule); }
+.wlad i.on { background: var(--accent); }
+.wsyn dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 0; align-items: center; }
+.wsyn dt { color: var(--muted); font-size: .85rem; font-weight: 600; }
+.wsyn dd { margin: 0; min-width: 0; }
+.wsyn .say { width: 28px; height: 28px; vertical-align: middle; }

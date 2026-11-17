@@ -4,6 +4,16 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.8.0', date: '2026-11-17', title: 'Six more lessons, four new drills, word families',
+    items: [
+      { type: 'feature', text: 'Four new drills on the Drills page. Find the root: strip the affixes from a dictionary word. Word families: choose the right word from one root, match a deep Filipino word to the everyday one, or pick the stronger of two words. Numbers, times and doses: hear an age, a clock time or a dose and type it. Say it in Tagalog: read an English line and type the Tagalog, with several accepted answers.' },
+      { type: 'feature', text: 'New Word families page (More → Word families). Sixteen roots with the words built from them (tulog, kain, inom, takot, lungkot, isip and more), eight sets of words for a feeling from mild to strong, and 28 ideas in deep Filipino, everyday speech and Taglish. Dictionary entries link to their family.' },
+      { type: 'content', text: 'Six new lessons with quizzes: Where the short words go (ka, ko, na, pa, po, ba); Time words (kanina, mamaya, tuwing, simula noong); How much (medyo, sobra, napaka-, and doubling); Three more focuses (place, beneficiary, instrument); Making nouns (pag-, ka- -an, pagka-); and Kaka- (it only just happened). There are now 36 lessons.' },
+      { type: 'content', text: '115 new dictionary words: commuting, kitchen and cooking, market and produce, house and household things, farming and fishing, family occasions, body sensations in plain words, and time expressions.' },
+      { type: 'content', text: 'All new Tagalog is a draft awaiting review by Dr. Navarro. Audio for the new words and sentences is recorded automatically shortly after release.' }
+    ]
+  },
+  {
     version: '3.7.0', date: '2026-11-17', title: 'Six grammar lessons, three new drills, 191 new words',
     items: [
       { type: 'feature', text: 'New Drills page (Practice, or More → Grammar drills) with three drills of ten items each. Choose the marker: ang, ng or sa; si, ni or kay; ito, iyan or iyon. Build the sentence: tap word tiles into order to learn where na, po, ba, ko and the other short words go. Formal or everyday: match each interview line to the same line in the other register.' },

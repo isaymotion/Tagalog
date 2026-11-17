@@ -59,7 +59,7 @@
     const pins = (s.pins || []).slice().reverse();
     const recent = (s.recent || []).filter((r) => !/^#\/(more|settings|progress|new|about|search)/.test(r.hash) && !App.isPinned(r.hash)).slice(0, 4);
     // One quick drill a day, rotating so the Home screen nudges different skills.
-    const quick = [['#/verbs', 'Verb trainer', '10 aspect questions'], ['#/affixes', 'Panlapi', 'Take 10 words apart'], ['#/drills/build', 'Build the sentence', 'Put 10 sentences in order'], ['#/drills/markers', 'Choose the marker', 'Ang, ng or sa: 10 gaps'], ['#/psych/interp', 'What is the patient saying?', 'Interpret 10 lines'], ['#/psych/listen', 'Listening drill', 'Hear 10 replies, pick the meaning'], ['#/listen', 'Listening exercise', 'One recording, questions and dictation'], ['#/flash/psych', 'Psychiatry flashcards', 'A quick review'], ['#/psych/cases', 'Case simulation', 'One interview, with feedback']];
+    const quick = [['#/verbs', 'Verb trainer', '10 aspect questions'], ['#/affixes', 'Panlapi', 'Take 10 words apart'], ['#/drills/build', 'Build the sentence', 'Put 10 sentences in order'], ['#/drills/markers', 'Choose the marker', 'Ang, ng or sa: 10 gaps'], ['#/drills/dictation', 'Numbers, times and doses', 'Hear 10 lines and type them'], ['#/drills/families', 'Word families', 'One root, many words'], ['#/drills/translate', 'Say it in Tagalog', 'Type 10 sentences'], ['#/psych/interp', 'What is the patient saying?', 'Interpret 10 lines'], ['#/psych/listen', 'Listening drill', 'Hear 10 replies, pick the meaning'], ['#/listen', 'Listening exercise', 'One recording, questions and dictation'], ['#/flash/psych', 'Psychiatry flashcards', 'A quick review'], ['#/psych/cases', 'Case simulation', 'One interview, with feedback']];
     const qd = quick[Math.floor(Date.now() / 864e5) % quick.length];
     el.innerHTML =
       '<section class="hero"><svg class="rays" viewBox="0 0 100 100" aria-hidden="true">' + Array.from({ length: 8 }, (_, k) => '<rect x="47" y="2" width="6" height="30" fill="#e3b53f" transform="rotate(' + k * 45 + ' 50 50)"/>').join('') + '<circle cx="50" cy="50" r="16" fill="#e3b53f"/></svg>' +
@@ -146,6 +146,7 @@
     const r = e.root || '';
     const related = r ? (App.byRoot.get(App.flat(r)) || []).filter((x) => x.id !== e.id) : [];
     const verb = (window.VERBS || []).find((v) => v.r === r || v.r === e.tl);
+    const family = (window.WORD_FAMILIES || []).find((f) => f.r === App.flat(r) || f.r === e.ftl);
     const phrases = [];
     PSYCH_SECTIONS.forEach((s) => s.phrases.forEach((ph, i) => { if (App.flat(ph.f + ' ' + (ph.c || '')).includes(e.ftl) && e.ftl.length > 2) phrases.push([s, ph, i]); }));
     el.innerHTML = crumb([['Dictionary', '#/dict'], [e.tl]]) +
@@ -153,6 +154,7 @@
       '<button class="btn sm" data-addcard="' + e.id + '">' + (S().srs[e.id] ? icons.check + ' In deck' : icons.plus + ' Add to flashcards') + '</button></div></div>' +
       '<div style="font-size:1.15rem">' + esc(e.en) + '</div><div class="row"><span class="pill">' + esc(App.POS[e.pos] || e.pos) + '</span><a class="pill" href="#/dict?cat=' + e.cat + '">' + esc(App.CATS[e.cat] || e.cat) + '</a>' + (r ? '<span class="pill">root: ' + esc(r) + '</span>' : '') + '</div>' +
       (e.note ? '<div class="notice info">' + esc(e.note) + '</div>' : '') + '</div>' +
+      (family ? '<p style="margin-top:12px"><a class="btn sm" href="#/words?r=' + encodeURIComponent(family.r) + '">Word family: ' + esc(family.r) + '</a></p>' : '') +
       (verb ? '<h2 style="margin-top:18px">Verb forms</h2>' + verbTable(verb) + '<p><a href="#/verbs/' + verb.r + '">Practice this verb</a></p>' : '') +
       (related.length ? '<h2 style="margin-top:18px">Same root</h2><div class="card">' + related.map((x) => entryHTML(x)).join('') + '</div>' : '') +
       (phrases.length ? '<h2 style="margin-top:18px">In psychiatry phrases</h2><div class="card">' + phrases.slice(0, 8).map(([s, ph, i]) => '<div class="entry"><div class="w"><a href="#/psych/s/' + s.id + '?p=' + i + '">' + esc(ph.f) + '</a></div><div class="d muted">' + esc(ph.en) + '</div></div>').join('') + '</div>' : '');

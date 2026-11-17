@@ -9,7 +9,7 @@ const ctx = { window: {}, console, TextEncoder, Buffer };
 ctx.window = ctx;
 vm.createContext(ctx);
 const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
-['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/dict-themes.js', 'js/data/drills.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js',
+['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/dict-themes.js', 'js/data/drills.js', 'js/data/word-sets.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js',
  'js/data/reading.js', 'js/data/listening.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js', 'js/data/psych-sud.js', 'js/data/psych-withdrawal.js', 'js/data/psych-mood.js', 'js/data/psych-shea.js', 'js/data/psych-phrases-nurse.js', 'js/data/psych-answers.js', 'js/data/psych-answers-nurse.js', 'js/data/affixes.js',
  'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js', 'js/pronounce.js'].forEach(load);
 
@@ -61,6 +61,13 @@ add('Magandang umaga po. Kumusta po kayo?'); // settings voice test
 // exactly as js/drills.js shows it (first letter capital, end mark).
 (ctx.DRILL_CLOZE || []).forEach((it) => add(it.q.replace('____', it.a)));
 (ctx.DRILL_BUILD || []).forEach((it) => [it.t].concat(it.alt || []).forEach((t) => { const s = t.join(' '); add(s.charAt(0).toUpperCase() + s.slice(1) + (it.end || '.')); }));
+// 3.8.0: dictation lines, the model answer of each typed translation, word families, intensity ladders,
+// and the deep and everyday words of each synonym set (Taglish words are not recorded: the voice mangles English).
+(ctx.DRILL_DICTATION || []).forEach((it) => add(it.tl));
+(ctx.DRILL_TRANSLATE || []).forEach((it) => add(it.tl[0]));
+(ctx.WORD_FAMILIES || []).forEach((f) => { add(f.r); f.forms.forEach((x) => add(x[0])); });
+(ctx.WORD_LADDERS || []).forEach((l) => l.steps.forEach((x) => add(x[0])));
+(ctx.WORD_SYNONYMS || []).forEach((x) => x.deep.concat(x.daily).forEach(add));
 
 // Substance use screener: lines are templates ({s} substance, {w} withdrawal symptoms, {u} unit) filled at run time
 // for the chosen substance, so record every line as it is spoken for every substance, not only the nganga example.

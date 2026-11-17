@@ -205,4 +205,128 @@ singil|charge; collection|n|money
 badyet|budget|n|money
 interes|interest (on a loan)|n|money
 pautang|a loan given to someone; lending|n|money|utang
+# ---- 3.8.0 ----
+# Commuting and transport
+pamasahe|fare; fare money|n|travel|pasahe
+magbayad ng pamasahe|to pay the fare|phr|travel
+bababa po ako|I am getting off here|phr|travel|baba|Said to the driver or conductor
+lumipat ng sasakyan|to transfer to another vehicle|phr|travel|lipat
+trapiko|traffic|n|travel||Usually said trapik
+matrapik|with heavy traffic|adj|travel|trapik
+konduktor|conductor|n|travel
+sa tabi lang po|just at the side, please|phr|travel||Said to ask the driver to stop
+hintuan|stop; place where vehicles stop|n|travel|hinto
+sakayan|boarding place|n|travel|sakay
+bumiyahe|to travel; to go on a trip|v|travel|biyahe
+biyahe|trip; journey|n|travel
+estasyon|station|n|travel
+# Kitchen and cooking
+magprito|to fry|v|food|prito
+pakuluan|to boil (something)|v|food|kulo
+magpakulo|to boil|v|food|kulo
+maggisa|to saute|v|food|gisa
+mag-ihaw|to grill|v|food|ihaw
+kawali|pan; wok|n|food
+sandok|ladle|n|food
+gasera|kerosene lamp|n|home
+uling|charcoal|n|food
+kahoy na panggatong|firewood|phr|food|gatong
+tira|leftover|n|food
+tirang pagkain|leftover food|phr|food|tira
+initin|to reheat; to heat up|v|food|init
+magsaing|to cook rice|v|food|saing
+magbalat|to peel|v|food|balat
+sawsawan|dipping sauce|n|food
+sinaing|cooked rice (in a pot)|n|food|saing
+lamesa|table|n|home||Also mesa
+# Market and produce
+tawad|a lower price asked for when haggling|n|money
+tumawad|to haggle|v|money|tawad
+kilo|kilo|n|money
+suki|regular customer or vendor|n|money
+kangkong|water spinach|n|food
+talong|eggplant|n|food
+ampalaya|bitter melon|n|food
+sitaw|string beans|n|food
+tilapya|tilapia|n|food
+bangus|milkfish|n|food
+galunggong|round scad|n|food
+hipon|shrimp|n|food
+alimango|mud crab|n|food
+alamang|tiny shrimp used for bagoong|n|food
+pusit|squid|n|food
+magtimbang|to weigh|v|money|timbang
+repolyo|cabbage|n|food
+kalabasa|squash|n|food
+dilis|anchovy|n|food
+# House and household things
+bakod|fence|n|home
+kulambo|mosquito net|n|home
+banig|woven mat|n|home
+timba|bucket|n|home
+tabo|dipper|n|home
+walis tingting|broom of coconut ribs|phr|home|walis
+pandakot|dustpan|n|home|dakot
+lababo|sink|n|home
+balde|pail; bucket|n|home||Also timba
+palanggana|basin|n|home
+sampayan|clothesline|n|home|sampay
+kumutan|to cover with a blanket|v|home|kumot
+kurtina|curtain|n|home
+# Farming and fishing
+palayan|rice field|n|work|palay
+palay|unhusked rice|n|work
+magtanim|to plant|v|work|tanim
+mag-ani|to harvest|v|work|ani
+ani|harvest|n|work
+bangka|boat|n|work
+lambat|net|n|work
+palaisdaan|fish pond|n|work|isda
+mangisda|to fish|v|work|isda
+magbilad|to sun-dry|v|work|bilad
+daing|dried salted fish|n|work
+magpatubig|to irrigate; to water|v|work|tubig
+sagwan|oar; paddle|n|work
+anihan|harvest time|n|work|ani
+# Family occasions
+ikasal|to be married|v|family|kasal
+magluksa|to mourn|v|family|luksa
+piyesta|town feast|n|family||Also pista
+reunion|family reunion|n|family||English word used as is
+dumalaw sa sementeryo|to visit the cemetery|phr|family|dalaw
+kabaong|coffin|n|family
+makiramay|to offer condolences|v|family|damay
+magpabinyag|to have someone baptized|v|family|binyag
+magpuyat sa lamay|to stay up at a wake|phr|family|puyat
+puntod|grave|n|family
+# Body sensations in plain words
+nangangalay|feeling stiff or tired (limbs)|adj|health|ngalay
+manhid|numb|adj|health
+pangingilig|tingling|n|health
+kabag|gas pain; bloating|n|health
+liyo|dizzy, lightheaded feeling|n|health
+binat|folk illness: relapse after recovery from illness or childbirth|n|health
+pananakit ng ulo|headache|n|health|sakit
+makirot|painful; throbbing|adj|health|kirot
+nangangati|itchy|adj|health|kati
+sinat|low-grade fever|n|health
+manas|swelling; edema|n|health
+# Time expressions
+kamakalawa|day before yesterday|adv|time
+sa makalawa|day after tomorrow|phr|time
+simula noong|since|phr|time
+hanggang ngayon|until now|phr|time
+sa susunod na buwan|next month|phr|time
+kahapon ng umaga|yesterday morning|phr|time
+nitong nakaraang linggo|this past week|phr|time
+kamakalawa ng gabi|the night before last|phr|time
+ilang beses|how many times|phr|time
+pagkakain|after eating|adv|time|kain
+pagkagising|upon waking|adv|time|gising
+kakakain|has just eaten|v|time|kain
+kakagising|has just woken up|v|time|gising
+kararating|has just arrived|v|time|dating|Everyday form: kakarating
+napakasakit|very painful|adj|health|sakit
+namatayan|bereaved; lost someone to death|v|family|patay
+magpatiwakal|to take one's own life (formal word)|v|risk|tiwakal|News and formal word; in interviews say magpakamatay
 `);
