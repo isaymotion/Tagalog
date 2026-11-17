@@ -13,7 +13,7 @@ import re
 import argparse, asyncio, base64, os, shutil, subprocess
 from playwright.async_api import async_playwright
 
-ROUTES = ['#/', '#/daily', '#/drills/focus', '#/drills/errors', '#/drills/stress', '#/words?tab=str', '#/words?tab=look', '#/words', '#/words?tab=lad', '#/words?tab=syn', '#/words?r=tulog', '#/drills/roots', '#/drills/families', '#/drills/dictation', '#/drills/translate', '#/lessons/enclitics', '#/lessons/time-words', '#/lessons/intensifiers', '#/lessons/focus-an-i', '#/lessons/nominalising', '#/lessons/recent-past', '#/lessons/handout?id=focus-an-i', '#/drills', '#/drills/markers', '#/drills/build', '#/drills/switch', '#/lessons/demonstratives', '#/lessons/connectors', '#/lessons/ability', '#/lessons/causative', '#/lessons/requests', '#/lessons/hedging', '#/lessons/handout?id=hedging', '#/dict?cat=routine', '#/dict?cat=civic', '#/practice', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/d10', '#/flash', '#/flash/psych', '#/verbs', '#/verbs/kain',
+ROUTES = ['#/', '#/pictures', '#/pictures/bodymap', '#/signs', '#/signs?tab=quiz', '#/signs?tab=panels', '#/daily', '#/drills/focus', '#/drills/errors', '#/drills/stress', '#/words?tab=str', '#/words?tab=look', '#/words', '#/words?tab=lad', '#/words?tab=syn', '#/words?r=tulog', '#/drills/roots', '#/drills/families', '#/drills/dictation', '#/drills/translate', '#/lessons/enclitics', '#/lessons/time-words', '#/lessons/intensifiers', '#/lessons/focus-an-i', '#/lessons/nominalising', '#/lessons/recent-past', '#/lessons/handout?id=focus-an-i', '#/drills', '#/drills/markers', '#/drills/build', '#/drills/switch', '#/lessons/demonstratives', '#/lessons/connectors', '#/lessons/ability', '#/lessons/causative', '#/lessons/requests', '#/lessons/hedging', '#/lessons/handout?id=hedging', '#/dict?cat=routine', '#/dict?cat=civic', '#/practice', '#/search?q=bumubulong', '#/dict', '#/dict?q=kinakain', '#/dict/d10', '#/flash', '#/flash/psych', '#/verbs', '#/verbs/kain',
   '#/lessons', '#/lessons/markers', '#/reading', '#/reading/sulat-nanay', '#/speak', '#/speak/meet', '#/speak/case-jomar', '#/psych',
   '#/psych/s/hallucinations', '#/psych/point', '#/psych/point?s=suicide', '#/psych/listen', '#/psych/listen?s=depression', '#/lessons/interpreting', '#/psych/cases', '#/psych/case/jomar', '#/psych/interp', '#/placement', '#/progress', '#/settings', '#/new',
   '#/about', '#/more', '#/psych/handout', '#/psych/handout?s=suicide', '#/psych/deesc', '#/psych/handout?deesc=1', '#/psych/s/deescalation',
@@ -348,6 +348,101 @@ async def main(base, out):
             await pg.evaluate("location.hash='#/psych/discharge'"); await pg.wait_for_timeout(200)
             await pg.click('[data-go="3"].ds-chip'); await pg.click('[data-pick="8"]'); await pg.click('.ds-chip.sum'); await pg.wait_for_timeout(100)
             if 'Command hallucinations persist' not in await pg.inner_text('#view'): fails.append(f'{name}: discharge command flag')
+            # 3.10.0: picture words, body map, signs and buttons, picture lessons. Ids come from the data, not from the seed.
+            await pg.evaluate("window._ps = []; App.speak = (t) => { window._ps.push(t); }; 0")
+            async def go(h):
+                await pg.evaluate(f"location.hash={h!r}"); await pg.wait_for_timeout(180)
+                if await pg.evaluate("document.documentElement.scrollWidth > window.innerWidth"): fails.append(f'{name} {h}: horizontal overflow')
+            async def tap(sel):
+                await pg.locator(sel).first.dispatch_event('click'); await pg.wait_for_timeout(50)
+            sid = await pg.evaluate("(App.pictures.sets().find((s) => s.kind === 'diagram' && App.pictures.svg(s) && (s.say || []).length) || {}).id")
+            if not sid: fails.append(f'{name}: no diagram picture set with art and sentences')
+            else:
+                await go(f'#/pictures/{sid}')
+                pid = await pg.evaluate("document.querySelector('#picTab .pic-pin').dataset.p")
+                await tap(f'#picTab .pic-pin[data-p="{pid}"]')
+                w = await pg.evaluate(f"App.pictures.get({sid!r}).parts.find((p) => p.id === {pid!r}).w")
+                if w not in await pg.inner_text('#picTab .pic-panel'): fails.append(f'{name}: picture learn tap did not show the word {w}')
+                if not await pg.evaluate("window._ps.length") or (await pg.evaluate("window._ps[window._ps.length - 1]")) != w: fails.append(f'{name}: picture learn tap did not speak the word')
+                async def play(mode, answer):
+                    for _ in range(20):
+                        if not await pg.locator('.pic-round').count(): break
+                        pid = await answer()
+                        if not pid: fails.append(f'{name}: picture {mode}: could not find the answer'); return
+                        if await pg.locator('.pic-in').count():
+                            await pg.fill('.pic-in', pid); await pg.press('.pic-in', 'Enter')
+                        elif await pg.locator('.pic-q .opt').count(): await tap(f'.pic-q .opt[data-p="{pid}"]')
+                        else: await tap(f'.pic-q .pic-pin[data-p="{pid}"], .pic-q .pic-card[data-p="{pid}"]')
+                        await pg.wait_for_timeout(40)
+                        if not await pg.locator('.pic-q .feedback.ok').count(): fails.append(f'{name}: picture {mode}: right answer marked wrong'); return
+                        await tap('.pic-q [data-act=next]')
+                    sc = await pg.evaluate(f"App.state.done.pictures[{(mode.split('-')[0] + ':' + sid)!r}]")
+                    if sc != 100: fails.append(f'{name}: picture {mode} score not saved as 100: {sc}')
+                said_part = "((s) => { const t = window._ps[window._ps.length - 1]; const p = App.pictures.get(s).parts.find((x) => x.w === t); return p ? p.id : null; })"
+                await go(f'#/pictures/{sid}?tab=identify'); await play('identify', lambda: pg.evaluate(said_part + f"({sid!r})"))
+                hl = "(() => { const e = document.querySelector('.pic-q .pic-pin.hl, .pic-q .pic-card.hl'); return e ? e.dataset.p : null; })()"
+                await pg.evaluate("App.state.settings.picLabel = 'choose'; 0")
+                await go(f'#/pictures/{sid}?tab=label'); await play('label-choose', lambda: pg.evaluate(hl))
+                await tap('[data-plab="type"]'); await pg.wait_for_timeout(100)
+                async def typed():
+                    p = await pg.evaluate(hl)
+                    return p and await pg.evaluate(f"(() => {{ const w = App.pictures.get({sid!r}).parts.find((x) => x.id === {p!r}).w; return ' ' + w.toUpperCase() + '!'; }})()")
+                await play('label-type', typed)
+                bad = await pg.evaluate("""(() => { const out = []; App.pictures.sets().forEach((s) => s.parts.forEach((p) => {
+                  if (!App.pictures.typedOk(p.w, p)) out.push('w ' + p.w); (p.alt || []).forEach((a) => { if (!App.pictures.typedOk(a, p)) out.push('alt ' + a); });
+                  const f = App.flat(p.w); if (f.length >= 7 && !App.pictures.typedOk(f.slice(0, -1) + (f.slice(-1) === 'a' ? 'o' : 'a'), p)) out.push('near ' + p.w);
+                  if (App.pictures.typedOk('zzzzqq', p)) out.push('loose ' + p.w); })); return out; })()""")
+                if bad: fails.append(f'{name}: picture typed answers: {bad[:4]}')
+                said_say = "((s) => { const t = window._ps[window._ps.length - 1]; const x = App.pictures.get(s).say.find((y) => y.tl === t); return x ? x.p : null; })"
+                await go(f'#/pictures/{sid}?tab=listen')
+                if await pg.locator('.pic-q .feedback').count(): fails.append(f'{name}: listen shows feedback before answering')
+                await play('listen', lambda: pg.evaluate(said_say + f"({sid!r})"))
+                await go(f'#/pictures/{sid}?tab=print')
+                if not await pg.locator('#ppPaper .pp-page .pp-svg').count() or not await pg.locator('#ppPaper .pp-lines li').count(): fails.append(f'{name}: picture print sheet not rendered')
+                await tap('[data-pp-set="fill"][data-v="filled"]')
+                if w not in await pg.evaluate("(document.querySelector('#ppPaper') || {}).innerText || ''"): fails.append(f'{name}: filled print sheet lacks the words')
+            # every set and tab: no overflow, no error
+            for s2 in await pg.evaluate("App.pictures.sets().map((s) => s.id)"):
+                for t in ['learn', 'identify', 'label', 'listen', 'print']: await go(f'#/pictures/{s2}?tab={t}')
+            await go('#/pictures/bodymap')
+            bm = await pg.evaluate("(() => { const g = document.querySelector('[data-pp-part]'); const f = g.closest('[data-pp-set-id]').dataset.ppSetId; return App.pictures.get(f).parts.find((p) => p.id === g.dataset.ppPart).w; })()")
+            await tap('[data-pp-part]')
+            if bm not in await pg.inner_text('#ppBmShow'): fails.append(f'{name}: body map tap did not show {bm}')
+            # signs: Learn tap, Quiz to a score, a panel to a score
+            await go('#/signs?tab=learn&g=all')
+            await tap('.sg-tap')
+            en = await pg.evaluate("SIGNS.signs.find((x) => x.id === document.querySelector('.sg-tap').dataset.sid).en")
+            if await pg.locator('.sg-detail >> nth=0').is_hidden() or en not in await pg.inner_text('.sg-tile >> nth=0'): fails.append(f'{name}: sign tap did not show the meaning')
+            await go('#/signs?tab=quiz')
+            await pg.evaluate("App.state.settings.signsG = 'all'; App.state.settings.signsM = 'tl-en'; App.state.settings.signsLv = 'All'; 0"); await go('#/signs?tab=learn'); await go('#/signs?tab=quiz')
+            await tap('#sggo')
+            for _ in range(25):
+                if not await pg.locator('#sgq .opt').count(): break
+                await tap('#sgq .opt'); await tap('#sgq [data-act=next]')
+            if not isinstance(await pg.evaluate("App.state.done.signs['quiz:all:tl-en']"), (int, float)): fails.append(f'{name}: sign quiz score not saved')
+            pnl = await pg.evaluate("SIGN_PANELS[0] && SIGN_PANELS[0].id")
+            if pnl:
+                await go(f'#/signs?tab=panels&p={pnl}')
+                await tap('[data-pm="tasks"]')
+                for _ in range(10):
+                    if not await pg.locator('.sg-task').count(): break
+                    q = await pg.inner_text('.sg-task .sg-q')
+                    a = await pg.evaluate("(q) => SIGN_PANELS[0].tasks.find((t) => t.q === q).a", q)
+                    await tap(f'.sg-ctl[data-cid="{a}"]')
+                    if not await pg.locator('[data-fb] .feedback.ok').count(): fails.append(f'{name}: panel right control marked wrong'); break
+                    await tap('[data-act=next]')
+                if await pg.evaluate(f"App.state.done.signs['panel:{pnl}']") != 100: fails.append(f'{name}: panel score not saved as 100')
+            # a lesson with a picture shows it; search finds the page; Progress lists the new rows
+            lid = await pg.evaluate("(LESSONS.find((l) => /pic-embed/.test(l.body)) || {}).id")
+            if lid:
+                await go(f'#/lessons/{lid}')
+                if not await pg.locator('.lesson-body .pic-embed .pic-svg, .lesson-body .pic-embed .pic-card').count(): fails.append(f'{name}: lesson {lid} picture not mounted')
+                if not await pg.evaluate(f"JSON.stringify(App.htmlToPdf(LESSONS.find((l) => l.id === {lid!r}).body)).includes('Picture: ')"): fails.append(f'{name}: lesson handout lacks the picture line')
+            if not await pg.evaluate("App.searchAll('picture words').some((r) => r.route === '#/pictures')"): fails.append(f'{name}: search does not find Picture words')
+            await go('#/progress')
+            if 'Picture sets tried' not in await pg.inner_text('#view'): fails.append(f'{name}: progress lacks picture row')
+            await go('#/practice')
+            if await pg.locator('#view a[href="#/pictures"], #view a[href="#/pictures/bodymap"], #view a[href="#/signs"]').count() < 3: fails.append(f'{name}: practice lacks the Pictures tiles')
             if name == 'desk':
                 await pg.evaluate("location.hash='#/psych/handout'"); await pg.wait_for_timeout(200)
                 await pg.evaluate(LOAD_PDFMAKE)

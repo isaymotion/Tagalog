@@ -7,8 +7,22 @@ const repo = path.resolve(process.argv[2] || '.');
 const ctx = { console, TextEncoder, Buffer, localStorage: { getItem: () => null, setItem() {} }, navigator: {}, document: { querySelector: () => null }, fetch: () => Promise.reject(new Error('no fetch')) };
 ctx.window = ctx; vm.createContext(ctx);
 const html = fs.readFileSync(path.join(repo, 'index.html'), 'utf8');
-const scripts = [...html.matchAll(/src="((?:js|data)\/[^"]+)"/g)].map((m) => m[1]).filter((f) => f.startsWith('data/') || f.includes('/data/') || /conjugate|audio-key|pronounce|lang|core|discharge-practice|mse-practice/.test(f));
-for (const f of scripts) vm.runInContext(fs.readFileSync(path.join(repo, f), 'utf8'), ctx, { filename: f });
+// 3.10.0: pictures/art-*.js (the line art of the picture sets) load too. Each picture, sign and panel object is remembered with
+// the file that added it, so the count rules of a file marked "seed: writers replace" are warnings, not failures.
+const scripts = [...html.matchAll(/src="((?:js|data|pictures)\/[^"]+)"/g)].map((m) => m[1]).filter((f) => f.startsWith('data/') || f.includes('/data/') || f.startsWith('pictures/') || /conjugate|audio-key|pronounce|lang|core|discharge-practice|mse-practice/.test(f));
+const fileOf = new Map(), seedFiles = new Set(), artFile = {};
+const noteObj = (f, o) => { if (o && typeof o === 'object' && !fileOf.has(o)) fileOf.set(o, f); };
+for (const f of scripts) {
+  const src = fs.readFileSync(path.join(repo, f), 'utf8'), base = path.basename(f);
+  if (src.includes('seed: writers replace')) seedFiles.add(base);
+  vm.runInContext(src, ctx, { filename: f });
+  (Array.isArray(ctx.PICTURE_SETS) ? ctx.PICTURE_SETS : []).forEach((x) => noteObj(base, x));
+  (ctx.LESSONS || []).forEach((x) => noteObj(base, x));
+  { const sg = ctx.SIGNS || {}; (sg.groups || []).forEach((x) => noteObj(base, x)); (sg.signs || []).forEach((x) => noteObj(base, x)); }
+  (Array.isArray(ctx.SIGN_PANELS) ? ctx.SIGN_PANELS : []).forEach((x) => noteObj(base, x));
+  if (ctx.PICTURE_BODYMAP) noteObj(base, ctx.PICTURE_BODYMAP);
+  Object.keys(ctx.PICTURE_ART || {}).forEach((k) => { if (!artFile[k]) artFile[k] = base; });
+}
 const C = ctx;
 let fails = 0; const bad = (m) => { fails++; console.log('FAIL', m); };
 const sec = (id) => C.PSYCH_SECTIONS.find((s) => s.id === id);
@@ -231,7 +245,167 @@ if (C.DRILL_CLOZE) {
     if (C.App.DICT_LEGACY !== 1658) bad('legacy dictionary size changed: ' + C.App.DICT_LEGACY);
   } else console.log('WARN no tests/dict-ids.json snapshot');
 }
+
+// 3.10.0: picture words, body map, signs and buttons, picture lessons (PLAN-3.10 A1 to A5).
+const P310 = { pictureSets: 0, pictureParts: 0, pictureSay: 0, signs: 0, panels: 0, panelTasks: 0 };
+{
+  const FO = (o) => fileOf.get(o) || '?';
+  // Count rules: a failure, or a warning when the object comes from a seed file.
+  const cnt = (o, m) => { const f = FO(o); if (seedFiles.has(f)) console.log('WARN ' + f + ' (seed): ' + m); else bad(f + ': ' + m); };
+  const isStr = (v) => typeof v === 'string' && v.trim().length > 0, isNum = (v) => typeof v === 'number' && isFinite(v);
+  const ACRO = new Set(['CR', 'OPD', 'ER', 'ATM', 'TV', 'ID', 'PWD', 'MRT', 'LRT', 'OB', 'IV', 'BP', 'ECG', 'ICU', 'NCMH', 'DOH', 'SM', 'OK', 'PM', 'AM', 'USB', 'LED', 'ON', 'OFF', 'TIMER', 'SWING', 'FAN', 'COOK', 'WARM', 'TEMP', 'HOT', 'COLD', 'PIN', 'X-RAY', 'CT', 'MRI', 'RH', 'BHW']);
+  const capsWord = (t) => (String(t || '').match(/[A-Za-zÑñ-]+/g) || []).filter((w) => w.replace(/-/g, '').length >= 4 && w === w.toUpperCase() && /[A-Z]/.test(w) && !ACRO.has(w));
+  const ACCENT = /[áéíóúàèìòùâêîôûÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛ]|[̀-ͯ]/;
+  const spokenCheck = (o, where, t) => { if (!isStr(t)) return; const fo = typeof o === 'string' ? o : FO(o); const c = capsWord(t); if (c.length) bad(fo + ': ' + where + ' has an ALL-CAPS word (the voice spells it): ' + c.join(', ')); if (ACCENT.test(t)) bad(fo + ': ' + where + ' has an accent mark (the voice drops the vowel): ' + t); };
+  const ART = C.PICTURE_ART || {};
+  Object.entries(ART).forEach(([k, a]) => { if (!a || !Array.isArray(a.vb) || a.vb.length !== 2 || !isNum(a.vb[0]) || !isNum(a.vb[1]) || !isStr(a.svg)) bad((artFile[k] || '?') + ': art ' + k + ' needs vb [w, h] and svg'); });
+  const PLAN = { body: ['body-front', 'body-back', 'face', 'hand-arm', 'leg-foot', 'inside'], home: ['house-outside', 'living-room', 'kitchen', 'bathroom', 'bedroom', 'appliances'],
+    town: ['street', 'station', 'buildings', 'hospital-floor', 'positions'], animals: ['pets-farm', 'zoo', 'birds-insects-sea', 'animal-parts'],
+    machines: ['car', 'bicycle', 'computer-phone', 'vehicles', 'ward-things'], food: ['fruit-veg', 'meals-drinks', 'table-setting'], clothes: ['clothes', 'accessories-colours'],
+    nature: ['landscape', 'weather', 'seasons-plants'], daily: ['feelings', 'daily-routine', 'school-office', 'family-tree'] };
+  const PLANNED = [].concat(...Object.values(PLAN));
+  const NEWER = [[0x1F90C, 0x1F90C], [0x1F972, 0x1F972], [0x1F977, 0x1F979], [0x1F9A3, 0x1F9A4], [0x1F9AB, 0x1F9AD], [0x1F9CB, 0x1F9CC], [0x1F6D6, 0x1F6DF], [0x1F6FB, 0x1F6FF], [0x1F7F0, 0x1F7FF], [0x1FA74, 0x1FA77], [0x1FA7B, 0x1FA7F], [0x1FA83, 0x1FA8F], [0x1FA96, 0x1FAFF]];
+  const oneEmoji = (pic) => { if (!isStr(pic)) return 'missing'; const cps = [...pic].map((c) => c.codePointAt(0)).filter((c) => c !== 0xFE0F && c !== 0xFE0E);
+    if (cps.includes(0x200D)) return 'ZWJ sequence'; if (cps.some((c) => (c >= 0x1F3FB && c <= 0x1F3FF) || (c >= 0x1F1E6 && c <= 0x1F1FF))) return 'skin tone or flag';
+    if (cps.length !== 1 || cps[0] < 0x2000) return 'not ONE emoji'; if (NEWER.some(([a, b]) => cps[0] >= a && cps[0] <= b)) return 'newer than Emoji 12.0'; return ''; };
+  const LV = ['A1', 'A2', 'B1'];
+  const PS = Array.isArray(C.PICTURE_SETS) ? C.PICTURE_SETS : [];
+  const setIds = new Set();
+  PS.forEach((s, si) => {
+    if (!s || !isStr(s.id)) return bad('picture set #' + (si + 1) + ' without an id');
+    const f = FO(s), w = 'set ' + s.id;
+    if (setIds.has(s.id)) bad(f + ': ' + w + ' id twice'); setIds.add(s.id);
+    const fg = (f.match(/^picture-sets-(\w+)\.js$/) || [])[1];
+    if (fg && s.group !== fg) bad(f + ': ' + w + ' group ' + s.group + ' (file is ' + fg + ')');
+    if (!PLAN[s.group]) bad(f + ': ' + w + ' unknown group ' + s.group); else if (!PLAN[s.group].includes(s.id)) console.log('WARN ' + f + ': ' + w + ' is not a planned set id of group ' + s.group);
+    if (s.lv !== 'A1' && s.lv !== 'A2') bad(f + ': ' + w + ' lv must be A1 or A2');
+    if (!isStr(s.title) || !isStr(s.intro)) bad(f + ': ' + w + ' needs title and intro');
+    if (s.kind !== 'diagram' && s.kind !== 'cards') bad(f + ': ' + w + ' kind must be diagram or cards');
+    const art = s.kind === 'diagram' ? ART[s.art] : null;
+    if (s.kind === 'diagram' && !art) bad(f + ': ' + w + ' art ' + s.art + ' is not in PICTURE_ART (pictures/art-*.js)');
+    if (s.kind === 'cards' && s.art != null) bad(f + ': ' + w + ' cards have no art');
+    const parts = Array.isArray(s.parts) ? s.parts : [];
+    const lo = s.kind === 'cards' ? 10 : 8;
+    if (parts.length < lo || parts.length > 16) cnt(s, w + ': ' + lo + ' to 16 parts, found ' + parts.length);
+    const pids = new Set(), ws = new Set(); let nb1 = 0;
+    parts.forEach((p, i) => {
+      const pw = w + ' part ' + ((p && p.id) || '#' + (i + 1));
+      if (!p || !isStr(p.id)) return bad(f + ': ' + pw + ' missing id');
+      if (pids.has(p.id)) bad(f + ': ' + pw + ' part id twice'); pids.add(p.id);
+      if (!isStr(p.w) || !isStr(p.en)) bad(f + ': ' + pw + ' needs w and en');
+      else { if (p.w !== p.w.toLowerCase() && !capsWord(p.w).length && !/^[A-Z]{2,4}$/.test(p.w) && p.w !== 'Pasko') console.log('WARN ' + f + ': ' + pw + ' w should be lower case: ' + p.w); if (p.w.trim().split(/\s+/).length > 3) bad(f + ': ' + pw + ' w is more than 3 words'); const k = p.w.toLowerCase().replace(/[\s-]/g, ''); if (ws.has(k)) bad(f + ': ' + pw + ' w repeated in the set: ' + p.w); ws.add(k); }
+      spokenCheck(f, pw + ' w', p.w); (Array.isArray(p.alt) ? p.alt : []).forEach((a) => { if (!isStr(a)) bad(f + ': ' + pw + ' empty alt'); else if (ACCENT.test(a)) bad(f + ': ' + pw + ' alt has an accent: ' + a); });
+      if (p.alt != null && !Array.isArray(p.alt)) bad(f + ': ' + pw + ' alt must be an array');
+      if (!LV.includes(p.lv)) bad(f + ': ' + pw + ' lv must be A1, A2 or B1'); if (p.lv === 'B1') nb1++;
+      if (s.kind === 'diagram') {
+        if (p.pic != null) bad(f + ': ' + pw + ' a diagram part has no pic');
+        if (!isNum(p.x) || !isNum(p.y)) bad(f + ': ' + pw + ' x and y must be numbers');
+        else if (art && Array.isArray(art.vb) && (p.x < 0 || p.y < 0 || p.x > art.vb[0] || p.y > art.vb[1])) bad(f + ': ' + pw + ' pin (' + p.x + ', ' + p.y + ') outside the art ' + art.vb.join('x'));
+      } else if (s.kind === 'cards') {
+        if (p.x != null || p.y != null) bad(f + ': ' + pw + ' cards have no x / y');
+        const e = oneEmoji(p.pic); if (e) bad(f + ': ' + pw + ' pic ' + e + ': ' + JSON.stringify(p.pic));
+      }
+    });
+    if (parts.length && nb1 * 4 > parts.length) bad(f + ': ' + w + ' more than a quarter of the words are B1');
+    const say = Array.isArray(s.say) ? s.say : [];
+    if (say.length < 6 || say.length > 10) cnt(s, w + ': 6 to 10 say sentences, found ' + say.length);
+    const seen = new Set();
+    say.forEach((x, i) => {
+      const xw = w + ' say ' + (i + 1);
+      if (!x || !isStr(x.tl) || !isStr(x.en)) return bad(f + ': ' + xw + ' needs tl and en');
+      if (!pids.has(x.p)) bad(f + ': ' + xw + ' p ' + x.p + ' is not a part id');
+      if (seen.has(x.tl)) bad(f + ': ' + xw + ' repeated'); seen.add(x.tl);
+      spokenCheck(f, xw, x.tl);
+    });
+    P310.pictureSets++; P310.pictureParts += parts.length; P310.pictureSay += say.length;
+  });
+  const missing = PLANNED.filter((id) => !setIds.has(id));
+  if (missing.length) console.log('WARN ' + missing.length + ' of the ' + PLANNED.length + ' planned picture sets are not there yet: ' + missing.join(', '));
+  // Body map
+  const BM = C.PICTURE_BODYMAP;
+  if (!BM) bad('PICTURE_BODYMAP missing');
+  else {
+    const f = FO(BM);
+    if (!Array.isArray(BM.sets) || !BM.sets.length) bad(f + ': body map sets missing'); else BM.sets.forEach((id) => { if (!setIds.has(id)) bad(f + ': body map set ' + id + ' does not exist'); });
+    const ask = Array.isArray(BM.ask) ? BM.ask : [], words = Array.isArray(BM.words) ? BM.words : [];
+    if (ask.length !== 8) bad(f + ': body map needs 8 ask, found ' + ask.length);
+    if (words.length !== 10) bad(f + ': body map needs 10 words, found ' + words.length);
+    ask.concat(words, BM.scale ? [BM.scale] : []).forEach((x, i) => { if (!x || !isStr(x.tl) || !isStr(x.en)) bad(f + ': body map line ' + (i + 1) + ' needs tl and en'); else spokenCheck(BM, 'body map line ' + (i + 1), x.tl); });
+    if (!BM.scale) bad(f + ': body map scale missing');
+  }
+  // Signs
+  const SG = C.SIGNS;
+  if (!SG || !Array.isArray(SG.groups) || !Array.isArray(SG.signs)) bad('SIGNS must be { groups: [], signs: [] }');
+  else {
+    const gids = new Set(), ids = new Set(), STY = ['green', 'red', 'blue', 'yellow', 'plain'];
+    SG.groups.forEach((g) => { if (!g || !isStr(g.id) || !isStr(g.title)) bad(FO(g) + ': sign group needs id and title'); else { if (gids.has(g.id)) bad(FO(g) + ': sign group ' + g.id + ' twice'); gids.add(g.id); } });
+    ['hospital', 'commute', 'street', 'building', 'shop', 'cr', 'medicine'].forEach((g) => { if (!gids.has(g)) bad('signs.js: sign group ' + g + ' missing'); });
+    let nEn = 0;
+    SG.signs.forEach((x, i) => {
+      if (!x || !isStr(x.id)) return bad('sign #' + (i + 1) + ' without an id');
+      const f = FO(x), w = 'sign ' + x.id;
+      if (!/^sg-\d{3}$/.test(x.id)) bad(f + ': ' + w + ' ids are sg-001, sg-002, ...'); if (ids.has(x.id)) bad(f + ': ' + w + ' id twice'); ids.add(x.id);
+      if (!gids.has(x.g)) bad(f + ': ' + w + ' group ' + x.g + ' does not exist');
+      if (!STY.includes(x.style)) bad(f + ': ' + w + ' style ' + x.style);
+      if (!['tl', 'mix', 'en'].includes(x.lang)) bad(f + ': ' + w + ' lang must be tl, mix or en');
+      if (typeof x.caps !== 'boolean') bad(f + ': ' + w + ' caps must be true or false');
+      if (!LV.includes(x.lv)) bad(f + ': ' + w + ' lv ' + x.lv);
+      if (!isStr(x.tl) || !isStr(x.en)) bad(f + ': ' + w + ' needs tl and en');
+      if (x.lang === 'en') nEn++; else spokenCheck(x, w, x.tl);
+      if (x.lang === 'en' && capsWord(x.tl).length) bad(f + ': ' + w + ' write the text in sentence case (caps: true sets capitals)');
+    });
+    gids.forEach((g) => { if (!SG.signs.some((x) => x && x.g === g)) cnt(SG.groups.find((y) => y.id === g), 'sign group ' + g + ' has no signs'); });
+    if (nEn * 5 > SG.signs.length) bad('signs.js: English-only signs must stay under a fifth (' + nEn + ' of ' + SG.signs.length + ')');
+    if (SG.signs.length < 110 || SG.signs.length > 120) cnt(SG.groups[0], 'about 110 to 120 signs, found ' + SG.signs.length);
+    P310.signs = SG.signs.length;
+  }
+  // Panels
+  const SP = C.SIGN_PANELS;
+  if (!Array.isArray(SP)) bad('SIGN_PANELS must be an array');
+  else {
+    const pids = new Set();
+    SP.forEach((p, i) => {
+      if (!p || !isStr(p.id)) return bad('panel #' + (i + 1) + ' without an id');
+      const f = FO(p), w = 'panel ' + p.id;
+      if (pids.has(p.id)) bad(f + ': ' + w + ' id twice'); pids.add(p.id);
+      if (!isStr(p.title) || !LV.includes(p.lv)) bad(f + ': ' + w + ' needs title and lv A1, A2 or B1');
+      const rows = Array.isArray(p.rows) ? p.rows : [];
+      if (rows.length < 2 || rows.length > 4) bad(f + ': ' + w + ' 2 to 4 rows, found ' + rows.length);
+      const ctl = new Map();
+      rows.forEach((r) => (Array.isArray(r) ? r : []).forEach((c) => {
+        if (!c || !isStr(c.id)) return bad(f + ': ' + w + ' control without an id');
+        if (ctl.has(c.id)) bad(f + ': ' + w + ' control id twice: ' + c.id); ctl.set(c.id, c);
+        if (c.label == null || String(c.label) === '' || !isStr(c.en)) bad(f + ': ' + w + ' control ' + c.id + ' needs label and en');
+        if (!['btn', 'lamp', 'dial'].includes(c.kind)) bad(f + ': ' + w + ' control ' + c.id + ' kind ' + c.kind);
+      }));
+      if (ctl.size < 6 || ctl.size > 12) cnt(p, w + ': 6 to 12 controls, found ' + ctl.size);
+      const tasks = Array.isArray(p.tasks) ? p.tasks : [];
+      if (tasks.length < 5 || tasks.length > 6) cnt(p, w + ': 5 or 6 tasks, found ' + tasks.length);
+      tasks.forEach((t, ti) => {
+        const tw = w + ' task ' + (ti + 1);
+        if (!t || !isStr(t.q) || !isStr(t.en)) return bad(f + ': ' + tw + ' needs q and en');
+        const c = ctl.get(t.a);
+        if (!c) bad(f + ': ' + tw + ' a ' + t.a + ' is not a control'); else if (c.kind === 'lamp') bad(f + ': ' + tw + ' a ' + t.a + ' is a lamp');
+        if (!isStr(t.why)) console.log('WARN ' + f + ': ' + tw + ' has no why');
+        spokenCheck(f, tw, t.q);
+      });
+      P310.panels++; P310.panelTasks += tasks.length;
+    });
+    if (SP.length !== 10) cnt(SP[0], '10 panels planned, found ' + SP.length);
+  }
+  // Lessons: every picture embed names an existing set
+  C.LESSONS.forEach((l) => { [...String(l.body || '').matchAll(/<div\b[^>]*class="pic-embed"[^>]*>/g)].forEach((m) => {
+    const id = (m[0].match(/data-pic="([^"]*)"/) || [])[1];
+    if (!id) bad('lesson ' + l.id + ': .pic-embed without data-pic');
+    else if (!setIds.has(id)) { if (PLANNED.includes(id)) console.log('WARN lesson ' + l.id + ': picture ' + id + ' is not there yet'); else bad('lesson ' + l.id + ': picture ' + id + ' is not a picture set id'); }
+  }); if (/pic-embed/.test(l.body || '') && !/<div class="pic-embed" data-pic="[^"]+"><\/div>/.test(l.body)) bad('lesson ' + l.id + ': write embeds exactly as <div class="pic-embed" data-pic="<set id>"></div>'); });
+  C.LESSONS.filter((l) => l.unit === 'Picture lessons').forEach((l) => { if (!Array.isArray(l.quiz) || l.quiz.length !== 5) cnt(l, 'picture lesson ' + l.id + ' needs 5 quiz items'); });
+  // Stigma rule
+  const text = JSON.stringify([C.PICTURE_SETS, C.PICTURE_BODYMAP, C.SIGNS, C.SIGN_PANELS, C.LESSONS.filter((l) => l.unit === 'Picture lessons')]).toLowerCase();
+  ['baliw', 'adik', 'sira ulo', 'sira-ulo', 'loko'].forEach((w) => { if (new RegExp('\\b' + w + '\\b').test(text)) bad('stigmatizing word in the 3.10.0 data: ' + w); });
+}
 const counts = { version: C.APP_META.version, answers: C.PSYCH_ANSWERS ? C.PSYCH_ANSWERS.common.reduce((a, g) => a + g.items.length, 0) + Object.values(C.PSYCH_ANSWERS.sections).reduce((a, l) => a + l.length, 0) : 0, dict: C.App.DICT.length, sections: C.PSYCH_SECTIONS.length, phrases: C.PSYCH_SECTIONS.reduce((a, s) => a + s.phrases.length, 0), cases: C.PSYCH_CASES.length, lessons: C.LESSONS.length, reading: C.READING.length, listening: (C.LISTENING || []).length, dialogues: C.DIALOGUES.length, verbs: C.VERBS.length, dcases: (C.PSYCH_DISCHARGE_CASES || []).length, mcases: (C.PSYCH_MSE_CASES || []).length, affixes: (C.AFFIX_ITEMS || []).length, drillGaps: (C.DRILL_CLOZE || []).length, drillBuild: (C.DRILL_BUILD || []).length, dictation: (C.DRILL_DICTATION || []).length, translate: (C.DRILL_TRANSLATE || []).length, families: (C.WORD_FAMILIES || []).length, ladders: (C.WORD_LADDERS || []).length, synonyms: (C.WORD_SYNONYMS || []).length, focus: (C.DRILL_FOCUS || []).length, errors: (C.DRILL_ERRORS || []).length, stress: (C.WORD_STRESS || []).length, falseFriends: (C.WORD_FALSE_FRIENDS || []).length, lookalikes: (C.WORD_COGNATES || []).length, placement: C.PLACEMENT.length };
+Object.assign(counts, P310);
 console.log(JSON.stringify(counts));
 console.log(fails ? fails + ' FAILURES' : 'DATA OK');
 process.exit(fails ? 1 : 0);
