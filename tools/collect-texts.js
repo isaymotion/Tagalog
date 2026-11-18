@@ -9,7 +9,7 @@ const ctx = { window: {}, console, TextEncoder, Buffer };
 ctx.window = ctx;
 vm.createContext(ctx);
 const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
-['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/dict-themes.js', 'js/data/drills.js', 'js/data/word-sets.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js', 'js/data/lessons-2.js',
+['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/dict-themes.js', 'js/data/drills.js', 'js/data/drills-grammar.js', 'js/data/word-sets.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js', 'js/data/lessons-2.js',
  'js/data/reading.js', 'js/data/listening.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js', 'js/data/psych-sud.js', 'js/data/psych-withdrawal.js', 'js/data/psych-mood.js', 'js/data/psych-shea.js', 'js/data/psych-phrases-nurse.js', 'js/data/psych-answers.js', 'js/data/psych-answers-nurse.js', 'js/data/affixes.js',
  'js/data/picture-sets-body.js', 'js/data/picture-sets-home.js', 'js/data/picture-sets-town.js', 'js/data/picture-sets-animals.js', 'js/data/picture-sets-machines.js', 'js/data/picture-sets-food.js', 'js/data/picture-sets-clothes.js', 'js/data/picture-sets-nature.js', 'js/data/picture-sets-daily.js', 'js/data/picture-bodymap.js', 'js/data/signs.js', 'js/data/signs-panels.js', 'js/data/lessons-pictures.js',
  'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js', 'js/pronounce.js'].forEach(load);
@@ -76,6 +76,10 @@ add('Magandang umaga po. Kumusta po kayo?'); // settings voice test
 (ctx.WORD_STRESS || []).forEach((x) => { add(ctx.WORD_STRESS_SAY(x, false)); add(ctx.WORD_STRESS_SAY(x, true)); }); // the last-syllable sentence is respelled for the voice
 (ctx.WORD_FALSE_FRIENDS || []).forEach((x) => { if (!x.mix) add(x.tl); });
 (ctx.WORD_COGNATES || []).forEach((x) => add(x[0]));
+// 3.12.0: each gap sentence as it is really written (full, or q with the answer put in), and each change-the-sentence
+// item's starting sentence, model answer and every other accepted answer. The wrong options are never recorded.
+(ctx.DRILL_GAPS || []).forEach((it) => add(it.full || it.q.replace('____', it.a)));
+(ctx.DRILL_CHANGE || []).forEach((it) => { add(it.from); add(it.to); (it.alt || []).forEach((a) => add(a)); });
 
 // 3.10.0: picture words (each part's word and every listen-and-point sentence), signs (not the English-only ones), the Tagalog
 // request of each panel task (control labels are printed English and are not recorded) and the body map lines.

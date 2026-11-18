@@ -1,6 +1,7 @@
 /* Grammar handout generator. Topics: panlapi (affixes), verbs (conjugation tables, sentences, worksheet), lesson (any lesson),
    reading (any passage), dialogue (any dialogue, including the clinical ones from the case simulations) and listening
-   (any listening exercise: notes, questions, dictation, transcript and key; the audio itself is played in the app).
+   (any listening exercise: notes, questions, dictation, transcript and key; the audio itself is played in the app),
+   and (3.12.0) drills (a worksheet from the drill data, six parts, seeded sample, key on its own page).
    Same pattern as the psychiatry handout: one content model from the options, rendered as an on-screen
    preview (also used for printing) and as a PDF through pdfmake (App.pdfKit, shared with handout.js).
    Data: AFFIX_* in js/data/affixes.js; VERBS and VERB_SENTENCES (verbs.js, verb-sentences.js); LESSONS (lessons.js);
@@ -21,9 +22,10 @@
     lesson: { topic: 'lesson', lesson: '', english: 'show', paper: 'A4', size: 'normal', body: true, quiz: true, key: true, title: '', preparedFor: '' },
     reading: { topic: 'reading', reading: '', english: 'show', paper: 'A4', size: 'normal', passage: true, gloss: true, quiz: true, key: true, title: '', preparedFor: '' },
     dialogue: { topic: 'dialogue', dialogue: '', english: 'show', register: 'f', paper: 'A4', size: 'normal', script: true, role: true, key: true, title: '', preparedFor: '' },
-    listening: { topic: 'listening', listening: '', english: 'show', paper: 'A4', size: 'normal', notes: true, quiz: true, dictation: true, transcript: true, key: true, title: '', preparedFor: '' }
+    listening: { topic: 'listening', listening: '', english: 'show', paper: 'A4', size: 'normal', notes: true, quiz: true, dictation: true, transcript: true, key: true, title: '', preparedFor: '' },
+    drills: { topic: 'drills', english: 'show', paper: 'A4', size: 'normal', n: '8', seed: 1, gap: true, errors: true, focus: true, change: true, translate: true, dictation: false, key: true, title: 'Tagalog Grammar Drills', preparedFor: '' }
   };
-  const SUBKEYS = ['verbs', 'lesson', 'reading', 'dialogue', 'listening'];
+  const SUBKEYS = ['verbs', 'lesson', 'reading', 'dialogue', 'listening', 'drills'];
   // Panlapi keeps its old flat place in settings.ghandout; the other topics live in sub-keys so they never clobber it.
   function opts(topic) {
     const g = S().settings.ghandout || {};
@@ -94,6 +96,7 @@
     if (m.topic === 'reading') return readingHTML(m);
     if (m.topic === 'dialogue') return dialogueHTML(m);
     if (m.topic === 'listening') return listeningHTML(m);
+    if (m.topic === 'drills') return drillsHTML(m);
     const o = m.o, en = o.english === 'show';
     let h = '<header class="ho-head"><img src="icons/logo-96.png" alt=""><div><h1>' + esc(m.title) + '</h1><p>' + (m.preparedFor ? 'Prepared for ' + esc(m.preparedFor) + ' · ' : '') + esc(m.date) + ' · ' + esc(m.scope) + '</p></div></header>';
     if (m.cheat) {
@@ -175,6 +178,7 @@
     if (m.topic === 'reading') return readingDoc(m, logo);
     if (m.topic === 'dialogue') return dialogueDoc(m, logo);
     if (m.topic === 'listening') return listeningDoc(m, logo);
+    if (m.topic === 'drills') return drillsDoc(m, logo);
     const k = kit(m, logo), { K, NAVY, MUTED, LINE, TINT, o, en, base, a5, content, heading, sub, th, layout, grid } = k, AFFIX = '#9a5b00';
     // Segmented word: affix pieces in bold brown, repeated syllable in italics.
     const segText = (seg, size) => ({ text: pieces(seg).map((x) => (x.k === 'a' ? { text: x.s, bold: true, color: AFFIX } : x.k === 'd' ? { text: x.s, italics: true, color: MUTED } : { text: x.s })), fontSize: size });
@@ -789,9 +793,109 @@
     return finish(m, k, 'Tagalog listening handout');
   }
 
+  /* ===================== Topic: drills (3.12.0) ===================== */
+  // A worksheet made from the drill data: six parts, each switched on or off, N items each, sampled with a seeded
+  // shuffle (o.seed; "New set" adds one) so the preview, Print and the PDF show the same items. Key on its own page.
+  const DRILL_PARTS = [
+    ['gap', 'Fill the gap', 'Write the missing word on the line. The choices are in brackets.'],
+    ['errors', 'Find the mistake', 'One word in each sentence is wrong. Write the corrected sentence.'],
+    ['focus', 'Switch the focus', 'Rewrite each sentence in object focus: make the thing acted on the topic.'],
+    ['change', 'Change the sentence', 'Rewrite each sentence as the instruction says.'],
+    ['translate', 'Say it in Tagalog', 'Write each sentence in Tagalog.'],
+    ['dictation', 'Dictation', 'Write each line as you hear it. A partner reads each line twice.']
+  ];
+  const seededRnd = (seed) => {
+    let h = 2166136261; for (const ch of String(seed)) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+    return () => ((h = Math.imul(h ^ (h >>> 15), 2246822507) ^ Math.imul(h ^ (h >>> 13), 3266489909)) >>> 0) / 4294967296;
+  };
+  const seededPick = (list, n, rnd) => { const a = list.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a.slice(0, Math.max(0, Math.min(n, a.length))); };
+  const dSent = (verb, rest, it) => verb + ' ' + rest + (it.end || '.');
+  const chInstr = (it) => (App.drillChangeInstr ? App.drillChangeInstr(it) : it.type);
+  // Each part: { id, title, how, items: [{ tl, en, opts, ask }], key: [{ tl, en, a }] }. Items keep their order in the key.
+  function drillPart(k, n, rnd) {
+    const W = window;
+    if (k === 'gap') {
+      const sets = W.DRILL_CLOZE_SETS || {}, lab = (x) => (x === 'nothing' ? 'no linker' : x);
+      const cl = (W.DRILL_CLOZE || []).map((it) => ({ q: it.q, en: it.en, a: it.a, opts: (sets[it.set] || { opts: [it.a] }).opts, full: it.q.replace('____', it.a) }));
+      const gp = (W.DRILL_GAPS || []).map((it) => ({ q: it.q, en: it.en, a: lab(it.a), opts: it.opts.map(lab), full: it.full || it.q.replace('____', it.a) }));
+      // About a third markers, the rest the 3.12.0 gap sets; topped up from either list when one runs short.
+      const a = seededPick(cl, Math.ceil(n / 3), rnd), b = seededPick(gp, n - a.length, rnd);
+      const more = seededPick(cl.filter((x) => !a.includes(x)), n - a.length - b.length, rnd);
+      const all = seededPick(a.concat(b, more), n, rnd);
+      return all.map((x) => ({ item: { tl: x.q, en: x.en, opts: x.opts }, key: { a: x.a, tl: x.full } }));
+    }
+    if (k === 'errors') return seededPick(W.DRILL_ERRORS || [], n, rnd).map((x) => ({ item: { tl: x.bad, en: x.en, line: 1 }, key: { tl: x.fix, en: x.why } }));
+    if (k === 'focus') return seededPick(W.DRILL_FOCUS || [], n, rnd).map((x) => ({ item: { tl: dSent(x.a, x.ar, x), en: x.enA, line: 1 }, key: { tl: dSent(x.o, x.or, x), en: x.enO } }));
+    if (k === 'change') return seededPick(W.DRILL_CHANGE || [], n, rnd).map((x) => ({ item: { tl: x.from, ask: chInstr(x), line: 1 }, key: { tl: x.to, en: x.en } }));
+    if (k === 'translate') return seededPick(W.DRILL_TRANSLATE || [], n, rnd).map((x) => ({ item: { en: x.en, line: 1 }, key: { tl: x.tl[0], en: x.en } }));
+    if (k === 'dictation') return seededPick(W.DRILL_DICTATION || [], n, rnd).map((x) => ({ item: { line: 1 }, key: { tl: x.tl, en: x.en } }));
+    return [];
+  }
+  function drillsBuild(o) {
+    const n = [8, 12, 16].includes(+o.n) ? +o.n : 8, seed = o.seed || 1;
+    const parts = DRILL_PARTS.filter(([k]) => o[k]).map(([k, title, how], i) => {
+      const rows = drillPart(k, n, seededRnd(seed + ':' + k));
+      return { k, id: letter(i), title, how, items: rows.map((r) => r.item), key: rows.map((r) => r.key) };
+    }).filter((p) => p.items.length);
+    return {
+      topic: 'drills', o, n, seed, title: o.title || DEF.drills.title, preparedFor: o.preparedFor, date: today(),
+      scope: parts.length + (parts.length === 1 ? ' part' : ' parts') + ' · ' + n + ' items each · set ' + seed,
+      parts, key: o.key && parts.length ? parts.map((p) => ({ id: p.id, k: p.k, title: p.title, answers: p.key })) : null
+    };
+  }
+  const drillsCanPrint = (o) => DRILL_PARTS.some(([k]) => o[k]);
+  const optLine = (opts) => '(' + opts.join(' · ') + ')';
+  function drillsHTML(m) {
+    const en = m.o.english === 'show';
+    let h = headHTML(m) + '<p class="ho-goal">Name: ____________________ Date: __________</p>';
+    m.parts.forEach((p) => {
+      h += '<section class="ho-sec gh-ws"><h2>' + p.id + '. ' + esc(p.title) + '</h2><p class="ho-goal">' + esc(p.how) + '</p><ol class="gh-wsB">' + p.items.map((it) =>
+        '<li>' + (it.tl ? '<span class="tl">' + esc(it.tl) + '</span>' : '') + (it.opts ? ' <span class="gh-dopts tl">' + esc(optLine(it.opts)) + '</span>' : '') +
+        (it.ask ? '<div class="gh-dask">' + esc(it.ask) + '</div>' : '') + (it.en && (en || !it.tl) ? '<div class="gh-en gh-den">' + esc(it.en) + '</div>' : '') +
+        (it.line ? '<div class="gh-lines">' + (p.k === 'dictation' ? '<span class="gh-blank"></span><span class="gh-blank"></span>' : '<span class="gh-blank"></span>') + '</div>' : '') + '</li>').join('') + '</ol></section>';
+    });
+    if (m.key) {
+      h += '<section class="ho-sec gh-key"><h2>Answer key</h2>' + m.key.map((p) => '<h3>' + p.id + '. ' + esc(p.title) + '</h3>' + (p.k === 'dictation' ? '<p class="ho-goal">For the partner: read each line twice.</p>' : '') +
+        '<ol class="gh-keyB">' + p.answers.map((a) => '<li>' + (a.a ? '<b>' + esc(a.a) + '</b> · ' : '') + '<b class="tl">' + esc(a.tl) + '</b>' + (a.en && en ? ' <small>' + esc(a.en) + '</small>' : '') + '</li>').join('') + '</ol>').join('') + '</section>';
+    }
+    return h + footHTML();
+  }
+  function drillsDoc(m, logo) {
+    const k = kit(m, logo), { MUTED, LINE, NAVY, base, content, heading, sub } = k, en = m.o.english === 'show', w = pageW(m.o) - 16;
+    const run = (t, x) => Object.assign({ text: t }, x || {});
+    const rule = () => ({ canvas: [{ type: 'line', x1: 0, y1: 0, x2: w, y2: 0, lineWidth: 0.6, lineColor: LINE }], margin: [0, 16, 0, 0] }); // fresh node each time: pdfmake mutates nodes
+    content.push({ text: 'Name: ______________________   Date: ____________', margin: [0, 2, 0, 2] });
+    m.parts.forEach((p) => {
+      const head = [heading(p.id + '. ' + p.title, ''), { text: p.how, color: MUTED, fontSize: base - 1, margin: [0, 0, 0, 4] }];
+      p.items.forEach((it, i) => {
+        const stack = [];
+        const line1 = [run((i + 1) + '. ', { color: MUTED })];
+        if (it.tl) line1.push(run(it.tl, { bold: true }));
+        if (it.opts) line1.push(run('   ' + optLine(it.opts), { color: NAVY }));
+        if (!it.tl && it.en) line1.push(run(it.en));
+        if (!it.tl && !it.en) line1.push(run('Line ' + (i + 1), { color: MUTED }));
+        stack.push({ text: line1 });
+        if (it.ask) stack.push({ text: it.ask, italics: true, color: NAVY, fontSize: base - 1, margin: [12, 1, 0, 0] });
+        if (it.tl && it.en && en) stack.push({ text: it.en, color: MUTED, fontSize: base - 1, margin: [12, 1, 0, 0] });
+        if (it.line) { stack.push(Object.assign(rule(), { margin: [12, 16, 0, 0] })); if (p.k === 'dictation') stack.push(Object.assign(rule(), { margin: [12, 16, 0, 0] })); }
+        // The part heading travels with its first item so it never sits alone at the foot of a page.
+        content.push({ stack: i === 0 ? head.concat(stack) : stack, unbreakable: true, margin: [0, 0, 0, it.line ? 8 : 5] });
+      });
+    });
+    if (m.key) {
+      content.push(Object.assign(heading('Answer key', m.title), { pageBreak: 'before' }));
+      m.key.forEach((p) => {
+        content.push(sub(p.id + '. ' + p.title));
+        if (p.k === 'dictation') content.push({ text: 'For the partner: read each line twice.', color: MUTED, italics: true, fontSize: base - 1, margin: [0, 0, 0, 3] });
+        p.answers.forEach((a, i) => content.push({ text: [run((i + 1) + '  ', { color: MUTED })].concat(a.a ? [run(a.a + '  ·  ', { bold: true, color: NAVY })] : []).concat([run(a.tl, { bold: true })]).concat(a.en && en ? [run('  ' + a.en, { color: MUTED, fontSize: base - 1.5 })] : []), margin: [0, 0, 0, 3] }));
+      });
+    }
+    return finish(m, k, 'Tagalog grammar drills handout');
+  }
+
   function build(o) {
     const t = o.topic || 'panlapi';
-    return t === 'verbs' ? verbsBuild(o) : t === 'lesson' ? lessonBuild(o) : t === 'reading' ? readingBuild(o) : t === 'dialogue' ? dialogueBuild(o) : t === 'listening' ? listeningBuild(o) : panlapiBuild(o);
+    return t === 'verbs' ? verbsBuild(o) : t === 'lesson' ? lessonBuild(o) : t === 'reading' ? readingBuild(o) : t === 'dialogue' ? dialogueBuild(o) : t === 'listening' ? listeningBuild(o) : t === 'drills' ? drillsBuild(o) : panlapiBuild(o);
   }
   // For tests and callers: {topic, ...} gets that topic's defaults filled in.
   const withDefaults = (o) => Object.assign({}, DEF[(o && o.topic) || 'panlapi'] || DEFAULTS, o);
@@ -800,13 +904,14 @@
 
 
   /* ---------- Page ---------- */
-  const canPrint = (o) => ({ verbs: verbsCanPrint, lesson: lessonCanPrint, reading: readingCanPrint, dialogue: dialogueCanPrint, listening: listeningCanPrint }[o.topic] || panlapiCanPrint)(o);
+  const canPrint = (o) => ({ verbs: verbsCanPrint, lesson: lessonCanPrint, reading: readingCanPrint, dialogue: dialogueCanPrint, listening: listeningCanPrint, drills: drillsCanPrint }[o.topic] || panlapiCanPrint)(o);
   const PAGE = {
     panlapi: { h1: 'Grammar handout', crumb: '<a href="#/affixes">Panlapi</a> / Handout', intro: 'Print the affix cheat sheet, the sound-change rules, the word list, and a worksheet with its answer key. Your choices are remembered on this device.', file: 'grammar-handout' },
     verbs: { h1: 'Verb handout', crumb: '<a href="#/verbs">Verbs</a> / Handout', intro: 'Print conjugation tables for the verbs you pick, example sentences for each aspect, an "aspect at a glance" page, and a worksheet with its answer key. Your choices are remembered on this device.', file: 'verb-handout' },
     lesson: { h1: 'Lesson handout', crumb: '<a href="#/lessons">Lessons</a> / Handout', intro: 'Print any lesson with its quiz and an answer key on a separate page. Your choices are remembered on this device.', file: 'lesson-handout' },
     reading: { h1: 'Reading handout', crumb: '<a href="#/reading">Reading</a> / Handout', intro: 'Print any passage with its glossary, questions and an answer key. Put the translation under each paragraph, on its own page, or leave it out. Your choices are remembered on this device.', file: 'reading-handout' },
     listening: { h1: 'Listening handout', crumb: '<a href="#/listen">Listening</a> / Handout', intro: 'Print a listening exercise for a class or for yourself: a notes box, the questions and dictation lines, then the transcript and the answer key on their own pages. Play the recording from the Listening page. Your choices are remembered on this device.', file: 'listening-handout' },
+    drills: { h1: 'Drills handout', crumb: '<a href="#/drills">Drills</a> / Handout', intro: 'Print a grammar worksheet made from the drills: fill the gap, find the mistake, switch the focus, change the sentence, say it in Tagalog, and dictation, with the answer key on its own page. New set picks other sentences. Your choices are remembered on this device.', file: 'drills-handout' },
     dialogue: { h1: 'Dialogue handout', crumb: '<a href="#/speak">Speaking</a> / Handout', intro: 'Print any dialogue as a script, and a role-play worksheet where you write your own lines from the English cue, with an answer key. Your choices are remembered on this device.', file: 'dialogue-handout' }
   };
   function page(topic, el, p, q) {
@@ -870,6 +975,14 @@
         return '<div class="ho-grid">' + sel + trSeg + regSeg + paperSize + '</div>' +
           '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('script', 'Script', 'every line in Tagalog') + chk('role', 'Role-play worksheet', 'your lines blank, with the English cue') + chk('key', 'Answer key', 'your lines, for the worksheet') + '</div></div>';
       }
+      if (topic === 'drills') {
+        const nSeg = '<div><div class="eyebrow">Items per part</div>' + seg('n', [['8', '8'], ['12', '12'], ['16', '16']]) + '</div>';
+        const setBox = '<div><div class="eyebrow">Sentences</div><div class="row"><button class="btn sm" id="ghNew">New set</button><span class="muted small">Set ' + esc(String(o.seed || 1)) + '</span></div><p class="small muted" style="margin:4px 0 0">The same set prints the same sentences.</p></div>';
+        return '<div class="ho-grid">' + nSeg + setBox + englishSeg + paperSize + '</div>' +
+          '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('gap', 'A. Fill the gap', 'markers, linkers, small words, pronouns, question words, negation') + chk('errors', 'B. Find the mistake', 'write the corrected sentence') +
+          chk('focus', 'C. Switch the focus', 'actor focus to object focus') + chk('change', 'D. Change the sentence', 'question, negative, respectful, time') + chk('translate', 'E. Say it in Tagalog', 'from the English') +
+          chk('dictation', 'F. Dictation', 'a partner reads the lines from the key') + chk('key', 'Answer key', 'on its own page') + '</div></div>';
+      }
       return '<div class="ho-grid">' +
         '<div><div class="eyebrow">Affix type</div>' + seg('type', [['all', 'All']].concat(TYPES().map((t) => [t.id, t.tl]))) + '</div>' +
         '<div><div class="eyebrow">Words</div>' + seg('set', [['all', 'All words'], ['clinical', 'Clinical only']]) + '</div>' + englishSeg + paperSize + '</div>' +
@@ -906,6 +1019,7 @@
       const rs = el.querySelector('#ghReading'); if (rs) rs.onchange = () => update({ reading: rs.value, title: '' }, true);
       const lsel = el.querySelector('#ghListening'); if (lsel) lsel.onchange = () => update({ listening: lsel.value, title: '' }, true);
       const ds = el.querySelector('#ghDialogue'); if (ds) ds.onchange = () => update({ dialogue: ds.value, title: '' }, true);
+      const nw = el.querySelector('#ghNew'); if (nw) nw.onclick = () => update({ seed: (+o.seed || 1) + 1 }, true);
       el.querySelector('#ghTitle').oninput = (e) => update({ title: e.target.value });
       el.querySelector('#ghFor').oninput = (e) => update({ preparedFor: e.target.value });
       el.querySelector('#ghPrint').onclick = () => window.print();
@@ -934,4 +1048,5 @@
   V.ghandoutReading = (el, p, q) => page('reading', el, p, q);
   V.ghandoutDialogue = (el, p, q) => page('dialogue', el, p, q);
   V.ghandoutListening = (el, p, q) => page('listening', el, p, q);
+  V.ghandoutDrills = (el, p, q) => page('drills', el, p, q);
 })();

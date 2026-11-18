@@ -14,6 +14,13 @@
    errors  Find the mistake: DRILL_ERRORS, tap the wrong word
    families also has the sets ff (false friends, WORD_FALSE_FRIENDS) and cog (borrowed words, WORD_COGNATES)
    #/daily  Daily mix: ten questions drawn from every multiple-choice drill; state.done.daily['YYYY-MM-DD'] = best %
+   3.12.0:
+   aspect   Choose the aspect: VERB_SENTENCES with the verb form blanked, options = the same verb and affix in the other aspects
+   linker, particle, pronoun, qword, negation  Fill the gap: DRILL_GAPS sets lk, pt, pn, qw, neg (js/data/drills-grammar.js)
+   change   Change the sentence: DRILL_CHANGE (question, negative, respectful, time), choose or type
+   Every row has a group g (Grammar, Vocabulary, Listening and writing); #/drills shows one heading per group.
+   #/drills/handout  printable Drills handout (js/grammar-handout.js, topic drills)
+   App.dailyExtra: other files may push [tag, fn] parts for the daily mix (fn returns runQuiz questions).
    Best scores in state.done.drills['<id>:<set>']. To add a drill: a row in DRILLS, a run function in RUN. */
 (function () {
   const { esc, shuffle, pick } = App;
@@ -23,41 +30,67 @@
   const FAMS = window.WORD_FAMILIES || [], LADS = window.WORD_LADDERS || [], SYNS = window.WORD_SYNONYMS || [];
   const FOCUS = window.DRILL_FOCUS || [], ERRORS = window.DRILL_ERRORS || [];
   const STRESS = window.WORD_STRESS || [], FALSE = window.WORD_FALSE_FRIENDS || [], COGS = window.WORD_COGNATES || [];
+  const GAPS = window.DRILL_GAPS || [], CHANGE = window.DRILL_CHANGE || [];
   const SECTIONS = () => window.PSYCH_SECTIONS || [];
   const N = 10;
 
   const DRILLS = [
-    { id: 'switch', title: 'Formal or everyday?', eyebrow: 'Register · 10 questions', blurb: 'Hear a line one way, find the same line in the other register.',
+    { id: 'switch', g: 'Grammar', title: 'Formal or everyday?', eyebrow: 'Register · 10 questions', blurb: 'Hear a line one way, find the same line in the other register.',
       intro: 'Every interview phrase in this app has a respectful form (po, kayo) and an everyday form. Patients answer in the everyday form, and elders expect the respectful one. Here you see a line in one register and choose the same line in the other.',
       opts: [['f-c', 'Respectful → everyday'], ['c-f', 'Everyday → respectful']], lessons: ['politeness', 'register'] },
-    { id: 'markers', title: 'Choose the marker', eyebrow: 'Grammar · 10 questions', blurb: 'Ang, ng or sa? Si, ni or kay? Ito, iyan or iyon?',
+    { id: 'markers', g: 'Grammar', title: 'Choose the marker', eyebrow: 'Grammar · 10 questions', blurb: 'Ang, ng or sa? Si, ni or kay? Ito, iyan or iyon?',
       intro: 'Fill the gap with the right marker or pointing word. The English line tells you who did what.',
       opts: [['all', 'All sets'], ['m', 'Ang, ng, sa'], ['n', 'Si, ni, kay'], ['d', 'Ito, iyan, iyon']], lessons: ['markers', 'names', 'demonstratives'] },
-    { id: 'build', title: 'Build the sentence', eyebrow: 'Word order · 10 sentences', blurb: 'Tap the words into order. Where do na, po, ba and ko go?',
+    { id: 'build', g: 'Grammar', title: 'Build the sentence', eyebrow: 'Word order · 10 sentences', blurb: 'Tap the words into order. Where do na, po, ba and ko go?',
       intro: 'Tap the words in order to build the Tagalog sentence. The short words (ka, ko, mo, na, pa, po, ba, lang, raw) have a fixed place right after the first word of the sentence; this drill trains that order.',
       opts: [], lessons: ['enclitics', 'particles', 'pronouns', 'questions'] },
-    { id: 'roots', title: 'Find the root', eyebrow: 'Roots · 10 questions', blurb: 'Strip the affixes from a dictionary word and name its root.',
+    { id: 'roots', g: 'Vocabulary', title: 'Find the root', eyebrow: 'Roots · 10 questions', blurb: 'Strip the affixes from a dictionary word and name its root.',
       intro: 'Most Tagalog words are a root plus affixes. If you can see the root, you can look the word up and guess its meaning. Each question shows a word from the dictionary; choose its root.',
       opts: [['all', 'All words'], ['v', 'Verbs'], ['clin', 'Health and mind words']], lessons: ['panlapi', 'nominalising', 'focus-an-i'] },
-    { id: 'families', title: 'Word families', eyebrow: 'Vocabulary · 10 questions', blurb: 'One root, many words: matulog, nakatulog, patulugin. Also deep and everyday words.',
+    { id: 'families', g: 'Vocabulary', title: 'Word families', eyebrow: 'Vocabulary · 10 questions', blurb: 'One root, many words: matulog, nakatulog, patulugin. Also deep and everyday words.',
       intro: 'Five sets. Pick the right form: choose the word from one root that fits the meaning. Deep word to everyday word: match a formal Filipino word to what most people say. Which is stronger: choose the stronger of two words for the same feeling. False friends: words from Spanish or English that changed their meaning. Borrowed words: recognise a Spanish or English word in its Filipino spelling.',
       opts: [['fam', 'Pick the right form'], ['syn', 'Deep word to everyday word'], ['lad', 'Which is stronger?'], ['ff', 'False friends'], ['cog', 'Borrowed words']], lessons: ['intensifiers', 'register', 'ability', 'causative'], more: ['#/words', 'See all word families'] },
-    { id: 'dictation', title: 'Numbers, times and doses', eyebrow: 'Listening · 10 lines', blurb: 'Hear an age, a clock time or a dose and type it.',
+    { id: 'dictation', g: 'Listening and writing', title: 'Numbers, times and doses', eyebrow: 'Listening · 10 lines', blurb: 'Hear an age, a clock time or a dose and type it.',
       intro: 'You hear a short line with a number, a clock time or a dose. Type what you hear in Tagalog. Capital letters, accents and punctuation do not count. For numbers and times you may type the figure instead (23, 3:30).',
       opts: [['all', 'All sets'], ['num', 'Numbers'], ['time', 'Clock times'], ['dose', 'Doses']], lessons: ['numbers', 'time-words'] },
-    { id: 'translate', title: 'Say it in Tagalog', eyebrow: 'Writing · 10 sentences', blurb: 'Read the English, type the Tagalog. Several answers are accepted.',
+    { id: 'translate', g: 'Listening and writing', title: 'Say it in Tagalog', eyebrow: 'Writing · 10 sentences', blurb: 'Read the English, type the Tagalog. Several answers are accepted.',
       intro: 'Type the Tagalog for each English line. Your answer is compared word by word with the accepted answers, with or without po. Tagalog has many right ways to say a thing, so read the model answer even when you are marked wrong.',
       opts: [['all', 'All sets'], ['e', 'Everyday'], ['w', 'On the ward']], lessons: ['enclitics', 'questions', 'politeness'] },
-    { id: 'focus', title: 'Switch the focus', eyebrow: 'Grammar · 10 sentences', blurb: 'Uminom ang pasyente ng gamot. Now make the medicine the topic.',
+    { id: 'focus', g: 'Grammar', title: 'Switch the focus', eyebrow: 'Grammar · 10 sentences', blurb: 'Uminom ang pasyente ng gamot. Now make the medicine the topic.',
       intro: 'The same event can be told with the doer as the topic (actor focus) or with the thing acted on as the topic (object focus). When the focus changes, the verb changes its affix and ang and ng trade places. Choose the sentence that says the same thing in the other focus, or type it yourself.',
       opts: [['ao', 'Actor focus → object focus'], ['oa', 'Object focus → actor focus'], ['type', 'Type the object focus']], lessons: ['focus', 'markers', 'pronouns', 'focus-an-i'] },
-    { id: 'errors', title: 'Find the mistake', eyebrow: 'Grammar · 10 sentences', blurb: 'One word is wrong in each sentence. Tap it.',
+    { id: 'errors', g: 'Grammar', title: 'Find the mistake', eyebrow: 'Grammar · 10 sentences', blurb: 'One word is wrong in each sentence. Tap it.',
       intro: 'Each sentence has one mistake a learner often makes: a wrong marker or pronoun, a small word out of place, a missing linker, or a verb in the wrong form. Tap the word that is wrong, then read the corrected sentence.',
       opts: [['all', 'All sets'], ['m', 'Markers and pronouns'], ['o', 'Small words and linkers'], ['v', 'Verb forms']], lessons: ['markers', 'pronouns', 'enclitics', 'linkers', 'aspect', 'negation'] },
-    { id: 'stress', title: 'Same spelling, different stress', eyebrow: 'Listening · 10 questions', blurb: 'Bukas is tomorrow or open. Gutom is hunger or hungry. The stress decides.',
+    { id: 'stress', g: 'Listening and writing', title: 'Same spelling, different stress', eyebrow: 'Listening · 10 questions', blurb: 'Bukas is tomorrow or open. Gutom is hunger or hungry. The stress decides.',
       intro: 'Tagalog is written without accents, so one spelling can be two words. The stress tells them apart: BU-kas is tomorrow, bu-KAS is open. Capital letters here show the stressed syllable. From the sentence: read it and say where the stress falls. By ear: hear the sentence first. From the meaning: go from the English to the stress.',
-      opts: [['ctx', 'From the sentence'], ['ear', 'By ear'], ['mean', 'From the meaning']], lessons: ['pronounce'], more: ['#/words?tab=str', 'See all stress pairs'] }
+      opts: [['ctx', 'From the sentence'], ['ear', 'By ear'], ['mean', 'From the meaning']], lessons: ['pronounce'], more: ['#/words?tab=str', 'See all stress pairs'] },
+    // 3.12.0
+    { id: 'aspect', g: 'Grammar', title: 'Choose the aspect', eyebrow: 'Verbs · 10 sentences', blurb: 'Kumain, kumakain or kakain? Done, going on, or still to come.',
+      intro: 'Each sentence from the verb trainer has its verb taken out. Choose the form that fits: completed (it already happened), incompleted (going on or habitual), contemplated (not yet begun), or the infinitive (after gusto, kailangan, puwede, and in commands). The English line tells you when it happens.',
+      opts: [['all', 'All sentences'], ['c', 'Clinical sentences']], lessons: ['aspect', 'focus'], more: ['#/verbs', 'Verb trainer'] },
+    { id: 'linker', g: 'Grammar', title: 'Na, -ng or nothing?', eyebrow: 'Linkers · 10 gaps', blurb: 'Magandang bahay, mabait na bata, may lagnat: which linker joins the words?',
+      intro: 'A linker joins a describing word to the word it describes, and a verb like gusto to the next verb. Use na after a consonant, -ng after a vowel, and -g after n. Some pairs take no linker at all (after may, after hindi, between ang and a noun). Choose what fills the gap.',
+      opts: [], lessons: ['linkers'] },
+    { id: 'particle', g: 'Grammar', title: 'Choose the small word', eyebrow: 'Particles · 10 gaps', blurb: 'Na, pa, lang, muna, pala, sana, daw: one small word changes the meaning.',
+      intro: 'Short words like na (already), pa (still, yet), lang (only), muna (first, for now), pala (so it turns out), sana (I hope) and daw (they say) usually come right after the first word or phrase. The English line tells you which one the speaker meant.',
+      opts: [], lessons: ['particles', 'enclitics'] },
+    { id: 'pronoun', g: 'Grammar', title: 'Ako, ko or akin?', eyebrow: 'Pronouns · 10 gaps', blurb: 'Pagod na ako. Gusto ko. Sa akin ito. Choose the form the sentence needs.',
+      intro: 'Every pronoun has three forms: the topic form (ako, ka, siya), the ng form (ko, mo, niya) for the doer of an object-focus verb and the owner, and the sa form (akin, iyo, kanya) after sa, para sa and the like. Choose the form that fits the gap.',
+      opts: [], lessons: ['pronouns'] },
+    { id: 'qword', g: 'Grammar', title: 'Choose the question word', eyebrow: 'Questions · 10 gaps', blurb: 'Saan or nasaan? Ilan or magkano? Sino or kanino?',
+      intro: 'Choose the question word that fits the rest of the sentence and the English line: sino, ano, saan, nasaan, kailan, bakit, paano, ilan, magkano, alin, kanino, gaano.',
+      opts: [], lessons: ['questions'] },
+    { id: 'negation', g: 'Grammar', title: 'Hindi, wala or huwag?', eyebrow: 'Negation · 10 gaps', blurb: 'Hindi for verbs and descriptions, wala for having none, huwag for commands.',
+      intro: 'Hindi says no to a verb or a description. Wala says that something is not there or that someone has none (the opposite of may). Huwag says do not, in commands and requests. Choose the one that fits.',
+      opts: [], lessons: ['negation'] },
+    { id: 'change', g: 'Grammar', title: 'Change the sentence', eyebrow: 'Grammar · 10 sentences', blurb: 'Make it a question, make it negative, make it respectful, or change the time.',
+      intro: 'You see a sentence and an instruction. Choose the sentence that does what the instruction says, or type it yourself. Watch where ba, po and the pronouns go, which negator to use, and how the verb changes.',
+      opts: [['all', 'All kinds'], ['q', 'Make it a question'], ['neg', 'Make it negative'], ['po', 'Make it respectful'], ['asp', 'Change the time'], ['type', 'Type the answer']], lessons: ['questions', 'negation', 'politeness', 'aspect'] }
   ];
+  const GROUPS = ['Grammar', 'Vocabulary', 'Listening and writing'];
+  // Drills with a part in the printable Drills handout (#/drills/handout).
+  const HANDOUT = ['markers', 'linker', 'particle', 'pronoun', 'qword', 'negation', 'errors', 'focus', 'change', 'translate', 'dictation'];
   App.DRILLS = DRILLS;
   const byId = (id) => DRILLS.find((d) => d.id === id);
   const bestOf = (id) => { const o = (App.state.done.drills || {}); const v = Object.keys(o).filter((k) => k.split(':')[0] === id).map((k) => o[k]); return v.length ? Math.max(...v) : null; };
@@ -343,6 +376,57 @@
   // The same items as a two-way choice, for the daily mix.
   const errorQs = (n) => pick(ERRORS, Math.min(n, ERRORS.length)).map((it) => ({ q: 'Which sentence is right?', sub: it.en, tlo: true, opts: [it.fix, it.bad], a: 0, sayAfter: it.fix, exp: it.fix + ' ' + it.why }));
 
+  /* ---------- Choose the aspect (3.12.0): VERB_SENTENCES with the verb form taken out ---------- */
+  const ASP4 = ['inf', 'com', 'inc', 'con'];
+  const ASP_NOTE = { com: 'Completed: it already happened.', inc: 'Ongoing or habitual.', con: 'Not yet begun.', inf: 'Infinitive: after gusto, kailangan, puwede, or as a command.' };
+  const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  // A sentence qualifies when its form occurs once as a whole word and the same verb and affix has 3 or 4 distinct forms.
+  let aspPool = null;
+  const aspectPool = () => aspPool || (aspPool = [].concat(...(window.VERBS || []).map((v) => {
+    const f = App.verbForms(v), out = [];
+    ((window.VERB_SENTENCES || {})[v.r] || []).forEach((s, i) => {
+      const [tl, en, form, asp, flags] = s;
+      if (!ASP4.includes(asp) || !form) return;
+      const re = new RegExp('(^|[^\\p{L}-])(' + escRe(form) + ')(?![\\p{L}-])', 'giu'), hits = [...tl.matchAll(re)];
+      if (hits.length !== 1) return;
+      const af = Object.keys(f).find((k) => String(f[k][asp] || '').toLowerCase() === form.toLowerCase());
+      if (!af) return;
+      const at = hits[0].index + hits[0][1].length, first = at === 0, word = tl.slice(at, at + form.length);
+      const forms = [...new Set(ASP4.map((a) => String(f[af][a] || '').toLowerCase()).filter(Boolean))];
+      if (forms.length < 3) return;
+      const opts = forms.map((x) => (first ? cap(x) : x)), ans = first ? cap(form.toLowerCase()) : form.toLowerCase();
+      if (word !== ans) return; // odd capitals inside the sentence: the filled gap would not match the recording
+      out.push({ r: v.r, i, tl, en, asp, clin: /c/.test(flags || ''), q: tl.slice(0, at) + '____' + tl.slice(at + form.length), opts: [ans].concat(opts.filter((x) => x !== ans)) });
+    });
+    return out;
+  })));
+  function aspectQs(set, n) {
+    const src = aspectPool().filter((x) => set !== 'c' || x.clin);
+    return pick(src, Math.min(n, src.length)).map((x) => ({ q: x.q, sub: x.en, tlq: true, tlo: true, opts: x.opts.slice(), a: 0, sayAfter: x.tl, exp: x.tl + ' ' + ASP_NOTE[x.asp] }));
+  }
+
+  /* ---------- Linkers, particles, pronouns, question words, negation (3.12.0): DRILL_GAPS ---------- */
+  const gapFull = (it) => it.full || it.q.replace('____', it.a);
+  const gapLabel = (o) => (o === 'nothing' ? 'no linker' : o);
+  function gapQs(set, n) {
+    const src = GAPS.filter((it) => it.set === set);
+    return pick(src, Math.min(n, src.length)).map((it) => ({ q: it.q, sub: it.en, tlq: true, tlo: true, opts: it.opts.map(gapLabel), a: it.opts.indexOf(it.a), sayAfter: gapFull(it), exp: gapFull(it) + (it.why ? ' ' + it.why : '') }));
+  }
+  const GAP_SET = { linker: 'lk', particle: 'pt', pronoun: 'pn', qword: 'qw', negation: 'neg' };
+
+  /* ---------- Change the sentence (3.12.0): DRILL_CHANGE ---------- */
+  const CH_INSTR = { q: 'Make it a yes or no question.', neg: 'Make it negative.', po: 'Make it respectful, as to an older patient.' };
+  const CH_TIME = { past: 'Say it as already done.', now: 'Say it as happening now.', future: 'Say it as still to come.' };
+  const changeInstr = (it) => (it.type === 'asp' ? CH_TIME[it.time] : CH_INSTR[it.type]) || '';
+  App.drillChangeInstr = changeInstr;
+  // The wrong sentences are shown as options but never spoken (no say, and sayAfter is the model answer).
+  function changeQs(set, n) {
+    const src = CHANGE.filter((it) => set === 'all' || it.type === set);
+    return pick(src, Math.min(n, src.length)).map((it) => ({ q: it.from, sub: changeInstr(it), tlq: true, tlo: true, say: it.from, opts: [it.to].concat((it.wrong || []).slice(0, 3)), a: 0, sayAfter: it.to, exp: it.to + ' ' + it.en + ' ' + it.why }));
+  }
+  const changeTyped = () => CHANGE.map((it) => ({ prompt: it.from, tlPrompt: true, sub: changeInstr(it), answers: [it.to].concat(it.alt || []), exact: true, en: it.en, why: it.why }));
+
   /* ---------- Daily mix (3.9.0) ---------- */
   // Dictionary words: the learner's mistakes and due cards first, then any word. Wrong answers come from the same category.
   function vocabQs(n) {
@@ -356,12 +440,29 @@
   }
   const dayKey = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
   App.dailyToday = () => (App.state.done.daily || {})[dayKey()];
-  const DAILY_PARTS = [['Vocabulary', () => vocabQs(2)], ['Markers', () => clozeQs('all', 1)], ['Register', () => switchQs('f-c', 1)], ['Roots', () => rootQs('all', 1)], ['Word families', () => famQs('fam', 1)],
-    ['False friends', () => famQs('ff', 1)], ['Focus', () => focusQs(Math.random() < 0.5 ? 'ao' : 'oa', 1)], ['Stress', () => stressQs('ctx', 1)], ['Find the mistake', () => errorQs(1)]];
-  const dailyQs = () => shuffle([].concat(...DAILY_PARTS.map(([tag, f]) => f().map((q) => Object.assign(q, { sub: tag + ' · ' + (q.sub || '') })))));
+  // 3.12.0: two words, then one question from each of 8 different parts drawn at random from all the others,
+  // including any parts other files add to App.dailyExtra ([tag, fn], read at call time).
+  const DAILY_PARTS = [['Markers', () => clozeQs('all', 1)], ['Register', () => switchQs('f-c', 1)], ['Roots', () => rootQs('all', 1)], ['Word families', () => famQs('fam', 1)],
+    ['False friends', () => famQs('ff', 1)], ['Focus', () => focusQs(Math.random() < 0.5 ? 'ao' : 'oa', 1)], ['Stress', () => stressQs('ctx', 1)], ['Find the mistake', () => errorQs(1)],
+    ['Aspect', () => aspectQs('all', 1)], ['Linkers', () => gapQs('lk', 1)], ['Small words', () => gapQs('pt', 1)], ['Pronouns', () => gapQs('pn', 1)], ['Question words', () => gapQs('qw', 1)],
+    ['Negation', () => gapQs('neg', 1)], ['Change the sentence', () => changeQs('all', 1)]];
+  const DAILY_N = 8;
+  const tagged = (tag) => (q) => Object.assign(q, { sub: tag + ' · ' + (q.sub || '') });
+  const dailyQs = () => {
+    const extra = Array.isArray(App.dailyExtra) ? App.dailyExtra.filter((p) => Array.isArray(p) && typeof p[1] === 'function') : [];
+    const out = vocabQs(2).map(tagged('Vocabulary')), used = new Set(['Vocabulary']);
+    for (const [tag, f] of shuffle(DAILY_PARTS.concat(extra))) {
+      if (used.size > DAILY_N) break;
+      if (used.has(tag)) continue;
+      let got = []; try { got = f() || []; } catch (e) { got = []; }
+      if (!got.length) continue;
+      used.add(tag); out.push(tagged(tag)(got[0]));
+    }
+    return shuffle(out);
+  };
   V.daily = (el) => {
     const done = App.dailyToday(), days = Object.keys(App.state.done.daily || {}).length;
-    el.innerHTML = '<h1>Daily mix</h1><p class="muted">Ten mixed questions, about five minutes: two words (your mistakes and due cards first), then one question from each drill. A new set every time you start.</p>' +
+    el.innerHTML = '<h1>Daily mix</h1><p class="muted">Ten mixed questions, about five minutes: two words (your mistakes and due cards first), then one question from each of eight drills, chosen at random. A new set every time you start.</p>' +
       '<div class="card stack"><div class="row"><button class="btn primary" id="dgo">' + (done != null ? 'Go again' : 'Start') + '</button><span class="pill' + (done != null ? ' good' : '') + '">' + (done != null ? 'Done today · best ' + done + '%' : 'Not done today') + '</span>' + (days ? '<span class="muted small">' + days + (days === 1 ? ' day' : ' days') + ' so far</span>' : '') + '</div><div id="dbox"></div></div>' +
       '<div class="row" style="margin-top:14px"><a class="btn" href="#/drills">All drills</a><a class="btn" href="#/flash/due">Flashcards due</a></div>';
     const box = el.querySelector('#dbox');
@@ -386,14 +487,18 @@
     translate: (box, set) => runTyped(box, transItems(set), 'translate:' + set, false),
     switch: (box, set) => App.runQuiz(box, switchQs(set, N), { onDone: (r, n) => saveBest('switch:' + set, r, n), after: '<a class="btn" href="#/drills">All drills</a>' }),
     markers: (box, set) => App.runQuiz(box, clozeQs(set, N), { onDone: (r, n) => saveBest('markers:' + set, r, n), after: '<a class="btn" href="#/drills">All drills</a>' }),
-    build: (box) => runBuild(box, 'build:all')
+    build: (box) => runBuild(box, 'build:all'),
+    aspect: (box, set) => App.runQuiz(box, aspectQs(set, N), { onDone: (r, n) => saveBest('aspect:' + set, r, n), after: '<a class="btn" href="#/drills">All drills</a>' }),
+    change: (box, set) => (set === 'type' ? runTyped(box, changeTyped(), 'change:type', false) : App.runQuiz(box, changeQs(set, N), { onDone: (r, n) => saveBest('change:' + set, r, n), after: '<a class="btn" href="#/drills">All drills</a>' }))
   };
-  App.drillQs = { switch: switchQs, markers: clozeQs, roots: rootQs, families: famQs, rootWords, focus: focusQs, stress: stressQs, errors: errorQs, vocab: vocabQs, daily: dailyQs }; // for tests
+  Object.keys(GAP_SET).forEach((id) => (RUN[id] = (box) => App.runQuiz(box, gapQs(GAP_SET[id], N), { onDone: (r, n) => saveBest(id + ':all', r, n), after: '<a class="btn" href="#/drills">All drills</a>' })));
+  App.drillQs = { switch: switchQs, markers: clozeQs, roots: rootQs, families: famQs, rootWords, focus: focusQs, stress: stressQs, errors: errorQs, vocab: vocabQs, daily: dailyQs, aspect: aspectQs, aspectPool, gaps: gapQs, change: changeQs, changeTyped }; // for tests
 
+  const tileOf = (d) => { const b = bestOf(d.id); return '<a class="tile" href="#/drills/' + d.id + '"><span class="eyebrow">' + esc(d.eyebrow) + '</span><h3>' + esc(d.title) + '</h3><p>' + esc(d.blurb) + '</p><div class="meta row"><span class="pill' + (b != null ? ' good' : '') + '">' + (b != null ? 'Best ' + b + '%' : 'Not tried yet') + '</span></div></a>'; };
   V.drills = (el) => {
-    el.innerHTML = '<h1>Drills</h1><p class="muted">Short grammar, vocabulary, listening and writing drills, ten items each. They go with the lessons; the verb trainer and Panlapi have their own pages.</p><div class="grid">' +
-      DRILLS.map((d) => { const b = bestOf(d.id); return '<a class="tile" href="#/drills/' + d.id + '"><span class="eyebrow">' + esc(d.eyebrow) + '</span><h3>' + esc(d.title) + '</h3><p>' + esc(d.blurb) + '</p><div class="meta row"><span class="pill' + (b != null ? ' good' : '') + '">' + (b != null ? 'Best ' + b + '%' : 'Not tried yet') + '</span></div></a>'; }).join('') +
-      '</div><div class="row" style="margin-top:14px"><a class="btn primary" href="#/daily">Daily mix</a><a class="btn" href="#/verbs">Verb trainer</a><a class="btn" href="#/affixes">Panlapi</a><a class="btn" href="#/words">Word families</a><a class="btn" href="#/practice">All practice</a></div>';
+    el.innerHTML = '<h1>Drills</h1><p class="muted">Short grammar, vocabulary, listening and writing drills, ten items each. They go with the lessons; the verb trainer and Panlapi have their own pages.</p>' +
+      GROUPS.map((g, i) => { const ds = DRILLS.filter((d) => (d.g || 'Grammar') === g); return ds.length ? '<h2' + (i ? ' style="margin-top:18px"' : '') + '>' + esc(g) + '</h2><div class="grid">' + ds.map(tileOf).join('') + '</div>' : ''; }).join('') +
+      '<div class="row" style="margin-top:14px"><a class="btn primary" href="#/daily">Daily mix</a><a class="btn" href="#/drills/handout">' + App.icons.book + ' Print handout</a><a class="btn" href="#/verbs">Verb trainer</a><a class="btn" href="#/affixes">Panlapi</a><a class="btn" href="#/words">Word families</a><a class="btn" href="#/practice">All practice</a></div>';
   };
 
   V.drill = (el, p) => {
@@ -405,7 +510,7 @@
       (d.opts.length ? '<label class="small" style="max-width:100%">Set <select class="input" id="dset" style="width:auto;max-width:100%">' + d.opts.map(([v, t]) => '<option value="' + v + '">' + esc(t) + '</option>').join('') + '</select></label>' : '') +
       '<button class="btn primary" id="dgo">Start</button></div><div id="dbox"></div></div>' +
       (lessons.length ? '<p class="muted small" style="margin-top:12px">Lessons for this drill: ' + lessons.map((l) => '<a href="#/lessons/' + l.id + '">' + esc(l.title) + '</a>').join(' · ') + '</p>' : '') +
-      (d.more ? '<div class="row" style="margin-top:10px"><a class="btn" href="' + d.more[0] + '">' + esc(d.more[1]) + '</a></div>' : '') +
+      (d.more || HANDOUT.includes(d.id) ? '<div class="row" style="margin-top:10px">' + (d.more ? '<a class="btn" href="' + d.more[0] + '">' + esc(d.more[1]) + '</a>' : '') + (HANDOUT.includes(d.id) ? '<a class="btn" href="#/drills/handout">' + App.icons.book + ' Print handout</a>' : '') + '</div>' : '') +
       (d.id === 'switch' ? '<div class="notice info" style="margin-top:12px">Practice phrasings, not validated instrument translations.</div>' : '');
     const box = el.querySelector('#dbox');
     el.querySelector('#dgo').onclick = () => {

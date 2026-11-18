@@ -48,6 +48,7 @@
     [/^\/words$/, V.words, 'words'],
     [/^\/daily$/, V.daily, 'daily'],
     [/^\/drills$/, V.drills, 'drills'],
+    [/^\/drills\/handout$/, V.ghandoutDrills, 'drills'],
     [/^\/drills\/(?<id>[\w-]+)$/, V.drill, 'drills'],
 
     [/^\/pictures$/, V.pictures, 'pictures'],
@@ -191,7 +192,7 @@
   /* ---------- Practice and More pages ---------- */
   const BLURB = {
     dict: App.DICT.length + ' entries, both directions, root-word search', flash: 'Spaced repetition across every deck',
-    verbs: 'Aspect and focus drills, 78 verbs', affixes: 'Unlapi, gitlapi, hulapi: take words apart', drills: 'Markers, word order, focus, mistakes, stress, dictation', words: 'Families, mild to strong, stress pairs, Spanish and English words', lessons: 'Grammar and culture', pictures: 'Tap a picture to hear the word, then find it, label it and point to it', signs: 'Hospital, jeepney and street signs, and the buttons on machines', reading: 'Graded passages, A1 to C1', listen: 'Voicemails, announcements, radio, ward talk', speak: 'Dialogues with listening and recording',
+    verbs: 'Aspect and focus drills, 78 verbs', affixes: 'Unlapi, gitlapi, hulapi: take words apart', drills: 'Markers, linkers, aspect, word order, focus, mistakes, stress, dictation', words: 'Families, mild to strong, stress pairs, Spanish and English words', lessons: 'Grammar and culture', pictures: 'Tap a picture to hear the word, then find it, label it and point to it', signs: 'Hospital, jeepney and street signs, and the buttons on machines', reading: 'Graded passages, A1 to C1', listen: 'Voicemails, announcements, radio, ward talk', speak: 'Dialogues with listening and recording',
     practice: 'Every drill on one page', psych: (window.PSYCH_SECTIONS || []).length + ' interview sections and the ward tools',
     placement: '25 questions to find your level, A1 to C1', progress: 'Streak, stats, backup', settings: 'Register, voice, theme', new: 'What changed in each version', about: 'Credits and disclaimers'
   };
@@ -201,7 +202,7 @@
     const best = (k) => { const o = s.done.affixes || {}; const v = Object.keys(o).filter((x) => x.startsWith(k)).map((x) => o[x]); return v.length ? 'Best ' + Math.max(...v) + '%' : 'Not tried yet'; };
     el.innerHTML = '<h1>Practice</h1><p class="muted">Short drills you can finish in a few minutes. Scores feed your streak and XP.</p>' +
       '<h2>Language</h2><div class="grid">' +
-      T('#/daily', '5 minutes · 10 questions', 'Daily mix', App.dailyToday() != null ? 'Done today: ' + App.dailyToday() + '%. Go again for a new set.' : 'Two words and one question from each drill.') +
+      T('#/daily', '5 minutes · 10 questions', 'Daily mix', App.dailyToday() != null ? 'Done today: ' + App.dailyToday() + '%. Go again for a new set.' : 'Two words, then one question from each of eight drills.') +
       T('#/verbs', 'Drill · 10 questions', 'Verb trainer', 'Aspect and focus forms, then real sentences.') +
       T('#/affixes', 'Drill · 10 questions', 'Panlapi', 'Name the affix, find the root, build the word. ' + best('type')) +
       T('#/drills/markers', 'Drill · 10 questions', 'Choose the marker', 'Ang, ng or sa? Si, ni or kay? Ito, iyan or iyon?') +
@@ -214,6 +215,14 @@
       T('#/drills/focus', 'Drill · 10 sentences', 'Switch the focus', 'Say the same thing with the other topic.') +
       T('#/drills/errors', 'Drill · 10 sentences', 'Find the mistake', 'Tap the one wrong word.') +
       T('#/drills/stress', 'Listen · 10 questions', 'Same spelling, different stress', 'Bukas: tomorrow or open?') +
+      T('#/drills/aspect', 'Drill · 10 sentences', 'Choose the aspect', 'Kumain, kumakain or kakain?') +
+      T('#/drills/linker', 'Drill · 10 gaps', 'Na, -ng or nothing?', 'Magandang bahay, mabait na bata.') +
+      T('#/drills/particle', 'Drill · 10 gaps', 'Choose the small word', 'Na, pa, lang, muna, pala, sana, daw.') +
+      T('#/drills/pronoun', 'Drill · 10 gaps', 'Ako, ko or akin?', 'The three forms of each pronoun.') +
+      T('#/drills/qword', 'Drill · 10 gaps', 'Choose the question word', 'Saan or nasaan? Ilan or magkano?') +
+      T('#/drills/negation', 'Drill · 10 gaps', 'Hindi, wala or huwag?', 'Three ways to say no.') +
+      T('#/drills/change', 'Drill · 10 sentences', 'Change the sentence', 'Make it a question, negative, respectful, or another time.') +
+      T('#/drills/handout', 'Print', 'Drills handout', 'A worksheet from the drills, with an answer key.') +
       T('#/flash/due', 'Review', due ? due + ' cards due' : 'Flashcards', 'Spaced repetition across every deck.') +
       T('#/lessons', 'Quiz', 'Lesson quizzes', Object.keys(s.done.lessons).length + ' of ' + LESSONS.length + ' lessons done.') +
       T('#/reading', 'Read', 'Reading', 'Graded passages with questions.') +

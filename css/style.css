@@ -1030,3 +1030,8 @@ mark.vf { background: var(--warn-bg); color: var(--gold-ink); font-weight: 700; 
 }
 .pic-prow { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 .pic-prow .btn { min-height: 44px; }
+
+/* 3.12.0: Drills handout (grammar-handout.js, topic drills) */
+.gh-dopts { color: var(--p-muted); font-size: .92em; }
+.gh-dask { font-style: italic; color: var(--p-muted); font-size: .92em; }
+.gh-wsB .gh-den { display: block; color: var(--p-muted); font-size: .9em; }

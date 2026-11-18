@@ -4,6 +4,16 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.12.0', date: '2026-11-18', title: 'Seven more grammar drills and a printable drill sheet',
+    items: [
+      { type: 'feature', text: 'Choose the aspect: 534 sentences from the verb trainer with the verb taken out. Pick the form that fits the English: done, going on, still to come, or the plain form.' },
+      { type: 'feature', text: 'Five gap drills, 150 sentences: Na, -ng or nothing? (linkers), Choose the small word (na, pa, lang, naman, pala, kasi, muna, sana), Ako, ko or akin?, Choose the question word, and Hindi, wala or huwag?' },
+      { type: 'feature', text: 'Change the sentence, 48 items: make it a question, make it negative, make it respectful, or change the time. Choose the answer or type it.' },
+      { type: 'feature', text: 'Drills handout: print a worksheet of gaps, find the mistake, switch the focus, change the sentence, translation and dictation, with an answer key. Use the Print handout button on the Drills page.' },
+      { type: 'update', text: 'The Drills page is now in three groups: Grammar, Vocabulary, and Listening and writing. The daily mix draws its eight grammar questions from fifteen drills.' }
+    ]
+  },
+  {
     version: '3.11.0', date: '2026-11-18', title: 'Ten more grammar lessons',
     items: [
       { type: 'content', text: 'Ten new lessons, 56 in all: if and when (kung, kapag, sakali, basta, sana); reporting what others said (sabi, ayon sa, akala ko); doing things with other people (maki-, makipag-, mag- -an); things that just happen (naiwan, nahulog, napaiyak); more than one (mga, sina, magkakapatid); where (nasa, sa, nandito, galing sa); the man who, the medicine that (joining a clause to a noun); Tagalog as it is really spoken (yung, \'di, \'wag, pa\'no); which numbers when (alas-dos, bente pesos, dalawang tableta); and exclamations (Ang ganda! Naku! Sayang!).' },
