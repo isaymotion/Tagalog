@@ -259,10 +259,10 @@ const P310 = { pictureSets: 0, pictureParts: 0, pictureSay: 0, signs: 0, panels:
   const spokenCheck = (o, where, t) => { if (!isStr(t)) return; const fo = typeof o === 'string' ? o : FO(o); const c = capsWord(t); if (c.length) bad(fo + ': ' + where + ' has an ALL-CAPS word (the voice spells it): ' + c.join(', ')); if (ACCENT.test(t)) bad(fo + ': ' + where + ' has an accent mark (the voice drops the vowel): ' + t); };
   const ART = C.PICTURE_ART || {};
   Object.entries(ART).forEach(([k, a]) => { if (!a || !Array.isArray(a.vb) || a.vb.length !== 2 || !isNum(a.vb[0]) || !isNum(a.vb[1]) || !isStr(a.svg)) bad((artFile[k] || '?') + ': art ' + k + ' needs vb [w, h] and svg'); });
-  const PLAN = { body: ['body-front', 'body-back', 'face', 'hand-arm', 'leg-foot', 'inside'], home: ['house-outside', 'living-room', 'kitchen', 'bathroom', 'bedroom', 'appliances'],
-    town: ['street', 'station', 'buildings', 'hospital-floor', 'positions'], animals: ['pets-farm', 'zoo', 'birds-insects-sea', 'animal-parts'],
+  const PLAN = { body: ['body-front', 'body-back', 'face', 'hand-arm', 'leg-foot', 'inside'], home: ['house-outside', 'living-room', 'kitchen', 'bathroom', 'bedroom', 'appliances', 'kitchen-tools'],
+    town: ['street', 'station', 'buildings', 'hospital-floor', 'positions', 'shops', 'pharmacy-counter', 'ward-room'], animals: ['pets-farm', 'zoo', 'birds-insects-sea', 'animal-parts'],
     machines: ['car', 'bicycle', 'computer-phone', 'vehicles', 'ward-things'], food: ['fruit-veg', 'meals-drinks', 'table-setting'], clothes: ['clothes', 'accessories-colours'],
-    nature: ['landscape', 'weather', 'seasons-plants'], daily: ['feelings', 'daily-routine', 'school-office', 'family-tree'] };
+    nature: ['landscape', 'weather', 'seasons-plants'], daily: ['feelings', 'daily-routine', 'school-office', 'family-tree', 'sports-hobbies', 'clock-calendar'] };
   const PLANNED = [].concat(...Object.values(PLAN));
   const NEWER = [[0x1F90C, 0x1F90C], [0x1F972, 0x1F972], [0x1F977, 0x1F979], [0x1F9A3, 0x1F9A4], [0x1F9AB, 0x1F9AD], [0x1F9CB, 0x1F9CC], [0x1F6D6, 0x1F6DF], [0x1F6FB, 0x1F6FF], [0x1F7F0, 0x1F7FF], [0x1FA74, 0x1FA77], [0x1FA7B, 0x1FA7F], [0x1FA83, 0x1FA8F], [0x1FA96, 0x1FAFF]];
   const oneEmoji = (pic) => { if (!isStr(pic)) return 'missing'; const cps = [...pic].map((c) => c.codePointAt(0)).filter((c) => c !== 0xFE0F && c !== 0xFE0E);
