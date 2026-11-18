@@ -9,7 +9,7 @@ const ctx = { window: {}, console, TextEncoder, Buffer };
 ctx.window = ctx;
 vm.createContext(ctx);
 const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
-['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/dict-themes.js', 'js/data/drills.js', 'js/data/word-sets.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js',
+['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/dict-themes.js', 'js/data/drills.js', 'js/data/word-sets.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js', 'js/data/lessons-2.js',
  'js/data/reading.js', 'js/data/listening.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js', 'js/data/psych-sud.js', 'js/data/psych-withdrawal.js', 'js/data/psych-mood.js', 'js/data/psych-shea.js', 'js/data/psych-phrases-nurse.js', 'js/data/psych-answers.js', 'js/data/psych-answers-nurse.js', 'js/data/affixes.js',
  'js/data/picture-sets-body.js', 'js/data/picture-sets-home.js', 'js/data/picture-sets-town.js', 'js/data/picture-sets-animals.js', 'js/data/picture-sets-machines.js', 'js/data/picture-sets-food.js', 'js/data/picture-sets-clothes.js', 'js/data/picture-sets-nature.js', 'js/data/picture-sets-daily.js', 'js/data/picture-bodymap.js', 'js/data/signs.js', 'js/data/signs-panels.js', 'js/data/lessons-pictures.js',
  'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js', 'js/pronounce.js'].forEach(load);
@@ -44,7 +44,7 @@ if (ctx.PSYCH_ANSWERS) { ctx.PSYCH_ANSWERS.common.forEach((g) => g.items.forEach
 add('Opo, Dok.'); // default discharge practice answer
 (ctx.PSYCH_MSE_SHEET ? ctx.PSYCH_MSE_SHEET.sections : []).forEach((s) => (s.blocks || []).forEach((b) => b.items.forEach((it) => add(it.tl)))); // MSE interviewer sheet lines not already in PSYCH_SECTIONS
 (ctx.PSYCH_MSE_CASES || []).forEach((c) => { if (c.cc) add(c.cc.ans[0]); Object.values(c.domains).forEach((d) => Object.values(d.ans || {}).forEach((a) => add(a[0]))); });
-(ctx.LESSONS || []).forEach((l) => { const re = /<div class="ex"><b>([^<]+)<\/b>/g; let m; while ((m = re.exec(l.body))) add(m[1].replace(/&#39;/g, "'").replace(/&amp;/g, '&')); });
+(ctx.LESSONS || []).forEach((l) => { const re = /<div class="ex"(?: data-voice="([^"]*)")?><b>([^<]+)<\/b>/g; let m; while ((m = re.exec(l.body))) add((m[1] || m[2]).replace(/&#39;/g, "'").replace(/&amp;/g, '&')); });
 (ctx.VERBS || []).forEach((v) => {
   const forms = {};
   v.a.forEach((af) => (forms[af] = ctx.Conj.conjugate(v.r, af)));

@@ -396,7 +396,7 @@
       '<h2 style="margin-top:20px">Check yourself</h2><div id="lq"></div>' +
       '<div class="spread" style="margin-top:16px">' + (prev ? '<a class="btn" href="#/lessons/' + prev.id + '">← ' + esc(prev.title) + '</a>' : '<span></span>') + (next ? '<a class="btn" href="#/lessons/' + next.id + '">' + esc(next.title) + ' →</a>' : '') + '</div>';
     // speak buttons for examples
-    el.querySelectorAll('.lesson-body .ex').forEach((ex) => { const b = ex.querySelector('b'); if (b) { const wrap = document.createElement('div'); wrap.innerHTML = App.sayBtn(b.textContent); ex.classList.add('has-say'); ex.appendChild(wrap.firstChild); } });
+    el.querySelectorAll('.lesson-body .ex').forEach((ex) => { const b = ex.querySelector('b'); if (b) { const wrap = document.createElement('div'); wrap.innerHTML = App.sayBtn(ex.dataset.voice || b.textContent); ex.classList.add('has-say'); ex.appendChild(wrap.firstChild); } });
     App.mountPics(el.querySelector('.lesson-body'));
     App.runQuiz(el.querySelector('#lq'), l.quiz.map(([q, opts, a, exp]) => ({ q, opts, a, exp })), {
       onDone: (r, n) => { const pct = Math.round((100 * r) / n); S().done.lessons[l.id] = Math.max(pct, S().done.lessons[l.id] || 0); App.activity(10); }

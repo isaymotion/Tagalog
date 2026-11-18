@@ -4,6 +4,14 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.11.0', date: '2026-11-18', title: 'Ten more grammar lessons',
+    items: [
+      { type: 'content', text: 'Ten new lessons, 56 in all: if and when (kung, kapag, sakali, basta, sana); reporting what others said (sabi, ayon sa, akala ko); doing things with other people (maki-, makipag-, mag- -an); things that just happen (naiwan, nahulog, napaiyak); more than one (mga, sina, magkakapatid); where (nasa, sa, nandito, galing sa); the man who, the medicine that (joining a clause to a noun); Tagalog as it is really spoken (yung, \'di, \'wag, pa\'no); which numbers when (alas-dos, bente pesos, dalawang tableta); and exclamations (Ang ganda! Naku! Sayang!).' },
+      { type: 'feature', text: 'The new lessons have six quiz questions each, a table of forms, a clinical tip and a common mistake.' },
+      { type: 'update', text: 'In the lesson on spoken short forms the voice is given each line without its apostrophes, so that s\'ya and pa\'no are read as words. The new recordings arrive a few minutes after the update.' }
+    ]
+  },
+  {
     version: '3.10.1', date: '2026-11-18', title: 'TV is said correctly',
     items: [
       { type: 'correction', text: 'The recorded voice said TV as "tebai". It now says ti-bi everywhere TV appears: the picture words, the dictionary and every sentence with the word. The new recordings arrive a few minutes after the update.' }
