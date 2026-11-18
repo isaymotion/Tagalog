@@ -22,6 +22,14 @@ ROUTES = ['#/', '#/pictures', '#/pictures/bodymap', '#/signs', '#/signs?tab=quiz
   '#/verbs/handout', '#/verbs/handout?v=inom&set=clinical', '#/lessons/handout?id=markers',
   '#/reading/handout?id=sulat-nanay', '#/listen', '#/listen/voicemail-klinika', '#/listen/endorsement', '#/listen/radyo-panayam', '#/listen/triage-opd', '#/listen/handout', '#/listen/handout?id=tawag-pamilya', '#/reading/opinyon-hiya', '#/reading/huling-biyahe', '#/speak/handout?id=meet', '#/speak/handout?id=case-jomar']
 
+# Extension modules: tests/smoke_ext_*.py, each with ROUTES (list of hashes, checked on both viewports) and
+# `async def checks(pg, name, fails)` run once per viewport after the main checks (name = 'desk' or 'phone').
+import glob, importlib.util
+EXT = []
+for _f in sorted(glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'smoke_ext_*.py'))):
+    _spec = importlib.util.spec_from_file_location(os.path.basename(_f)[:-3], _f); _m = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_m)
+    EXT.append(_m); ROUTES += [r for r in getattr(_m, 'ROUTES', []) if r not in ROUTES]
+
 LOAD_PDFMAKE = """async () => { if (!window.pdfMake) await new Promise((r) => { const s = document.createElement('script'); s.src = 'js/vendor/pdfmake.min.js';
   s.onload = () => { const t = document.createElement('script'); t.src = 'js/vendor/vfs_fonts.js'; t.onload = r; document.head.appendChild(t); }; document.head.appendChild(s); }); }"""
 
@@ -477,6 +485,9 @@ async def main(base, out):
                     for k in presets:
                         pages = subprocess.run(['pdfinfo', f'{out}/{k}_show.pdf'], capture_output=True, text=True).stdout.split('Pages:')[1].split()[0]
                         print(f'  pdf {k}: {pages} pages')
+            # Extension checks (3.11.0 on): every tests/smoke_ext_*.py has `async def checks(pg, name, fails)`; its ROUTES were added above.
+            for mod in EXT:
+                await mod.checks(pg, name, fails)
             await ctx.close()
         await b.close()
     fails += errs

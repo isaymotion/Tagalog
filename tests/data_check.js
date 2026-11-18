@@ -406,6 +406,8 @@ const P310 = { pictureSets: 0, pictureParts: 0, pictureSay: 0, signs: 0, panels:
 }
 const counts = { version: C.APP_META.version, answers: C.PSYCH_ANSWERS ? C.PSYCH_ANSWERS.common.reduce((a, g) => a + g.items.length, 0) + Object.values(C.PSYCH_ANSWERS.sections).reduce((a, l) => a + l.length, 0) : 0, dict: C.App.DICT.length, sections: C.PSYCH_SECTIONS.length, phrases: C.PSYCH_SECTIONS.reduce((a, s) => a + s.phrases.length, 0), cases: C.PSYCH_CASES.length, lessons: C.LESSONS.length, reading: C.READING.length, listening: (C.LISTENING || []).length, dialogues: C.DIALOGUES.length, verbs: C.VERBS.length, dcases: (C.PSYCH_DISCHARGE_CASES || []).length, mcases: (C.PSYCH_MSE_CASES || []).length, affixes: (C.AFFIX_ITEMS || []).length, drillGaps: (C.DRILL_CLOZE || []).length, drillBuild: (C.DRILL_BUILD || []).length, dictation: (C.DRILL_DICTATION || []).length, translate: (C.DRILL_TRANSLATE || []).length, families: (C.WORD_FAMILIES || []).length, ladders: (C.WORD_LADDERS || []).length, synonyms: (C.WORD_SYNONYMS || []).length, focus: (C.DRILL_FOCUS || []).length, errors: (C.DRILL_ERRORS || []).length, stress: (C.WORD_STRESS || []).length, falseFriends: (C.WORD_FALSE_FRIENDS || []).length, lookalikes: (C.WORD_COGNATES || []).length, placement: C.PLACEMENT.length };
 Object.assign(counts, P310);
+// Extension checks (3.11.0 on): every tests/data_check_ext_*.js exports (C, bad, counts) => {} and may add counts.
+fs.readdirSync(__dirname).filter((f) => /^data_check_ext_.*\.js$/.test(f)).sort().forEach((f) => require(path.join(__dirname, f))(C, bad, counts, repo));
 console.log(JSON.stringify(counts));
 console.log(fails ? fails + ' FAILURES' : 'DATA OK');
 process.exit(fails ? 1 : 0);
