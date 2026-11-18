@@ -19,7 +19,8 @@
                                         pins, tabindex); quiz (aria-label = number only); cls = extra class on the svg.
      App.pictures.embed(el, setId)      the Learn picture of one set inside a lesson (.pic-embed), scoped to el, so it works
                                         several times on a page and in print. An unknown set id leaves el empty.
-     App.pictures.GROUPS                [[group id, English title], …] in menu order. */
+     App.pictures.GROUPS                [[group id, English title], …] in menu order.
+     App.pictures.parts(set)            the set's usable parts; App.pictures.wordCard(part) the word block of the feedback (3.19.0). */
 (function () {
   const { esc, shuffle, pick } = App;
   const V = (App.views = App.views || {}), S = () => App.state;
@@ -326,7 +327,7 @@
     quizTab(box, s, tab);
   };
 
-  App.pictures = { embed, GROUPS, sets, byId, get: byId, svg, typedOk };
+  App.pictures = { embed, GROUPS, sets, byId, get: byId, svg, typedOk, parts: partsOf, wordCard }; // 3.19.0: parts, wordCard for js/vocab.js (Picture)
   // Rows for the Completion card of #/progress (V.progress in js/views.js): [label, done, total]. Signs are counted here too.
   // 3.14.0: chains onto any earlier App.progressExtra (js/views.js adds the lesson "More practice" row) like js/vocab.js does.
   const prevExtra = App.progressExtra;

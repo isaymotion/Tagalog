@@ -1100,3 +1100,15 @@ mark.exw { background: var(--mark); color: inherit; font-weight: 700; border-rad
 .rp-line { display: flex; align-items: center; gap: 8px; }
 .rp-line .tl { flex: 1 1 auto; min-width: 0; font-size: 1.12rem; font-weight: 600; overflow-wrap: break-word; }
 #rpset .seg { margin-top: -4px; }
+
+/* 3.19.0 vocabulary picture mode (js/vocab.js, #/vocab/picture): the question picture is capped at 46vh so two choices
+   still show on a 640px phone; only the asked part's pin is shown; the card is a picture, not a button. */
+.vp-round { gap: 8px; padding-top: 12px; }
+.vp-pwrap { width: 100%; }
+.vp-psvg { max-height: 46vh; }
+.vp-psvg .pic-pin:not(.hl) { display: none; }
+.vp-psvg .pic-pin { cursor: default; }
+.vp-psvg .pic-pin.hl .pic-ring { stroke-width: 4; fill-opacity: .22; }
+.vp-pcard .pic-card, .vp-pcard .pic-card:hover { cursor: default; border-color: var(--accent); }
+.vp-opts { gap: 6px; }
+.vp-opts .opt { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 9px 14px; overflow-wrap: anywhere; }

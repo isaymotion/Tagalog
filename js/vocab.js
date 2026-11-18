@@ -1,4 +1,4 @@
-/* Vocabulary practice (3.13.0): #/vocab lists seven games, #/vocab/<mode> runs one. Data: js/data/vocab-sets.js
+/* Vocabulary practice (3.13.0): #/vocab lists nine games, #/vocab/<mode> runs one. Data: js/data/vocab-sets.js
    (WORD_PAIRS opposites and collocations, WORD_ODD), the dictionary, and AFFIX_ITEMS / AFFIX_LIST (js/data/affixes.js).
    match  Match the pairs: 5 words and 5 meanings a round, 3 rounds; source = a dictionary topic or Opposites
    opp    Opposites            col  What goes with it?    odd  Odd one out
@@ -7,6 +7,9 @@
    affix  Guess the meaning from the parts: root + affixes, pick the meaning
    context In context (3.15.0): a dictionary word's example sentence (App.exampleOf, js/data/examples-*.js) with the word
           blanked; pick it among four words of the same part of speech (cardId = dictionary id)
+   picture Picture (3.19.0): one part of a picture set (App.pictures, js/pictures.js) shown as its picture, pick its word
+          among four; own sources ('all' or a picture group, state.settings.vocabPicSrc) and the Picture words level
+          (state.settings.picLv). See "Picture" below.
    Word source (match, type, hear, context): ?cat=<key> or state.settings.vocabCat; 'mine' = mistakes and due cards, 'all', a category.
    Best scores: state.done.vocab['<mode>:<source>']. "Your words by topic" under the tiles; one row on #/progress. */
 (function () {
@@ -34,7 +37,9 @@
     { id: 'affix', title: 'Guess the meaning from the parts', eyebrow: 'Word parts · 10 questions', blurb: 'Root plus affixes: work out what the word means.',
       intro: 'Each word is shown with its root and its affixes. Use what the affix adds to choose the meaning. The wrong answers often share the root, so read the affix.' },
     { id: 'context', title: 'In context', eyebrow: 'Vocabulary · 10 sentences', src: true, draft: true, blurb: 'A sentence with one word missing. Pick the word that fits.',
-      intro: 'Each sentence has one word missing, with its meaning in English under it. Choose the Tagalog word that fits. You hear the whole sentence after you answer. Words you miss go to My mistakes.' }
+      intro: 'Each sentence has one word missing, with its meaning in English under it. Choose the Tagalog word that fits. You hear the whole sentence after you answer. Words you miss go to My mistakes.' },
+    { id: 'picture', title: 'Picture', eyebrow: 'Pictures · 10 questions', pics: true, blurb: 'See the picture, choose the Tagalog word.',
+      intro: 'Each question is a picture: one part of a drawing marked with a pin, or a picture card. Choose its Tagalog word from four. The English and the sound come after you answer. Keys 1 to 4 choose, Enter goes on.' }
   ];
   const byId = (id) => MODES.find((m) => m.id === id);
   const bestOf = (id) => { const o = App.state.done.vocab || {}; const v = Object.keys(o).filter((k) => k.split(':')[0] === id).map((k) => o[k]); return v.length ? Math.max(...v) : null; };
@@ -171,7 +176,61 @@
       return { q: c.q, sub: c.en, tlq: true, tlo: true, sayAfter: c.tl, opts: opts.map(head), ids: opts.map((x) => x.id), a: 0, cardId: e.id, exp: head(e) + ' = ' + e.en + '.' };
     }).filter((q) => q.opts.length === 4);
   }
-  App.vocabQs = { opp: oppQs, col: colQs, odd: oddQs, hear: hearQs, affix: affixQs, context: contextQs };
+  /* ---------- Picture (3.19.0) ---------- */
+  // Pool: every usable part (App.pictures.parts) of every picture set that can be shown: a cards set (the emoji) or a
+  // diagram set whose drawing exists. Source 'all' or a picture group (App.pictures.GROUPS); level = the Picture words
+  // level (state.settings.picLv 'A1' | 'A2', anything else = all), by set level as on #/pictures.
+  // Options: the part's word and three others that never share a word (its `w` or an `alt`) or an English gloss with the
+  // answer or each other: the same set first, then the same group, then any set. No word is asked twice in a round.
+  const PX = () => App.pictures;
+  const drawable = new Map();
+  const canShow = (s) => { if (s.kind === 'cards') return true; if (!drawable.has(s.id)) drawable.set(s.id, !!PX().svg(s, { pins: 'none' })); return drawable.get(s.id); };
+  const picLv = () => (['A1', 'A2'].includes(App.state.settings.picLv) ? App.state.settings.picLv : 'All');
+  const picItems = (src, lv) => {
+    if (!PX() || typeof PX().sets !== 'function') return [];
+    const out = [];
+    PX().sets().filter(canShow).forEach((s) => { if ((src && src !== 'all' && s.group !== src) || (lv && lv !== 'All' && s.lv !== lv)) return; PX().parts(s).forEach((p) => out.push({ s, p })); });
+    return out;
+  };
+  App.vocabPictureCount = (src, lv) => picItems(src || 'all', lv || 'All').length; // for QA
+  const picSources = () => { const lv = picLv(); return [['all', 'All pictures']].concat((PX() ? PX().GROUPS : []).filter(([g]) => picItems(g, lv).length >= 4)); };
+  // A source (or level) with fewer than four pictures falls back to all pictures, then to every level.
+  const picPool = (src) => {
+    const lv = picLv();
+    let items = picItems(src, lv);
+    if (items.length < 4) { src = 'all'; items = picItems('all', lv); }
+    if (items.length < 4) items = picItems('all', 'All');
+    return { items, src };
+  };
+  const picKeys = (p) => [p.w].concat(Array.isArray(p.alt) ? p.alt : []).map((x) => App.flat(x)).filter(Boolean);
+  function picWrong(it) {
+    const { s, p } = it, out = [], keys = new Set(picKeys(p)), ens = new Set(p.en ? [norm(p.en)] : []);
+    const take = (list) => { for (const x of list) {
+      if (out.length >= 3) break;
+      const k = picKeys(x);
+      if (k.some((y) => keys.has(y)) || (x.en && ens.has(norm(x.en)))) continue;
+      k.forEach((y) => keys.add(y)); if (x.en) ens.add(norm(x.en)); out.push(x);
+    } };
+    take(shuffle(PX().parts(s)));
+    if (out.length < 3) { const all = picItems('all', 'All').filter((x) => x.s !== s); take(shuffle(all.filter((x) => x.s.group === s.group)).map((x) => x.p)); take(shuffle(all).map((x) => x.p)); }
+    return out;
+  }
+  // n questions { s, p, opts: [part…] (4, shuffled), a: index of p }.
+  function pictureQs(n, src) {
+    const { items } = picPool(src || 'all'), seen = new Set(), out = [];
+    for (const it of shuffle(items)) {
+      if (out.length >= n) break;
+      const k = App.flat(it.p.w);
+      if (seen.has(k)) continue;
+      const wrong = picWrong(it);
+      if (wrong.length < 3) continue;
+      seen.add(k);
+      const opts = shuffle([it.p].concat(wrong));
+      out.push({ s: it.s, p: it.p, opts, a: opts.indexOf(it.p) });
+    }
+    return out;
+  }
+  App.vocabQs = { opp: oppQs, col: colQs, odd: oddQs, hear: hearQs, affix: affixQs, context: contextQs, picture: pictureQs };
 
   /* ---------- Match the pairs ---------- */
   // Rounds of five pairs { l, le, r, re, say }; within a round no two pairs share an English gloss.
@@ -297,10 +356,72 @@
     start();
   }
 
+  /* ---------- Picture round (3.19.0) ---------- */
+  const EMOJI_FONT = "'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji','Segoe UI Symbol',sans-serif";
+  // The question picture: a diagram with only this part's pin (the CSS hides the others), or the card's emoji, large.
+  const picHtml = (s, p) => (s.kind === 'cards'
+    ? '<div class="pic-cards one vp-pcard" data-vps="' + esc(s.id) + '" data-vpp="' + esc(p.id) + '"><div class="pic-card hl" role="img" aria-label="Picture"><span class="pic-emo" aria-hidden="true" style="font-family:' + EMOJI_FONT.replace(/'/g, '&#39;') + '">' + esc(p.pic) + '</span></div></div>'
+    : '<div class="pic-wrap vp-pwrap" data-vps="' + esc(s.id) + '" data-vpp="' + esc(p.id) + '">' + PX().svg(s, { pins: 'dots', highlight: p.id, quiz: true, cls: 'vp-psvg' }) + '</div>');
+  // Phone: scroll el up under the top bar when it starts above it or runs past the bottom (or the tab bar).
+  const barTop = () => { const tb = document.querySelector('.tabbar'); return tb && getComputedStyle(tb).display !== 'none' && tb.getBoundingClientRect().top > 0 ? tb.getBoundingClientRect().top : window.innerHeight; };
+  const bring = (el) => {
+    const tb = document.querySelector('.topbar'), top = tb ? tb.getBoundingClientRect().bottom : 0, r = el.getBoundingClientRect();
+    if (r.top < top || r.bottom > barTop()) window.scrollBy(0, r.top - top - 4);
+  };
+  // After an answer: the feedback and Next come into view, moving the page no more than needed.
+  const reveal = (el) => { const r = el.getBoundingClientRect(), lim = barTop() - 8; if (r.bottom > lim) window.scrollBy(0, r.bottom - lim); };
+  function runPicture(box, src) {
+    let qs, i, right, used;
+    const start = () => { const r = picPool(src); used = r.src; qs = App.vocabQs.picture(N, used); i = 0; right = 0; draw(); };
+    const finish = () => {
+      const n = qs.length, pct = Math.round((100 * right) / n);
+      box.innerHTML = scoreCard(pct, right + ' / ' + n + ' · ' + pct + '%').replace(ALL, ALL + '<a class="btn" href="#/pictures">Picture words</a>');
+      const b = box.querySelector('[data-act=retry]'); b.onclick = start; b.focus({ preventScroll: true });
+      bring(box.firstElementChild);
+      saveBest('picture:' + used, right, n);
+    };
+    const draw = () => {
+      if (!box.isConnected) return;
+      if (!qs.length) { box.innerHTML = '<div class="notice info">No pictures are loaded yet. Try another game.</div><div class="row" style="margin-top:10px">' + ALL + '</div>'; return; }
+      if (i >= qs.length) return finish();
+      const q = qs[i], { s, p } = q, svgSet = s.kind !== 'cards';
+      box.innerHTML = (used !== src && i === 0 ? '<div class="notice info" style="margin-bottom:10px">Not enough pictures there yet, so this game uses all pictures.</div>' : '') +
+        '<div class="card stack vp-round"><div class="spread"><span class="eyebrow">Question ' + (i + 1) + ' of ' + qs.length + '</span><span class="muted small">' + right + ' right</span></div>' +
+        '<div class="progress"><i style="width:' + Math.round((100 * i) / qs.length) + '%"></i></div>' +
+        picHtml(s, p) +
+        '<div class="opts vp-opts" role="group" aria-label="What is this?">' + q.opts.map((x, k) => '<button type="button" class="opt" data-k="' + k + '"><span class="pic-k" aria-hidden="true">' + (k + 1) + '</span> <span class="tl">' + esc(x.w) + '</span></button>').join('') + '</div><div data-fb></div></div>';
+      const card = box.querySelector('.vp-round');
+      bring(card);
+      let done = false;
+      const answer = (k) => {
+        if (done) return; done = true;
+        const ok = k === q.a, ch = q.opts[k];
+        if (ok) right++;
+        App.recordAnswer(ok);
+        box.querySelectorAll('.opt').forEach((b) => { b.disabled = true; if (+b.dataset.k === q.a) b.classList.add('right'); else if (+b.dataset.k === k) b.classList.add('wrong'); });
+        box.querySelector('[data-fb]').innerHTML = '<div class="feedback ' + (ok ? 'ok' : 'no') + ' stack"><b>' + (ok ? LANG.quiz.right : LANG.quiz.wrong) + '</b>' +
+          '<div class="row" style="gap:8px;align-items:flex-start">' + (svgSet ? '' : '<span class="pic-remo" aria-hidden="true">' + esc(p.pic) + '</span>') + PX().wordCard(p) + '</div>' +
+          (!ok ? '<div class="small muted">You chose <span class="tl">' + esc(ch.w) + '</span> (' + esc(ch.en || '') + ')</div>' : '') + '</div>' +
+          '<div class="row" style="margin-top:10px"><button type="button" class="btn primary" data-act="next">' + (i + 1 < qs.length ? 'Next' : 'See score') + '</button></div>';
+        if (ok) App.speak(p.w);
+        const nx = box.querySelector('[data-act=next]'); nx.onclick = () => { i++; draw(); }; nx.focus({ preventScroll: true });
+        reveal(nx);
+      };
+      box.querySelectorAll('.opt').forEach((b) => (b.onclick = () => answer(+b.dataset.k)));
+    };
+    // Keys as in Label it (js/pictures.js): 1 to 4 choose, Enter goes on.
+    App.keyHandler = (ev) => {
+      if (!box.isConnected || ev.altKey || ev.ctrlKey || ev.metaKey || ev.target.matches('input,textarea,select')) return;
+      if (/^[1-4]$/.test(ev.key)) { const b = box.querySelector('.opt[data-k="' + (+ev.key - 1) + '"]:not(:disabled)'); if (b) { ev.preventDefault(); b.click(); } return; }
+      if (ev.key === 'Enter' && !ev.target.closest('button,a,[role=button]')) { const nx = box.querySelector('[data-act=next]'); if (nx) { ev.preventDefault(); nx.click(); } }
+    };
+    start();
+  }
+
   /* ---------- Pages ---------- */
   const quiz = (gen, key) => (box) => App.runQuiz(box, gen(), { onDone: (r, n) => saveBest(key, r, n), after: ALL });
   const RUN = {
-    match: runMatch, type: runType,
+    match: runMatch, type: runType, picture: runPicture,
     opp: quiz(() => oppQs(N), 'opp:all'), col: quiz(() => colQs(N), 'col:all'), odd: quiz(() => oddQs(N), 'odd:all'), affix: quiz(() => affixQs(N), 'affix:all'),
     hear: (box, src) => { const used = poolFor(src, 4).src; return quiz(() => hearQs(N, used), 'hear:' + used)(box); },
     context: (box, src) => {
@@ -325,7 +446,7 @@
   };
   App.vocabCatStats = catStats;
   V.vocab = (el) => {
-    el.innerHTML = '<h1>Vocabulary practice</h1><p class="muted">Eight short word games: matching, opposites, words that go together, odd one out, typing, listening, word parts and words in context.</p>' +
+    el.innerHTML = '<h1>Vocabulary practice</h1><p class="muted">Nine short word games: matching, opposites, words that go together, odd one out, typing, listening, word parts, words in context and pictures.</p>' +
       '<div class="grid">' + App.vocabTiles() + '</div>' +
       '<h2 style="margin-top:22px">Your words by topic</h2><p class="muted small">Words in the dictionary, how many are in your flashcards, and how many you know well. Tap a topic to open its flashcards.</p>' +
       '<div class="card vcats">' + catStats().map((x) => '<div class="vcat" data-cat="' + x.c + '"><div class="spread"><a href="#/flash/c-' + x.c + '"><b>' + esc(x.label) + '</b></a>' +
@@ -337,18 +458,22 @@
   V.vocabMode = (el, p, q) => {
     const m = byId(p.mode);
     if (!m) { el.innerHTML = '<h1>Vocabulary practice</h1><p>That game does not exist. <a href="#/vocab">See all vocabulary practice</a>.</p>'; return; }
-    const st = App.state.settings, srcs = m.src ? sources(m.id) : null;
+    const st = App.state.settings, srcs = m.pics ? picSources() : m.src ? sources(m.id) : null, key = m.pics ? 'vocabPicSrc' : 'vocabCat';
     const has = (v) => srcs && srcs.some(([k]) => k === v);
-    const cur = has(q && q.cat) ? q.cat : has(st.vocabCat) ? st.vocabCat : 'all';
+    const cur = has(q && q.cat) ? q.cat : has(st[key]) ? st[key] : 'all';
+    const lv = picLv(), count = (v) => '<p class="muted small" style="margin:0" data-vpn>' + picPool(v).items.length + ' pictures' + (lv !== 'All' ? ' at level ' + lv : '') + '.</p>';
     el.innerHTML = '<h1>' + esc(m.title) + '</h1><p class="muted">' + esc(m.intro) + '</p>' +
-      '<div class="card stack"><div class="row">' +
-      (srcs ? '<label class="small" style="max-width:100%">Words <select class="input" id="vsrc" style="width:auto;max-width:100%">' + srcs.map(([v, t]) => '<option value="' + v + '"' + (v === cur ? ' selected' : '') + '>' + esc(t) + '</option>').join('') + '</select></label>' : '') +
-      '<button class="btn primary" id="vgo">Start</button></div><div id="vbox"></div></div>' + (m.draft ? DRAFT : '');
+      '<div class="card stack">' + (m.pics ? '<div class="row"><span class="small">Level</span><div class="seg" role="group" aria-label="Level">' + ['All', 'A1', 'A2'].map((k) => '<button type="button" data-vplv="' + k + '" aria-pressed="' + (lv === k) + '" class="' + (lv === k ? 'on' : '') + '">' + k + '</button>').join('') + '</div></div>' : '') +
+      '<div class="row">' +
+      (srcs ? '<label class="small" style="max-width:100%">' + (m.pics ? 'Pictures' : 'Words') + ' <select class="input" id="vsrc" style="width:auto;max-width:100%">' + srcs.map(([v, t]) => '<option value="' + v + '"' + (v === cur ? ' selected' : '') + '>' + esc(t) + '</option>').join('') + '</select></label>' : '') +
+      '<button class="btn primary" id="vgo">Start</button></div>' + (m.pics ? count(cur) : '') + '<div id="vbox"></div></div>' + (m.draft ? DRAFT : '');
     const sel = el.querySelector('#vsrc'), box = el.querySelector('#vbox');
-    if (sel) sel.onchange = () => { st.vocabCat = sel.value; App.save(); };
+    if (sel) sel.onchange = () => { st[key] = sel.value; App.save(); const c = el.querySelector('[data-vpn]'); if (c) c.outerHTML = count(sel.value); };
+    // The level is the one on Picture words (#/pictures): changing it here changes it there too.
+    el.querySelectorAll('[data-vplv]').forEach((b) => (b.onclick = () => { st.picLv = b.dataset.vplv; App.save(); V.vocabMode(el, p, Object.assign({}, q, { cat: sel ? sel.value : 'all' })); }));
     el.querySelector('#vgo').onclick = () => {
       const src = sel ? sel.value : 'all';
-      if (sel) { st.vocabCat = src; App.save(); }
+      if (sel) { st[key] = src; App.save(); }
       const inner = document.createElement('div'); inner.style.marginTop = '12px'; box.innerHTML = ''; box.appendChild(inner);
       RUN[m.id](inner, src);
     };
