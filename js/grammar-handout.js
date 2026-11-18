@@ -19,7 +19,7 @@
   const DEF = {
     panlapi: DEFAULTS,
     verbs: { topic: 'verbs', set: 'all', verb: 'all', english: 'show', paper: 'A4', size: 'normal', table: true, sentences: true, cheat: true, worksheet: true, key: true, title: 'Tagalog Verbs: Focus and Aspect', preparedFor: '' },
-    lesson: { topic: 'lesson', lesson: '', english: 'show', paper: 'A4', size: 'normal', body: true, quiz: true, key: true, title: '', preparedFor: '' },
+    lesson: { topic: 'lesson', lesson: '', english: 'show', paper: 'A4', size: 'normal', body: true, mistakes: true, more: true, quiz: true, quiz2: true, key: true, title: '', preparedFor: '' },
     reading: { topic: 'reading', reading: '', english: 'show', paper: 'A4', size: 'normal', passage: true, gloss: true, quiz: true, key: true, title: '', preparedFor: '' },
     dialogue: { topic: 'dialogue', dialogue: '', english: 'show', register: 'f', paper: 'A4', size: 'normal', script: true, role: true, key: true, title: '', preparedFor: '' },
     listening: { topic: 'listening', listening: '', english: 'show', paper: 'A4', size: 'normal', notes: true, quiz: true, dictation: true, transcript: true, key: true, title: '', preparedFor: '' },
@@ -481,19 +481,35 @@
   const LV = () => window.LESSONS || [];
   function lessonBuild(o) {
     const l = LV().find((x) => x.id === o.lesson) || LV()[0] || { id: '', title: 'Lesson', unit: '', level: '', body: '', quiz: [] };
+    const x = (App.lessonExtra && App.lessonExtra(l.id)) || { mistakes: [], more: [], quiz: [] };
     return {
       topic: 'lesson', l, o, title: o.title || l.title, preparedFor: o.preparedFor,
       date: new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' }),
-      scope: l.unit + ' · ' + l.level,
-      body: o.body ? l.body : null, quiz: o.quiz ? l.quiz : null, key: o.key ? l.quiz : null
+      scope: l.unit + ' · ' + l.level + (l.review ? ' · Review' : ''),
+      body: o.body ? l.body : null, quiz: o.quiz ? l.quiz : null, key: o.key ? l.quiz : null,
+      // 3.14.0 lesson extras (App.lessonExtra in js/views.js: malformed rows already dropped). null = off or nothing to print.
+      mistakes: o.mistakes && x.mistakes.length ? x.mistakes : null,
+      more: o.more && x.more.length ? x.more : null,
+      quiz2: o.quiz2 && x.quiz.length ? x.quiz : null,
+      key2: o.key && o.quiz2 && x.quiz.length ? x.quiz : null
     };
   }
-  const lessonCanPrint = (o) => o.body || o.quiz || o.key;
+  const lessonCanPrint = (o) => o.body || o.quiz || o.key || o.mistakes || o.more || o.quiz2;
+  // Extras as lesson-body HTML: the preview shows it, htmlToPdf turns the example boxes into PDF nodes (fresh each call).
+  // The wrong line of a mistake is never an .ex: struck through, with a cross (preview) or "x" (PDF font has no ✗).
+  const exHtml = (tl, en, showEn) => '<div class="ex"><b class="tl">' + esc(tl) + '</b>' + (showEn && en ? '<span>' + esc(en) + '</span>' : '') + '</div>';
+  const mistakesHTML = (rows) => rows.map((r) => '<div class="lx-m"><p class="lx-bad"><span class="lx-mk" aria-hidden="true">✗</span><span class="sr-only">Wrong: </span><s class="tl">' + esc(r[0]) + '</s></p>' + exHtml(r[1], r[2], true).replace('class="ex"', 'class="ex lx-ok"') + '</div>').join('');
+  const moreHTML = (rows, showEn) => rows.map((r) => exHtml(r[0], r[1], showEn)).join('');
+  const lqHTML = (qs) => '<ol class="gh-quiz">' + qs.map((q) => '<li><b>' + esc(q[0]) + '</b><ol type="A" class="gh-qopts">' + q[1].map((x) => '<li>' + esc(x) + '</li>').join('') + '</ol></li>').join('') + '</ol>';
+  const lkeyHTML = (qs) => '<ol class="gh-keyB gh-keyQ">' + qs.map((q) => '<li><b>' + letter(q[2]) + '. ' + esc(q[1][q[2]]) + '</b> <small>' + esc(q[3] || '') + '</small></li>').join('') + '</ol>';
   function lessonHTML(m) {
     let h = headHTML(m);
     if (m.body) h += '<section class="ho-sec"><div class="lesson-body">' + picHtml(m.body).replace(/<table>/g, '<div class="ho-tw"><table>').replace(/<\/table>/g, '</table></div>') + '</div></section>';
-    if (m.quiz) h += '<section class="ho-sec gh-ws"><h2>Check yourself</h2><ol class="gh-quiz">' + m.quiz.map((q) => '<li><b>' + esc(q[0]) + '</b><ol type="A" class="gh-qopts">' + q[1].map((x) => '<li>' + esc(x) + '</li>').join('') + '</ol></li>').join('') + '</ol></section>';
-    if (m.key) h += '<section class="ho-sec gh-key"><h2>Answer key</h2><ol class="gh-keyB gh-keyQ">' + m.key.map((q) => '<li><b>' + letter(q[2]) + '. ' + esc(q[1][q[2]]) + '</b> <small>' + esc(q[3]) + '</small></li>').join('') + '</ol></section>';
+    if (m.mistakes) h += '<section class="ho-sec gh-mist"><h2>Common mistakes</h2><div class="lesson-body">' + mistakesHTML(m.mistakes) + '</div></section>';
+    if (m.more) h += '<section class="ho-sec gh-more"><h2>More examples</h2><div class="lesson-body">' + moreHTML(m.more, m.o.english !== 'hide') + '</div></section>';
+    if (m.quiz) h += '<section class="ho-sec gh-ws"><h2>Check yourself</h2>' + lqHTML(m.quiz) + '</section>';
+    if (m.quiz2) h += '<section class="ho-sec gh-ws gh-q2"><h2>More practice</h2>' + lqHTML(m.quiz2) + '</section>';
+    if (m.key || m.key2) h += '<section class="ho-sec gh-key"><h2>Answer key</h2>' + (m.key ? (m.key2 ? '<h3>Check yourself</h3>' : '') + lkeyHTML(m.key) : '') + (m.key2 ? '<h3>More practice</h3>' + lkeyHTML(m.key2) : '') + '</section>';
     return h + footHTML();
   }
 
@@ -592,16 +608,26 @@
   App.htmlToPdf = htmlToPdf;
 
   function lessonDoc(m, logo) {
-    const k = kit(m, logo), { MUTED, base, content, heading } = k;
+    const k = kit(m, logo), { MUTED, base, content, heading, sub } = k;
     const run = (t, extra) => Object.assign({ text: t }, extra || {});
+    const quizNodes = (qs) => qs.forEach((q, i) => content.push({ stack: [{ text: [run((i + 1) + '. ', { color: MUTED }), run(q[0], { bold: true })] }].concat(q[1].map((x, j) => ({ text: [run(letter(j) + '.  ', { color: MUTED }), run(x)], margin: [16, 1, 0, 0] }))), unbreakable: true, margin: [0, 0, 0, 7] }));
+    const keyNodes = (qs) => qs.forEach((q, i) => content.push({ text: [run((i + 1) + '  ', { color: MUTED }), run(letter(q[2]) + '. ' + q[1][q[2]], { bold: true }), run('  ' + (q[3] || ''), { color: MUTED, fontSize: base - 1.5 })], margin: [0, 0, 0, 4] }));
     if (m.body) htmlToPdf(m.body, { base }).forEach((x) => content.push(x));
-    if (m.quiz) {
-      content.push(heading('Check yourself', m.quiz.length + ' questions'));
-      m.quiz.forEach((q, i) => content.push({ stack: [{ text: [run((i + 1) + '. ', { color: MUTED }), run(q[0], { bold: true })] }].concat(q[1].map((x, j) => ({ text: [run(letter(j) + '.  ', { color: MUTED }), run(x)], margin: [16, 1, 0, 0] }))), unbreakable: true, margin: [0, 0, 0, 7] }));
+    if (m.mistakes) {
+      content.push(heading('Common mistakes', m.mistakes.length + (m.mistakes.length === 1 ? ' sentence' : ' sentences')));
+      // Built fresh for every row: the wrong line struck through after a plain "x" (the PDF font has no ✗), then the right line as an example box.
+      m.mistakes.forEach((r) => content.push({ stack: [{ text: [run('x  ', { bold: true, color: '#b3261e' }), run('Wrong: ', { color: MUTED, fontSize: base - 1.5 }), run(r[0], { decoration: 'lineThrough', color: MUTED })], margin: [0, 2, 0, 1] }].concat(htmlToPdf(exHtml(r[1], r[2], true), { base })), unbreakable: true, margin: [0, 0, 0, 3] }));
     }
-    if (m.key) {
+    if (m.more) {
+      content.push(heading('More examples', m.more.length + ' sentences'));
+      htmlToPdf(moreHTML(m.more, m.o.english !== 'hide'), { base }).forEach((x) => content.push(x));
+    }
+    if (m.quiz) { content.push(heading('Check yourself', m.quiz.length + ' questions')); quizNodes(m.quiz); }
+    if (m.quiz2) { content.push(heading('More practice', m.quiz2.length + ' questions')); quizNodes(m.quiz2); }
+    if (m.key || m.key2) {
       content.push(Object.assign(heading('Answer key', m.l.title), { pageBreak: content.length > 1 ? 'before' : undefined }));
-      m.key.forEach((q, i) => content.push({ text: [run((i + 1) + '  ', { color: MUTED }), run(letter(q[2]) + '. ' + q[1][q[2]], { bold: true }), run('  ' + q[3], { color: MUTED, fontSize: base - 1.5 })], margin: [0, 0, 0, 4] }));
+      if (m.key) { if (m.key2) content.push(sub('Check yourself')); keyNodes(m.key); }
+      if (m.key2) { content.push(sub('More practice')); keyNodes(m.key2); }
     }
     return finish(m, k, 'Tagalog lesson handout');
   }
@@ -952,7 +978,7 @@
         LV().forEach((l) => { let u = units.find((x) => x[0] === l.unit); if (!u) units.push((u = [l.unit, []])); u[1].push(l); });
         const sel = '<div><div class="eyebrow">Lesson</div><select class="input" id="ghLesson">' + units.map(([u, ls]) => '<optgroup label="' + esc(u) + '">' + ls.map((l) => '<option value="' + esc(l.id) + '"' + (o.lesson === l.id ? ' selected' : '') + '>' + esc(l.title) + ' (' + esc(l.level) + ')</option>').join('') + '</optgroup>').join('') + '</select></div>';
         return '<div class="ho-grid">' + sel + paperSize + '</div>' +
-          '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('body', 'Lesson text', 'with examples and tables') + chk('quiz', 'Quiz questions', 'lettered options, no answers') + chk('key', 'Answer key', 'answers and explanations, on its own page') + '</div></div>';
+          '<div><div class="eyebrow">Include</div><div class="ho-chks">' + chk('body', 'Lesson text', 'with examples and tables') + chk('mistakes', 'Common mistakes', 'the wrong line struck through, then the right one') + chk('more', 'More examples') + chk('quiz', 'Quiz questions', 'lettered options, no answers') + chk('quiz2', 'More practice quiz', 'its answers go in the key') + chk('key', 'Answer key', 'answers and explanations, on its own page') + '</div></div>';
       }
       if (topic === 'reading') {
         const grp = (lab, rs) => rs.length ? '<optgroup label="' + lab + '">' + rs.map((r) => '<option value="' + esc(r.id) + '"' + (o.reading === r.id ? ' selected' : '') + '>' + esc(r.title) + ' · ' + esc(r.titleEn) + ' (' + esc(r.level) + ')</option>').join('') + '</optgroup>' : '';

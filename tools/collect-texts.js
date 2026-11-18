@@ -13,6 +13,10 @@ const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'),
  'js/data/reading.js', 'js/data/listening.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js', 'js/data/psych-sud.js', 'js/data/psych-withdrawal.js', 'js/data/psych-mood.js', 'js/data/psych-shea.js', 'js/data/psych-phrases-nurse.js', 'js/data/psych-answers.js', 'js/data/psych-answers-nurse.js', 'js/data/affixes.js',
  'js/data/picture-sets-body.js', 'js/data/picture-sets-home.js', 'js/data/picture-sets-town.js', 'js/data/picture-sets-animals.js', 'js/data/picture-sets-machines.js', 'js/data/picture-sets-food.js', 'js/data/picture-sets-clothes.js', 'js/data/picture-sets-nature.js', 'js/data/picture-sets-daily.js', 'js/data/picture-bodymap.js', 'js/data/signs.js', 'js/data/signs-panels.js', 'js/data/lessons-pictures.js',
  'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js', 'js/pronounce.js'].forEach(load);
+// 3.14.0: lesson extras (every js/data/lesson-extra-<n>.js present, in number order), the unit reviews, then the lesson
+// order file, which builds the review lessons into LESSONS (so the lesson-body sweep below records their examples).
+fs.readdirSync(path.join(root, 'js/data')).filter((f) => /^lesson-extra-\d+\.js$/.test(f)).sort((a, b) => parseInt(a.slice(13), 10) - parseInt(b.slice(13), 10)).forEach((f) => load('js/data/' + f));
+['js/data/lessons-review.js', 'js/data/lessons-zz-order.js'].filter((f) => fs.existsSync(path.join(root, f))).forEach(load);
 
 const out = new Map();
 const caps = new Map(); // every all-caps word in spoken text → how the voice will say it (written to tools/caps.json)
@@ -45,6 +49,13 @@ add('Opo, Dok.'); // default discharge practice answer
 (ctx.PSYCH_MSE_SHEET ? ctx.PSYCH_MSE_SHEET.sections : []).forEach((s) => (s.blocks || []).forEach((b) => b.items.forEach((it) => add(it.tl)))); // MSE interviewer sheet lines not already in PSYCH_SECTIONS
 (ctx.PSYCH_MSE_CASES || []).forEach((c) => { if (c.cc) add(c.cc.ans[0]); Object.values(c.domains).forEach((d) => Object.values(d.ans || {}).forEach((a) => add(a[0]))); });
 (ctx.LESSONS || []).forEach((l) => { const re = /<div class="ex"(?: data-voice="([^"]*)")?><b>([^<]+)<\/b>/g; let m; while ((m = re.exec(l.body))) add((m[1] || m[2]).replace(/&#39;/g, "'").replace(/&amp;/g, '&')); });
+// 3.14.0 lesson extras: each "more" example and the RIGHT line of each common mistake (its voice text instead when given:
+// more [tl, en, voice?], mistakes [wrong, right, why, voice?]). The wrong line is never recorded. Malformed rows are skipped.
+Object.values(ctx.LESSON_EXTRA && typeof ctx.LESSON_EXTRA === 'object' ? ctx.LESSON_EXTRA : {}).forEach((x) => {
+  if (!x || typeof x !== 'object') return;
+  (Array.isArray(x.more) ? x.more : []).forEach((r) => { if (Array.isArray(r)) add(r[2] || r[0]); });
+  (Array.isArray(x.mistakes) ? x.mistakes : []).forEach((r) => { if (Array.isArray(r)) add(r[3] || r[1]); });
+});
 (ctx.VERBS || []).forEach((v) => {
   const forms = {};
   v.a.forEach((af) => (forms[af] = ctx.Conj.conjugate(v.r, af)));

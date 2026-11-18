@@ -16,7 +16,7 @@ window.LESSONS = [
 <ul>
 <li><b>ng</b> is one sound, like the end of <i>sing</i>, and can start a word: <b>ng</b>ipin (tooth), <b>ng</b>ayon (now).</li>
 <li><b>ng</b> (the marker) is pronounced <b>nang</b>. <b>mga</b> (plural marker) is pronounced <b>ma-NGA</b>.</li>
-<li><b>Glottal stops</b>: a catch in the throat, like the middle of <i>uh-oh</i>. <i>bata</i> (child) ends with one. Stress and glottal stops change meaning: <i>BUkas</i> (open) vs <i>buKAS</i> (tomorrow).</li>
+<li><b>Glottal stops</b>: a catch in the throat, like the middle of <i>uh-oh</i>. <i>bata</i> (child) ends with one. Stress and glottal stops change meaning: <i>BUkas</i> (tomorrow) vs <i>buKAS</i> (open).</li>
 <li>Every vowel is pronounced. <i>Tao</i> is <b>TA-o</b>, two syllables. <i>Oo</i> (yes) is <b>O-o</b> with a catch between.</li>
 <li>Consonants are not aspirated. <i>p, t, k</i> are softer than in English.</li>
 </ul>

@@ -328,6 +328,8 @@
 
   App.pictures = { embed, GROUPS, sets, byId, get: byId, svg, typedOk };
   // Rows for the Completion card of #/progress (V.progress in js/views.js): [label, done, total]. Signs are counted here too.
+  // 3.14.0: chains onto any earlier App.progressExtra (js/views.js adds the lesson "More practice" row) like js/vocab.js does.
+  const prevExtra = App.progressExtra;
   App.progressExtra = (st) => {
     const pic = (st.done && st.done.pictures) || {}, sg = (st.done && st.done.signs) || {};
     const tried = new Set(Object.keys(pic).filter((k) => /^(identify|label|listen):/.test(k) && typeof pic[k] === 'number').map((k) => k.slice(k.indexOf(':') + 1)).filter((id) => byId(id)));
@@ -336,6 +338,6 @@
     const rows = [['Picture sets tried', tried.size, sets().length]];
     if (groups.length) rows.push(['Sign quizzes tried (by group or all)', groups.filter((g) => gq.has(g.id)).length + (gq.has('all') ? 1 : 0), groups.length + 1]);
     if (panels.length) rows.push(['Machine panels done', panels.filter((x) => typeof sg['panel:' + x.id] === 'number').length, panels.length]);
-    return rows;
+    return (prevExtra ? prevExtra(st) : []).concat(rows);
   };
 })();

@@ -372,13 +372,54 @@
 
   /* ---------- Lessons ---------- */
   V.lessons = (el) => {
-    const units = {};
-    LESSONS.forEach((l) => (units[l.unit] = units[l.unit] || []).push(l));
+    // 3.14.0: units in LESSON_UNITS order (js/data/lessons-zz-order.js sorts LESSONS that way); a unit review is the last tile of its unit.
+    const units = [];
+    LESSONS.forEach((l) => { let u = units.find((x) => x[0] === l.unit); if (!u) units.push((u = [l.unit, []])); u[1].push(l); });
+    const doneN = LESSONS.filter((l) => S().done.lessons[l.id] != null).length;
     el.innerHTML = '<h1>Lessons</h1><p class="muted">Short grammar and culture lessons, each with a quiz. Tap <span class="kbd">🔊</span> on any example to hear it.</p>' +
-      Object.entries(units).map(([u, ls]) => '<h2>' + esc(u) + '</h2><div class="grid">' + ls.map((l) => {
+      '<p class="small muted lx-done">' + doneN + ' of ' + LESSONS.length + ' lessons done</p>' +
+      units.map(([u, ls]) => '<h2>' + esc(u) + '</h2><div class="grid">' + ls.map((l) => {
         const sc = S().done.lessons[l.id];
-        return '<a class="tile" href="#/lessons/' + l.id + '"><div class="row">' + lvPill(l.level) + (sc != null ? '<span class="pill good">' + icons.check.replace('<svg', '<svg width="12" height="12"') + ' ' + sc + '%</span>' : '') + '</div><h3 style="margin-top:6px">' + esc(l.title) + '</h3><p>' + esc(l.summary) + '</p></a>';
+        return '<a class="tile" href="#/lessons/' + l.id + '"><div class="row">' + lvPill(l.level) + (l.review ? reviewPill : '') + (sc != null ? '<span class="pill good">' + icons.check.replace('<svg', '<svg width="12" height="12"') + ' ' + sc + '%</span>' : '') + '</div><h3 style="margin-top:6px">' + esc(l.title) + '</h3><p>' + esc(l.summary) + '</p></a>';
       }).join('') + '</div>').join('');
+  };
+  /* 3.14.0 lesson extras (window.LESSON_EXTRA[id], js/data/lesson-extra-*.js): "Common mistakes" and "More examples" after
+     the body, inside a second .lesson-body (so they print and get speaker buttons like the body's examples), and a second
+     quiz "More practice" after the lesson's own; its best score goes in state.done.lessonsMore[id] (lesson completion stays
+     state.done.lessons). Rows: mistakes [wrong, right, why, voice?], more [tl, en, voice?], quiz [q, opts, idx, why].
+     The WRONG line of a mistake is struck through and never spoken: it is not an .ex. Malformed entries are ignored.
+     Review lessons (review: true, built by js/data/lessons-zz-order.js) carry a Review pill here and on the lessons list.
+     App.lessonLinks: functions (lesson) => HTML drawn in a .row.noprint under the quizzes; each returns '' when it has nothing. */
+  const reviewPill = '<span class="pill rv">Review</span>';
+  App.lessonLinks = App.lessonLinks || [];
+  const str = (x) => typeof x === 'string' && x.trim() !== '';
+  App.lessonExtra = (id) => {
+    const X = window.LESSON_EXTRA, x = X && typeof X === 'object' && Object.prototype.hasOwnProperty.call(X, id) ? X[id] : null;
+    if (!x || typeof x !== 'object' || Array.isArray(x)) return null;
+    const rows = (k) => (Array.isArray(x[k]) ? x[k].filter((r) => Array.isArray(r)) : []);
+    return {
+      mistakes: rows('mistakes').filter((m) => str(m[0]) && str(m[1])),
+      more: rows('more').filter((m) => str(m[0])),
+      quiz: rows('quiz').filter((q) => str(q[0]) && Array.isArray(q[1]) && q[1].length >= 2 && q[1].every((o) => typeof o === 'string') && Number.isInteger(q[2]) && q[2] >= 0 && q[2] < q[1].length)
+    };
+  };
+  // Progress (#/progress) Completion row: lessons whose "More practice" quiz has a score, out of lessons that have one.
+  const prevProgress = App.progressExtra;
+  App.progressExtra = (st) => {
+    const m = (st.done && st.done.lessonsMore && typeof st.done.lessonsMore === 'object') ? st.done.lessonsMore : {};
+    const withQuiz = LESSONS.filter((l) => { const x = App.lessonExtra(l.id); return x && x.quiz.length; });
+    const rows = withQuiz.length ? [['More practice done (lessons)', withQuiz.filter((l) => typeof m[l.id] === 'number').length, withQuiz.length]] : [];
+    return (prevProgress ? prevProgress(st) : []).concat(rows);
+  };
+  const voiceAttr = (v) => (str(v) ? ' data-voice="' + esc(v) + '"' : '');
+  const extraHTML = (x) => {
+    if (!x || (!x.mistakes.length && !x.more.length)) return '';
+    return '<div class="lesson-body lx">' +
+      (x.mistakes.length ? '<h2>Common mistakes</h2>' + x.mistakes.map(([bad, good, why, voice]) =>
+        '<div class="lx-m"><p class="lx-bad"><span class="lx-mk" aria-hidden="true">✗</span><span class="sr-only">Wrong: </span><s class="tl">' + esc(bad) + '</s></p>' +
+        '<div class="ex lx-ok"' + voiceAttr(voice) + '><b class="tl">' + esc(good) + '</b><span>' + esc(str(why) ? why : '') + '</span></div></div>').join('') : '') +
+      (x.more.length ? '<h2>More examples</h2>' + x.more.map(([tl, en, voice]) => '<div class="ex"' + voiceAttr(voice) + '><b class="tl">' + esc(tl) + '</b><span>' + esc(str(en) ? en : '') + '</span></div>').join('') : '') +
+      '</div>';
   };
   // 3.10.0: a picture in a lesson body (<div class="pic-embed" data-pic="<set id>"></div>) is mounted by the pictures module
   // (js/pictures.js, App.pictures.embed). An unknown set id or a missing module leaves the div empty.
@@ -390,16 +431,24 @@
     const l = LESSONS.find((x) => x.id === p.id);
     if (!l) { el.innerHTML = '<p>Lesson not found.</p>'; return; }
     const idx = LESSONS.indexOf(l), next = LESSONS[idx + 1], prev = LESSONS[idx - 1];
-    el.innerHTML = crumb([['Lessons', '#/lessons'], [l.title]]) + '<div class="row">' + lvPill(l.level) + '<span class="muted small">' + esc(l.unit) + '</span></div><h1 style="margin-top:6px">' + esc(l.title) + '</h1><div class="row" style="margin:-6px 0 10px"><a class="btn sm" href="#/lessons/handout?id=' + l.id + '">' + App.icons.book + ' Print handout</a></div>' +
+    const x = App.lessonExtra(l.id), xq = x ? x.quiz : [];
+    const links = App.lessonLinks.map((f) => { try { return (typeof f === 'function' && f(l)) || ''; } catch (e) { return ''; } }).join('');
+    el.innerHTML = crumb([['Lessons', '#/lessons'], [l.title]]) + '<div class="row">' + lvPill(l.level) + (l.review ? reviewPill : '') + '<span class="muted small">' + esc(l.unit) + '</span></div><h1 style="margin-top:6px">' + esc(l.title) + '</h1><div class="row" style="margin:-6px 0 10px"><a class="btn sm" href="#/lessons/handout?id=' + l.id + '">' + App.icons.book + ' Print handout</a></div>' +
       (l.draft ? '<div class="notice warn" style="margin-bottom:12px">Draft for review: the Tagalog lines in this lesson are practice wording pending Dr. Navarro\u2019s check.</div>' : '') +
       '<div class="lesson-body">' + l.body.replace(/<table>/g, '<div class="tablewrap"><table>').replace(/<\/table>/g, '</table></div>') + '</div>' +
+      extraHTML(x) +
       '<h2 style="margin-top:20px">Check yourself</h2><div id="lq"></div>' +
+      (xq.length ? '<h2 style="margin-top:20px">More practice</h2><div id="lq2"></div>' : '') +
+      (links ? '<div class="row noprint lx-links" style="margin-top:14px">' + links + '</div>' : '') +
       '<div class="spread" style="margin-top:16px">' + (prev ? '<a class="btn" href="#/lessons/' + prev.id + '">← ' + esc(prev.title) + '</a>' : '<span></span>') + (next ? '<a class="btn" href="#/lessons/' + next.id + '">' + esc(next.title) + ' →</a>' : '') + '</div>';
-    // speak buttons for examples
+    // speak buttons for examples: the body, the extras (right lines and more examples) and review rows. data-voice wins.
     el.querySelectorAll('.lesson-body .ex').forEach((ex) => { const b = ex.querySelector('b'); if (b) { const wrap = document.createElement('div'); wrap.innerHTML = App.sayBtn(ex.dataset.voice || b.textContent); ex.classList.add('has-say'); ex.appendChild(wrap.firstChild); } });
     App.mountPics(el.querySelector('.lesson-body'));
     App.runQuiz(el.querySelector('#lq'), l.quiz.map(([q, opts, a, exp]) => ({ q, opts, a, exp })), {
       onDone: (r, n) => { const pct = Math.round((100 * r) / n); S().done.lessons[l.id] = Math.max(pct, S().done.lessons[l.id] || 0); App.activity(10); }
+    });
+    if (xq.length) App.runQuiz(el.querySelector('#lq2'), xq.map(([q, opts, a, exp]) => ({ q, opts, a, exp: str(exp) ? exp : '' })), {
+      onDone: (r, n) => { const d = S().done, m = d.lessonsMore && typeof d.lessonsMore === 'object' ? d.lessonsMore : (d.lessonsMore = {}); m[l.id] = Math.max(Math.round((100 * r) / n), m[l.id] || 0); App.activity(5); }
     });
   };
 

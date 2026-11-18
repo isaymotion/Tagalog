@@ -4,6 +4,18 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.14.0', date: '2026-11-18', title: 'Lesson extras, nine units and unit reviews',
+    items: [
+      { type: 'feature', text: 'Every lesson now ends with Common mistakes: the wrong line is struck through, then the correct line with audio and a short reason.' },
+      { type: 'feature', text: 'More examples: six extra sentences in every lesson, half from the ward and half from everyday life, each with audio.' },
+      { type: 'feature', text: 'More practice: a second quiz of six questions after each lesson\'s own quiz. Its best score is kept separately.' },
+      { type: 'feature', text: 'The lessons are now grouped into nine units, and each unit ends with a Review: one key point and one example per lesson, and a mixed quiz of ten questions.' },
+      { type: 'update', text: 'The lesson handout can print the common mistakes, the extra examples and the extra quiz with its answers.' },
+      { type: 'content', text: '168 common mistakes, 336 more examples, 336 more quiz questions and nine unit reviews. All drafted for study and pending review by a native speaker.' },
+      { type: 'correction', text: 'Pronunciation lesson: the stress of bukas was the wrong way round. BUkas is tomorrow and buKAS is open.' }
+    ]
+  },
+  {
     version: '3.13.0', date: '2026-11-18', title: 'Vocabulary practice: seven word games',
     items: [
       { type: 'feature', text: 'A new Vocabulary practice page with seven short games: Match the pairs, Opposites, What goes with it? (uminom ng gamot, magsipilyo ng ngipin), Odd one out, Type the word, Hear the word, and Guess the meaning from the parts.' },
