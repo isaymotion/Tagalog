@@ -9,14 +9,14 @@ const ctx = { window: {}, console, TextEncoder, Buffer };
 ctx.window = ctx;
 vm.createContext(ctx);
 const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
-['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/dict-themes.js', 'js/data/drills.js', 'js/data/drills-grammar.js', 'js/data/word-sets.js', 'js/data/vocab-sets.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js', 'js/data/lessons-2.js',
+['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/dict-themes.js', 'js/data/drills.js', 'js/data/drills-grammar.js', 'js/data/word-sets.js', 'js/data/vocab-sets.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js', 'js/data/lessons-2.js', 'js/data/lessons-3.js',
  'js/data/reading.js', 'js/data/listening.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js', 'js/data/psych-sud.js', 'js/data/psych-withdrawal.js', 'js/data/psych-mood.js', 'js/data/psych-shea.js', 'js/data/psych-phrases-nurse.js', 'js/data/psych-answers.js', 'js/data/psych-answers-nurse.js', 'js/data/affixes.js',
  'js/data/picture-sets-body.js', 'js/data/picture-sets-home.js', 'js/data/picture-sets-town.js', 'js/data/picture-sets-animals.js', 'js/data/picture-sets-machines.js', 'js/data/picture-sets-food.js', 'js/data/picture-sets-clothes.js', 'js/data/picture-sets-nature.js', 'js/data/picture-sets-daily.js', 'js/data/picture-bodymap.js', 'js/data/signs.js', 'js/data/signs-panels.js', 'js/data/lessons-pictures.js',
  'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js', 'js/pronounce.js'].forEach(load);
 // 3.14.0: lesson extras (every js/data/lesson-extra-<n>.js present, in number order), the unit reviews, then the lesson
 // order file, which builds the review lessons into LESSONS (so the lesson-body sweep below records their examples).
 fs.readdirSync(path.join(root, 'js/data')).filter((f) => /^lesson-extra-\d+\.js$/.test(f)).sort((a, b) => parseInt(a.slice(13), 10) - parseInt(b.slice(13), 10)).forEach((f) => load('js/data/' + f));
-['js/data/lessons-review.js', 'js/data/lessons-zz-order.js'].filter((f) => fs.existsSync(path.join(root, f))).forEach(load);
+['js/data/lessons-review.js', 'js/data/lessons-review-2.js', 'js/data/lessons-zz-order.js'].filter((f) => fs.existsSync(path.join(root, f))).forEach(load);
 // 3.15.0: example sentences of dictionary words (any of the six parts that exist).
 fs.readdirSync(path.join(root, 'js/data')).filter((f) => /^examples-\d+\.js$/.test(f)).sort((a, b) => parseInt(a.slice(9), 10) - parseInt(b.slice(9), 10)).forEach((f) => load('js/data/' + f));
 

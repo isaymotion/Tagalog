@@ -4,6 +4,17 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.16.0', date: '2026-11-18', title: 'Twenty more grammar lessons, to B2',
+    items: [
+      { type: 'content', text: 'Verbs: mag- or -um-, choosing -in, i- or -an, mang- verbs, pang- words and ipang- verbs, feeling verbs (natatakot or nakakatakot), may and wala with verbs, ka- -an verbs of feeling, and magsi- for many doers.' },
+      { type: 'content', text: 'Building sentences: reason and result, when and after clauses, while, before, after and until, kahit and kung with question words, and nang or ng.' },
+      { type: 'content', text: 'Natural speech: softeners (naman, nga, muna, sana), din or rin and daw or raw, and sentence tags (\'no, ha, di ba, kaya, pala).' },
+      { type: 'content', text: 'Register and style: giving instructions step by step, and formal written Filipino as seen in forms and notices. Everyday life: ordinals and tig-, and saying things are the same (kasing-, pareho, gaya ng).' },
+      { type: 'feature', text: 'Each new lesson has its own quiz, common mistakes, more examples and a More practice quiz, and a place in its unit\'s review.' },
+      { type: 'update', text: 'Every unit now has ten lessons or fewer. Lessons are in a teaching order within each unit.' }
+    ]
+  },
+  {
     version: '3.15.0', date: '2026-11-18', title: 'An example sentence for every word',
     items: [
       { type: 'feature', text: 'Every dictionary word now has an example sentence with audio. It shows on the word\'s page, with the word highlighted, and on the back of its flashcard.' },

@@ -14,12 +14,12 @@
 (function (root) {
   root.LESSON_UNITS = [
     ['Foundations', ['pronounce', 'markers', 'names', 'pronouns', 'linkers', 'may-wala', 'questions', 'negation', 'demonstratives', 'plurals']],
-    ['Verbs: focus and aspect', ['focus', 'aspect', 'panlapi', 'focus-an-i', 'ay-inversion', 'recent-past']],
-    ['Verbs: more affixes', ['ability', 'causative', 'social-verbs', 'accidental', 'nominalising']],
-    ['Natural speech', ['particles', 'politeness', 'enclitics', 'hedging', 'exclamations']],
-    ['Building sentences', ['connectors', 'conditionals', 'reported-speech', 'relative-clauses']],
-    ['Register and style', ['register', 'spoken-short-forms', 'storytelling']],
-    ['Everyday life', ['numbers', 'modals', 'comparisons', 'requests', 'time-words', 'intensifiers', 'location', 'spanish-numbers']],
+    ['Verbs: focus and aspect', ['focus', 'aspect', 'panlapi', 'mag-um', 'choosing-focus', 'focus-an-i', 'mang-verbs', 'ay-inversion', 'recent-past']],
+    ['Verbs: more affixes', ['ability', 'causative', 'social-verbs', 'accidental', 'nominalising', 'pang-ipang', 'feeling-verbs', 'may-verbs', 'ka-an-verbs', 'magsi']],
+    ['Natural speech', ['particles', 'politeness', 'enclitics', 'softeners', 'din-daw', 'hedging', 'exclamations', 'tags']],
+    ['Building sentences', ['connectors', 'reason-result', 'conditionals', 'time-clauses', 'while-before-after', 'kahit-kung', 'reported-speech', 'relative-clauses', 'nang-ng']],
+    ['Register and style', ['register', 'spoken-short-forms', 'storytelling', 'instructions', 'formal-filipino']],
+    ['Everyday life', ['numbers', 'modals', 'comparisons', 'requests', 'time-words', 'intensifiers', 'location', 'spanish-numbers', 'ordinals', 'equality']],
     ['Culture', ['kinship', 'values', 'folk', 'idioms-distress', 'interpreting']],
     ['Picture lessons', ['pic-nasaan', 'pic-masakit', 'pic-paglalarawan', 'pic-bilang', 'pic-suot', 'pic-direksyon', 'pic-karatula', 'pic-makina', 'pic-kalagayan', 'pic-paliwanag']]
   ];
