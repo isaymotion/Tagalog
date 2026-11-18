@@ -47,14 +47,28 @@ window.PICTURE_ART['face'] = { vb: [320, 400], svg:
     '="0.06" d="M134 222C146 216 174 216 186 222L184 230C170 227 150 227 136 230Z"/><path stroke-width="1.5" d="M148 218L148 228M160 217L160 227M172 218L17' +
     '2 228"/><path stroke-width="2" fill="currentColor" fill-opacity="0.15" d="M141 249C145 236 175 236 179 249C172 256 148 256 141 249Z"/><path stroke-wid' +
     'th="2" d="M148 280Q160 285 172 280M150 310Q160 314 170 310"/></g>' };
-window.PICTURE_ART['hand-arm'] = { vb: [400, 320], svg:
-    '<g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path fill="currentColor" fill-opacity="0.08" d' +
-    '="M16 318C16 280 22 246 46 234C70 224 100 238 128 246C150 232 190 216 222 204C210 196 190 176 172 156C160 142 164 120 178 126C190 132 198 150 204 160L' +
-    '202 130L202 50C202 30 232 30 232 50L232 128L232 34C232 14 264 14 264 34L264 128L264 44C264 24 296 24 296 44L296 130L296 78C296 60 324 60 324 78L324 15' +
-    '0C324 178 316 196 304 206C270 236 210 280 172 300C160 308 140 312 126 310C100 306 76 302 60 300C56 306 54 312 54 318"/><g stroke-width="2"><path d="M2' +
-    '08 52C208 42 226 42 226 52L226 60L208 60ZM239 36C239 26 257 26 257 36L257 44L239 44ZM271 46C271 36 289 36 289 46L289 54L271 54ZM302 80C302 72 318 72 3' +
-    '18 80L318 87L302 87ZM166 130C166 122 176 122 180 128L182 136L170 138Z"/><path d="M209 116Q217 121 225 116M240 114Q248 119 256 114M271 116Q280 121 288 ' +
-    '116M302 128Q310 133 318 128"/><path d="M226 210Q262 220 300 212M118 266Q110 280 116 292"/></g></g>' };
+window.PICTURE_ART['hand-arm'] = { vb: [400, 440], svg:
+    '<g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" fill="currentColor" fill-op' +
+    'acity="0.08" d="M40 186L42 228C46 250 72 262 100 272C128 282 150 300 160 326Q206 312 258 320C262 300 264 280 264 260L268 196L312 196L316 262C318 300 3' +
+    '26 340 322 360C318 376 304 384 288 384L176 380C160 380 148 382 140 386C130 404 126 422 126 440L0 440L0 186Z"/><path d="M40 186L42 228C46 250 72 262 10' +
+    '0 272C128 282 150 300 160 326Q206 312 258 320C262 300 264 280 264 260L268 196L312 196L316 262C318 300 326 340 322 360C318 376 304 384 288 384L176 380C' +
+    '160 380 148 382 140 386C130 404 126 422 126 440"/><path stroke-width="2" d="M8 250C36 256 64 262 92 270"/><path stroke-width="1.8" d="M140 386C150 360' +
+    ' 146 330 130 304"/><path stroke-width="1.8" d="M136 396C110 418 62 422 24 412"/><path stroke-width="1.8" d="M258 322Q252 330 246 332"/><path stroke-wi' +
+    'dth="1.8" d="M306 360Q314 368 308 376"/><path fill="currentColor" fill-opacity="0.08" d="M273.5 126.6 L252.9 58 A12 12 0 0 0 230 64.9 L250.5 133.4"/><' +
+    'path stroke-width="1.8" fill="currentColor" fill-opacity="0.16" d="M253.1 74.3 L247.6 56.1 A7.4 7.4 0 0 0 233.4 60.4 L238.8 78.6 Q247 80 253.1 74.3 Z"' +
+    '/><path stroke-width="1.5" d="M255.7 88.3 Q250.6 91.9 244.3 91.7"/><path fill="currentColor" fill-opacity="0.08" d="M300.5 124.3 L302.2 40.8 A12.5 12.' +
+    '5 0 0 0 277.2 40.2 L275.5 123.7"/><path stroke-width="1.8" fill="currentColor" fill-opacity="0.16" d="M297.1 56.9 L297.6 37.2 A7.8 7.8 0 0 0 282.1 36.' +
+    '8 L281.7 56.6 Q289.3 60.6 297.1 56.9 Z"/><path stroke-width="1.5" d="M295.2 76.1 Q289 78 282.8 75.9"/><path fill="currentColor" fill-opacity="0.08" d=' +
+    '"M324.4 131.7 L345.6 67.1 A12 12 0 0 0 322.9 59.6 L301.6 124.3"/><path stroke-width="1.8" fill="currentColor" fill-opacity="0.16" d="M336.4 80.5 L342.' +
+    '4 62.5 A7.4 7.4 0 0 0 328.2 57.9 L322.3 75.9 Q328.2 81.8 336.4 80.5 Z"/><path stroke-width="1.5" d="M331.2 91.9 Q324.9 91.9 319.8 88.1"/><path fill="c' +
+    'urrentColor" fill-opacity="0.08" d="M338.9 154.9 L379 108.8 A10.5 10.5 0 0 0 363.2 95 L323.1 141.1"/><path stroke-width="1.8" fill="currentColor" fill' +
+    '-opacity="0.16" d="M367.1 116.5 L377.9 104 A6.5 6.5 0 0 0 368.1 95.4 L357.2 107.9 Q360 114.7 367.1 116.5 Z"/><path stroke-width="1.5" d="M358.5 124.4 ' +
+    'Q353.2 122.5 350.5 117.6"/><path fill="currentColor" fill-opacity="0.08" d="M282.4 174.1 L226.3 126.5 A13 13 0 0 0 209.5 146.3 L265.6 193.9"/><path st' +
+    'roke-width="1.8" fill="currentColor" fill-opacity="0.16" d="M236 141.2 L220.4 127.9 A8.1 8.1 0 0 0 209.9 140.2 L225.6 153.5 Q233.9 150 236 141.2 Z"/><' +
+    'path stroke-width="1.5" d="M245.2 151 Q242.5 157.3 236.8 161"/><path stroke="none" fill="var(--surface)" d="M264 202L258 160C254 140 250 126 252 118L3' +
+    '30 124L339 151C342 164 334 178 324 188L314 202Z"/><path stroke="none" fill="currentColor" fill-opacity="0.08" d="M264 202L258 160C254 140 250 126 252 ' +
+    '118L330 124L339 151C342 164 334 178 324 188L314 202Z"/><path d="M250.5 133C249 140 250 146 252 152"/><path d="M262 192Q266 198 268 206"/><path d="M339' +
+    ' 151C342 164 334 178 324 188C320 192 316 196 314 200"/><path stroke-width="1.8" d="M270 212Q290 218 310 212"/></g>' };
 window.PICTURE_ART['leg-foot'] = { vb: [400, 420], svg:
     '<g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path fill="currentColor" fill-opacity="0.08" d' +
     '="M70 16C62 40 58 62 52 90C46 120 56 140 70 150C76 190 80 230 84 262C76 290 74 320 84 350C88 370 86 384 82 396C80 406 88 412 100 412L186 412C196 412 1' +

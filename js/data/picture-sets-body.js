@@ -100,17 +100,17 @@ window.PICTURE_SETS = (window.PICTURE_SETS || []).concat([
   { id: 'hand-arm', group: 'body', title: 'The arm and hand', lv: 'A2', kind: 'diagram', art: 'hand-arm',
     intro: 'The arm from the shoulder to the fingertips, with the Tagalog name of each finger.',
     parts: [
-      { id: 'kata', w: 'balikat', en: 'shoulder', lv: 'A1', x: 36, y: 262 },
-      { id: 'ude', w: 'braso', en: 'arm', lv: 'A1', x: 92, y: 270 },
-      { id: 'hiji', w: 'siko', en: 'elbow', lv: 'A2', x: 128, y: 292 },
-      { id: 'tekubi', w: 'pulso', en: 'wrist', lv: 'A2', x: 262, y: 212, alt: ['galanggalangan', 'galang-galangan'] },
-      { id: 'te', w: 'kamay', en: 'hand', lv: 'A1', x: 262, y: 168 },
-      { id: 'oyayubi', w: 'hinlalaki', en: 'thumb', lv: 'A2', x: 180, y: 140 },
-      { id: 'hitosashiyubi', w: 'hintuturo', en: 'index finger', lv: 'A2', x: 217, y: 84 },
-      { id: 'nakayubi', w: 'gitnang daliri', en: 'middle finger', lv: 'A2', x: 248, y: 70, alt: ['hinlalato', 'middle finger'] },
-      { id: 'kusuriyubi', w: 'palasingsingan', en: 'ring finger', lv: 'B1', x: 280, y: 82, alt: ['ring finger'] },
-      { id: 'koyubi', w: 'hinliliit', en: 'little finger', lv: 'A2', x: 310, y: 108 },
-      { id: 'tsume', w: 'kuko', en: 'nail', lv: 'A1', x: 248, y: 36 }
+      { id: 'kata', w: 'balikat', en: 'shoulder', lv: 'A1', x: 124, y: 300 },
+      { id: 'ude', w: 'braso', en: 'arm', lv: 'A1', x: 200, y: 350 },
+      { id: 'hiji', w: 'siko', en: 'elbow', lv: 'A2', x: 304, y: 368 },
+      { id: 'tekubi', w: 'pulso', en: 'wrist', lv: 'A2', x: 290, y: 226, alt: ['galanggalangan', 'galang-galangan'] },
+      { id: 'te', w: 'kamay', en: 'hand', lv: 'A1', x: 296, y: 160 },
+      { id: 'oyayubi', w: 'hinlalaki', en: 'thumb', lv: 'A2', x: 242, y: 158 },
+      { id: 'hitosashiyubi', w: 'hintuturo', en: 'index finger', lv: 'A2', x: 252, y: 92 },
+      { id: 'nakayubi', w: 'gitnang daliri', en: 'middle finger', lv: 'A2', x: 289, y: 82, alt: ['hinlalato', 'middle finger'] },
+      { id: 'kusuriyubi', w: 'palasingsingan', en: 'ring finger', lv: 'B1', x: 326, y: 94, alt: ['ring finger'] },
+      { id: 'koyubi', w: 'hinliliit', en: 'little finger', lv: 'A2', x: 352, y: 126 },
+      { id: 'tsume', w: 'kuko', en: 'nail', lv: 'A1', x: 310, y: 44 }
     ],
     say: [
       { tl: 'Nangangalay na po ang braso ko sa kakabuhat sa bata.', en: 'My arm aches from carrying the child.', p: 'ude' },

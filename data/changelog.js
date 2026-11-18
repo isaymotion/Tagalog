@@ -4,6 +4,14 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.18.0', date: '2026-11-18', title: 'Six more picture sets, two redrawn pictures',
+    items: [
+      { type: 'content', text: 'Picture words has six more pictures: shops in town, at the botika, kitchen tools, a bed on the ward, sports and hobbies, and clocks and the calendar. That is 87 more words and 60 more sentences for Listen and point.' },
+      { type: 'update', text: 'The arm and hand picture is redrawn with a full forearm and shoulder, and the kitchen picture now shows the burners of the stove. Their words are the same.' },
+      { type: 'content', text: 'All the new Tagalog is a draft for review. Words with two natural choices accept both when you type, for example cashier or kaha, bedsheet or kobre-kama, videoke or karaoke.' }
+    ]
+  },
+  {
     version: '3.17.0', date: '2026-11-18', title: 'Practise a lesson, Listen and reply, 640 more words',
     items: [
       { type: 'feature', text: 'Practise this lesson: every lesson page has a button to ten gap sentences on exactly what that lesson teaches. Each unit review has Practise this unit. There is also a lesson picker under Drills.' },

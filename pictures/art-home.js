@@ -75,17 +75,26 @@ window.PICTURE_ART['kitchen'] = { vb: [420, 320], svg: '<g fill="none" stroke="c
   '<path d="M102 46 L114 38 M102 60 L126 42" stroke-width="1.5"/>' +
   '<rect x="82" y="158" width="334" height="30" fill="currentColor" fill-opacity="0.06"/>' +
   '<rect x="86" y="188" width="326" height="82"/>' +
-  '<path d="M182 188 V270 M240 188 V270 M340 188 V270 M174 226 V240 M190 226 V240 M332 226 V240 M348 226 V240"/>' +
+  '<path d="M182 188 V270 M240 188 V270 M340 188 V270 M174 226 V240 M190 226 V240 M348 226 V240"/>' +
   '<rect x="96" y="163" width="80" height="20" rx="5" fill="currentColor" fill-opacity="0.16"/>' +
   '<path d="M137 163 V142 Q137 130 149 130 Q161 130 161 142 V150" stroke-width="3"/>' +
   '<polygon points="186,163 240,163 244,184 182,184" fill="currentColor" fill-opacity="0.1"/>' +
-  '<path d="M182 177 L202 170 L204 176 L184 183 Z" fill="currentColor" fill-opacity="0.2"/><path d="M204 168 L240 157 Q246 159 241 164 L205 176 Z" fill="var(--surface)"/>' +
-  '<ellipse cx="268" cy="173" rx="20" ry="5"/><ellipse cx="316" cy="173" rx="22" ry="5"/>' +
-  '<rect x="250" y="126" width="36" height="44" rx="3" fill="var(--surface)"/><rect x="250" y="126" width="36" height="44" rx="3" fill="currentColor" fill-opacity="0.1"/>' +
-  '<path d="M248 126 H288 M262 126 Q268 116 274 126 M250 138 H244 M286 138 H292"/>' +
-  '<path d="M292 162 Q294 178 316 178 Q338 178 340 162 Z" fill="var(--surface)"/><path d="M292 162 Q294 178 316 178 Q338 178 340 162 Z" fill="currentColor" fill-opacity="0.14"/>' +
-  '<path d="M340 166 L364 182" stroke-width="3"/>' +
-  '<rect x="250" y="194" width="84" height="20" rx="3"/><circle cx="266" cy="204" r="5"/><circle cx="318" cy="204" r="5"/>' +
+  '<rect x="184" y="171" width="22" height="9" rx="3" fill="currentColor" fill-opacity="0.2"/>' +
+  '<path d="M206 169 H241 Q239 179 206 182 Z" fill="var(--surface)"/><path d="M206 169 H241 Q239 179 206 182 Z" fill="currentColor" fill-opacity="0.06"/>' +
+  '<rect x="244" y="158" width="96" height="30" fill="var(--surface)"/><rect x="244" y="158" width="96" height="30" fill="currentColor" fill-opacity="0.16"/>' +
+  '<path d="M240 158 L246 148 H338 L344 158 Z" fill="var(--surface)"/><path d="M240 158 L246 148 H338 L344 158 Z" fill="currentColor" fill-opacity="0.12"/>' +
+  '<circle cx="256" cy="173" r="5"/><circle cx="272" cy="173" r="5"/><circle cx="312" cy="173" r="5"/><circle cx="328" cy="173" r="5"/>' +
+  '<path d="M256 168 V172 M272 168 V172 M312 168 V172 M328 168 V172" stroke-width="1.5"/>' +
+  '<ellipse cx="268" cy="153" rx="15" ry="3" stroke-width="1.5"/><ellipse cx="316" cy="153" rx="17" ry="3" stroke-width="1.5"/>' +
+  '<path d="M252 153 V138 M284 153 V138 M298 153 V138 M334 153 V138 M250 138 H257 M279 138 H286 M296 138 H303 M329 138 H336" stroke-width="2.5"/>' +
+  '<path d="M261 151 Q257 146 261 141 Q265 146 261 151 M268 151 Q263 145 268 138 Q273 145 268 151 M275 151 Q271 146 275 141 Q279 146 275 151" stroke-width="1.5"/>' +
+  '<path d="M309 151 Q305 146 309 141 Q313 146 309 151 M316 151 Q311 145 316 138 Q321 145 316 151 M323 151 Q319 146 323 141 Q327 146 323 151" stroke-width="1.5"/>' +
+  '<rect x="250" y="98" width="36" height="39" rx="3" fill="var(--surface)"/><rect x="250" y="98" width="36" height="39" rx="3" fill="currentColor" fill-opacity="0.1"/>' +
+  '<path d="M248 98 H288 M262 98 Q268 88 274 98 M250 110 H244 M286 110 H292"/>' +
+  '<path d="M290 124 Q292 137 316 137 Q340 137 342 124 Z" fill="var(--surface)"/><path d="M290 124 Q292 137 316 137 Q340 137 342 124 Z" fill="currentColor" fill-opacity="0.14"/>' +
+  '<path d="M341 127 L352 118" stroke-width="3"/>' +
+  '<rect x="248" y="194" width="88" height="70" rx="3"/><path d="M256 202 H328" stroke-width="3"/>' +
+  '<rect x="258" y="212" width="68" height="42" rx="3" fill="currentColor" fill-opacity="0.12"/>' +
   '<rect x="244" y="62" width="100" height="6" fill="currentColor" fill-opacity="0.12"/><path d="M254 68 V78 L264 68 M334 68 V78 L324 68"/>' +
   '<circle cx="262" cy="46" r="15" fill="var(--surface)"/><circle cx="262" cy="46" r="7" stroke-width="1.5"/>' +
   '<circle cx="290" cy="46" r="15" fill="var(--surface)"/><circle cx="290" cy="46" r="7" stroke-width="1.5"/>' +
