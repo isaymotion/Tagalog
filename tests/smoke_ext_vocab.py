@@ -77,7 +77,7 @@ async def checks(pg, name, fails):
     bad = await pg.evaluate(GEN)
     if bad: fails.append(f'{name}: vocab generators: {bad[:6]}')
     # Hub: seven tiles, topic list (one row per dictionary category), links.
-    if await pg.locator('#view .tile[data-mode]').count() != 8: fails.append(f'{name}: vocab hub tiles')  # 3.15.0: eight with In context
+    if await pg.locator('#view .tile[data-mode]').count() != 9: fails.append(f'{name}: vocab hub tiles')  # 3.15.0: eight with In context; 3.19.0: nine with Picture
     rows, cats = await pg.evaluate("[document.querySelectorAll('.vcat').length, Object.keys(App.CATS).filter((c) => App.DICT.some((e) => e.cat === c)).length]")
     if rows != cats or rows < 20: fails.append(f'{name}: vocab topic rows {rows} of {cats}')
     if not await pg.locator('.vcat[data-cat=food] a[href="#/flash/c-food"]').count() or not await pg.locator('.vcat[data-cat=food] a[href="#/vocab/match?cat=food"]').count(): fails.append(f'{name}: vocab topic links')
@@ -155,7 +155,7 @@ async def checks(pg, name, fails):
     t = await pg.inner_text('#view')
     if 'Vocabulary games tried' not in t or 'Picture sets tried' not in t: fails.append(f'{name}: progress rows')
     await go(pg, '#/practice')
-    if await pg.locator('#view a.tile[href^="#/vocab/"]').count() != 8: fails.append(f'{name}: practice vocab tiles')
+    if await pg.locator('#view a.tile[href^="#/vocab/"]').count() != 9: fails.append(f'{name}: practice vocab tiles')  # 3.19.0: nine with Picture
     await go(pg, '#/search?q=opposites', 250)
     if 'Opposites (vocabulary)' not in await pg.inner_text('#view'): fails.append(f'{name}: search does not find opposites')
     if not await pg.evaluate("App.views.home.toString().includes('#/vocab/match') && App.views.home.toString().includes('#/vocab/hear')"): fails.append(f'{name}: home rotation lacks vocab')
