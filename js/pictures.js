@@ -152,6 +152,7 @@
   // least 85% alike letter by letter (App.similarity compares words, so the letters are spaced out first).
   const clean = (s) => App.flat(s);
   const letters = (s) => clean(s).split('').join(' ');
+  App.letterSimilarity = (a, b) => App.similarity(letters(a), letters(b)); // 3.13.0: also used by js/vocab.js (Type the word)
   function typedOk(typed, p) {
     const t = clean(typed);
     if (!t) return false;

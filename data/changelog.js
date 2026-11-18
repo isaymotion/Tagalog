@@ -4,6 +4,16 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.13.0', date: '2026-11-18', title: 'Vocabulary practice: seven word games',
+    items: [
+      { type: 'feature', text: 'A new Vocabulary practice page with seven short games: Match the pairs, Opposites, What goes with it? (uminom ng gamot, magsipilyo ng ngipin), Odd one out, Type the word, Hear the word, and Guess the meaning from the parts.' },
+      { type: 'feature', text: 'Choose the words to practise: your mistakes and cards due, all words, or one topic of the dictionary.' },
+      { type: 'feature', text: 'Your words by topic: for each topic, how many words there are, how many are in your flashcards and how many you know well.' },
+      { type: 'content', text: '70 pairs of opposites, 77 word partners and 50 odd-one-out sets.' },
+      { type: 'update', text: 'The daily mix can now also draw from opposites, word partners, odd one out and word parts.' }
+    ]
+  },
+  {
     version: '3.12.0', date: '2026-11-18', title: 'Seven more grammar drills and a printable drill sheet',
     items: [
       { type: 'feature', text: 'Choose the aspect: 534 sentences from the verb trainer with the verb taken out. Pick the form that fits the English: done, going on, still to come, or the plain form.' },

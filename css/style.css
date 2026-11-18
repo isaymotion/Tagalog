@@ -1035,3 +1035,20 @@ mark.vf { background: var(--warn-bg); color: var(--gold-ink); font-weight: 700; 
 .gh-dopts { color: var(--p-muted); font-size: .92em; }
 .gh-dask { font-style: italic; color: var(--p-muted); font-size: .92em; }
 .gh-wsB .gh-den { display: block; color: var(--p-muted); font-size: .9em; }
+
+/* 3.13.0 Vocabulary practice (js/vocab.js): Match the pairs, topic list */
+.vmatch { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.vcol { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.vtile { min-height: 52px; padding: 8px 10px; border: 1px solid var(--rule); border-radius: var(--r-md); background: var(--surface); color: var(--ink); font: 600 .95rem/1.25 var(--sans); text-align: left; cursor: pointer; overflow-wrap: break-word; hyphens: auto; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+.vtile small { font: 400 .8rem/1.2 var(--sans); color: var(--muted); }
+.vtile:hover:not(:disabled) { border-color: var(--ink-3); }
+.vtile.sel { border-color: var(--focus); box-shadow: inset 0 0 0 2px var(--focus); }
+.vtile.right { border-color: var(--good); background: var(--good-bg); cursor: default; opacity: 1; }
+.vtile.miss { border-color: var(--bad); background: var(--bad-bg); animation: vshake .3s; }
+@keyframes vshake { 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+@media (prefers-reduced-motion: reduce) { .vtile.miss { animation: none; } }
+.vcats { padding-top: 4px; padding-bottom: 4px; }
+.vcat { padding: 10px 0; border-top: 1px solid var(--rule); }
+.vcat:first-child { border-top: 0; }
+.vcat .spread { gap: 8px; }
+.progress.vbar { height: 4px; margin-top: 6px; }

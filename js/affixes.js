@@ -163,4 +163,5 @@
   };
 
   App.affixPieces = pieces; // for tests
+  App.affixLabel = affixLabel; // 3.13.0: js/vocab.js (Guess the meaning from the parts)
 })();
