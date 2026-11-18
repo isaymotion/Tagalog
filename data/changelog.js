@@ -4,6 +4,12 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.10.1', date: '2026-11-18', title: 'TV is said correctly',
+    items: [
+      { type: 'correction', text: 'The recorded voice said TV as "tebai". It now says ti-bi everywhere TV appears: the picture words, the dictionary and every sentence with the word. The new recordings arrive a few minutes after the update.' }
+    ]
+  },
+  {
     version: '3.10.0', date: '2026-11-18', title: 'Picture words, body map, signs and buttons, picture lessons',
     items: [
       { type: 'feature', text: 'Picture words (Practice, Pictures): 38 picture sets with 509 everyday and ward words. 23 are labelled drawings (the body front and back, face, arm and hand, leg and foot, inside the body, a house, living room, kitchen, bathroom, bedroom, a street, a station, a hospital floor plan, where things are, a dog and a bird, a car, a bicycle, computer and phone, a meal tray, clothes, a landscape, a family tree) and 15 are picture cards (animals, food, vehicles, things on the ward, weather, feelings, the daily routine and more). Four ways to practise each set: Learn by tapping, Identify, Label it (choose or type) and Listen and point, with 380 sentences.' },

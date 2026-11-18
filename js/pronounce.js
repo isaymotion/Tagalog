@@ -16,8 +16,9 @@
   //   - part of an all-caps heading: one or more capital words that open the text or a sentence and end in ":" or a
   //     dash (PARA SA:, PAKSA:, SAN ISIDRO —).
   // tests/data_check.js (dev-tools) prints every all-caps word in the spoken texts with the way it will be read.
-  const WORDS = new Set(['OK', 'PAGASA', 'COVID', 'NAIA', 'ASEAN', 'UNICEF', 'NASA', 'CIWA', 'NEDA', 'TESDA', 'SONA', 'AIDS', 'LASIK', 'SIM', 'PIN', 'WIFI']);
-  const SAY_AS = { OK: 'okey', CIWA: 'siwa', WIFI: 'wayfay', SIM: 'sim', PIN: 'pin', AIDS: 'eyds' };
+  const WORDS = new Set(['OK', 'PAGASA', 'COVID', 'NAIA', 'ASEAN', 'UNICEF', 'NASA', 'CIWA', 'NEDA', 'TESDA', 'SONA', 'AIDS', 'LASIK', 'SIM', 'PIN', 'WIFI', 'TV']);
+  // TV: the letter names ti-bi came out as "tebai" when the word stood alone; she chose tibi by ear (2026-11-18).
+  const SAY_AS = { OK: 'okey', CIWA: 'siwa', WIFI: 'wayfay', SIM: 'sim', PIN: 'pin', AIDS: 'eyds', TV: 'tibi' };
   // Headwords written all in capitals (NCMH, CR) are acronym entries and are left out, so they stay acronyms.
   let dict = null; // lower-case Tagalog headwords, built on first use (DICT_RAW is loaded before this runs)
   const inDict = (w) => {
