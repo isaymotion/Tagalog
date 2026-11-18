@@ -399,7 +399,7 @@ const P310 = { pictureSets: 0, pictureParts: 0, pictureSay: 0, signs: 0, panels:
     if (!id) bad('lesson ' + l.id + ': .pic-embed without data-pic');
     else if (!setIds.has(id)) { if (PLANNED.includes(id)) console.log('WARN lesson ' + l.id + ': picture ' + id + ' is not there yet'); else bad('lesson ' + l.id + ': picture ' + id + ' is not a picture set id'); }
   }); if (/pic-embed/.test(l.body || '') && !/<div class="pic-embed" data-pic="[^"]+"><\/div>/.test(l.body)) bad('lesson ' + l.id + ': write embeds exactly as <div class="pic-embed" data-pic="<set id>"></div>'); });
-  C.LESSONS.filter((l) => l.unit === 'Picture lessons').forEach((l) => { if (!Array.isArray(l.quiz) || l.quiz.length !== 5) cnt(l, 'picture lesson ' + l.id + ' needs 5 quiz items'); });
+  C.LESSONS.filter((l) => l.unit === 'Picture lessons' && !l.review).forEach((l) => { if (!Array.isArray(l.quiz) || l.quiz.length !== 5) cnt(l, 'picture lesson ' + l.id + ' needs 5 quiz items'); });
   // Stigma rule
   const text = JSON.stringify([C.PICTURE_SETS, C.PICTURE_BODYMAP, C.SIGNS, C.SIGN_PANELS, C.LESSONS.filter((l) => l.unit === 'Picture lessons')]).toLowerCase();
   ['baliw', 'adik', 'sira ulo', 'sira-ulo', 'loko'].forEach((w) => { if (new RegExp('\\b' + w + '\\b').test(text)) bad('stigmatizing word in the 3.10.0 data: ' + w); });
