@@ -105,6 +105,51 @@
   (window.VERBS || []).forEach((v) => { const r = flat(v.r); if (!byRoot.has(r)) byRoot.set(r, []); });
   App.byRoot = byRoot; App.byHead = byHead;
 
+  // 3.15.0: one example sentence per dictionary word (window.DICT_EX, js/data/examples-*.js): rows
+  // [key, sentence, english, form?], key = 'tagalog|english' (the first two fields of the dictionary line; readDict only
+  // trims them, so e.tl + '|' + e.en is the same text). Indexed on first use; the first row for a key wins; malformed rows
+  // are skipped. form = the word as it appears in the sentence (row[3], else the first alternative of the headword).
+  // Stigmatizing words never get an example. Search does not index these sentences.
+  let exIdx = null, exN = null;
+  const exIndex = () => {
+    if (exIdx) return exIdx;
+    exIdx = new Map();
+    (Array.isArray(window.DICT_EX) ? window.DICT_EX : []).forEach((x) => {
+      if (!Array.isArray(x) || typeof x[0] !== 'string' || typeof x[1] !== 'string' || typeof x[2] !== 'string' || !x[1].trim() || !x[2].trim() || exIdx.has(x[0])) return;
+      exIdx.set(x[0], x);
+    });
+    return exIdx;
+  };
+  App.exampleOf = (e) => {
+    const x = e && e.cat !== 'stigma' && exIndex().get(e.tl + '|' + e.en);
+    if (!x) return null;
+    return { tl: x[1].trim(), en: x[2].trim(), form: (typeof x[3] === 'string' && x[3].trim()) || e.tl.split(' / ')[0].trim() };
+  };
+  App.exampleCount = () => (exN != null ? exN : (exN = DICT.filter((e) => App.exampleOf(e)).length)); // dictionary words that have one
+  // Where the form stands in the sentence as a whole word (case-insensitive; letters, digits and hyphens join a word):
+  // [start, end, linkerEnd] of the first match, or null. The form may carry the linker (-ng after a vowel, -g after n:
+  // "tatlumpung araw", "nakaraang buwan"), used only when the bare form is not there; linkerEnd then includes it.
+  const WCH = /[a-zA-Z0-9\u00f1\u00d1\u00c0-\u024f-]/;
+  App.exampleFind = (s, form) => {
+    s = String(s || ''); const f = String(form || '').toLowerCase(), low = s.toLowerCase();
+    if (!f) return null;
+    const free = (k) => k >= s.length || !WCH.test(s[k]);
+    let lk = null;
+    for (let i = low.indexOf(f); i >= 0; i = low.indexOf(f, i + 1)) {
+      const j = i + f.length;
+      if (i > 0 && WCH.test(s[i - 1])) continue;
+      if (free(j)) return [i, j, j];
+      const L = /[aeiou]$/.test(f) ? 'ng' : /n$/.test(f) ? 'g' : '';
+      if (!lk && L && low.slice(j, j + L.length) === L && free(j + L.length)) lk = [i, j, j + L.length];
+    }
+    return lk;
+  };
+  // The sentence as HTML with the form marked (<mark class="exw">); no mark when the form is not found.
+  App.exampleMarked = (ex) => {
+    const r = App.exampleFind(ex.tl, ex.form);
+    return r ? esc(ex.tl.slice(0, r[0])) + '<mark class="exw">' + esc(ex.tl.slice(r[0], r[2])) + '</mark>' + esc(ex.tl.slice(r[2])) : esc(ex.tl);
+  };
+
   App.CATS = {
     basics: 'Basics & greetings', particles: 'Particles', grammar: 'Grammar words', pronouns: 'Pronouns', questions: 'Question words',
     numbers: 'Numbers', time: 'Time & dates', colors: 'Colors', people: 'People', family: 'Family & kinship', body: 'Body',
@@ -213,7 +258,7 @@
   (Array.isArray(window.PICTURE_SETS) ? window.PICTURE_SETS : []).forEach((x) => { if (x && x.id) push('Picture', x.title || x.id, x.intro || '', (x.parts || []).map((pt) => (pt && (pt.w || '') + ' ' + (pt.en || '')) || '').join(' '), '#/pictures/' + x.id); });
   { const sg = window.SIGNS || {}; (sg.groups || []).forEach((g) => { if (g && g.id) push('Signs', g.title || g.id, g.note || '', (sg.signs || []).filter((x) => x && x.g === g.id).map((x) => (x.tl || '') + ' ' + (x.en || '')).join(' '), '#/signs?tab=learn&g=' + encodeURIComponent(g.id)); }); }
   (Array.isArray(window.SIGN_PANELS) ? window.SIGN_PANELS : []).forEach((x) => { if (x && x.id) push('Panel', x.title || x.id, x.note || '', (x.tasks || []).map((t) => (t && (t.q || '') + ' ' + (t.en || '')) || '').join(' '), '#/signs?tab=panels&p=' + encodeURIComponent(x.id)); });
-  [['Picture words: learn words from pictures', '#/pictures'], ['Body map: where does it hurt?', '#/pictures/bodymap'], ['Signs and buttons: signs, labels and machine panels', '#/signs'], ['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Panlapi affix trainer', '#/affixes'], ['Grammar drills', '#/drills'], ['Vocabulary practice: word games', '#/vocab'], ['Match the pairs (vocabulary)', '#/vocab/match'], ['Opposites (vocabulary)', '#/vocab/opp'], ['What goes with it? Words that go together (collocations)', '#/vocab/col'], ['Odd one out (vocabulary)', '#/vocab/odd'], ['Type the word (vocabulary)', '#/vocab/type'], ['Hear the word (vocabulary listening)', '#/vocab/hear'], ['Guess the meaning from the parts (affixes)', '#/vocab/affix'], ['Choose the marker drill (ang, ng, sa)', '#/drills/markers'], ['Build the sentence drill (word order)', '#/drills/build'], ['Formal or everyday drill (register)', '#/drills/switch'], ['Find the root drill', '#/drills/roots'], ['Word families drill', '#/drills/families'], ['Numbers, times and doses dictation drill', '#/drills/dictation'], ['Say it in Tagalog translation drill (typed)', '#/drills/translate'], ['Daily mix (5-minute mixed review)', '#/daily'], ['Switch the focus drill (actor and object focus)', '#/drills/focus'], ['Find the mistake drill', '#/drills/errors'], ['Same spelling, different stress drill', '#/drills/stress'], ['Choose the aspect drill (completed, ongoing, future)', '#/drills/aspect'], ['Na, -ng or nothing? Linker drill', '#/drills/linker'], ['Choose the small word drill (na, pa, lang, muna, pala)', '#/drills/particle'], ['Ako, ko or akin? Pronoun drill', '#/drills/pronoun'], ['Choose the question word drill', '#/drills/qword'], ['Hindi, wala or huwag? Negation drill', '#/drills/negation'], ['Change the sentence drill (question, negative, respectful, time)', '#/drills/change'], ['Stress pairs: one spelling, two words', '#/words?tab=str'], ['Spanish and English words: false friends and look-alikes', '#/words?tab=look'], ['Word families', '#/words'], ['Mild to strong: words for feelings', '#/words?tab=lad'], ['Deep, everyday and Taglish words', '#/words?tab=syn'], ['Panlapi handout (print)', '#/affixes/handout'], ['Verb handout (print)', '#/verbs/handout'], ['Lesson handout (print)', '#/lessons/handout'], ['Reading handout (print)', '#/reading/handout'], ['Dialogue handout (print)', '#/speak/handout'], ['Listening handout (print)', '#/listen/handout'], ['Drills handout (print): grammar worksheet with answer key', '#/drills/handout'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp'], ['Listening drill', '#/psych/listen'], ['Point board (Ituro): patient points to the answer', '#/psych/point'], ['De-escalation checklist', '#/psych/deesc'], ['Discharge assessment', '#/psych/discharge'], ['Discharge practice cases', '#/psych/dcases'], ['Admission MSE practice', '#/psych/mcases'], ['Printable handout', '#/psych/handout'], ['Mood episode checker', '#/psych/mood'], ['Substance use screener', '#/psych/sud'], ['Withdrawal and agitation', '#/psych/withdrawal'], ['MSE interviewer sheet', '#/psych/mse-sheet'], ['Practice', '#/practice'], ['Psychiatry cases', '#/psych?tab=cases'], ['Ward tools', '#/psych?tab=tools'], ['Print', '#/psych?tab=print'], ['Lessons', '#/lessons'], ['Reading', '#/reading'], ['Listening exercises', '#/listen'], ['Speaking', '#/speak'], ['Case simulations', '#/psych/cases'], ['More', '#/more']]
+  [['Picture words: learn words from pictures', '#/pictures'], ['Body map: where does it hurt?', '#/pictures/bodymap'], ['Signs and buttons: signs, labels and machine panels', '#/signs'], ['Flashcards', '#/flash'], ['Verb trainer', '#/verbs'], ['Panlapi affix trainer', '#/affixes'], ['Grammar drills', '#/drills'], ['Vocabulary practice: word games', '#/vocab'], ['Match the pairs (vocabulary)', '#/vocab/match'], ['Opposites (vocabulary)', '#/vocab/opp'], ['What goes with it? Words that go together (collocations)', '#/vocab/col'], ['Odd one out (vocabulary)', '#/vocab/odd'], ['Type the word (vocabulary)', '#/vocab/type'], ['Hear the word (vocabulary listening)', '#/vocab/hear'], ['In context (vocabulary): fill the gap in example sentences', '#/vocab/context'], ['Guess the meaning from the parts (affixes)', '#/vocab/affix'], ['Choose the marker drill (ang, ng, sa)', '#/drills/markers'], ['Build the sentence drill (word order)', '#/drills/build'], ['Formal or everyday drill (register)', '#/drills/switch'], ['Find the root drill', '#/drills/roots'], ['Word families drill', '#/drills/families'], ['Numbers, times and doses dictation drill', '#/drills/dictation'], ['Say it in Tagalog translation drill (typed)', '#/drills/translate'], ['Daily mix (5-minute mixed review)', '#/daily'], ['Switch the focus drill (actor and object focus)', '#/drills/focus'], ['Find the mistake drill', '#/drills/errors'], ['Same spelling, different stress drill', '#/drills/stress'], ['Choose the aspect drill (completed, ongoing, future)', '#/drills/aspect'], ['Na, -ng or nothing? Linker drill', '#/drills/linker'], ['Choose the small word drill (na, pa, lang, muna, pala)', '#/drills/particle'], ['Ako, ko or akin? Pronoun drill', '#/drills/pronoun'], ['Choose the question word drill', '#/drills/qword'], ['Hindi, wala or huwag? Negation drill', '#/drills/negation'], ['Change the sentence drill (question, negative, respectful, time)', '#/drills/change'], ['Stress pairs: one spelling, two words', '#/words?tab=str'], ['Spanish and English words: false friends and look-alikes', '#/words?tab=look'], ['Word families', '#/words'], ['Mild to strong: words for feelings', '#/words?tab=lad'], ['Deep, everyday and Taglish words', '#/words?tab=syn'], ['Panlapi handout (print)', '#/affixes/handout'], ['Verb handout (print)', '#/verbs/handout'], ['Lesson handout (print)', '#/lessons/handout'], ['Reading handout (print)', '#/reading/handout'], ['Dialogue handout (print)', '#/speak/handout'], ['Listening handout (print)', '#/listen/handout'], ['Drills handout (print): grammar worksheet with answer key', '#/drills/handout'], ['Placement test', '#/placement'], ['Progress', '#/progress'], ['Settings', '#/settings'], ["What's New", '#/new'], ['About', '#/about'], ['Dictionary', '#/dict'], ['Interpretation drill', '#/psych/interp'], ['Listening drill', '#/psych/listen'], ['Point board (Ituro): patient points to the answer', '#/psych/point'], ['De-escalation checklist', '#/psych/deesc'], ['Discharge assessment', '#/psych/discharge'], ['Discharge practice cases', '#/psych/dcases'], ['Admission MSE practice', '#/psych/mcases'], ['Printable handout', '#/psych/handout'], ['Mood episode checker', '#/psych/mood'], ['Substance use screener', '#/psych/sud'], ['Withdrawal and agitation', '#/psych/withdrawal'], ['MSE interviewer sheet', '#/psych/mse-sheet'], ['Practice', '#/practice'], ['Psychiatry cases', '#/psych?tab=cases'], ['Ward tools', '#/psych?tab=tools'], ['Print', '#/psych?tab=print'], ['Lessons', '#/lessons'], ['Reading', '#/reading'], ['Listening exercises', '#/listen'], ['Speaking', '#/speak'], ['Case simulations', '#/psych/cases'], ['More', '#/more']]
     .forEach(([t, r]) => push('Page', t, '', '', r));
   App.searchAll = (q, limit) => {
     const nq = norm(q);

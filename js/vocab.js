@@ -5,7 +5,9 @@
    type   Type the word: English to Tagalog, typed; near misses on long words pass as "Almost"
    hear   Hear the word: the word is played, pick the meaning (cardId = dictionary id)
    affix  Guess the meaning from the parts: root + affixes, pick the meaning
-   Word source (match, type, hear): ?cat=<key> or state.settings.vocabCat; 'mine' = mistakes and due cards, 'all', a category.
+   context In context (3.15.0): a dictionary word's example sentence (App.exampleOf, js/data/examples-*.js) with the word
+          blanked; pick it among four words of the same part of speech (cardId = dictionary id)
+   Word source (match, type, hear, context): ?cat=<key> or state.settings.vocabCat; 'mine' = mistakes and due cards, 'all', a category.
    Best scores: state.done.vocab['<mode>:<source>']. "Your words by topic" under the tiles; one row on #/progress. */
 (function () {
   const { esc, shuffle, pick, norm } = App;
@@ -30,7 +32,9 @@
     { id: 'hear', title: 'Hear the word', eyebrow: 'Listening · 10 words', src: true, blurb: 'Hear a word, pick its meaning.',
       intro: 'A word is played. Choose what it means; the word is shown after you answer. Words you miss go to My mistakes.' },
     { id: 'affix', title: 'Guess the meaning from the parts', eyebrow: 'Word parts · 10 questions', blurb: 'Root plus affixes: work out what the word means.',
-      intro: 'Each word is shown with its root and its affixes. Use what the affix adds to choose the meaning. The wrong answers often share the root, so read the affix.' }
+      intro: 'Each word is shown with its root and its affixes. Use what the affix adds to choose the meaning. The wrong answers often share the root, so read the affix.' },
+    { id: 'context', title: 'In context', eyebrow: 'Vocabulary · 10 sentences', src: true, draft: true, blurb: 'A sentence with one word missing. Pick the word that fits.',
+      intro: 'Each sentence has one word missing, with its meaning in English under it. Choose the Tagalog word that fits. You hear the whole sentence after you answer. Words you miss go to My mistakes.' }
   ];
   const byId = (id) => MODES.find((m) => m.id === id);
   const bestOf = (id) => { const o = App.state.done.vocab || {}; const v = Object.keys(o).filter((k) => k.split(':')[0] === id).map((k) => o[k]); return v.length ? Math.max(...v) : null; };
@@ -131,7 +135,43 @@
         exp: it.w + ' = ' + it.en + '.' + (aff ? ' ' + aff.a + ': ' + aff.en : '') };
     });
   }
-  App.vocabQs = { opp: oppQs, col: colQs, odd: oddQs, hear: hearQs, affix: affixQs };
+  // In context: the example sentence with the first whole-word match of its form blanked. Wrong options: other headwords
+  // of the same part of speech (the same topic first, when it has three), never one with the answer's English, never
+  // another form of the same root; one-word answers get one-word options first.
+  const head = (e) => e.tl.split(' / ')[0].trim();
+  const rootKey = (e) => App.flat(e.root || head(e));
+  const ctxCache = new Map();
+  const ctxOf = (e) => {
+    if (ctxCache.has(e.id)) return ctxCache.get(e.id);
+    const ex = App.exampleOf ? App.exampleOf(e) : null, r = ex && App.exampleFind(ex.tl, ex.form);
+    const c = r ? { q: ex.tl.slice(0, r[0]) + '____' + ex.tl.slice(r[1]), tl: ex.tl, en: ex.en } : null;
+    ctxCache.set(e.id, c);
+    return c;
+  };
+  const hasCtx = (e) => !!ctxOf(e);
+  const sameRoot = (a, b) => { const ra = rootKey(a), rb = rootKey(b); return ra === rb || ra === App.flat(head(b)) || rb === App.flat(head(a)); };
+  function contextQs(n, cat) {
+    const { pool } = poolFor(cat || 'all', 8, hasCtx);
+    const all = App.vocabPool('all');
+    return distinct(pool, n).map((e) => {
+      const c = ctxOf(e), one = oneWord({ tl: head(e) });
+      const ok = (x) => x.id !== e.id && x.pos === e.pos && x.nen !== e.nen && App.flat(head(x)) !== App.flat(head(e)) && !sameRoot(x, e) && !App.exampleFind(c.tl, head(x));
+      const cands = all.filter(ok), sameCat = cands.filter((x) => x.cat === e.cat);
+      const first = sameCat.length >= 3 ? sameCat : cands;
+      const rank = (list) => shuffle(list).sort((a, b) => (oneWord({ tl: head(b) }) === one) - (oneWord({ tl: head(a) }) === one));
+      const wrong = [], seenTl = new Set([App.flat(head(e))]), seenEn = new Set([e.nen]), eKey = rootKey(e), eRoots = App.findRoots(head(e));
+      for (const x of rank(first).concat(rank(cands))) {
+        if (wrong.length >= 3) break;
+        const f = App.flat(head(x));
+        if (seenTl.has(f) || seenEn.has(x.nen)) continue;
+        if (App.findRoots(head(x)).includes(eKey) || eRoots.includes(rootKey(x))) continue; // natutulog is a form of tulog
+        seenTl.add(f); seenEn.add(x.nen); wrong.push(x);
+      }
+      const opts = [e].concat(wrong);
+      return { q: c.q, sub: c.en, tlq: true, tlo: true, sayAfter: c.tl, opts: opts.map(head), ids: opts.map((x) => x.id), a: 0, cardId: e.id, exp: head(e) + ' = ' + e.en + '.' };
+    }).filter((q) => q.opts.length === 4);
+  }
+  App.vocabQs = { opp: oppQs, col: colQs, odd: oddQs, hear: hearQs, affix: affixQs, context: contextQs };
 
   /* ---------- Match the pairs ---------- */
   // Rounds of five pairs { l, le, r, re, say }; within a round no two pairs share an English gloss.
@@ -262,7 +302,15 @@
   const RUN = {
     match: runMatch, type: runType,
     opp: quiz(() => oppQs(N), 'opp:all'), col: quiz(() => colQs(N), 'col:all'), odd: quiz(() => oddQs(N), 'odd:all'), affix: quiz(() => affixQs(N), 'affix:all'),
-    hear: (box, src) => { const used = poolFor(src, 4).src; return quiz(() => hearQs(N, used), 'hear:' + used)(box); }
+    hear: (box, src) => { const used = poolFor(src, 4).src; return quiz(() => hearQs(N, used), 'hear:' + used)(box); },
+    context: (box, src) => {
+      const used = poolFor(src, 8, hasCtx).src, qs = contextQs(N, used);
+      if (!qs.length) { box.innerHTML = '<div class="notice info">No example sentences are loaded yet. Try another game.</div><div class="row" style="margin-top:10px">' + ALL + '</div>'; return; }
+      const inner = document.createElement('div');
+      box.innerHTML = used !== src ? '<div class="notice info" style="margin-bottom:10px">Not enough sentences there yet, so this game uses all words.</div>' : '';
+      box.appendChild(inner);
+      App.runQuiz(inner, qs, { onDone: (r, k) => saveBest('context:' + used, r, k), after: ALL });
+    }
   };
   const tileHTML = (m) => { const b = bestOf(m.id); return '<a class="tile" href="#/vocab/' + m.id + '" data-mode="' + m.id + '"><span class="eyebrow">' + esc(m.eyebrow) + '</span><h3>' + esc(m.title) + '</h3><p>' + esc(m.blurb) + '</p>' +
     '<div class="meta row"><span class="pill' + (b != null ? ' good' : '') + '">' + (b != null ? 'Best ' + b + '%' : 'Not tried yet') + '</span></div></a>'; };
@@ -277,7 +325,7 @@
   };
   App.vocabCatStats = catStats;
   V.vocab = (el) => {
-    el.innerHTML = '<h1>Vocabulary practice</h1><p class="muted">Seven short word games: matching, opposites, words that go together, odd one out, typing, listening and word parts.</p>' +
+    el.innerHTML = '<h1>Vocabulary practice</h1><p class="muted">Eight short word games: matching, opposites, words that go together, odd one out, typing, listening, word parts and words in context.</p>' +
       '<div class="grid">' + App.vocabTiles() + '</div>' +
       '<h2 style="margin-top:22px">Your words by topic</h2><p class="muted small">Words in the dictionary, how many are in your flashcards, and how many you know well. Tap a topic to open its flashcards.</p>' +
       '<div class="card vcats">' + catStats().map((x) => '<div class="vcat" data-cat="' + x.c + '"><div class="spread"><a href="#/flash/c-' + x.c + '"><b>' + esc(x.label) + '</b></a>' +
@@ -311,5 +359,5 @@
   App.progressExtra = (st) => (prevExtra ? prevExtra(st) : []).concat([['Vocabulary games tried', MODES.filter((m) => Object.keys((st.done && st.done.vocab) || {}).some((k) => k.split(':')[0] === m.id)).length, MODES.length]]);
 
   // Daily mix (js/drills.js reads App.dailyExtra).
-  App.dailyExtra = (App.dailyExtra || []).concat([['Opposites', () => App.vocabQs.opp(1)], ['What goes with it', () => App.vocabQs.col(1)], ['Odd one out', () => App.vocabQs.odd(1)], ['Word parts', () => App.vocabQs.affix(1)]]);
+  App.dailyExtra = (App.dailyExtra || []).concat([['Opposites', () => App.vocabQs.opp(1)], ['What goes with it', () => App.vocabQs.col(1)], ['Odd one out', () => App.vocabQs.odd(1)], ['Word parts', () => App.vocabQs.affix(1)]].concat(App.vocabPool('all').some(hasCtx) ? [['In context', () => App.vocabQs.context(1)]] : [])); // In context only once sentences are loaded
 })();

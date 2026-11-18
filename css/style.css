@@ -1075,3 +1075,14 @@ mark.vf { background: var(--warn-bg); color: var(--gold-ink); font-weight: 700; 
 @media print {
   .lx-bad, .lesson-body .ex.lx-ok { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+/* 3.15.0 Example sentences (App.exampleOf): word page, flashcard back, In context game */
+.wex { border-left: 3px solid var(--gold); padding: 2px 0 2px 12px; display: grid; gap: 4px; min-width: 0; }
+.wex-s { display: flex; align-items: flex-start; gap: 8px; min-width: 0; }
+.wex-s .tl { flex: 1 1 auto; min-width: 0; overflow-wrap: break-word; font-size: 1.05rem; line-height: 1.45; }
+.wex-s .say { margin-top: -2px; }
+.wex .muted { font-size: .95rem; overflow-wrap: break-word; }
+mark.exw { background: var(--mark); color: inherit; font-weight: 700; border-radius: 4px; padding: 0 2px; }
+.flash .fcex { margin: 14px auto 0; padding-top: 12px; border-top: 1px dashed var(--rule); max-width: 34rem; display: grid; gap: 4px; font-size: .92rem; text-align: left; }
+.flash .fcex .wex-s .tl { font-size: 1rem; }
+.flash .fcex .say { width: 30px; height: 30px; }
+.flash .fcex .muted { font-size: .88rem; overflow-wrap: break-word; }

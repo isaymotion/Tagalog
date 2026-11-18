@@ -17,6 +17,8 @@ const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'),
 // order file, which builds the review lessons into LESSONS (so the lesson-body sweep below records their examples).
 fs.readdirSync(path.join(root, 'js/data')).filter((f) => /^lesson-extra-\d+\.js$/.test(f)).sort((a, b) => parseInt(a.slice(13), 10) - parseInt(b.slice(13), 10)).forEach((f) => load('js/data/' + f));
 ['js/data/lessons-review.js', 'js/data/lessons-zz-order.js'].filter((f) => fs.existsSync(path.join(root, f))).forEach(load);
+// 3.15.0: example sentences of dictionary words (any of the six parts that exist).
+fs.readdirSync(path.join(root, 'js/data')).filter((f) => /^examples-\d+\.js$/.test(f)).sort((a, b) => parseInt(a.slice(9), 10) - parseInt(b.slice(9), 10)).forEach((f) => load('js/data/' + f));
 
 const out = new Map();
 const caps = new Map(); // every all-caps word in spoken text → how the voice will say it (written to tools/caps.json)
@@ -93,6 +95,8 @@ add('Magandang umaga po. Kumusta po kayo?'); // settings voice test
 (ctx.DRILL_CHANGE || []).forEach((it) => { add(it.from); add(it.to); (it.alt || []).forEach((a) => add(a)); });
 // 3.13.0: vocabulary practice (js/vocab.js): both words of each opposite, and each collocation as one expression. Odd one out is not recorded.
 (ctx.WORD_PAIRS || []).forEach((x) => { if (x.type === 'opp') { add(x.a); add(x.b); } else if (x.type === 'col') add(x.a + ' ' + x.b); });
+// 3.15.0: each dictionary word's example sentence (word page, card back, In context game: the full sentence, never the gap).
+(Array.isArray(ctx.DICT_EX) ? ctx.DICT_EX : []).forEach((x) => { if (Array.isArray(x) && typeof x[1] === 'string') add(x[1]); });
 
 // 3.10.0: picture words (each part's word and every listen-and-point sentence), signs (not the English-only ones), the Tagalog
 // request of each panel task (control labels are printed English and are not recorded) and the body map lines.

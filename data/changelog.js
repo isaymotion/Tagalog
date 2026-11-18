@@ -4,6 +4,15 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.15.0', date: '2026-11-18', title: 'An example sentence for every word',
+    items: [
+      { type: 'feature', text: 'Every dictionary word now has an example sentence with audio. It shows on the word\'s page, with the word highlighted, and on the back of its flashcard.' },
+      { type: 'feature', text: 'In context, a new game on the Vocabulary practice page: ten sentences with a word missing. Choose the word that fits among four of the same kind. Words you miss go to My mistakes.' },
+      { type: 'update', text: 'The daily mix can now also draw an In context question.' },
+      { type: 'content', text: '2,128 example sentences: ward, clinic and family-visit sentences for health, mind and feeling words, everyday sentences for the rest. All drafted for study and pending review by a native speaker.' }
+    ]
+  },
+  {
     version: '3.14.0', date: '2026-11-18', title: 'Lesson extras, nine units and unit reviews',
     items: [
       { type: 'feature', text: 'Every lesson now ends with Common mistakes: the wrong line is struck through, then the correct line with audio and a short reason.' },
