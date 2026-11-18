@@ -99,9 +99,9 @@ async def checks(pg, name, fails):
         other.forEach((t) => seen.add(t));
         qs.forEach((q) => { if (!q.q || q.opts.length < 2 || new Set(q.opts).size !== q.opts.length || !(q.a >= 0 && q.a < q.opts.length) || !q.sub) out.push('q ' + q.q); }); }
       if (seen.size < 12) out.push('only ' + seen.size + ' parts seen in 20 mixes');
-      App.dailyExtra = [['Extra test part', () => [{ q: 'x', opts: ['a', 'b'], a: 0 }]]]; let hit = 0;
+      const keepExtra = App.dailyExtra; App.dailyExtra = [['Extra test part', () => [{ q: 'x', opts: ['a', 'b'], a: 0 }]]]; let hit = 0;
       for (let k = 0; k < 60; k++) { const qs = App.drillQs.daily(); if (qs.length !== 10) out.push('extra length'); if (qs.some((q) => q.sub.startsWith('Extra test part'))) hit++; }
-      delete App.dailyExtra; if (!hit) out.push('dailyExtra never drawn');
+      App.dailyExtra = keepExtra; if (!hit) out.push('dailyExtra never drawn');
       return out; })()""")
     if bad: fails.append(f'{name}: daily mix: {bad[:4]}')
     await go(pg, '#/daily')
