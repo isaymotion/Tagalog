@@ -21,6 +21,12 @@
    Every row has a group g (Grammar, Vocabulary, Listening and writing); #/drills shows one heading per group.
    #/drills/handout  printable Drills handout (js/grammar-handout.js, topic drills)
    App.dailyExtra: other files may push [tag, fn] parts for the daily mix (fn returns runQuiz questions).
+   3.17.0:
+   lessongaps  Practise a lesson: LESSON_GAPS['<lesson id>'] (js/data/lesson-gaps-*.js), ten gap sentences per lesson.
+     #/drills/lessongaps?l=<lesson id> runs that lesson's ten; ?u=<review lesson id> runs ten drawn from every lesson of
+     that unit; with neither (or an unknown id) the page shows a lesson picker. Best % in state.done.lessonGaps[id]
+     ('unit:<review id>' for a unit). A "Practise this lesson" (or "Practise this unit") button goes on every lesson page
+     through App.lessonLinks; a Progress row through App.progressExtra; one daily mix part through App.dailyExtra.
    Best scores in state.done.drills['<id>:<set>']. To add a drill: a row in DRILLS, a run function in RUN. */
 (function () {
   const { esc, shuffle, pick } = App;
@@ -31,6 +37,7 @@
   const FOCUS = window.DRILL_FOCUS || [], ERRORS = window.DRILL_ERRORS || [];
   const STRESS = window.WORD_STRESS || [], FALSE = window.WORD_FALSE_FRIENDS || [], COGS = window.WORD_COGNATES || [];
   const GAPS = window.DRILL_GAPS || [], CHANGE = window.DRILL_CHANGE || [];
+  const LGAPS = window.LESSON_GAPS && typeof window.LESSON_GAPS === 'object' ? window.LESSON_GAPS : {};
   const SECTIONS = () => window.PSYCH_SECTIONS || [];
   const N = 10;
 
@@ -86,14 +93,19 @@
       opts: [], lessons: ['negation'] },
     { id: 'change', g: 'Grammar', title: 'Change the sentence', eyebrow: 'Grammar · 10 sentences', blurb: 'Make it a question, make it negative, make it respectful, or change the time.',
       intro: 'You see a sentence and an instruction. Choose the sentence that does what the instruction says, or type it yourself. Watch where ba, po and the pronouns go, which negator to use, and how the verb changes.',
-      opts: [['all', 'All kinds'], ['q', 'Make it a question'], ['neg', 'Make it negative'], ['po', 'Make it respectful'], ['asp', 'Change the time'], ['type', 'Type the answer']], lessons: ['questions', 'negation', 'politeness', 'aspect'] }
+      opts: [['all', 'All kinds'], ['q', 'Make it a question'], ['neg', 'Make it negative'], ['po', 'Make it respectful'], ['asp', 'Change the time'], ['type', 'Type the answer']], lessons: ['questions', 'negation', 'politeness', 'aspect'] },
+    // 3.17.0: its own page (lessonGapsView below), scores in state.done.lessonGaps
+    { id: 'lessongaps', g: 'Grammar', title: 'Practise a lesson', eyebrow: 'Lessons · 10 gaps', blurb: 'Ten gap sentences on the grammar of one lesson, or a whole unit.',
+      intro: 'Choose a lesson and fill the gap in ten sentences that use what it teaches. The English line tells you what the sentence means. Each lesson page has a button for its own practice.',
+      opts: [], lessons: [] }
   ];
   const GROUPS = ['Grammar', 'Vocabulary', 'Listening and writing'];
   // Drills with a part in the printable Drills handout (#/drills/handout).
   const HANDOUT = ['markers', 'linker', 'particle', 'pronoun', 'qword', 'negation', 'errors', 'focus', 'change', 'translate', 'dictation'];
   App.DRILLS = DRILLS;
   const byId = (id) => DRILLS.find((d) => d.id === id);
-  const bestOf = (id) => { const o = (App.state.done.drills || {}); const v = Object.keys(o).filter((k) => k.split(':')[0] === id).map((k) => o[k]); return v.length ? Math.max(...v) : null; };
+  const bestOf = (id) => { if (id === 'lessongaps') { const g = lgStore(), v = Object.keys(g).map((k) => g[k]).filter((x) => typeof x === 'number'); return v.length ? Math.max(...v) : null; }
+    const o = (App.state.done.drills || {}); const v = Object.keys(o).filter((k) => k.split(':')[0] === id).map((k) => o[k]); return v.length ? Math.max(...v) : null; };
   const saveBest = (key, right, total) => {
     const s = App.state; s.done.drills = s.done.drills || {};
     s.done.drills[key] = Math.max(s.done.drills[key] || 0, Math.round((100 * right) / total));
@@ -427,6 +439,88 @@
   }
   const changeTyped = () => CHANGE.map((it) => ({ prompt: it.from, tlPrompt: true, sub: changeInstr(it), answers: [it.to].concat(it.alt || []), exact: true, en: it.en, why: it.why }));
 
+  /* ---------- Practise a lesson (3.17.0): LESSON_GAPS, ten gap sentences per lesson ---------- */
+  const lgStore = () => { const d = App.state.done; if (!d.lessonGaps || typeof d.lessonGaps !== 'object' || Array.isArray(d.lessonGaps)) d.lessonGaps = {}; return d.lessonGaps; };
+  const lgOk = (it) => it && typeof it.q === 'string' && it.q.split('____').length === 2 && Array.isArray(it.opts) && it.opts.length >= 2 && it.opts.includes(it.a);
+  const lgItems = (id) => (typeof id === 'string' && Object.prototype.hasOwnProperty.call(LGAPS, id) && Array.isArray(LGAPS[id]) ? LGAPS[id].filter(lgOk) : []);
+  const lgFull = (it) => it.q.replace('____', it.a);
+  // Options are shuffled by App.runQuiz itself, as in the other gap drills. Nothing is spoken before the answer (sayAfter only).
+  const lgQ = (lid) => (it) => ({ q: it.q, sub: it.en, tlq: true, tlo: true, opts: it.opts.slice(), a: it.opts.indexOf(it.a), sayAfter: it.voice || lgFull(it), exp: it.why || lgFull(it), lesson: lid });
+  const lgLessons = () => (window.LESSONS || []).filter((l) => l && !l.review && lgItems(l.id).length);
+  const lgUnitLessons = (rv) => lgLessons().filter((l) => l.unit === rv.unit);
+  const lgReview = (id) => (window.LESSONS || []).find((l) => l && l.review && l.id === id && lgUnitLessons(l).length);
+  const lgLessonQs = (id) => shuffle(lgItems(id)).slice(0, N).map(lgQ(id));
+  const lgUnitQs = (rid, n) => { const rv = lgReview(rid); if (!rv) return []; return pick([].concat(...lgUnitLessons(rv).map((l) => lgItems(l.id).map((it) => [l.id, it]))), n || N).map(([lid, it]) => lgQ(lid)(it)); };
+  const lgBest = (k) => { const v = lgStore()[k]; return typeof v === 'number' ? v : null; };
+  const lgPill = (b) => (b != null ? ' <span class="pill good">Best ' + b + '%</span>' : '');
+  // Units in LESSON_UNITS order, then any other unit in lesson order; only lessons that have gap sentences.
+  const lgUnits = () => {
+    const ls = lgLessons(), names = (window.LESSON_UNITS || []).map((u) => u[0]);
+    ls.forEach((l) => { if (!names.includes(l.unit)) names.push(l.unit); });
+    return names.map((u) => [u, ls.filter((l) => l.unit === u)]).filter((u) => u[1].length);
+  };
+  function lgPicker(el, q) {
+    const units = lgUnits(), all = lgLessons(), done = all.filter((l) => lgBest(l.id) != null).length;
+    const first = all.find((l) => App.state.done.lessons[l.id] != null && lgBest(l.id) == null) || all.find((l) => lgBest(l.id) == null) || all[0];
+    el.innerHTML = '<h1>Practise a lesson</h1><p class="muted">Ten gap sentences on what one lesson teaches. Choose the word that fills the gap; the English line tells you what the sentence means. Every lesson page has a button for its own practice, and each unit review has one for the whole unit.</p>' +
+      ((q.l || q.u) ? '<div class="notice info" style="margin-bottom:12px">That lesson has no practice sentences. Choose one below.</div>' : '') +
+      (all.length ? '<div class="card stack"><label class="small lg-pick">Lesson <select class="input" id="lgsel">' +
+        units.map(([u, ls]) => '<optgroup label="' + esc(u) + '">' + ls.map((l) => { const b = lgBest(l.id); return '<option value="' + esc(l.id) + '"' + (l === first ? ' selected' : '') + '>' + esc(l.title) + (b != null ? ' · best ' + b + '%' : '') + '</option>'; }).join('') + '</optgroup>').join('') +
+        '</select></label><div class="row"><button class="btn primary" id="lggo">Start</button><span class="muted small">' + done + ' of ' + all.length + ' lessons practised</span></div></div>'
+        : '<div class="notice info">No practice sentences are loaded yet.</div>') +
+      '<div class="row" style="margin-top:14px"><a class="btn" href="#/lessons">All lessons</a><a class="btn" href="#/drills">All drills</a></div>';
+    const go = el.querySelector('#lggo');
+    if (go) go.onclick = () => { const id = el.querySelector('#lgsel').value; App._lgAuto = id; App.go('#/drills/lessongaps?l=' + encodeURIComponent(id)); };
+  }
+  function lgView(el, q) {
+    const L = window.LESSONS || [];
+    const les = q.l ? L.find((l) => l && !l.review && l.id === q.l && lgItems(l.id).length) : null;
+    const rv = !les && q.u ? lgReview(q.u) : null;
+    if (!les && !rv) return lgPicker(el, q);
+    const key = les ? les.id : 'unit:' + rv.id, home = les || rv;
+    const order = lgLessons(), next = les ? order[order.indexOf(les) + 1] : null;
+    const sub = les ? lgItems(les.id).length + ' gap sentences from this lesson, in a new order each time.' : 'Ten gap sentences drawn at random from the ' + lgUnitLessons(rv).length + ' lessons of this unit.';
+    el.innerHTML = '<div class="breadcrumb"><a href="#/drills">Drills</a> / <a href="#/drills/lessongaps">Practise a lesson</a></div>' +
+      '<div class="row"><span class="pill lv">' + esc(home.level || '') + '</span><span class="eyebrow">' + (les ? 'Lesson practice' : 'Unit practice') + ' · ' + esc(home.unit || '') + '</span></div>' +
+      '<h1 style="margin-top:6px">' + esc(les ? les.title : rv.unit) + '</h1><p class="muted">' + esc(sub) + ' Choose the word that fills the gap; the English line tells you what the sentence means.</p>' +
+      '<div class="card stack"><div class="row"><button class="btn primary" id="lggo">Start</button><span data-best>' + lgPill(lgBest(key)) + '</span></div><div id="dbox"></div></div>' +
+      '<div class="row" style="margin-top:14px"><a class="btn" href="#/lessons/' + esc(home.id) + '">' + (les ? 'Back to the lesson' : 'Back to the unit review') + '</a><a class="btn" href="#/drills/lessongaps">Choose another lesson</a></div>';
+    const box = el.querySelector('#dbox');
+    const after = '<a class="btn" href="#/lessons/' + esc(home.id) + '">' + (les ? 'Back to the lesson' : 'Back to the unit review') + '</a>' +
+      (next ? '<a class="btn" href="#/drills/lessongaps?l=' + esc(next.id) + '" data-lgauto="' + esc(next.id) + '">Next lesson’s practice</a>' : '');
+    const start = () => {
+      const inner = document.createElement('div'); inner.style.marginTop = '12px'; box.innerHTML = ''; box.appendChild(inner);
+      inner.addEventListener('click', (e) => { const a = e.target.closest('[data-lgauto]'); if (a) App._lgAuto = a.dataset.lgauto; });
+      App.runQuiz(inner, les ? lgLessonQs(les.id) : lgUnitQs(rv.id, N), { after, onDone: (r, n) => {
+        const g = lgStore(); g[key] = Math.max(lgBest(key) || 0, Math.round((100 * r) / n));
+        App.activity(10); App.save();
+        const b = el.querySelector('[data-best]'); if (b) b.innerHTML = lgPill(g[key]);
+      } });
+    };
+    el.querySelector('#lggo').onclick = start;
+    if (App._lgAuto && App._lgAuto === (les && les.id)) { App._lgAuto = null; start(); }
+  }
+  App.drillLessonGaps = { items: lgItems, lessons: lgLessons, lessonQs: lgLessonQs, unitQs: lgUnitQs, unitLessons: (rid) => { const rv = lgReview(rid); return rv ? lgUnitLessons(rv).map((l) => l.id) : []; } }; // for tests
+  // Lesson page button (js/views.js draws App.lessonLinks under the quizzes).
+  App.lessonLinks = App.lessonLinks || [];
+  App.lessonLinks.push((l) => {
+    if (!l) return '';
+    if (l.review) return lgReview(l.id) ? '<a class="btn" href="#/drills/lessongaps?u=' + esc(l.id) + '">' + App.icons.target + ' Practise this unit' + lgPill(lgBest('unit:' + l.id)) + '</a>' : '';
+    return lgItems(l.id).length ? '<a class="btn" href="#/drills/lessongaps?l=' + esc(l.id) + '">' + App.icons.target + ' Practise this lesson' + lgPill(lgBest(l.id)) + '</a>' : '';
+  });
+  // Progress (#/progress) Completion row, chained like js/vocab.js.
+  const prevProgressLg = App.progressExtra;
+  App.progressExtra = (st) => {
+    const ls = lgLessons(), g = (st.done && st.done.lessonGaps && typeof st.done.lessonGaps === 'object') ? st.done.lessonGaps : {};
+    return (prevProgressLg ? prevProgressLg(st) : []).concat(ls.length ? [['Lesson practice (lessons)', ls.filter((l) => typeof g[l.id] === 'number').length, ls.length]] : []);
+  };
+  // Daily mix: one gap sentence, from a lesson the learner has finished when there is one.
+  App.dailyExtra = (App.dailyExtra || []).concat([['Lesson practice', () => {
+    const ls = lgLessons(); if (!ls.length) return [];
+    const fin = ls.filter((l) => App.state.done.lessons[l.id] != null), l = pick(fin.length ? fin : ls, 1)[0];
+    return pick(lgItems(l.id), 1).map(lgQ(l.id));
+  }]]);
+
   /* ---------- Daily mix (3.9.0) ---------- */
   // Dictionary words: the learner's mistakes and due cards first, then any word. Wrong answers come from the same category.
   function vocabQs(n) {
@@ -501,7 +595,8 @@
       '<div class="row" style="margin-top:14px"><a class="btn primary" href="#/daily">Daily mix</a><a class="btn" href="#/drills/handout">' + App.icons.book + ' Print handout</a><a class="btn" href="#/verbs">Verb trainer</a><a class="btn" href="#/affixes">Panlapi</a><a class="btn" href="#/words">Word families</a><a class="btn" href="#/practice">All practice</a></div>';
   };
 
-  V.drill = (el, p) => {
+  V.drill = (el, p, q) => {
+    if (p.id === 'lessongaps') return lgView(el, q || {});
     const d = byId(p.id);
     if (!d) { el.innerHTML = '<h1>Drills</h1><p>That drill does not exist. <a href="#/drills">See all drills</a>.</p>'; return; }
     const lessons = (window.LESSONS || []).filter((l) => d.lessons.includes(l.id));

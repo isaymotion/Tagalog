@@ -9,13 +9,15 @@ const ctx = { window: {}, console, TextEncoder, Buffer };
 ctx.window = ctx;
 vm.createContext(ctx);
 const load = (f) => vm.runInContext(fs.readFileSync(path.join(root, f), 'utf8'), ctx, { filename: f });
-['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/dict-themes.js', 'js/data/drills.js', 'js/data/drills-grammar.js', 'js/data/word-sets.js', 'js/data/vocab-sets.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js', 'js/data/lessons-2.js', 'js/data/lessons-3.js',
- 'js/data/reading.js', 'js/data/listening.js', 'js/data/dialogues.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js', 'js/data/psych-sud.js', 'js/data/psych-withdrawal.js', 'js/data/psych-mood.js', 'js/data/psych-shea.js', 'js/data/psych-phrases-nurse.js', 'js/data/psych-answers.js', 'js/data/psych-answers-nurse.js', 'js/data/affixes.js',
+['js/data/dict-core.js', 'js/data/dict-everyday.js', 'js/data/dict-clinical.js', 'js/data/dict-more.js', 'js/data/dict-themes.js', 'js/data/drills.js', 'js/data/drills-grammar.js', 'js/data/drills-more.js', 'js/data/word-sets.js', 'js/data/vocab-sets.js', 'js/data/verbs.js', 'js/data/verb-sentences.js', 'js/data/lessons.js', 'js/data/lessons-2.js', 'js/data/lessons-3.js',
+ 'js/data/reading.js', 'js/data/reading-2.js', 'js/data/listening.js', 'js/data/listen-reply.js', 'js/data/dialogues.js', 'js/data/dialogues-2.js', 'js/data/psych-phrases.js', 'js/data/psych-cases.js', 'js/data/psych-flow.js', 'js/data/psych-deesc.js', 'js/data/psych-discharge.js', 'js/data/psych-discharge-cases.js', 'js/data/psych-admit-mse.js', 'js/data/psych-mse-cases.js', 'js/data/psych-mse-sheet.js', 'js/data/psych-sud.js', 'js/data/psych-withdrawal.js', 'js/data/psych-mood.js', 'js/data/psych-shea.js', 'js/data/psych-phrases-nurse.js', 'js/data/psych-answers.js', 'js/data/psych-answers-nurse.js', 'js/data/affixes.js',
  'js/data/picture-sets-body.js', 'js/data/picture-sets-home.js', 'js/data/picture-sets-town.js', 'js/data/picture-sets-animals.js', 'js/data/picture-sets-machines.js', 'js/data/picture-sets-food.js', 'js/data/picture-sets-clothes.js', 'js/data/picture-sets-nature.js', 'js/data/picture-sets-daily.js', 'js/data/picture-bodymap.js', 'js/data/signs.js', 'js/data/signs-panels.js', 'js/data/lessons-pictures.js',
  'js/data/meta.js', 'js/conjugate.js', 'js/audio-key.js', 'js/pronounce.js'].forEach(load);
 // 3.14.0: lesson extras (every js/data/lesson-extra-<n>.js present, in number order), the unit reviews, then the lesson
 // order file, which builds the review lessons into LESSONS (so the lesson-body sweep below records their examples).
 fs.readdirSync(path.join(root, 'js/data')).filter((f) => /^lesson-extra-\d+\.js$/.test(f)).sort((a, b) => parseInt(a.slice(13), 10) - parseInt(b.slice(13), 10)).forEach((f) => load('js/data/' + f));
+// 3.17.0: gap sentences by lesson (every js/data/lesson-gaps-<n>.js present, in number order), before the lesson order file.
+fs.readdirSync(path.join(root, 'js/data')).filter((f) => /^lesson-gaps-\d+\.js$/.test(f)).sort((a, b) => parseInt(a.slice(12), 10) - parseInt(b.slice(12), 10)).forEach((f) => load('js/data/' + f));
 ['js/data/lessons-review.js', 'js/data/lessons-review-2.js', 'js/data/lessons-zz-order.js'].filter((f) => fs.existsSync(path.join(root, f))).forEach(load);
 // 3.15.0: example sentences of dictionary words (any of the six parts that exist).
 fs.readdirSync(path.join(root, 'js/data')).filter((f) => /^examples-\d+\.js$/.test(f)).sort((a, b) => parseInt(a.slice(9), 10) - parseInt(b.slice(9), 10)).forEach((f) => load('js/data/' + f));
@@ -97,6 +99,10 @@ add('Magandang umaga po. Kumusta po kayo?'); // settings voice test
 (ctx.WORD_PAIRS || []).forEach((x) => { if (x.type === 'opp') { add(x.a); add(x.b); } else if (x.type === 'col') add(x.a + ' ' + x.b); });
 // 3.15.0: each dictionary word's example sentence (word page, card back, In context game: the full sentence, never the gap).
 (Array.isArray(ctx.DICT_EX) ? ctx.DICT_EX : []).forEach((x) => { if (Array.isArray(x) && typeof x[1] === 'string') add(x[1]); });
+// 3.17.0: Practise a lesson: each gap sentence as the voice says it (voice when given, else q with the answer put in; the
+// wrong options are never recorded). Listen and reply: every line heard and every reply option (all four are real replies).
+Object.values(ctx.LESSON_GAPS && typeof ctx.LESSON_GAPS === 'object' ? ctx.LESSON_GAPS : {}).forEach((list) => (Array.isArray(list) ? list : []).forEach((it) => { if (it && typeof it.q === 'string') add(it.voice || it.q.replace('____', it.a)); }));
+(Array.isArray(ctx.LISTEN_REPLY) ? ctx.LISTEN_REPLY : []).forEach((x) => { if (!x) return; add(x.say); (x.opts || []).forEach((o) => o && add(o.tl)); });
 
 // 3.10.0: picture words (each part's word and every listen-and-point sentence), signs (not the English-only ones), the Tagalog
 // request of each panel task (control labels are printed English and are not recorded) and the body map lines.

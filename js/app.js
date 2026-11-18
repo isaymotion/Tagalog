@@ -63,6 +63,7 @@
     [/^\/listen$/, V.listening, 'listen'],
     [/^\/listen\/handout$/, V.ghandoutListening, 'listen'],
     [/^\/listen\/(?<id>[\w-]+)$/, V.listenItem, 'listen'],
+    [/^\/reply$/, V.reply, 'reply'],
     [/^\/reading$/, V.reading, 'reading'],
     [/^\/reading\/handout$/, V.ghandoutReading, 'reading'],
     [/^\/reading\/(?<id>[\w-]+)$/, V.passage, 'reading'],
@@ -93,7 +94,7 @@
     [/^\/new$/, V.whatsnew, 'new'],
     [/^\/about$/, V.about, 'about']
   ];
-  const TITLES = { home: '', practice: 'Practice', dict: 'Dictionary', flash: 'Flashcards', verbs: 'Verbs', affixes: 'Panlapi', drills: 'Drills', vocab: 'Vocabulary practice', daily: 'Daily mix', words: 'Word families', pictures: 'Picture words', signs: 'Signs and buttons', lessons: 'Lessons', reading: 'Reading', listen: 'Listening', speak: 'Speaking', psych: 'Psychiatry', placement: 'Placement', progress: 'Progress', settings: 'Settings', new: "What's New", about: 'About' };
+  const TITLES = { home: '', practice: 'Practice', dict: 'Dictionary', flash: 'Flashcards', verbs: 'Verbs', affixes: 'Panlapi', drills: 'Drills', vocab: 'Vocabulary practice', daily: 'Daily mix', words: 'Word families', pictures: 'Picture words', signs: 'Signs and buttons', lessons: 'Lessons', reading: 'Reading', listen: 'Listening', reply: 'Listen and reply', speak: 'Speaking', psych: 'Psychiatry', placement: 'Placement', progress: 'Progress', settings: 'Settings', new: "What's New", about: 'About' };
 
   /* ---------- Navigation: one grouped list for the desktop rail, the phone drawer (More) and the #/more page ----------
      [key, href, label, icon]. Group labels are shell strings (data/strings.js); item labels are the app's own. */
@@ -105,7 +106,7 @@
     ['p-ho', '#/psych/handout', 'Printable handout', icons.read]];
   const NAV = [
     ['', [['home', '#/', 'Home', icons.home], ['practice', '#/practice', 'Practice', icons.target]]],
-    ['nav.learn', [['lessons', '#/lessons', 'Lessons', icons.lesson], ['reading', '#/reading', 'Reading', icons.read], ['listen', '#/listen', 'Listening', icons.ear], ['speak', '#/speak', 'Speaking', icons.speak], ['dict', '#/dict', 'Dictionary', icons.book], ['words', '#/words', 'Word families', icons.affix], ['pictures', '#/pictures', t('nav.pictures'), icons.picture], ['signs', '#/signs', t('nav.signs'), icons.sign]]],
+    ['nav.learn', [['lessons', '#/lessons', 'Lessons', icons.lesson], ['reading', '#/reading', 'Reading', icons.read], ['listen', '#/listen', 'Listening', icons.ear], ['reply', '#/reply', t('nav.reply'), icons.sound], ['speak', '#/speak', 'Speaking', icons.speak], ['dict', '#/dict', 'Dictionary', icons.book], ['words', '#/words', 'Word families', icons.affix], ['pictures', '#/pictures', t('nav.pictures'), icons.picture], ['signs', '#/signs', t('nav.signs'), icons.sign]]],
     ['nav.drill', [['flash', '#/flash', 'Flashcards', icons.cards], ['verbs', '#/verbs', 'Verb trainer', icons.verb], ['affixes', '#/affixes', 'Panlapi', icons.affix], ['drills', '#/drills', 'Grammar drills', icons.spark], ['vocab', '#/vocab', t('nav.vocab'), icons.book], ['placement', '#/placement', 'Placement test', icons.target]]],
     ['nav.interview', [['psych', '#/psych', 'Psychiatry Tagalog', icons.brain]].concat(PSY_PRACTICE)],
     ['nav.tools', PSY_TOOLS],
@@ -194,7 +195,7 @@
   /* ---------- Practice and More pages ---------- */
   const BLURB = {
     dict: App.DICT.length + ' entries, both directions, root-word search', flash: 'Spaced repetition across every deck',
-    verbs: 'Aspect and focus drills, 78 verbs', affixes: 'Unlapi, gitlapi, hulapi: take words apart', drills: 'Markers, linkers, aspect, word order, focus, mistakes, stress, dictation', words: 'Families, mild to strong, stress pairs, Spanish and English words', vocab: 'Matching, opposites, odd one out, typing, listening, word parts, words in context', lessons: 'Grammar and culture', pictures: 'Tap a picture to hear the word, then find it, label it and point to it', signs: 'Hospital, jeepney and street signs, and the buttons on machines', reading: 'Graded passages, A1 to C1', listen: 'Voicemails, announcements, radio, ward talk', speak: 'Dialogues with listening and recording',
+    verbs: 'Aspect and focus drills, 78 verbs', affixes: 'Unlapi, gitlapi, hulapi: take words apart', drills: 'Markers, linkers, aspect, word order, focus, mistakes, stress, dictation', words: 'Families, mild to strong, stress pairs, Spanish and English words', vocab: 'Matching, opposites, odd one out, typing, listening, word parts, words in context', lessons: 'Grammar and culture', pictures: 'Tap a picture to hear the word, then find it, label it and point to it', signs: 'Hospital, jeepney and street signs, and the buttons on machines', reading: 'Graded passages, A1 to C1', listen: 'Voicemails, announcements, radio, ward talk', reply: 'Hear a line, choose the natural reply: everyday and on the ward', speak: 'Dialogues with listening and recording',
     practice: 'Every drill on one page', psych: (window.PSYCH_SECTIONS || []).length + ' interview sections and the ward tools',
     placement: '25 questions to find your level, A1 to C1', progress: 'Streak, stats, backup', settings: 'Register, voice, theme', new: 'What changed in each version', about: 'Credits and disclaimers'
   };
@@ -224,11 +225,13 @@
       T('#/drills/qword', 'Drill · 10 gaps', 'Choose the question word', 'Saan or nasaan? Ilan or magkano?') +
       T('#/drills/negation', 'Drill · 10 gaps', 'Hindi, wala or huwag?', 'Three ways to say no.') +
       T('#/drills/change', 'Drill · 10 sentences', 'Change the sentence', 'Make it a question, negative, respectful, or another time.') +
+      T('#/drills/lessongaps', 'Lessons · 10 gaps', 'Practise a lesson', 'Ten gap sentences on one lesson or a whole unit.') +
       T('#/drills/handout', 'Print', 'Drills handout', 'A worksheet from the drills, with an answer key.') +
       T('#/flash/due', 'Review', due ? due + ' cards due' : 'Flashcards', 'Spaced repetition across every deck.') +
       T('#/lessons', 'Quiz', 'Lesson quizzes', Object.keys(s.done.lessons).length + ' of ' + LESSONS.length + ' lessons done.') +
       T('#/reading', 'Read', 'Reading', 'Graded passages with questions.') +
       T('#/listen', 'Listen', 'Listening', 'Real-life recordings, questions and dictation.') +
+      T('#/reply', 'Listen · 10 lines', 'Listen and reply', 'Hear a line, choose the natural reply.') +
       T('#/speak', 'Speak', 'Speaking', 'Dialogues with listening and recording.') + '</div>' +
       '<h2 style="margin-top:18px">Vocabulary</h2><div class="grid">' + (App.vocabTiles ? App.vocabTiles() : '') + '</div>' +
       '<h2 style="margin-top:18px">Pictures</h2><div class="grid">' +
@@ -255,7 +258,7 @@
   };
   routes.push([/^\/more$/, V.more, 'more']);
   routes.push([/^\/practice$/, V.practice, 'practice']);
-  const MORE_KEYS = ['dict', 'words', 'vocab', 'pictures', 'signs', 'drills', 'lessons', 'reading', 'listen', 'speak', 'placement', 'progress', 'settings', 'new', 'about', 'more'];
+  const MORE_KEYS = ['dict', 'words', 'vocab', 'pictures', 'signs', 'drills', 'lessons', 'reading', 'listen', 'reply', 'speak', 'placement', 'progress', 'settings', 'new', 'about', 'more'];
 
   /* ---------- Header height -> --top (the search drops to a second row on phones) ---------- */
   function setTopVar() { const h = $('.topbar'); if (h) root.style.setProperty('--top', h.offsetHeight + 'px'); }

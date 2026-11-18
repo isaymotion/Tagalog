@@ -1086,3 +1086,17 @@ mark.exw { background: var(--mark); color: inherit; font-weight: 700; border-rad
 .flash .fcex .wex-s .tl { font-size: 1rem; }
 .flash .fcex .say { width: 30px; height: 30px; }
 .flash .fcex .muted { font-size: .88rem; overflow-wrap: break-word; }
+
+/* 3.17.0: Practise a lesson (picker) and Listen and reply (#/reply) */
+.lg-pick { display: grid; gap: 4px; width: 100%; }
+.lg-pick select { width: 100%; max-width: 100%; }
+.lx-links .btn .pill { margin-left: 2px; }
+.rp-opt { display: flex; align-items: center; gap: 8px; }
+.rp-opt .opt { flex: 1 1 auto; min-width: 0; display: grid; gap: 4px; overflow-wrap: break-word; }
+.rp-opt .say { flex: none; }
+.rp-en { font-size: .88rem; color: var(--muted); font-family: var(--sans); }
+.rp-en .pill { margin-left: 4px; vertical-align: 1px; }
+.rp-said { border-left: 3px solid var(--gold); padding: 6px 0 6px 12px; display: grid; gap: 4px; }
+.rp-line { display: flex; align-items: center; gap: 8px; }
+.rp-line .tl { flex: 1 1 auto; min-width: 0; font-size: 1.12rem; font-weight: 600; overflow-wrap: break-word; }
+#rpset .seg { margin-top: -4px; }

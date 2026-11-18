@@ -500,4 +500,645 @@ sa kaliwa|on the left; left of|phr|grammar||
 sa kanan|on the right; right of|phr|grammar||
 sa pagitan|between|phr|grammar||
 sa labas|outside|phr|grammar||
+# ---- 3.17.0 ----
+galak|joy, delight|n|emotions||
+ligaya|happiness|n|emotions||
+lumbay|sadness, melancholy|n|emotions||
+nalulumbay|feeling melancholy|adj|emotions|lumbay|
+pagkadismaya|disappointment|n|emotions|dismaya|
+dismayado|disappointed|adj|emotions|dismaya|
+sabik|eager, excited|adj|emotions||
+pananabik|longing, eagerness|n|emotions|sabik|
+kilig|romantic thrill|n|emotions||giddy feeling from romance
+nayayamot|irritated, fed up|adj|emotions|yamot|
+naaasar|annoyed|adj|emotions|asar|informal
+galit na galit|furious|phr|emotions|galit|
+napahiya|embarrassed, humiliated|adj|emotions|hiya|
+kahihiyan|shame, disgrace|n|emotions|hiya|
+tuwang-tuwa|overjoyed|adj|emotions|tuwa|
+kampante|at ease, confident|adj|emotions||
+kalmado|calm|adj|emotions||
+tensiyonado|tense|adj|emotions||also spelled tensyonado
+pagkabigla|shock|n|emotions|bigla|
+nabigla|shocked, caught off guard|adj|emotions|bigla|
+namangha|amazed|adj|emotions|mangha|
+pangamba|fear, apprehension|n|emotions||
+nangangamba|worried, apprehensive|adj|emotions|pangamba|
+nasindak|terrified|adj|emotions|sindak|
+pagmamalaki|pride|n|emotions|laki|
+ipinagmamalaki|is proud of|v|emotions|laki|
+hinanakit|resentment, grudge|n|emotions||
+sumpong|fit, bad mood|n|emotions||also a flare-up of an illness
+magaan ang loob|at ease with someone|phr|emotions||
+nanghihinayang|regretting a loss|adj|emotions|hinayang|
+naantig|touched, moved|adj|emotions|antig|
+nabagabag|troubled, disturbed|adj|emotions|bagabag|
+kontento|content, satisfied|adj|emotions||
+naiyak|was moved to tears|v|emotions|iyak|
+nagdamdam|felt hurt, took offense|v|emotions|damdam|
+naluha|teared up|v|emotions|luha|
+nagsasawa|fed up, tired of|adj|emotions|sawa|
+masama ang loob|upset, hurt|phr|emotions||
+masama ang timpla|in a bad mood|phr|emotions||informal
+maganda ang gising|woke up in a good mood|phr|emotions||
+makalimot|to forget|v|mind|limot|
+nakakalimutan|keep forgetting|v|mind|limot|
+naaalala|remembers, can recall|v|mind|alala|
+tandaan|to remember, keep in mind|v|mind|tanda|
+natatandaan|remembers|v|mind|tanda|
+makapag-isip|to be able to think|v|mind|isip|
+nag-iisip|thinking, considering|v|mind|isip|
+iniisip|thinking about|v|mind|isip|
+naisip|occurred to, thought of|v|mind|isip|
+ideya|idea|n|mind||
+pansin|attention, notice|n|mind||
+atensiyon|attention|n|mind||
+magpokus|to focus|v|mind|pokus|
+nakatuon|focused on|adj|mind|tuon|
+lumilipad ang isip|mind wanders|phr|mind||
+blangko ang isip|mind goes blank|phr|mind||
+naguguluhan|confused|adj|mind|gulo|
+magulo ang isip|mind is muddled|phr|mind||
+desisyon|decision|n|mind||
+pasya|decision|n|mind||
+akala|thought, assumption|n|mind||
+hinala|suspicion|n|mind||
+duda|doubt|n|mind||
+nagdududa|doubting|v|mind|duda|
+kumbinsido|convinced|adj|mind||
+talino|intelligence|n|mind||
+katinuan|soundness of mind|n|mind|tino|
+matino|sensible, lucid|adj|mind|tino|
+nasa sarili|in one's right mind|phr|mind|sarili|
+ulirat|senses, consciousness|n|mind||
+tumatak sa isip|stuck in one's mind|phr|mind|tatak|
+bumabalik sa isip|keeps coming back to mind|phr|mind|balik|
+hindi maalis sa isip|cannot get out of one's mind|phr|mind|alis|
+napagtanto|realized|v|mind|tanto|
+matalas ang memorya|has a sharp memory|phr|mind||
+mahina ang memorya|has a poor memory|phr|mind||
+katwiran|reason, justification|n|mind||
+pag-unawa|understanding|n|mind|unawa|
+kaalaman|knowledge|n|mind|alam|
+nakaligtaan|overlooked, missed|v|mind|ligta|
+sakit ng tiyan|stomachache|n|health||
+sakit ng ngipin|toothache|n|health||
+sakit ng likod|back pain|n|health||
+masakit ang lalamunan|sore throat|phr|health||
+barado ang ilong|stuffy nose|phr|health||
+tumutulo ang sipon|runny nose|phr|health||
+paos|hoarse|adj|health||
+nangangasim ang sikmura|acid stomach, heartburn|phr|health|asim|
+nalipasan ng gutom|went too long without eating|phr|health|lipas|
+nasusuka|nauseous|adj|health|suka|
+impatso|indigestion|n|health||folk term for an upset stomach
+pananakit ng kasukasuan|joint pain|n|health|sakit|
+rayuma|rheumatism, arthritis|n|health||
+pigsa|boil|n|health||
+galis|scabies, skin sores|n|health||
+bungang-araw|prickly heat rash|n|health||
+singaw|mouth sore|n|health||also means steam or vapor
+tagihawat|pimple|n|health||
+paltos|blister|n|health||
+kulani|swollen lymph node|n|health||
+bukol|lump|n|health||
+nauntog|bumped one's head|v|health|untog|
+napaso|got burned (by heat)|v|health|paso|
+nadulas|slipped|v|health|dulas|
+natapilok|twisted one's ankle|v|health|tapilok|
+nabalian|suffered a broken bone|v|health|bali|
+kinakapos ng hininga|short of breath|phr|health|kapos|
+nanlalambot|feeling weak, limp|adj|health|lambot|
+giniginaw|feeling cold, having chills|adj|health|ginaw|
+pinagpapawisan|sweating|adj|health|pawis|
+namumutla|turning pale|adj|health|putla|
+naninilaw|turning yellow|adj|health|dilaw|
+hirap lumunok|difficulty swallowing|phr|health|lunok|
+balisawsaw|painful, frequent urination|n|health||
+almoranas|hemorrhoids|n|health||
+mataas ang lagnat|high fever|phr|health||
+bulutong|chickenpox|n|health||
+tigdas|measles|n|health||
+trangkaso|flu|n|health||
+nagkamalay|regained consciousness|v|health|malay|
+silid-hintayan|waiting room|n|clinical|hintay|
+tsart|patient chart|n|clinical||
+presyon ng dugo|blood pressure|n|clinical||
+timbangin|to weigh|v|clinical|timbang|
+kunan ng dugo|to draw blood from|phr|clinical|kuha|
+tahi|stitches|n|clinical||
+tahiin|to stitch (a wound)|v|clinical|tahi|
+benda|bandage|n|clinical||
+karayom|needle|n|clinical||
+hiringgilya|syringe|n|clinical||
+gasa|gauze|n|clinical||
+alkohol|rubbing alcohol|n|clinical||the drink is alak
+bulak|cotton ball|n|clinical||
+pamahid|ointment|n|clinical|pahid|
+patak sa mata|eye drops|n|clinical|patak|
+pampababa ng lagnat|fever reducer|n|clinical|baba|
+pampawala ng sakit|painkiller|n|clinical|wala|
+magreseta|to prescribe|v|clinical|reseta|
+komadrona|midwife|n|clinical||also spelled kumadrona
+bahay-paanakan|birthing clinic|n|clinical|anak|
+sentro ng kalusugan|health center|n|clinical|lusog|
+papeles|papers, documents|n|clinical||
+pauwiin|to send home, discharge|v|clinical|uwi|
+ilipat|to transfer|v|clinical|lipat|
+isugod|to rush (to hospital)|v|clinical|sugod|
+oras ng pagdalaw|visiting hours|n|clinical|dalaw|
+magpasuri|to get tested, get checked|v|clinical|suri|
+kapansanan|disability|n|clinical||
+saklay|crutch|n|clinical||
+tungkod|walking cane|n|clinical||
+arinola|bedpan, chamber pot|n|clinical||
+lampin|diaper|n|clinical||
+nakaratay|bedridden|adj|clinical|ratay|
+silid-operahan|operating room|n|clinical|opera|
+operahan|to operate on|v|clinical|opera|
+pampamanhid|anesthetic|n|clinical|manhid|
+malubha|serious, critical|adj|clinical|lubha|
+lagay|condition|n|clinical||
+bumuti|to improve, get better|v|clinical|buti|
+magbantay|to watch over (a patient)|v|clinical|bantay|
+magbanlaw|to rinse|v|routine|banlaw|
+magpunas|to wipe oneself, sponge bathe|v|routine|punas|
+magmumog|to gargle|v|routine|mumog|
+maligamgam|lukewarm|adj|routine|ligamgam|
+magpatuyo|to dry (oneself, one's hair)|v|routine|tuyo|
+magpaaraw|to sit in the sun|v|routine|araw|
+mag-ehersisyo|to exercise|v|routine|ehersisyo|
+maglakad-lakad|to take a walk|v|routine|lakad|
+mag-unat|to stretch|v|routine|unat|
+magpahangin|to get some fresh air|v|routine|hangin|
+magmeryenda|to have a snack|v|routine|meryenda|
+magtanghalian|to have lunch|v|routine|tanghalian|
+magbaon|to bring packed food|v|routine|baon|
+ubusin|to finish (food)|v|routine|ubos|
+subuan|to spoon-feed|v|routine|subo|
+ngumuya|to chew|v|routine|nguya|
+lumunok|to swallow|v|routine|lunok|
+nasamid|choked (on food or drink)|v|routine|samid|
+nabusog|got full|v|routine|busog|
+magbanyo|to use the bathroom|v|routine|banyo|
+naiihi|needing to pee|adj|routine|ihi|
+mag-ayos ng higaan|to make the bed|phr|routine|ayos|
+magtimpla|to mix (a drink)|v|routine|timpla|
+maghain|to set out the meal|v|routine|hain|
+matulog nang maaga|to sleep early|phr|routine|tulog|
+oras ng pagtulog|bedtime|n|routine|tulog|
+pagtulog|sleep, sleeping|n|routine|tulog|
+nakatulog|fell asleep, managed to sleep|v|routine|tulog|
+nagising|woke up|v|routine|gising|
+mahimbing|sound, deep (of sleep)|adj|routine|himbing|
+pupungas-pungas|still half-asleep|adj|routine|pungas|
+tulog na tulog|fast asleep|phr|routine|tulog|
+gisingin|to wake (someone) up|v|routine|gising|
+paliguan|to bathe (someone)|v|routine|ligo|
+bihisan|to dress (someone)|v|routine|bihis|
+magsuot|to wear, put on|v|routine|suot|
+hubarin|to take off (clothes, shoes)|v|routine|hubad|
+magkape|to have coffee|v|routine|kape|
+magdiyeta|to go on a diet|v|routine|diyeta|
+magpamasahe|to get a massage|v|routine|masahe|
+manligaw|to court|v|family|ligaw|
+manliligaw|suitor|n|people|ligaw|
+sagutin|to accept a suitor|v|family|sagot|courtship sense
+magkasintahan|dating couple|n|family|sinta|
+magpakasal|to get married|v|family|kasal|
+mamanhikan|to formally ask for a bride's hand|v|family|panhik|the groom's family visits the bride's parents
+kasalan|wedding (celebration)|n|family|kasal|
+bagong kasal|newlyweds|n|family|kasal|
+pulot-gata|honeymoon|n|family||
+balae|child's parent-in-law|n|family||
+madrasta|stepmother|n|family||
+padrasto|stepfather|n|family||
+anak-anakan|foster child|n|family|anak|someone treated like one's own child
+kinakapatid|godsibling|n|family|kapatid|child of one's godparent
+kabiyak|spouse, better half|n|family|biyak|
+maybahay|wife|n|family|bahay|
+solong magulang|single parent|n|family||
+iniwan|left, abandoned|v|family|iwan|
+nambabae|cheated (of a man)|v|family|babae|informal
+nanlalaki|cheating (of a woman)|v|family|lalaki|informal; also means widening (eyes)
+kabit|mistress, lover (in an affair)|n|family||
+pagtataksil|infidelity, betrayal|n|family|taksil|
+magkagalit|on bad terms|adj|family|galit|
+magkapatid|siblings (of each other)|n|family|kapatid|
+magkasundo|getting along|adj|family|sundo|
+magkaayos|to reconcile|v|family|ayos|
+sigawan|shouting at each other|n|family|sigaw|
+pagalitan|to scold|v|family|galit|
+palayasin|to throw out (of the house)|v|family|layas|
+sumbatan|to throw past favors in one's face|v|family|sumbat|
+mana|inheritance|n|family||
+palakihin|to raise (a child)|v|family|laki|
+sustento|financial support for a child|n|family||
+relasyon|relationship|n|family||
+karelasyon|romantic partner|n|people|relasyon|
+nagdadalaga|becoming a young woman|v|family|dalaga|
+nagbibinata|becoming a young man|v|family|binata|
+kapatid sa ama|half-sibling (same father)|n|family|kapatid|
+mag-ama|father and child|n|family|ama|
+mag-ina|mother and child|n|family|ina|
+mapagmahal|loving|adj|adjectives|mahal|
+maalalahanin|thoughtful|adj|adjectives|alala|
+maasikaso|attentive, caring|adj|adjectives|asikaso|
+matiyaga|patient, persevering|adj|adjectives|tiyaga|
+mainipin|impatient|adj|adjectives|inip|
+magagalitin|quick to anger|adj|adjectives|galit|
+pikon|easily annoyed by teasing|adj|adjectives||
+matampuhin|quick to sulk|adj|adjectives|tampo|
+iyakin|crybaby, cries easily|adj|adjectives|iyak|
+mareklamo|always complaining|adj|adjectives|reklamo|
+makulit|pesky, persistent|adj|adjectives|kulit|
+pasaway|unruly, hard-headed|adj|adjectives||
+suwail|disobedient (to parents)|adj|adjectives||
+masunurin|obedient|adj|adjectives|sunod|
+magalang|polite, respectful|adj|adjectives|galang|
+bastos|rude|adj|adjectives||
+mayabang|arrogant, boastful|adj|adjectives|yabang|
+mapagkumbaba|humble|adj|adjectives|kumbaba|
+mapagbigay|generous|adj|adjectives|bigay|
+kuripot|stingy|adj|adjectives||
+maramot|selfish, unwilling to share|adj|adjectives|damot|
+matulungin|helpful|adj|adjectives|tulong|
+masayahin|cheerful|adj|adjectives|saya|
+palakaibigan|friendly|adj|adjectives|kaibigan|
+palaaway|quarrelsome|adj|adjectives|away|
+mapusok|impulsive, hot-blooded|adj|adjectives|pusok|
+padalos-dalos|rash, hasty|adj|adjectives|dalos|
+maingat|careful|adj|adjectives|ingat|
+pabaya|neglectful|adj|adjectives|baya|
+responsable|responsible|adj|adjectives||
+maaasahan|reliable|adj|adjectives|asa|
+tapat|honest, faithful|adj|adjectives||
+mapagkakatiwalaan|trustworthy|adj|adjectives|tiwala|
+mapanghusga|judgmental|adj|adjectives|husga|
+maunawain|understanding|adj|adjectives|unawa|
+mapag-isa|preferring to be alone|adj|adjectives|isa|
+masigla|lively, energetic|adj|adjectives|sigla|
+matapang|brave|adj|adjectives|tapang|
+seloso|jealous (of a man)|adj|adjectives|selos|selosa for a woman
+isip-bata|childish|adj|adjectives|isip|
+magpaliwanag|to explain|v|verbs|paliwanag|
+mag-usap|to talk (with each other)|v|verbs|usap|
+kausapin|to talk to|v|verbs|usap|
+ikuwento|to tell, narrate|v|verbs|kuwento|
+ibahagi|to share|v|verbs|bahagi|
+aminin|to admit|v|verbs|amin|
+umamin|to confess, own up|v|verbs|amin|
+tumanggi|to refuse|v|verbs|tanggi|
+sumang-ayon|to agree|v|verbs|ayon|
+kumontra|to object, oppose|v|verbs|kontra|
+makipagtalo|to argue (with someone)|v|verbs|talo|
+humiling|to request|v|verbs|hiling|
+makiusap|to plead, ask a favor|v|verbs|usap|
+magmakaawa|to beg|v|verbs|awa|
+magpaalam|to ask leave, say goodbye|v|verbs|paalam|
+humingi ng tulong|to ask for help|phr|verbs|hingi|
+magbiro|to joke|v|verbs|biro|
+tuksuhin|to tease|v|verbs|tukso|
+purihin|to praise|v|verbs|puri|
+pagsabihan|to admonish, talk sense into|v|verbs|sabi|
+payuhan|to advise|v|verbs|payo|
+ipaalam|to inform, let know|v|verbs|alam|
+ibalita|to break the news|v|verbs|balita|
+banggitin|to mention|v|verbs|banggit|
+ulitin|to repeat|v|verbs|ulit|
+makaramdam|to feel|v|verbs|damdam|
+dibdibin|to take to heart|v|verbs|dibdib|
+masaktan|to get hurt|v|verbs|sakit|
+magtampo|to sulk|v|verbs|tampo|
+mainggit|to be envious|v|verbs|inggit|
+magdalawang-isip|to have second thoughts|v|verbs|isip|
+magpasya|to decide|v|verbs|pasya|
+payagan|to allow|v|verbs|payag|
+tanggapin|to accept|v|verbs|tanggap|
+magbago ng isip|to change one's mind|phr|verbs|bago|
+pag-isipan|to think over|v|verbs|isip|
+sundin|to follow, obey|v|verbs|sunod|
+magtiwala|to trust|v|verbs|tiwala|
+ipagtapat|to confide, confess|v|verbs|tapat|
+magsisi|to regret|v|verbs|sisi|
+halalan|election|n|civic||
+boto|vote|n|civic||
+bumoto|to vote|v|civic|boto|
+botante|voter|n|civic|boto|
+kandidato|candidate|n|civic||
+balota|ballot|n|civic||
+kampanya|campaign|n|civic||
+mangampanya|to campaign|v|civic|kampanya|
+manalo|to win|v|civic|panalo|
+matalo|to lose (a contest)|v|civic|talo|
+bilangan|counting of votes|n|civic|bilang|
+alkalde|mayor|n|civic||
+konsehal|councilor|n|civic||
+gobernador|governor|n|civic||
+pangulo|president|n|civic||
+pamahalaan|government|n|civic||note: more formal than gobyerno
+gobyerno|government|n|civic||
+tanggapan|office|n|civic|tanggap|
+pasaporte|passport|n|civic||
+lisensiya|license|n|civic||
+permiso|permit|n|civic||
+buwis|tax|n|civic||
+pirma|signature|n|civic||
+patunay|proof|n|civic|tunay|
+tirahan|address, residence|n|civic|tira|
+pulong|meeting|n|civic||
+lupon|committee, council|n|civic||note: lupong tagapamayapa settles barangay disputes
+batas|law|n|civic||
+mamamayan|citizen|n|civic|bayan|
+residente|resident|n|civic||
+punan|to fill in (a form)|v|civic|puno|
+magpasa|to submit|v|civic|pasa|
+babala|warning|n|nature||
+habagat|southwest monsoon|n|nature||
+amihan|northeast monsoon|n|nature||
+bumuhos|to pour (rain)|v|nature|buhos|
+umambon|to drizzle|v|nature|ambon|
+tumila|to stop (raining)|v|nature|tila|
+kumulog|to thunder|v|nature|kulog|
+humupa|to subside|v|nature|hupa|
+binaha|was flooded|v|nature|baha|
+lumubog|to be submerged, to sink|v|nature|lubog|
+putik|mud|n|nature||
+tubig-baha|floodwater|n|nature|baha|
+lumusong|to wade|v|nature|lusong|
+ilikas|to evacuate (someone)|v|nature|likas|
+sumilong|to take shelter|v|nature|silong|
+kanlungan|shelter, refuge|n|nature||
+mag-imbak|to stock up|v|nature|imbak|
+lumindol|to have an earthquake|v|nature|lindol|
+pagyanig|tremor, shaking|n|nature|yanig|
+gumuho|to collapse|v|nature|guho|
+bitak|crack|n|nature||
+pataba|fertilizer|n|nature|taba|
+punla|seedling|n|nature||
+pananim|crops|n|nature|tanim|
+gulayan|vegetable garden|n|nature|gulay|
+peste|pest|n|nature||
+magdilig|to water (plants)|v|nature|dilig|
+anihin|to harvest (something)|v|nature|ani|
+pumalaot|to go out to sea|v|nature|laot|
+pain|bait|n|nature||
+mamingwit|to fish with a rod|v|nature|bingwit|
+pamingwit|fishing rod|n|nature|bingwit|
+bakante|vacant, free (seat, post)|adj|travel||
+papunta|going to, bound for|adv|travel|punta|
+pabalik|on the way back|adv|travel|balik|
+pauwi|on the way home|adv|travel|uwi|
+biyahero|traveler|n|travel|biyahe|
+isakay|to load, put on board|v|travel|sakay|
+ihatid|to take, see (someone) off|v|travel|hatid|
+sunduin|to pick up (someone)|v|travel|sundo|
+lumiko|to turn|v|travel|liko|
+kumanan|to turn right|v|travel|kanan|
+kumaliwa|to turn left|v|travel|kaliwa|
+tumawid|to cross (a street)|v|travel|tawid|
+huminto|to stop|v|travel|hinto|
+lubak|pothole|n|travel||
+lubak-lubak|bumpy, full of potholes|adj|travel|lubak|
+lansangan|road, public street|n|travel||
+eskinita|alley|n|travel||
+babaan|drop-off point|n|travel|baba|
+gasolinahan|gas station|n|travel|gasolina|
+gasolina|gasoline|n|travel||
+siksikan|crowded, packed|adj|travel|siksik|
+maiwan|to be left behind|v|travel|iwan|
+maleta|suitcase|n|travel||
+bagahe|luggage|n|travel||
+pasalubong|gift brought home from a trip|n|travel|salubong|
+magbakasyon|to go on vacation|v|travel|bakasyon|
+maglakbay|to travel|v|travel|lakbay|
+tumuloy|to stay (at a place)|v|travel|tuloy|
+aberya|breakdown, hitch|n|travel||
+nasiraan|broke down (vehicle)|v|travel|sira|
+ruta|route|n|travel||
+pantalan|pier, port|n|travel||
+iparada|to park|v|travel|parada|
+aplikante|applicant|n|work||
+mag-apply|to apply (for a job)|v|work|apply|
+panayam|interview|n|work||note: in speech people often just say interview
+matanggap|to be hired, to be accepted|v|work|tanggap|
+katrabaho|coworker|n|work|trabaho|
+may-ari|owner|n|work||
+kumpanya|company|n|work||
+ahensiya|agency (for recruitment)|n|work||
+ibang bansa|abroad, another country|n|work||
+mag-abroad|to go work abroad|v|work|abroad|
+benepisyo|benefits|n|work||
+panggabi|night shift|adj|work|gabi|
+pang-umaga|morning shift|adj|work|umaga|
+lumiban|to be absent|v|work|liban|
+kinsenas|mid-month payday|n|money||
+sahuran|payday|n|money|sahod|
+taas-sahod|pay raise|n|money|sahod|
+kaltas|deduction (from pay)|n|money||
+bumale|to get a cash advance|v|money|bale|
+puhunan|capital (for a business)|n|money||
+paninda|goods for sale|n|money|tinda|
+mamimili|buyer, shopper|n|money|bili|
+malugi|to lose money (in business)|v|money|lugi|
+lugi|at a loss (business)|adj|money||
+sapat|enough|adj|money||
+kapos|short (of money)|adj|money||
+gipit|hard up, in a tight spot|adj|money||
+magtipid|to economize|v|money|tipid|
+matipid|thrifty, economical|adj|money|tipid|
+isangla|to pawn|v|money|sangla|
+humiram|to borrow|v|money|hiram|
+ipahiram|to lend|v|money|hiram|
+pumasa|to pass (a test)|v|school|pasa|
+bumagsak|to fail (a test)|v|school|bagsak|
+magsunog ng kilay|to study hard|phr|school||note: literally to burn one's eyebrows
+kabisaduhin|to memorize|v|school|kabisado|
+kabisado|memorized, known by heart|adj|school||
+aralin|lesson|n|school|aral|
+asignatura|school subject|n|school||
+sagutan|to answer (a test, a form)|v|school|sagot|
+marka|grade, mark|n|school||
+baitang|grade level|n|school||
+seksiyon|class section|n|school||
+pisara|blackboard|n|school||
+tisa|chalk|n|school||
+pambura|eraser|n|school|bura|
+burahin|to erase|v|school|bura|
+kopyahin|to copy|v|school|kopya|
+mangopya|to cheat (by copying)|v|school|kopya|
+proyekto|project|n|school||
+ulat|report|n|school||
+sanaysay|essay|n|school||
+bigkasin|to pronounce|v|school|bigkas|
+baybayin|to spell|v|school|baybay|note: also the name of the old Filipino script
+pagtatapos|graduation|n|school|tapos|
+mag-enroll|to enroll|v|school|enroll|
+silid-aklatan|library|n|school|aklat|
+kantina|canteen|n|school||
+ipaliwanag|to explain|v|school|liwanag|
+magsanay|to practice|v|school|sanay|
+pahina|page|n|school||
+diksiyonaryo|dictionary|n|school||
+pangungusap|sentence|n|school||
+puntos|points, score|n|school||
+ilaga|to boil (eggs, root crops)|v|food|laga|
+nilaga|boiled meat and vegetable soup|n|food|laga|
+ihawin|to grill|v|food|ihaw|
+inihaw|grilled|adj|food|ihaw|
+iprito|to fry (something)|v|food|prito|
+pinirito|fried|adj|food|prito|
+igisa|to sauté (something)|v|food|gisa|
+ginisa|sautéed|adj|food|gisa|
+hiwain|to slice, cut|v|food|hiwa|
+tadtarin|to chop finely, mince|v|food|tadtad|
+balatan|to peel|v|food|balat|
+hugasan|to wash (something)|v|food|hugas|
+haluin|to stir|v|food|halo|
+timplahan|to season|v|food|timpla|
+tikman|to taste|v|food|tikim|
+lasa|taste, flavor|n|food||
+malasa|flavorful|adj|food|lasa|
+malinamnam|savory, rich in flavor|adj|food|linamnam|
+malansa|fishy (smell or taste)|adj|food|lansa|
+malutong|crispy|adj|food|lutong|
+malapot|thick (liquid)|adj|food|lapot|
+nasunog|got burnt|v|food|sunog|
+ibabad|to soak, to marinate|v|food|babad|
+tunawin|to thaw, to melt|v|food|tunaw|
+palamigin|to let cool, to chill|v|food|lamig|
+isalang|to put on the stove|v|food|salang|
+hanguin|to take off the heat|v|food|hango|
+kumulo|to boil, come to a boil|v|food|kulo|
+sangkalan|chopping board|n|food||
+sangkap|ingredient|n|food||
+luya|ginger|n|food||
+patis|fish sauce|n|food||
+sahog|added meat or vegetables|n|food||
+yero|galvanized iron sheet|n|home||
+tumulo|to drip, to leak|v|home|tulo|
+butas|hole|n|home||
+ayusin|to fix, to arrange|v|home|ayos|
+kumpunihin|to repair|v|home|kumpuni|
+pintahan|to paint (something)|v|home|pinta|
+pintura|paint|n|home||
+martilyo|hammer|n|home||
+pako|nail|n|home||
+turnilyo|screw|n|home||
+tubero|plumber|n|home||
+barado|clogged|adj|home|bara|
+kuryente|electricity|n|home||
+saksakan|electrical outlet|n|home|saksak|
+isaksak|to plug in|v|home|saksak|
+pundido|burnt out (bulb)|adj|home|pundi|
+palitan|to replace, to change|v|home|palit|
+alikabok|dust|n|home||
+punasan|to wipe|v|home|punas|
+kuskusin|to scrub|v|home|kuskos|
+banlawan|to rinse|v|home|banlaw|
+isampay|to hang out (laundry)|v|home|sampay|
+tiklupin|to fold|v|home|tiklop|
+plantsahin|to iron|v|home|plantsa|
+labhan|to wash (clothes)|v|home|laba|
+itapon|to throw away|v|home|tapon|
+ligpitin|to put away, to clear|v|home|ligpit|
+walisan|to sweep (a place)|v|home|walis|
+lampasuhin|to mop|v|home|lampaso|
+mantsa|stain|n|home||
+gawaing-bahay|housework|n|home||
+bodega|storeroom|n|home||
+seradura|door lock|n|home||
+abuloy|money gift to a bereaved family|n|beliefs||
+ilibing|to bury|v|beliefs|libing|
+babang-luksa|end of mourning, first death anniversary|n|beliefs|luksa|
+nitso|tomb, burial niche|n|beliefs||
+magtirik ng kandila|to light a candle (for the dead)|phr|beliefs||
+binyagan|to baptize|v|beliefs|binyag|
+kumpil|confirmation (sacrament)|n|beliefs||
+komunyon|Holy Communion|n|beliefs||
+altar|altar|n|beliefs||
+krus|cross, crucifix|n|beliefs||
+mag-antanda|to make the sign of the cross|v|beliefs|antanda|
+poon|holy image (of a saint, of Christ)|n|beliefs||
+prusisyon|religious procession|n|beliefs||
+deboto|devotee|n|beliefs||
+panata|religious vow|n|beliefs||
+kapistahan|feast day|n|beliefs|pista|
+pabasa|chanting of the Passion|n|beliefs|basa|
+senakulo|Passion play|n|beliefs||
+simbang gabi|dawn masses before Christmas|n|beliefs||
+banal|holy|adj|beliefs||
+basbasan|to bless|v|beliefs|basbas|
+basbas|blessing|n|beliefs||
+mag-ayuno|to fast (for religion)|v|beliefs|ayuno|
+estampita|holy card (small saint picture)|n|beliefs||
+pamisa|Mass offered for someone|n|beliefs|misa|
+kampana|church bell|n|beliefs||
+sakristan|altar server|n|beliefs||
+padasal|prayer gathering for the dead|n|beliefs|dasal|
+mag-reply|to reply|v|tech|reply|
+i-send|to send|v|tech|send|
+i-forward|to forward|v|tech|forward|
+group chat|group chat|n|tech||
+mag-download|to download|v|tech|download|
+mag-upload|to upload|v|tech|upload|
+i-update|to update|v|tech|update|
+mag-log in|to log in|v|tech|log in|
+naka-off|switched off|adj|tech|off|
+naka-silent|on silent|adj|tech|silent|
+nag-hang|froze (device)|v|tech|hang|
+i-restart|to restart|v|tech|restart|
+na-seen|left on read|v|tech|seen|
+i-save|to save|v|tech|save|
+kontak|contact (in a phone)|n|tech||
+numero|phone number|n|tech||
+selfie|selfie|n|tech||
+i-tag|to tag (in a post)|v|tech|tag|
+mag-comment|to comment (online)|v|tech|comment|
+komento|comment|n|tech||
+i-follow|to follow (an account)|v|tech|follow|
+mag-video|to take a video|v|tech|video|
+mag-screenshot|to take a screenshot|v|tech|screenshot|
+powerbank|power bank|n|tech||
+basag|cracked, shattered|adj|tech||
+notif|notification|n|tech||note: short for notification
+mag-type|to type|v|tech|type|
+i-mute|to mute|v|tech|mute|
+offline|offline|adj|tech||
+link|link|n|tech||
+mag-search|to search (online)|v|tech|search|
+net|internet connection|n|tech||note: short for internet
+kanina pa|for a while now|adv|time||
+maya-maya|in a little while|adv|time|maya|
+saglit|a moment|n|time||
+noong isang araw|the other day|adv|time||
+noong isang buwan|last month|adv|time||
+kinabukasan|the next day|adv|time|bukas|
+magdamag|all night|adv|time||
+maghapon|all day|adv|time|hapon|
+katapusan|end (of the month)|n|time|tapos|
+katatapos|just finished|adv|time|tapos|
+pagkatapos|after, afterward|conj|time|tapos|
+samantala|meanwhile|adv|grammar||
+saka|and then, and also|conj|grammar||
+sakaling|in case|conj|grammar|sakali|
+kahit|even if, even though|conj|grammar||
+upang|in order to|conj|grammar||note: more formal than para
+nang|when; so that; links an adverb|conj|grammar||note: not the same as the marker ng
+kaysa|than|conj|grammar||
+kung hindi|otherwise, if not|conj|grammar||
+lalo na|especially|adv|grammar||
+pati|including, as well as|conj|grammar||
+parati|always|adv|time||
+kadalasan|usually|adv|time|dalas|
+karaniwan|usually, normally|adv|time||
+unti-unti|little by little, gradually|adv|grammar|unti|
+bigla|suddenly|adv|grammar||
+tuloy-tuloy|continuously, nonstop|adv|grammar|tuloy|
+ngayong gabi|tonight|adv|time||
+ngayong linggo|this week|adv|time||
+sa ngayon|for now|adv|time||
+mula ngayon|from now on|adv|time||
+kada|every, per|prep|time||
+oras-oras|every hour|adv|time|oras|
 `);

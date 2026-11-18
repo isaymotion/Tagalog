@@ -4,6 +4,17 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.17.0', date: '2026-11-18', title: 'Practise a lesson, Listen and reply, 640 more words',
+    items: [
+      { type: 'feature', text: 'Practise this lesson: every lesson page has a button to ten gap sentences on exactly what that lesson teaches. Each unit review has Practise this unit. There is also a lesson picker under Drills.' },
+      { type: 'feature', text: 'Listen and reply: hear a line from a neighbor, a vendor, a patient or a relative, then choose the natural reply from four. Choose Everyday or Clinical and a level from A1 to B2. Lines you miss can be practised again.' },
+      { type: 'content', text: '640 more dictionary words, each with an example sentence: feelings, thinking and memory, symptoms, hospital words, self-care, family life, character, barangay and government, storms and farming, travel, work and money, school, cooking, the house, church and wakes, phones and messaging, time words.' },
+      { type: 'content', text: '760 gap sentences by lesson, 72 Listen and reply lines, 79 more find-the-mistake sentences and 71 more change-the-sentence items.' },
+      { type: 'content', text: 'Six more readings (A2 to C1) and six more dialogues (A2 to B2), including a ward visit, a thank-you letter, a follow-up visit and a family meeting.' },
+      { type: 'update', text: 'The daily mix can now draw a lesson-practice question and a Listen and reply question.' }
+    ]
+  },
+  {
     version: '3.16.0', date: '2026-11-18', title: 'Twenty more grammar lessons, to B2',
     items: [
       { type: 'content', text: 'Verbs: mag- or -um-, choosing -in, i- or -an, mang- verbs, pang- words and ipang- verbs, feeling verbs (natatakot or nakakatakot), may and wala with verbs, ka- -an verbs of feeling, and magsi- for many doers.' },
