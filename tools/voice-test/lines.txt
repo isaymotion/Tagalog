@@ -1,29 +1,8 @@
 # Voice test lines: id|voice|text. Recorded by .github/workflows/voice-test.yml into tools/voice-test/out/<id>.mp3.
-# Not part of the app or the audio pack. Round 3 (2026-11-17): every last-syllable sentence with a plain hyphen; basa with a final catch.
-r3-bukas|fil-PH-BlessicaNeural|Bu-kas ang pinto ng kuwarto.
-r3-gutom|fil-PH-BlessicaNeural|Gu-tom na ang mga bata.
-r3-tulog|fil-PH-BlessicaNeural|Tu-log pa ang pasyente.
-r3-pagod|fil-PH-BlessicaNeural|Pa-god ako pagkatapos ng trabaho.
-r3-takot|fil-PH-BlessicaNeural|Ta-kot siya sa karayom.
-r3-galit|fil-PH-BlessicaNeural|Ga-lit pa rin siya sa kapatid niya.
-r3-buhay|fil-PH-BlessicaNeural|Bu-hay pa ang lolo niya.
-r3-sunog|fil-PH-BlessicaNeural|Su-nog ang sinaing.
-r3-suka|fil-PH-BlessicaNeural|May su-ka sa sahig ng kuwarto.
-r3-labi|fil-PH-BlessicaNeural|Iniuwi sa probinsya ang la-bi ng lolo niya.
-r3-baka|fil-PH-BlessicaNeural|Ba-ka umulan mamaya.
-r3-gabi|fil-PH-BlessicaNeural|Hindi siya nakatulog buong ga-bi.
-r3-hapon|fil-PH-BlessicaNeural|Ha-pon ang asawa ng pinsan ko.
-r3-pito|fil-PH-BlessicaNeural|Pi-to silang magkakapatid.
-r3-galing|fil-PH-BlessicaNeural|Ang ga-ling niyang kumanta.
-r3-huli|fil-PH-BlessicaNeural|Hu-li na naman siya sa trabaho.
-r3-saya|fil-PH-BlessicaNeural|Ang sa-ya ng piyesta kahapon.
-r3-lamang|fil-PH-BlessicaNeural|La-mang ng dalawang puntos ang koponan natin.
-r3-pala|fil-PH-BlessicaNeural|Ikaw pa-la ang bagong doktor.
-r3-sikat|fil-PH-BlessicaNeural|Si-kat na artista ang kapitbahay nila.
-r3-tubo|fil-PH-BlessicaNeural|Nagtatanim sila ng tu-bo sa Tarlac.
-r3-hamon|fil-PH-BlessicaNeural|May ha-mon at keso tuwing Pasko.
-r3-balat|fil-PH-BlessicaNeural|Namumula ang ba-lat niya.
-r3g-basa-1|fil-PH-BlessicaNeural|Ang damit niya ay ba-sa.
-r3g-basa-2|fil-PH-BlessicaNeural|Ang damit niya ay ba-sa'.
-r3g-basa-3|fil-PH-BlessicaNeural|Ang damit niya ay ba-sa-.
-r3g-basa-4|fil-PH-BlessicaNeural|Ba-sa' ng pawis ang damit niya.
+# Not part of the app or the audio pack. Round 4 (2026-11-18): the single word TV (the app's "ti-bi" comes out as "tebai").
+tv-1|fil-PH-BlessicaNeural|Ti-bi.
+tv-2|fil-PH-BlessicaNeural|tibi
+tv-3|fil-PH-BlessicaNeural|ti bi
+tv-4|fil-PH-BlessicaNeural|TV
+tv-5|fil-PH-BlessicaNeural|tivi
+tv-6|fil-PH-BlessicaNeural|ti-vi
