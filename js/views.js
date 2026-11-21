@@ -720,4 +720,20 @@
     el.querySelectorAll('[data-lang]').forEach((b) => (b.onclick = () => App.setLang(b.dataset.lang)));
     el.querySelector('#copymail').onclick = () => { navigator.clipboard && navigator.clipboard.writeText(APP_META.email).then(() => App.toast('Email copied.'), () => App.toast(APP_META.email)); };
   };
+
+  /* Ko-fi support card at the end of Home and About. The address is APP_META.kofi; without one nothing is shown. */
+  const supportCard = () => {
+    const m = window.APP_META || {}, u = String(m.kofi || '');
+    if (!/^https:\/\/ko-fi\.com\/[\w-]+\/?$/.test(u)) return '';
+    const name = String(m.name || 'this app').replace(/[&<>"]/g, '');
+    return '<div class="card support-card"><h2>Enjoying ' + name + '?</h2><p>It is free, with no ads and no tracking. If it helps you, you can buy me a coffee.</p><p><a class="btn primary" href="' + u + '" target="_blank" rel="noopener">♥ Support on Ko-fi</a></p></div>';
+  };
+  ['home', 'about'].forEach((k) => {
+    const draw = V[k];
+    V[k] = function (el) {
+      const out = draw.apply(this, arguments);
+      if (el && el.insertAdjacentHTML && !el.querySelector('.support-card')) el.insertAdjacentHTML('beforeend', supportCard());
+      return out;
+    };
+  });
 })();

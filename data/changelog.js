@@ -4,6 +4,12 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.19.2', date: '2026-11-21', title: 'Support card on Home and About',
+    items: [
+      { type: 'update', text: 'A “Support on Ko-fi” card now sits at the end of Home and About, as well as the link at the bottom of every page.' }
+    ]
+  },
+  {
     version: '3.19.1', date: '2026-11-21', title: 'Support this app',
     items: [
       { type: 'update', text: 'This app stays free. If it helps you, there is now a “Support this app on Ko-fi” link at the bottom of every page.' }

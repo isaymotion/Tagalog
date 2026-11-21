@@ -1116,3 +1116,9 @@ mark.exw { background: var(--mark); color: inherit; font-weight: 700; border-rad
 /* Ko-fi support link under the attribution line */
 .support-line{margin:0 0 10px}
 .support-line a{display:inline-flex;align-items:center;min-height:44px;color:inherit;font-weight:600;text-underline-offset:3px}
+
+/* Ko-fi support card on Home and About */
+.support-card{margin-top:22px}
+.support-card h2{margin:0 0 6px;font-size:1.1rem}
+.support-card p{margin:0 0 12px}
+.support-card p:last-child{margin-bottom:0}
