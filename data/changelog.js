@@ -4,6 +4,12 @@
    For every release: add an entry here, then bump APP_META.version (data/app-meta.js) and VERSION in sw.js. */
 window.APP_CHANGELOG = [
   {
+    version: '3.19.1', date: '2026-11-21', title: 'Support this app',
+    items: [
+      { type: 'update', text: 'This app stays free. If it helps you, there is now a “Support this app on Ko-fi” link at the bottom of every page.' }
+    ]
+  },
+  {
     version: '3.19.0', date: '2026-11-18', title: 'Picture mode in Vocabulary practice',
     items: [
       { type: 'feature', text: 'Vocabulary practice has a ninth game, Picture: see one part of a drawing marked with a pin, or a picture card, and choose its Tagalog word from four. The English and the sound come after you answer.' },

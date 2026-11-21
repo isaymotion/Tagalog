@@ -1112,3 +1112,7 @@ mark.exw { background: var(--mark); color: inherit; font-weight: 700; border-rad
 .vp-pcard .pic-card, .vp-pcard .pic-card:hover { cursor: default; border-color: var(--accent); }
 .vp-opts { gap: 6px; }
 .vp-opts .opt { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 9px 14px; overflow-wrap: anywhere; }
+
+/* Ko-fi support link under the attribution line */
+.support-line{margin:0 0 10px}
+.support-line a{display:inline-flex;align-items:center;min-height:44px;color:inherit;font-weight:600;text-underline-offset:3px}

@@ -3,7 +3,8 @@ window.APP_META = {
   name: 'Usap Tayo',
   short: 'Usap Tayo',
   tagline: 'Tagalog for the psychiatric interview',
-  version: '3.19.0',
+  version: '3.19.1',
+  kofi: 'https://ko-fi.com/isaymotion',   // support link shown in the footer
   repo: 'Tagalog',
   updated: 'November 2026',
   author: 'Isabella Navarro, MD',
